@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 
 public class FabricApiHelper {
@@ -18,14 +18,14 @@ public class FabricApiHelper {
         return FabricLoader.getInstance().isModLoaded("fabric-api");
     }
 
-    public static void fireOnWorldLoadEvent(@NotNull MinecraftServer server, @NotNull ServerWorld serverWorld) throws Exception {
-        List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerWorld.class);
+    public static void fireOnWorldLoadEvent(@NotNull MinecraftServer server, @NotNull ServerLevel serverWorld) throws Exception {
+        List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerLevel.class);
         List<Object> eventArguments = List.of(server, serverWorld);
         FabricApiHelper.fireEvent(FabricApiHelper.SERVER_WORLD_EVENTS_CLASS_NAME, "LOAD", "onWorldLoad", eventParameters, eventArguments);
     }
 
-    public static void fireOnWorldUnloadEvent(@NotNull MinecraftServer server, @NotNull ServerWorld serverWorld) throws Exception {
-        List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerWorld.class);
+    public static void fireOnWorldUnloadEvent(@NotNull MinecraftServer server, @NotNull ServerLevel serverWorld) throws Exception {
+        List<Class<?>> eventParameters = List.of(MinecraftServer.class, ServerLevel.class);
         List<Object> eventArguments = List.of(server, serverWorld);
         FabricApiHelper.fireEvent(FabricApiHelper.SERVER_WORLD_EVENTS_CLASS_NAME, "UNLOAD", "onWorldUnload", eventParameters, eventArguments);
     }

@@ -8,7 +8,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class GodInitializer extends ModuleInitializer {
@@ -16,7 +16,7 @@ public class GodInitializer extends ModuleInitializer {
     @Document(id = 1751825142583L, value = "Toggle the invulnerable state.")
     @CommandNode("god")
     @CommandRequirement(level = 4)
-    private static int $god(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $god(@CommandSource @CommandTarget ServerPlayer player) {
         boolean flag = !player.getAbilities().invulnerable;
         return $god(player, flag);
     }
@@ -24,9 +24,9 @@ public class GodInitializer extends ModuleInitializer {
     @Document(id = 1756710502594L, value = "Set the invulnerable state.")
     @CommandNode("god")
     @CommandRequirement(level = 4)
-    private static int $god(@CommandSource @CommandTarget ServerPlayerEntity player, boolean flag) {
+    private static int $god(@CommandSource @CommandTarget ServerPlayer player, boolean flag) {
         player.getAbilities().invulnerable = flag;
-        player.sendAbilitiesUpdate();
+        player.onUpdateAbilities();
 
         TextHelper.sendTextByKey(player, flag ? "god.on" : "god.off");
         return CommandHelper.Return.SUCCESS;

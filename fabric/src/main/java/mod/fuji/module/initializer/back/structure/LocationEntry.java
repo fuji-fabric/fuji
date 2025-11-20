@@ -5,7 +5,7 @@ import mod.fuji.core.structure.GlobalPos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -17,7 +17,7 @@ public class LocationEntry implements Comparable<LocationEntry> {
     GlobalPos location;
     Long savedTimestamp;
 
-    public static LocationEntry makeLocationEntry(@NotNull ServerPlayerEntity player) {
+    public static LocationEntry makeLocationEntry(@NotNull ServerPlayer player) {
         GlobalPos location = GlobalPos.of(player);
         Long saved_timestamp = ChronosUtil.getCurrentTimestamp();
         return new LocationEntry(location, saved_timestamp);

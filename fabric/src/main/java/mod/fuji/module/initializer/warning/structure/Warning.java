@@ -7,8 +7,8 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.Item;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ public class Warning {
         return entity;
     }
 
-    public @NotNull List<Text> asLore(Object audience) {
+    public @NotNull List<Component> asLore(Object audience) {
         return List.of(
             TextHelper.getTextByKey(audience, "entity.active", isActive())
             , TextHelper.getTextByKey(audience, "entity.created_by_player", creatorName)

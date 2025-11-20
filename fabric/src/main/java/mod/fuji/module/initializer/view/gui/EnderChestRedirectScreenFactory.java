@@ -1,30 +1,30 @@
 package mod.fuji.module.initializer.view.gui;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
 
 public class EnderChestRedirectScreenFactory extends RedirectScreenHandlerFactory {
 
-    public EnderChestRedirectScreenFactory(ServerPlayerEntity sourcePlayer, String targetPlayerName) {
+    public EnderChestRedirectScreenFactory(ServerPlayer sourcePlayer, String targetPlayerName) {
         super(targetPlayerName, TextHelper.getTextByKey(sourcePlayer, "view.ender.title", targetPlayerName));
     }
 
     @Override
-    protected Inventory makeTargetInventoryRedirectScreen() {
+    protected Container makeTargetInventoryRedirectScreen() {
         return getTargetPlayer().getEnderChestInventory();
     }
 
     @Override
-    protected ScreenHandlerType<GenericContainerScreenHandler> getTargetInventorySize() {
-        return ScreenHandlerType.GENERIC_9X3;
+    protected MenuType<ChestMenu> getTargetInventorySize() {
+        return MenuType.GENERIC_9x3;
     }
 
     @Override
-    protected boolean canClick(ScreenHandler screenHandler, int i) {
+    protected boolean canClick(AbstractContainerMenu screenHandler, int i) {
         return true;
     }
 }

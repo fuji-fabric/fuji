@@ -8,12 +8,12 @@ import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.server.BypassPlayerLimitEvent;
-import net.minecraft.server.dedicated.DedicatedPlayerManager;
+import net.minecraft.server.dedicated.DedicatedPlayerList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @PhasedMixinTemplate
-@Mixin(DedicatedPlayerManager.class)
+@Mixin(DedicatedPlayerList.class)
 public class BypassPlayerLimitEventMixin {
 
     @EventProducer(BypassPlayerLimitEvent.class)
@@ -26,9 +26,9 @@ public class BypassPlayerLimitEventMixin {
     #elif MC_VER >= MC_1_21_9
     @ModifyExpressionValue(
         method = "canBypassPlayerLimit",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/server/OperatorList;canBypassPlayerLimit(Lnet/minecraft/server/PlayerConfigEntry;)Z")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/ServerOpList;canBypassPlayerLimit(Lnet/minecraft/server/players/NameAndId;)Z")
     )
-    boolean produceBypassPlayerLimitEvent(boolean original, net.minecraft.server.PlayerConfigEntry vanillaType)
+    boolean produceBypassPlayerLimitEvent(boolean original, net.minecraft.server.players.NameAndId vanillaType)
     #endif
     {
         return GameProfileWrapper

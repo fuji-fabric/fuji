@@ -9,9 +9,9 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.structure.JobDescriptor;
 import lombok.SneakyThrows;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quartz.Job;
@@ -26,17 +26,17 @@ import java.util.List;
 
 public class JobsInspectionGui extends PagedGui<JobDescriptor> {
 
-    public JobsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<JobDescriptor> entities, int pageIndex) {
+    public JobsInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, @NotNull List<JobDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.jobs.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<JobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JobDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<JobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<JobDescriptor> entities, int pageIndex) {
         return new JobsInspectionGui(parent, player, entities, pageIndex);
     }
 
     @SneakyThrows(SchedulerException.class)
-    public static JobsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static JobsInspectionGui inspectAll(SimpleGui parent, ServerPlayer player) {
         List<JobDescriptor> entities = JobDescriptor
             .getJobDescriptors();
 
@@ -65,7 +65,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
         JobKey jobKey = jobDetail.getKey();
         String sourceModule = entity.getSourceModule();
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", sourceModule));
 
         Class<? extends Job> jobClass = jobDetail.getJobClass();

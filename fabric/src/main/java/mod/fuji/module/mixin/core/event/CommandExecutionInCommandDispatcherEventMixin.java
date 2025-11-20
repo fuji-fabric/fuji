@@ -17,7 +17,7 @@ import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.command.CommandExecutionPostEvent;
 import mod.fuji.core.event.message.command.CommandExecutionPreEvent;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = CommandDispatcher.class, remap = false)
 public class CommandExecutionInCommandDispatcherEventMixin {
 
+    // TODO(Ravel): no target class
     @EventProducer(CommandExecutionPreEvent.class)
     #if MC_VER <= MC_1_20_2
     @Inject(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"), cancellable = true)
@@ -44,13 +45,14 @@ public class CommandExecutionInCommandDispatcherEventMixin {
         });
     }
 
+    // TODO(Ravel): no target class
     @EventProducer(CommandExecutionPostEvent.class)
     #if MC_VER <= MC_1_20_2
     @ModifyExpressionValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/Command;run(Lcom/mojang/brigadier/context/CommandContext;)I"))
     int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
     #elif MC_VER > MC_1_20_2
     @ModifyReturnValue(method = "execute(Lcom/mojang/brigadier/ParseResults;)I", at = @At("RETURN"))
-    int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<ServerCommandSource> parseResults)
+    int produceAfterCommandExecutionInCommandDispatcherEvent(int original, @Local(argsOnly = true) ParseResults<CommandSourceStack> parseResults)
     #endif
     {
         CommandHelper.Source.withServerCommandSource(parseResults.getContext(), (serverCommandSource) -> {

@@ -1,11 +1,11 @@
 package mod.fuji.core.auxiliary.minecraft;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityHelper {
@@ -18,11 +18,11 @@ public class EntityHelper {
         #endif
     }
 
-    public static @NotNull ServerWorld getServerWorld(@NotNull Entity entity) {
+    public static @NotNull ServerLevel getServerWorld(@NotNull Entity entity) {
         #if MC_VER < MC_1_21_9
         return (ServerWorld) entity.getWorld();
         #elif MC_VER >= MC_1_21_9
-        return (ServerWorld) entity.getEntityWorld();
+        return (ServerLevel) entity.level();
         #endif
     }
 
@@ -30,16 +30,16 @@ public class EntityHelper {
         String translatableKey;
 
         if (entity instanceof ItemEntity itemEntity) {
-            translatableKey = itemEntity.getStack().getItem().getTranslationKey();
+            translatableKey = itemEntity.getItem().getItem().getDescriptionId();
         } else {
-            translatableKey = entity.getType().getTranslationKey();
+            translatableKey = entity.getType().getDescriptionId();
         }
         return translatableKey;
     }
 
     public static int getEntityEffectiveCount(@NotNull Entity entity) {
         if (entity instanceof ItemEntity itemEntity) {
-            return itemEntity.getStack().getCount();
+            return itemEntity.getItem().getCount();
         } else {
             return 1;
         }
@@ -50,11 +50,11 @@ public class EntityHelper {
     }
 
     public static int getAge(@NotNull Entity entity) {
-        return entity.age;
+        return entity.tickCount;
     }
 
-    public static @NotNull Vec3d getPos(@NotNull Entity entity) {
-        return entity.pos;
+    public static @NotNull Vec3 getPos(@NotNull Entity entity) {
+        return entity.position;
     }
 
     public static void rideEntity(@NotNull Entity passengerEntity, @NotNull Entity vehicleEntity) {
@@ -68,17 +68,17 @@ public class EntityHelper {
     public static class Physics {
 
         public static void addVelocity(@NotNull Entity entity, double x, double y, double z) {
-            entity.addVelocity(x, y, z);
+            entity.push(x, y, z);
             updateVelocity(entity);
         }
 
         public static void setVelocity(@NotNull Entity entity, double x, double y, double z) {
-            entity.setVelocity(x, y, z);
+            entity.setDeltaMovement(x, y, z);
             updateVelocity(entity);
         }
 
         public static void updateVelocity(@NotNull Entity entity) {
-            EntityVelocityUpdateS2CPacket packet = new EntityVelocityUpdateS2CPacket(entity);
+            ClientboundSetEntityMotionPacket packet = new ClientboundSetEntityMotionPacket(entity);
             PacketHelper.sendPacketToAll(packet);
         }
     }
@@ -89,20 +89,20 @@ public class EntityHelper {
             #if MC_VER <= MC_1_20_6
             return (entity instanceof net.minecraft.entity.mob.MobEntity mobEntity) && mobEntity.isLeashed();
             #elif MC_VER > MC_1_20_6
-            return (entity instanceof net.minecraft.entity.Leashable leashable) && leashable.isLeashed();
+            return (entity instanceof net.minecraft.world.entity.Leashable leashable) && leashable.isLeashed();
             #endif
         }
 
         public static boolean isLivingEntity(@NotNull Entity entity) {
-            return entity.isLiving();
+            return entity.showVehicleHealth();
         }
 
         public static boolean hasVehicle(@NotNull Entity entity) {
-            return entity.hasVehicle();
+            return entity.isPassenger();
         }
 
         public static boolean hasPassengers(@NotNull Entity entity) {
-            return entity.hasPassengers();
+            return entity.isVehicle();
         }
 
         public static boolean isItemEntity(@NotNull Entity entity) {
@@ -110,12 +110,12 @@ public class EntityHelper {
         }
 
         public static boolean isGlowing(@NotNull Entity entity) {
-            return entity.isGlowing();
+            return entity.isCurrentlyGlowing();
         }
 
         public static boolean hasCustomName(@NotNull Entity entity) {
             if (entity instanceof ItemEntity itemEntity) {
-                ItemStack itemStack = itemEntity.getStack();
+                ItemStack itemStack = itemEntity.getItem();
                 return ItemStackHelper.CustomName.hasCustomName(itemStack);
             } else {
                 return entity.hasCustomName();

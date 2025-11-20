@@ -16,10 +16,10 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
 import java.util.Queue;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826684077L, value = """
@@ -35,7 +35,7 @@ public class ChatHistoryInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatHistoryConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatHistoryConfigModel.class);
 
-    private static Queue<Text> chatHistory;
+    private static Queue<Component> chatHistory;
 
     @SuppressWarnings("RedundantIfStatement")
     private static boolean isMessageTypeAccepted(@NotNull String messageTypeAsString) {
@@ -88,7 +88,7 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         return rejectedMessage;
     }
 
-    private static void processChatHistory(@NotNull SignedMessage signedMessage, @NotNull MessageType.Parameters parameters) {
+    private static void processChatHistory(@NotNull PlayerChatMessage signedMessage, @NotNull ChatType.Bound parameters) {
         /* Filter the message by message type. */
         String messageTypeString = RegistryHelper.getIdAsString(parameters);
         if (!isMessageTypeAccepted(messageTypeString)) {
@@ -96,14 +96,14 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         }
 
         /* Reject the message by content and parameters. (Styled Chat mod will encode info into parameters, and we can detect the feature.) */
-        String contentString = TextHelper.Operators.getString(signedMessage.getContent());
+        String contentString = TextHelper.Operators.getString(signedMessage.decoratedContent());
         String parametersString = parameters.toString();
         if (isMessageRejected(contentString, parametersString)) {
             return;
         }
 
         /* Add the message into chat history. */
-        Text decoratedTextAsTheClientSideDo = parameters.applyChatDecoration(signedMessage.getContent());
+        Component decoratedTextAsTheClientSideDo = parameters.decorate(signedMessage.decoratedContent());
         storeChatHistory(decoratedTextAsTheClientSideDo);
     }
 
@@ -114,20 +114,20 @@ public class ChatHistoryInitializer extends ModuleInitializer {
 
     @Override
     protected void onReload() {
-        EvictingQueue<Text> newQueue = EvictingQueue.create(config.model().getBufferSize());
+        EvictingQueue<Component> newQueue = EvictingQueue.create(config.model().getBufferSize());
         newQueue.addAll(chatHistory);
         chatHistory.clear();
         chatHistory = newQueue;
     }
 
-    private static void storeChatHistory(@NotNull Text text) {
+    private static void storeChatHistory(@NotNull Component text) {
         chatHistory.add(text);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
     private static void replayChatHistory(PlayerJoinedEvent event) {
         // NOTE: Use a lower priority, to ensure the chat history is re-played before other welcome messages.
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         chatHistory.forEach(text -> TextHelper.sendMessageByText(player, text));
     }
 

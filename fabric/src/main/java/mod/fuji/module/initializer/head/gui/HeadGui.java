@@ -7,10 +7,10 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.head.privoder.HeadProvider;
 import mod.fuji.module.initializer.head.structure.Category;
 import mod.fuji.module.initializer.head.structure.Head;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,8 +18,8 @@ import java.util.List;
 
 public class HeadGui extends SimpleGui {
 
-    public HeadGui(ServerPlayerEntity player) {
-        super(ScreenHandlerType.GENERIC_9X2, player, false);
+    public HeadGui(ServerPlayer player) {
+        super(MenuType.GENERIC_9x2, player, false);
         this.setTitle(TextHelper.getTextByKey(player, "head.title"));
 
         /* Place categories buttons. */
@@ -53,7 +53,7 @@ public class HeadGui extends SimpleGui {
                 return;
             }
 
-            Text title = category.getText(player);
+            Component title = category.getText(player);
             new CategoryHeadsGui(this, player, title, entities, 0)
                 .open();
         });

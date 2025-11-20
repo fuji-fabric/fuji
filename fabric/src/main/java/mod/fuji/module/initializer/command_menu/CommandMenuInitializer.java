@@ -19,9 +19,9 @@ import mod.fuji.module.initializer.command_menu.command.argument.wrapper.MenuNam
 import mod.fuji.module.initializer.command_menu.config.CommandMenuConfigModel;
 import mod.fuji.module.initializer.command_menu.config.CommandMenuMenusModel;
 import mod.fuji.module.initializer.command_menu.structure.MenuDescriptor;
-import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751824895470L, value = """
     This module allows defining `menu GUIs` that can execute commands.
@@ -85,7 +85,7 @@ public class CommandMenuInitializer extends ModuleInitializer {
 
     @Document(id = 1751824900662L, value = "Open the specified `menu` for the player.")
     @CommandNode("open")
-    private static int $open(@CommandSource ServerCommandSource source, ServerPlayerEntity player, MenuName menuName) {
+    private static int $open(@CommandSource CommandSourceStack source, ServerPlayer player, MenuName menuName) {
         /* Check if menu exists. */
         String $menuName = menuName.getValue();
         if (!menus.model().getMenus().containsKey($menuName)) {
@@ -105,26 +105,26 @@ public class CommandMenuInitializer extends ModuleInitializer {
 
     @Document(id = 1751824905935L, value = "Close the currently `opened GUI` for the player.")
     @CommandNode("close")
-    private static int $close(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+    private static int $close(@CommandSource CommandSourceStack source, ServerPlayer player) {
         closeCurrentHandledScreen(player);
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static void closeCurrentHandledScreen(ServerPlayerEntity player) {
-        player.closeHandledScreen();
+    public static void closeCurrentHandledScreen(ServerPlayer player) {
+        player.closeContainer();
     }
 
-    public static void executeOnSneakingAndSwapHandsCommands(ServerPlayerEntity player) {
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), config.model().onSneakingAndSwapHandsEvent.commands);
+    public static void executeOnSneakingAndSwapHandsCommands(ServerPlayer player) {
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.createCommandSourceStack()), config.model().onSneakingAndSwapHandsEvent.commands);
     }
 
     @EventConsumer
     private static void consumePlayerActionEvent(PlayerActionEvent event) {
         if (!CommandMenuInitializer.config.model().onSneakingAndSwapHandsEvent.enable) return;
 
-        PlayerActionC2SPacket packet = event.getPacket();
-        ServerPlayerEntity player = event.getPlayer();
-        if (packet.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND && player.isSneaking()) {
+        ServerboundPlayerActionPacket packet = event.getPacket();
+        ServerPlayer player = event.getPlayer();
+        if (packet.getAction() == ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND && player.isShiftKeyDown()) {
             CommandMenuInitializer.executeOnSneakingAndSwapHandsCommands(player);
             event.getCallbackInfo().cancel();
         }

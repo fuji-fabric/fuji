@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.world.gamerule.config.adapter.BooleanGameRule
 import mod.fuji.module.initializer.world.gamerule.config.adapter.IntegerGameRuleMapAdapter;
 import mod.fuji.module.initializer.world.gamerule.config.model.WorldGameRuleConfigModel;
 import mod.fuji.module.initializer.world.gamerule.structure.GameRuleDescriptor;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 
 import java.util.Optional;
 

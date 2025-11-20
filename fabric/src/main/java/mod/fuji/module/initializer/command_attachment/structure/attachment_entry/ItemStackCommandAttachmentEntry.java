@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -22,15 +22,15 @@ public class ItemStackCommandAttachmentEntry extends BaseCommandAttachmentEntry 
     }
 
     @Override
-    public void onUsed(@NotNull ServerPlayerEntity player) {
+    public void onUsed(@NotNull ServerPlayer player) {
         super.onUsed(player);
         if (this.isVanishOnExhaust() && this.getUseTimes() >= this.getMaxUseTimes()) {
-            player.getMainHandStack().decrement(1);
+            player.getMainHandItem().shrink(1);
         }
     }
 
     @Override
-    public List<Text> asLore(@NotNull ServerPlayerEntity player) {
+    public List<Component> asLore(@NotNull ServerPlayer player) {
         return super.asLore(player);
     }
 }

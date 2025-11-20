@@ -8,7 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.service.bossbar.command.argument.wrapper.StepType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +21,14 @@ public class StepTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String name = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return StepType.valueOf(name);
     }
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.enums(StepType::values));
     }

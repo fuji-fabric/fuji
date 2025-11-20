@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.works.structure;
 
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import java.util.HashSet;
 import java.util.Set;

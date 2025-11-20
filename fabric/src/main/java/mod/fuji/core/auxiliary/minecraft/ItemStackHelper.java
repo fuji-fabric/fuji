@@ -7,27 +7,27 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.StringUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStackArgumentType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.commands.arguments.item.ItemArgument;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.ListTag;
 
 #if MC_VER <= MC_1_20_4
 #elif MC_VER > MC_1_20_4
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemLore;
 #endif
 
 public class ItemStackHelper {
@@ -38,15 +38,15 @@ public class ItemStackHelper {
             #if MC_VER <= MC_1_20_4
             stack.removeCustomName();
             #elif MC_VER > MC_1_20_4
-            stack.remove(DataComponentTypes.CUSTOM_NAME);
+            stack.remove(DataComponents.CUSTOM_NAME);
             #endif
         }
 
-        public static void setCustomName(@NotNull ItemStack stack, @NotNull Text customName) {
+        public static void setCustomName(@NotNull ItemStack stack, @NotNull Component customName) {
             #if MC_VER <= MC_1_20_4
             stack.setCustomName(customName);
             #elif MC_VER > MC_1_20_4
-            stack.set(DataComponentTypes.CUSTOM_NAME, customName);
+            stack.set(DataComponents.CUSTOM_NAME, customName);
             #endif
         }
 
@@ -54,7 +54,7 @@ public class ItemStackHelper {
             #if MC_VER <= MC_1_20_4
             return stack.hasCustomName();
             #elif MC_VER > MC_1_20_4
-            return stack.get(DataComponentTypes.CUSTOM_NAME) != null;
+            return stack.get(DataComponents.CUSTOM_NAME) != null;
             #endif
         }
     }
@@ -67,7 +67,7 @@ public class ItemStackHelper {
         @SuppressWarnings("unused")
         private static final String LORE_NBT_KEY = "Lore";
 
-        public static @NotNull List<Text> getLore(@NotNull ItemStack stack) {
+        public static @NotNull List<Component> getLore(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack
                 .getOrCreateSubNbt(DISPLAY_NBT_KEY)
@@ -76,16 +76,16 @@ public class ItemStackHelper {
                 .map(tag -> TextHelper.Codec.fromJson(tag.asString()))
                 .collect(java.util.stream.Collectors.toList());
             #elif MC_VER > MC_1_20_4
-                var loreComponent = stack.get(DataComponentTypes.LORE);
+                var loreComponent = stack.get(DataComponents.LORE);
                 if (loreComponent == null) {
                     return List.of();
                 }
 
-                return loreComponent.comp_2400();
+                return loreComponent.lines();
             #endif
         }
 
-        public static void setLore(@NotNull ItemStack stack, @NotNull List<Text> texts) {
+        public static void setLore(@NotNull ItemStack stack, @NotNull List<Component> texts) {
             #if MC_VER <= MC_1_20_4
             NbtCompound displayTag = stack.getOrCreateSubNbt(DISPLAY_NBT_KEY);
             NbtList loreItemsTag = new NbtList();
@@ -94,14 +94,14 @@ public class ItemStackHelper {
             }
             displayTag.put(LORE_NBT_KEY, loreItemsTag);
             #elif MC_VER > MC_1_20_4
-            LoreComponent loreComponent = new LoreComponent(texts);
-            stack.set(DataComponentTypes.LORE, loreComponent);
+            ItemLore loreComponent = new ItemLore(texts);
+            stack.set(DataComponents.LORE, loreComponent);
             #endif
         }
     }
 
     public static boolean canCombine(@NotNull ItemStack a, @NotNull ItemStack b) {
-        if (!a.isOf(b.getItem())) {
+        if (!a.is(b.getItem())) {
             return false;
         }
         if (a.isEmpty() && b.isEmpty()) {
@@ -116,18 +116,18 @@ public class ItemStackHelper {
             StringReader stringReader = new StringReader(itemString);
             try {
                 ItemStack stack;
-                ItemStackArgument itemStackArgument = ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
+                ItemInput itemStackArgument = ItemArgument.item(CommandHelper.getCommandRegistryAccess()).parse(stringReader);
                 stack = createItemStack(itemStackArgument);
                 return stack;
             } catch (CommandSyntaxException e) {
                 LogUtil.warn("Failed to parse the item string {} into an ItemStack instance, falling back to minecraft:barrier as the result ItemStack instance.", itemString);
-                return Items.BARRIER.getDefaultStack();
+                return Items.BARRIER.getDefaultInstance();
             }
 
         }
 
-        public static @NotNull ItemStack createItemStack(@NotNull ItemStackArgument itemStackArgument) throws CommandSyntaxException {
-            return itemStackArgument.createStack(1, false);
+        public static @NotNull ItemStack createItemStack(@NotNull ItemInput itemStackArgument) throws CommandSyntaxException {
+            return itemStackArgument.createItemStack(1, false);
         }
     }
 
@@ -155,7 +155,7 @@ public class ItemStackHelper {
 
         @SuppressWarnings("RedundantIfStatement")
         private static boolean filterItemName(@NotNull ItemStack itemStack, @NotNull String keyword) {
-            String itemName = TextHelper.Operators.getString(itemStack.getName());
+            String itemName = TextHelper.Operators.getString(itemStack.getHoverName());
             if (StringUtil.containsIgnoreCase(itemName, keyword)) return true;
 
             return false;
@@ -178,10 +178,10 @@ public class ItemStackHelper {
     public static class CustomData {
 
         @SuppressWarnings("unused")
-        public static void withCustomDataNbt(@NotNull ItemStack stack, @NotNull Consumer<NbtCompound> nbtConsumer) {
-            NbtCompound customDataNbt = getCustomDataNbt(stack);
+        public static void withCustomDataNbt(@NotNull ItemStack stack, @NotNull Consumer<CompoundTag> nbtConsumer) {
+            CompoundTag customDataNbt = getCustomDataNbt(stack);
             if (customDataNbt == null) {
-                customDataNbt = new NbtCompound();
+                customDataNbt = new CompoundTag();
             }
 
             nbtConsumer.accept(customDataNbt);
@@ -194,36 +194,36 @@ public class ItemStackHelper {
             For a NbtCompound, the data schema migration will be done automatically.
 
  **/
-        public static @Nullable NbtCompound getCustomDataNbt(@NotNull ItemStack stack) {
+        public static @Nullable CompoundTag getCustomDataNbt(@NotNull ItemStack stack) {
             #if MC_VER <= MC_1_20_4
             return stack.getNbt();
             #elif MC_VER > MC_1_20_4
-            NbtComponent nbtComponent = stack.get(DataComponentTypes.CUSTOM_DATA);
-            return nbtComponent == null ? null : nbtComponent.copyNbt();
+            net.minecraft.world.item.component.CustomData nbtComponent = stack.get(DataComponents.CUSTOM_DATA);
+            return nbtComponent == null ? null : nbtComponent.copyTag();
             #endif
         }
 
-        public static void setCustomDataNbt(@NotNull ItemStack stack, @NotNull NbtCompound newNbt) {
+        public static void setCustomDataNbt(@NotNull ItemStack stack, @NotNull CompoundTag newNbt) {
             #if MC_VER <= MC_1_20_4
             stack.setNbt(newNbt);
             #elif MC_VER > MC_1_20_4
-            stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(newNbt));
+            stack.set(DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.of(newNbt));
             #endif
         }
     }
 
     public static class Codec {
 
-        private static @NotNull NbtElement toNbtAllowEmpty(@NotNull ItemStack stack) {
+        private static @NotNull Tag toNbtAllowEmpty(@NotNull ItemStack stack) {
             /* Return empty NBT if item stack is empty. */
             if (stack.isEmpty()) {
-                return new NbtCompound();
+                return new CompoundTag();
             }
 
-            return Codec.toNbt(stack, new NbtCompound());
+            return Codec.toNbt(stack, new CompoundTag());
         }
 
-        private static @NotNull ItemStack fromNbtOrEmpty(@Nullable NbtCompound nbtCompound) {
+        private static @NotNull ItemStack fromNbtOrEmpty(@Nullable CompoundTag nbtCompound) {
             /* Return empty item stack if NBT is empty. */
             if (nbtCompound == null || nbtCompound.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -233,15 +233,15 @@ public class ItemStackHelper {
                 .orElse(ItemStack.EMPTY);
         }
 
-        public static NbtList writeSlotsNode(@NotNull NbtList node, @NotNull List<ItemStack> stackList) {
+        public static ListTag writeSlotsNode(@NotNull ListTag node, @NotNull List<ItemStack> stackList) {
             stackList.forEach(itemStack -> {
-                NbtElement nbtAllowEmpty = toNbtAllowEmpty(itemStack);
+                Tag nbtAllowEmpty = toNbtAllowEmpty(itemStack);
                 node.add(nbtAllowEmpty);
             });
             return node;
         }
 
-        public static @NotNull List<ItemStack> readSlotsNode(@Nullable NbtList node) {
+        public static @NotNull List<ItemStack> readSlotsNode(@Nullable ListTag node) {
             /* Return empty list. */
             if (node == null) {
                 return new ArrayList<>();
@@ -250,18 +250,18 @@ public class ItemStackHelper {
             /* Map the NBT to ItemStack. */
             List<ItemStack> ret = new ArrayList<>();
             for (int i = 0; i < node.size(); i++) {
-                NbtCompound nbtCompound = NbtHelper.Primitives
+                CompoundTag nbtCompound = NbtHelper.Primitives
                     .getCompound(node, i)
                     .orElseGet(() -> {
                         LogUtil.warn("Failed to read an item stack from slots node: nbtList = {}", node);
-                        return new NbtCompound();
+                        return new CompoundTag();
                     });
                 ret.add(fromNbtOrEmpty(nbtCompound));
             }
             return ret;
         }
 
-        public static NbtElement toNbt(@NotNull ItemStack stack, @NotNull NbtElement nbtElement) {
+        public static Tag toNbt(@NotNull ItemStack stack, @NotNull Tag nbtElement) {
             if (stack.isEmpty()) {
                 throw new IllegalStateException("Cannot encode empty ItemStack");
             }
@@ -272,13 +272,13 @@ public class ItemStackHelper {
                 .getOrThrow(true, string -> LogUtil.debug("Failed to encode item: {}", string));
             #elif MC_VER > MC_1_20_4
             return ItemStack.CODEC
-                .encode(stack, RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
+                .encode(stack, RegistryHelper.getDefaultWrapperLookup().createSerializationContext(NbtOps.INSTANCE), nbtElement)
                 .getOrThrow();
             #endif
 
         }
 
-        public static Optional<ItemStack> fromNbt(@NotNull NbtElement nbtElement) {
+        public static Optional<ItemStack> fromNbt(@NotNull Tag nbtElement) {
             #if MC_VER <= MC_1_20_4
             return ItemStack.CODEC
                 .decode(NbtOps.INSTANCE, nbtElement)
@@ -286,7 +286,7 @@ public class ItemStackHelper {
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
             #elif MC_VER > MC_1_20_4
             return ItemStack.CODEC
-                .decode(RegistryHelper.getDefaultWrapperLookup().getOps(NbtOps.INSTANCE), nbtElement)
+                .decode(RegistryHelper.getDefaultWrapperLookup().createSerializationContext(NbtOps.INSTANCE), nbtElement)
                 .map(Pair::getFirst)
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
             #endif

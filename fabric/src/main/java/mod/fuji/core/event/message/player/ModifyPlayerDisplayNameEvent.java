@@ -4,8 +4,8 @@ import mod.fuji.core.event.message.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 @AllArgsConstructor
 public class ModifyPlayerDisplayNameEvent extends BaseEvent {
 
-    @NotNull PlayerEntity player;
-    @Nullable Text text;
+    @NotNull Player player;
+    @Nullable Component text;
 
 }

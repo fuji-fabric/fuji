@@ -8,14 +8,14 @@ import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class BedInitializer extends ModuleInitializer {
 
     @Document(id = 1751825169906L, value = "Teleport to the bed location.")
     @CommandNode("bed")
-    private static int $bed(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $bed(@CommandSource @CommandTarget ServerPlayer player) {
         return WorldHelper.SpawnPos
             .getPlayerSpawnPos(player)
             .map(playerSpawnPos -> {

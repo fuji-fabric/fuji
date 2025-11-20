@@ -9,9 +9,9 @@ import java.util.function.Function;
 import mod.fuji.Fuji;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,48 +33,48 @@ public class PlaceholderHelper {
         return List.of(split);
     }
 
-    public static Text makeInvalidArgsErrorText() {
+    public static Component makeInvalidArgsErrorText() {
         return PlaceholderResult.invalid(INVALID_ARGS_ERROR_REASON).text();
     }
 
     @SuppressWarnings("resource")
-    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<MinecraftServer, String, Text> function) {
+    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<MinecraftServer, String, Component> function) {
         PlaceholderHandler placeholderHandler = (ctx, args) -> {
             // NOTE: The `args` should be verified by the placeholder itself.
             if (ctx.server() == null) {
                 return PlaceholderResult.invalid(PlaceholderHelper.NO_SERVER_ERROR_REASON);
             }
-            Text resultText = function.apply(ctx.server(), args);
+            Component resultText = function.apply(ctx.server(), args);
             return PlaceholderResult.value(resultText);
         };
 
         String placeholderName = descriptor.getString();
-        Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
-    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<ServerPlayerEntity, String, Text> function) {
+    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<ServerPlayer, String, Component> function) {
         PlaceholderHandler placeholderHandler = (ctx, args) -> {
             if (ctx.player() == null) {
                 return PlaceholderResult.invalid(NO_PLAYER_ERROR_REASON);
             }
-            Text resultText = function.apply(ctx.player(), args);
+            Component resultText = function.apply(ctx.player(), args);
             return PlaceholderResult.value(resultText);
         };
 
         String placeholderName = descriptor.getString();
-        Placeholders.register(Identifier.of(Fuji.MOD_ID, placeholderName), placeholderHandler);
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, placeholderName), placeholderHandler);
     }
 
-    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<MinecraftServer, Text> function) {
+    public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<MinecraftServer, Component> function) {
         registerServerPlaceholder(descriptor, (server, args) -> function.apply(server));
     }
 
-    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<ServerPlayerEntity, Text> function) {
+    public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<ServerPlayer, Component> function) {
         registerPlayerPlaceholder(descriptor, (player, args) -> function.apply(player));
     }
 
-    public static @NotNull String parsePlaceholderString(@NotNull ServerPlayerEntity player, @NotNull String placeholderString) {
-        Text text = TextHelper.getTextByValue(player, placeholderString);
+    public static @NotNull String parsePlaceholderString(@NotNull ServerPlayer player, @NotNull String placeholderString) {
+        Component text = TextHelper.getTextByValue(player, placeholderString);
         placeholderString = TextHelper.Operators.getString(text);
         return placeholderString;
     }

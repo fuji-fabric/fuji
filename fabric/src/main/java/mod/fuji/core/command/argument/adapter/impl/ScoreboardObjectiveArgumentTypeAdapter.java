@@ -6,9 +6,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.ScoreboardObjectiveArgumentType;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.ObjectiveArgument;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -17,18 +17,18 @@ public class ScoreboardObjectiveArgumentTypeAdapter extends BaseArgumentTypeAdap
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ScoreboardObjectiveArgumentType.scoreboardObjective();
+        return ObjectiveArgument.objective();
     }
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ScoreboardObjectiveArgumentType.getObjective(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ObjectiveArgument.getObjective(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(ScoreboardObjective.class);
+        return List.of(Objective.class);
     }
 
     @Override

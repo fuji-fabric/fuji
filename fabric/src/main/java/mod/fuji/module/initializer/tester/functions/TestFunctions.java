@@ -2,31 +2,31 @@ package mod.fuji.module.initializer.tester.functions;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class TestFunctions {
-    public static void testTextReplacement(ServerPlayerEntity player) {
+    public static void testTextReplacement(ServerPlayer player) {
         /* make */
-        MutableText root = Text.empty();
+        MutableComponent root = Component.empty();
 
-        MutableText first = Text.literal("first").formatted(Formatting.RED);
+        MutableComponent first = Component.literal("first").withStyle(ChatFormatting.RED);
         root.append(first);
 
-        MutableText first_first = Text.literal("second").formatted(Formatting.GREEN);
+        MutableComponent first_first = Component.literal("second").withStyle(ChatFormatting.GREEN);
         first.append(first_first);
 
-        MutableText first_second = Text.literal("third");
+        MutableComponent first_second = Component.literal("third");
         first.append(first_second);
 
         /* replace */
         LogUtil.debug("before = {}", root);
-        player.sendMessage(root);
+        player.sendSystemMessage(root);
 
-        MutableText after = TextHelper.Replacer.replaceTextWithRegex(root, "hi", (matcher) -> Text.literal("{replacement}"));
+        MutableComponent after = TextHelper.Replacer.replaceTextWithRegex(root, "hi", (matcher) -> Component.literal("{replacement}"));
         LogUtil.debug("after = {}", after);
-        player.sendMessage(after);
+        player.sendSystemMessage(after);
     }
 }

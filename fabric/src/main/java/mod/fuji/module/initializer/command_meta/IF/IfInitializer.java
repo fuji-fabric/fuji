@@ -17,7 +17,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import mod.fuji.module.initializer.command_meta.IF.argument.wrapper.IfGreedyCommandString;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1753515891751L, value = """
     This module provides a simple `/IF` command.
@@ -144,7 +144,7 @@ public class IfInitializer extends ModuleInitializer {
     private static final String THEN_LITERAL = "THEN";
     private static final String ELSE_LITERAL = "ELSE";
 
-    private static void checkAmbiguity(ServerCommandSource source, String conditionCommand, String thenCommand, String elseCommand) {
+    private static void checkAmbiguity(CommandSourceStack source, String conditionCommand, String thenCommand, String elseCommand) {
         if (conditionCommand.contains(THEN_LITERAL) || conditionCommand.contains(ELSE_LITERAL)) {
             TextHelper.sendTextByKey(source, "if.matcher.ambiguity");
             throw new AbortCommandExecutionException();
@@ -163,7 +163,7 @@ public class IfInitializer extends ModuleInitializer {
 
     @CommandNode("IF")
     @CommandRequirement(level = 4)
-    private static int $if(@CommandSource ServerCommandSource source, IfGreedyCommandString rest) {
+    private static int $if(@CommandSource CommandSourceStack source, IfGreedyCommandString rest) {
         String $rest = rest.getValue();
 
         Matcher matcher = IF_COMMAND_PARSER.matcher($rest);

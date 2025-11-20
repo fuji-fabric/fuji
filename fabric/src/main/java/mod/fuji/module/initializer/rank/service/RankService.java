@@ -22,12 +22,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,14 +68,14 @@ public class RankService {
         return findRankNode(startingRankNodeId);
     }
 
-    public static List<RankNode> getAvailableStartingRankNodes(@Nullable ServerPlayerEntity player) {
+    public static List<RankNode> getAvailableStartingRankNodes(@Nullable ServerPlayer player) {
         ArrayList<RankNode> result = new ArrayList<>();
 
         /* Get available starting rank nodes from permission. */
         if (player != null) {
             List<RankNode> A = getAllRankNodes()
                 .stream()
-                .filter(it -> LuckpermsHelper.hasPermission(player.getUuid(), RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR, it.getId()))
+                .filter(it -> LuckpermsHelper.hasPermission(player.getUUID(), RANK_STARTING_RANK_NODE_PERMISSION_DESCRIPTOR, it.getId()))
                 .toList();
             result.addAll(A);
         }
@@ -89,8 +89,8 @@ public class RankService {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public static boolean canMoveTo(@NotNull ServerPlayerEntity player, @NotNull RankNode rankNode) {
-        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
+    public static boolean canMoveTo(@NotNull ServerPlayer player, @NotNull RankNode rankNode) {
+        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.createCommandSourceStack());
         boolean canMoveTo = rankNode
             .getRequirements()
             .stream()
@@ -105,7 +105,7 @@ public class RankService {
             .allMatch(command -> CommandHelper.Return.isSuccess(CommandExecutor.executeSingle(source, command)));
     }
 
-    public static void tryMoveTo(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
+    public static void tryMoveTo(@NotNull ServerPlayer player, @Nullable RankNode newRankNode) {
         /* Check requirements if new rank node is not null. */
         if (newRankNode != null) {
             if (canMoveTo(player, newRankNode)) {
@@ -113,15 +113,15 @@ public class RankService {
                 TextHelper.sendTextByKey(player, "rank.up", newRankNode.getDisplayName());
             } else {
                 TextHelper.sendTextByKey(player, "rank.up.requirements_not_meet", newRankNode.getDisplayName());
-                sendRankNodeRequirements(player.getCommandSource(), newRankNode);
+                sendRankNodeRequirements(player.createCommandSourceStack(), newRankNode);
             }
         } else {
             moveTo(player, null);
         }
     }
 
-    public static void moveTo(@NotNull ServerPlayerEntity player, @Nullable RankNode newRankNode) {
-        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.getCommandSource());
+    public static void moveTo(@NotNull ServerPlayer player, @Nullable RankNode newRankNode) {
+        ExtendedCommandSource source = ExtendedCommandSource.asConsole(player.createCommandSourceStack());
 
         /* Execute the leave commands for previous rank node. */
         Optional<RankNode> previousRankNode = getCurrentRankNode(player);
@@ -154,14 +154,14 @@ public class RankService {
 
     }
 
-    public static Optional<RankNode> getCurrentRankNode(@NotNull ServerPlayerEntity player) {
+    public static Optional<RankNode> getCurrentRankNode(@NotNull ServerPlayer player) {
         return withRankDataNode(player, false, rankDataNode -> {
             @Nullable String currentRankNodeId = rankDataNode.getCurrentRankNodeId();
             return findRankNode(currentRankNodeId);
         });
     }
 
-    private static <T> T withRankDataNode(@NotNull ServerPlayerEntity player, boolean writeStorage, Function<RankDataNode, T> function) {
+    private static <T> T withRankDataNode(@NotNull ServerPlayer player, boolean writeStorage, Function<RankDataNode, T> function) {
         String playerName = PlayerHelper.getPlayerName(player);
         RankDataNode rankDataNode = RankInitializer.data.model()
             .getRankDataNodeMap()
@@ -174,21 +174,21 @@ public class RankService {
         return apply;
     }
 
-    public static Text getNoRankStatusText() {
+    public static Component getNoRankStatusText() {
         return TextHelper.getTextByValue(null, RankInitializer.config.model().getNoRankStatusText());
     }
 
-    public static List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayerEntity player) {
+    public static List<RankNode> getNextAvailableRankNodes(@NotNull ServerPlayer player) {
         return getNextAvailableRankNodes(player, getCurrentRankNode(player));
     }
 
-    public static @NotNull List<RankNode> getNextAvailableRankNodes(@Nullable ServerPlayerEntity player, Optional<RankNode> currentRankNode) {
+    public static @NotNull List<RankNode> getNextAvailableRankNodes(@Nullable ServerPlayer player, Optional<RankNode> currentRankNode) {
         return currentRankNode
             .map(NEXT_RANK_NODES_MAP::get)
             .orElseGet(() -> getAvailableStartingRankNodes(player));
     }
 
-    public static List<RankNode> getPreviousAvailableRankNodes(@NotNull ServerPlayerEntity player) {
+    public static List<RankNode> getPreviousAvailableRankNodes(@NotNull ServerPlayer player) {
         return getCurrentRankNode(player)
             .map(currentRankNode -> {
                 Set<String> walkedRankNodeIds = getWalkedRankNodeIds(player);
@@ -201,7 +201,7 @@ public class RankService {
             .orElseGet(List::of);
     }
 
-    public static Set<String> getWalkedRankNodeIds(@NotNull ServerPlayerEntity player) {
+    public static Set<String> getWalkedRankNodeIds(@NotNull ServerPlayer player) {
         return withRankDataNode(player, false, RankDataNode::getWalkedRankNodeIds);
     }
 
@@ -233,7 +233,7 @@ public class RankService {
             .toList();
     }
 
-    public static void sendRankNodeInfo(@NotNull ServerCommandSource source, @NotNull RankNode rankNode, boolean displayRequirements) {
+    public static void sendRankNodeInfo(@NotNull CommandSourceStack source, @NotNull RankNode rankNode, boolean displayRequirements) {
         /* Send basic info for the rank node. */
         TextHelper.sendTextByKey(source, "rank.info.header");
         TextHelper.sendTextByKey(source, "rank.rank_node.id", rankNode.getId());
@@ -257,17 +257,17 @@ public class RankService {
         List<RankNode> nextRankNodes = getNextAvailableRankNodes(null, Optional.of(rankNode));
         if (!nextRankNodes.isEmpty()) {
             TextHelper.sendTextByKey(source, "rank.info.next_ranks");
-            MutableText textBuilder = Text.empty();
+            MutableComponent textBuilder = Component.empty();
             nextRankNodes
                 .forEach(nextRankNode -> {
                     String value = "<grey>[</grey>%s<grey>]</grey>".formatted(nextRankNode.getDisplayName());
-                    MutableText singleText = TextHelper.getTextByValue(source, value).copy();
+                    MutableComponent singleText = TextHelper.getTextByValue(source, value).copy();
                     ClickEvent clickEvent = CommandCallbackManager.makeCallbackClickEvent((player) -> {
                         sendRankNodeInfo(source, nextRankNode, true);
                     }, 5, TimeUnit.MINUTES);
-                    Text hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
+                    Component hoverText = TextHelper.getTextByKey(source, "prompt.click.see_it.any");
                     singleText
-                        .fillStyle(Style.EMPTY
+                        .withStyle(Style.EMPTY
                             .withClickEvent(clickEvent)
                             .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
 
@@ -280,7 +280,7 @@ public class RankService {
         }
     }
 
-    public static void sendRankNodeRequirements(@NotNull ServerCommandSource source, @NotNull RankNode rankNode) {
+    public static void sendRankNodeRequirements(@NotNull CommandSourceStack source, @NotNull RankNode rankNode) {
         TextHelper.sendTextByKey(source, "rank.rank_node.requirements");
         List<RankRequirement> requirements = rankNode.getRequirements();
         if (requirements.isEmpty()) {

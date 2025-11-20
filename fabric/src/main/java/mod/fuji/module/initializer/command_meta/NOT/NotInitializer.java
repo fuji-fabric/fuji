@@ -10,7 +10,7 @@ import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1756136221326L, value = """
     Provides a `/NOT <command>` command.
@@ -31,7 +31,7 @@ public class NotInitializer extends ModuleInitializer {
     @Document(id = 1756136578216L, value = "Execute the command as the console, and reverse the return values of `SUCCESS` and `FAILURE`.")
     @CommandNode("NOT")
     @CommandRequirement(level = 4)
-    private static int $not(@CommandSource ServerCommandSource source, GreedyCommandString command) {
+    private static int $not(@CommandSource CommandSourceStack source, GreedyCommandString command) {
         int commandReturnValue = CommandExecutor.executeSingle(ExtendedCommandSource.fromSource(source), command.getValue());
 
         if (CommandHelper.Return.isSuccess(commandReturnValue)) {

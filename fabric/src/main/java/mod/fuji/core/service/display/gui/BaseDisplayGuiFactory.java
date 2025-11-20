@@ -9,24 +9,23 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.TestCase;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseDisplayGuiFactory {
 
-    protected final Text title;
+    protected final Component title;
     protected static final int LINE_SIZE = 9;
 
-    protected BaseDisplayGuiFactory(@NotNull Text title) {
+    protected BaseDisplayGuiFactory(@NotNull Component title) {
         this.title = title;
     }
 
-    protected BaseDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer) {
+    protected BaseDisplayGuiFactory(@NotNull ServerPlayer sourcePlayer) {
         this(TextHelper.getTextByKey(sourcePlayer, "display.gui.title", PlayerHelper.getPlayerName(sourcePlayer)));
     }
 
@@ -44,7 +43,7 @@ public abstract class BaseDisplayGuiFactory {
         gui.setSlot(slotIndex, guiElementBuilder.build());
     }
 
-    public abstract SimpleGui build(ServerPlayerEntity viewingPlayer);
+    public abstract SimpleGui build(ServerPlayer viewingPlayer);
 
     public static boolean isShulkerBox(@NotNull ItemStack itemStack) {
         return itemStack.getItem() instanceof BlockItem bi
@@ -52,9 +51,9 @@ public abstract class BaseDisplayGuiFactory {
     }
 
     @TestCase(action = "Create an inventory display that contains a shulker box.", targets = "See if we can go inside the shulker box.")
-    public record SlotClickForDeeperDisplayCallback(@NotNull SimpleGui parentGui, @NotNull ServerPlayerEntity viewingPlayer) implements GuiElementInterface.ClickCallback {
+    public record SlotClickForDeeperDisplayCallback(@NotNull SimpleGui parentGui, @NotNull ServerPlayer viewingPlayer) implements GuiElementInterface.ClickCallback {
         @Override
-        public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
+        public void click(int i, ClickType clickType, net.minecraft.world.inventory.ClickType clickType1, SlotGuiInterface slotGuiInterface) {
             GuiElementInterface slot = slotGuiInterface.getSlot(i);
             if (slot == null) {
                 LogUtil.error("A slot in display GUI is null.");

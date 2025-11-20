@@ -16,8 +16,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class LeaderBoardService {
@@ -86,7 +86,7 @@ public class LeaderBoardService {
             .forEach(LeaderBoardService::updateLeaderBoard);
     }
 
-    public static void updateLeaderBoard(ServerPlayerEntity player) {
+    public static void updateLeaderBoard(ServerPlayer player) {
         LogUtil.debug("Update leaderboards for player {}.", PlayerHelper.getPlayerName(player));
         getLeaderBoardDescriptors()
             .forEach(descriptor -> updateLeaderBoard(descriptor, player));
@@ -94,7 +94,7 @@ public class LeaderBoardService {
         LeaderBoardInitializer.data.writeStorage();
     }
 
-    public static void updateLeaderBoard(LeaderBoardDescriptor leaderBoardDescriptor, ServerPlayerEntity player) {
+    public static void updateLeaderBoard(LeaderBoardDescriptor leaderBoardDescriptor, ServerPlayer player) {
         String leaderboardId = leaderBoardDescriptor.getLeaderboardId();
         String playerName = PlayerHelper.getPlayerName(player);
         LogUtil.debug("Update leaderboard {} for player {}.", leaderboardId, playerName);
@@ -117,11 +117,11 @@ public class LeaderBoardService {
         });
     }
 
-    public static Text getNonePlayerText() {
+    public static Component getNonePlayerText() {
         return TextHelper.getTextByValue(null, LeaderBoardInitializer.config.model().getLeaderboardNoPlayerText());
     }
 
-    public static Text getNoScoreText() {
+    public static Component getNoScoreText() {
         return TextHelper.getTextByValue(null, LeaderBoardInitializer.config.model().getLeaderboardNoScoreText());
     }
 

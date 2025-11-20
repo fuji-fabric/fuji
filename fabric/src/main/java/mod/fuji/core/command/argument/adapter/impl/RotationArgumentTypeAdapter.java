@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.PosArgument;
-import net.minecraft.command.argument.RotationArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
+import net.minecraft.commands.arguments.coordinates.RotationArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -15,17 +15,17 @@ public class RotationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return RotationArgumentType.rotation();
+        return RotationArgument.rotation();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return RotationArgumentType.getRotation(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return RotationArgument.getRotation(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(PosArgument.class);
+        return List.of(Coordinates.class);
     }
 
     @Override

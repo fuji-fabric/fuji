@@ -11,14 +11,14 @@ import mod.fuji.core.document.annotation.TestCase;
 import java.lang.reflect.Method;
 import java.util.List;
 import lombok.SneakyThrows;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class AliasCommandDescriptor extends CommandDescriptor {
 
-    final CommandNode<ServerCommandSource> redirectTargetCommandNode;
+    final CommandNode<CommandSourceStack> redirectTargetCommandNode;
 
-    public AliasCommandDescriptor(@NotNull List<CommandArgument> commandArguments, @NotNull CommandNode<ServerCommandSource> redirectTargetCommandNode) {
+    public AliasCommandDescriptor(@NotNull List<CommandArgument> commandArguments, @NotNull CommandNode<CommandSourceStack> redirectTargetCommandNode) {
         super(getDummyMethod(), commandArguments);
         this.redirectTargetCommandNode = redirectTargetCommandNode;
     }
@@ -34,7 +34,7 @@ public class AliasCommandDescriptor extends CommandDescriptor {
         "The duplicated command redirect: `/wb -> /wb -> /wb`"
     })
     @Override
-    protected @NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<ServerCommandSource, ?> terminalArgumentBuilder) {
+    protected @NotNull ArgumentBuilder<CommandSourceStack, ?> terminalArgumentDecorator(@NotNull ArgumentBuilder<CommandSourceStack, ?> terminalArgumentBuilder) {
         return terminalArgumentBuilder
             // NOTE: The execute() handles the literal node to literal node case.
             .executes(this.redirectTargetCommandNode.getCommand())

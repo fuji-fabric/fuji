@@ -9,7 +9,7 @@ import mod.fuji.module.initializer.world.manager.command.argument.wrapper.WorldP
 import java.util.Optional;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,7 +107,7 @@ public class RuntimeDimensionDescriptor {
         return WorldPresetType.DEBUG_ALL_BLOCK_STATES == this.worldPresetType;
     }
 
-    public Optional<ServerWorld> getLoadedWorld() {
+    public Optional<ServerLevel> getLoadedWorld() {
         return WorldHelper.getWorld(this.dimension);
     }
 }

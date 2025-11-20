@@ -28,10 +28,10 @@ import mod.fuji.module.initializer.command_permission.service.CommandPermissionS
 import mod.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
 import java.util.Comparator;
 import java.util.List;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 @Cite("https://github.com/DrexHD/VanillaPermissions")
@@ -165,7 +165,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     @CommandNode("gui")
     @Document(id = 1751826777672L, value = "Open the command permission gui.")
-    public static int $gui(@CommandSource ServerPlayerEntity player) {
+    public static int $gui(@CommandSource ServerPlayer player) {
         List<CommandNodePermissionWrapper> entities = CommandHelper.Tree.getAllCommandNodes().stream()
             .map(CommandNodePermissionWrapper::new)
             .sorted(Comparator.comparing(CommandNodePermissionWrapper::getPath))
@@ -177,7 +177,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
 
     @Document(id = 1751826779531L, value = "Toggle the command permission verbose mode.")
     @CommandNode("verbose")
-    public static int $verbose(@CommandSource ServerCommandSource source) {
+    public static int $verbose(@CommandSource CommandSourceStack source) {
         CommandPermissionService.verboseModeFlag = !CommandPermissionService.verboseModeFlag;
 
         TextHelper.sendTextByKey(source, CommandPermissionService.verboseModeFlag ? "command_permission.verbose.on" : "command_permission.verbose.off");
@@ -187,21 +187,21 @@ public class CommandPermissionInitializer extends ModuleInitializer {
     @Document(id = 1751826781243L, value = "Describe the `required permissions` of `the given command`.")
     @CommandNode("describe")
     @SuppressWarnings("SameReturnValue")
-    public static int $describe(@CommandSource ServerCommandSource source, GreedyCommandString command) {
+    public static int $describe(@CommandSource CommandSourceStack source, GreedyCommandString command) {
         /* Parse the command string to get the command context. */
         String $command = command.getValue();
-        ParseResults<ServerCommandSource> parseResults = CommandHelper
+        ParseResults<CommandSourceStack> parseResults = CommandHelper
             .getCommandDispatcher()
             // NOTE: The `parse result` depends on the `command source`.
             .parse($command, source);
-        CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
+        CommandContextBuilder<CommandSourceStack> context = parseResults.getContext();
 
         /* Describe the command string. */
         String commandString = TextHelper.Parsers.escapeTags(parseResults.getReader().getString());
         TextHelper.sendTextByKey(source, "command_permission.describe.command_string", commandString);
 
         /* Check if there is early exceptions. */
-        @Nullable CommandSyntaxException earlyException = CommandManager.getException(parseResults);
+        @Nullable CommandSyntaxException earlyException = Commands.getParseException(parseResults);
         if (earlyException != null) {
             TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.exceptions");
             TextHelper.sendTextByKey(source, "command_permission.describe.command_string.parser.early_exception", earlyException);
@@ -223,7 +223,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         }
 
         /* Describe the command nodes. */
-        List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
+        List<ParsedCommandNode<CommandSourceStack>> nodes = context.getNodes();
         List<String> nodesName = nodes.stream().map(it -> it.getNode().getName()).toList();
         TextHelper.sendTextByKey(source, "command_permission.describe.command_node.nodes", nodesName);
 
@@ -253,7 +253,7 @@ public class CommandPermissionInitializer extends ModuleInitializer {
         });
 
         /* Newline. */
-        TextHelper.sendMessageByText(source, Text.empty());
+        TextHelper.sendMessageByText(source, Component.empty());
         return CommandHelper.Return.SUCCESS;
     }
 

@@ -16,8 +16,8 @@ import mod.fuji.module.initializer.nametag.config.model.NametagConfigModel;
 import mod.fuji.module.initializer.nametag.config.model.NametagDataModel;
 import mod.fuji.module.initializer.nametag.service.NametagService;
 import mod.fuji.module.initializer.nametag.structure.NametagPlayerPreferences;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751825018627L, value = """
     Customize the nametag above the players.
@@ -78,7 +78,7 @@ public class NametagInitializer extends ModuleInitializer {
 
     @CommandNode("nametag toggle")
     @CommandRequirement(level = 4)
-    private static int $toggle(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target) {
+    private static int $toggle(@CommandSource CommandSourceStack source, @CommandTarget ServerPlayer target) {
         NametagPlayerPreferences preferences = NametagService.getOrCreateNametagPlayerPreferences(target);
         boolean flag = !preferences.isEnableNametagEntity();
         return $toggle(source, target, flag);
@@ -86,7 +86,7 @@ public class NametagInitializer extends ModuleInitializer {
 
     @CommandNode("nametag toggle")
     @CommandRequirement(level = 4)
-    private static int $toggle(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target, boolean flag) {
+    private static int $toggle(@CommandSource CommandSourceStack source, @CommandTarget ServerPlayer target, boolean flag) {
         NametagPlayerPreferences preferences = NametagService.getOrCreateNametagPlayerPreferences(target);
         preferences.setEnableNametagEntity(flag);
         data.writeStorage();

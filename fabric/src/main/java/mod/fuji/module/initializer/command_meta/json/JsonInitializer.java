@@ -16,8 +16,8 @@ import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_meta.json.command.argument.wrapper.JsonValueType;
 import lombok.SneakyThrows;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -67,17 +67,17 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("read")
-    private static int $read(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
+    private static int $read(@CommandSource CommandContext<CommandSourceStack> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             Object read = documentContext.read(jsonPath);
-            TextHelper.sendMessageByText(ctx.getSource(), Text.literal(read.toString()));
+            TextHelper.sendMessageByText(ctx.getSource(), Component.literal(read.toString()));
             return false;
         });
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("write")
-    private static int $write(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, JsonValueType valueType, GreedyString value) {
+    private static int $write(@CommandSource CommandContext<CommandSourceStack> ctx, String filePath, String jsonPath, JsonValueType valueType, GreedyString value) {
         operateJson(filePath, (documentContext, path) -> {
             Object obj = valueType.parse(value.getValue());
             documentContext.set(jsonPath, obj);
@@ -87,7 +87,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("delete")
-    private static int $delete(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath) {
+    private static int $delete(@CommandSource CommandContext<CommandSourceStack> ctx, String filePath, String jsonPath) {
         operateJson(filePath, (documentContext, path) -> {
             documentContext.delete(jsonPath);
             return true;
@@ -96,7 +96,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("put")
-    private static int $put(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String jsonKey, JsonValueType valueType, GreedyString value) {
+    private static int $put(@CommandSource CommandContext<CommandSourceStack> ctx, String filePath, String jsonPath, String jsonKey, JsonValueType valueType, GreedyString value) {
         operateJson(filePath, (documentContext, path) -> {
             Object obj = valueType.parse(value.getValue());
             documentContext.put(jsonPath, jsonKey, obj);
@@ -106,7 +106,7 @@ public class JsonInitializer extends ModuleInitializer {
     }
 
     @CommandNode("renameKey")
-    private static int $renameKey(@CommandSource CommandContext<ServerCommandSource> ctx, String filePath, String jsonPath, String oldJsonKey, String newJsonKey) {
+    private static int $renameKey(@CommandSource CommandContext<CommandSourceStack> ctx, String filePath, String jsonPath, String oldJsonKey, String newJsonKey) {
         operateJson(filePath, (documentContext, path) -> {
             documentContext.renameKey(jsonPath, oldJsonKey, newJsonKey);
             return true;

@@ -2,59 +2,59 @@
 # You should write the AW entries directly, and ignore the AW file headers.
 
 # core
-accessible class net/minecraft/util/UserCache$Entry
-accessible field net/minecraft/util/UserCache byName Ljava/util/Map;
-accessible field net/minecraft/server/command/ServerCommandSource silent Z
-accessible field net/minecraft/entity/Entity pos Lnet/minecraft/util/math/Vec3d;
+accessible class net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo
+accessible field net/minecraft/server/players/CachedUserNameToIdResolver profilesByName Ljava/util/Map;
+accessible field net/minecraft/commands/CommandSourceStack silent Z
+accessible field net/minecraft/world/entity/Entity position Lnet/minecraft/world/phys/Vec3;
 
 # common economy api
-accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
 
 # rtp
-accessible method net/minecraft/server/world/ServerChunkManager getChunkFuture (IILnet/minecraft/world/chunk/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
+accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMainThread (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
 
 # temp ban
-accessible method net/minecraft/server/ServerConfigList removeInvalidEntries ()V
+accessible method net/minecraft/server/players/StoredUserList removeExpired ()V
 
 # nametag
-accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT Lnet/minecraft/entity/data/TrackedData;
-accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setText (Lnet/minecraft/text/Text;)V
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_TEXT_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V
 
-accessible method net/minecraft/entity/decoration/DisplayEntity setBillboardMode (Lnet/minecraft/entity/decoration/DisplayEntity$BillboardMode;)V
-accessible field net/minecraft/entity/decoration/DisplayEntity$BillboardMode CENTER Lnet/minecraft/entity/decoration/DisplayEntity$BillboardMode;
+accessible method net/minecraft/world/entity/Display setBillboardConstraints (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V
+accessible field net/minecraft/world/entity/Display$BillboardConstraints CENTER Lnet/minecraft/world/entity/Display$BillboardConstraints;
 
-accessible field net/minecraft/entity/decoration/DisplayEntity TRANSLATION Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/world/entity/Display DATA_TRANSLATION_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
 
-accessible method net/minecraft/entity/decoration/DisplayEntity setDisplayWidth (F)V
-accessible method net/minecraft/entity/decoration/DisplayEntity setDisplayHeight (F)V
+accessible method net/minecraft/world/entity/Display setWidth (F)V
+accessible method net/minecraft/world/entity/Display setHeight (F)V
 
-accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setBackground (I)V
-accessible method net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity setTextOpacity (B)V
+accessible method net/minecraft/world/entity/Display$TextDisplay setBackgroundColor (I)V
+accessible method net/minecraft/world/entity/Display$TextDisplay setTextOpacity (B)V
 
-accessible field net/minecraft/entity/decoration/DisplayEntity SCALE Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
 
-accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT_DISPLAY_FLAGS Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_STYLE_FLAGS_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
 
-accessible method net/minecraft/entity/decoration/DisplayEntity setShadowRadius (F)V
-accessible method net/minecraft/entity/decoration/DisplayEntity setShadowStrength (F)V
+accessible method net/minecraft/world/entity/Display setShadowRadius (F)V
+accessible method net/minecraft/world/entity/Display setShadowStrength (F)V
 
-accessible method net/minecraft/entity/decoration/DisplayEntity setViewRange (F)V
-accessible method net/minecraft/entity/decoration/DisplayEntity setBrightness (Lnet/minecraft/entity/decoration/Brightness;)V
+accessible method net/minecraft/world/entity/Display setViewRange (F)V
+accessible method net/minecraft/world/entity/Display setBrightnessOverride (Lnet/minecraft/util/Brightness;)V
 
-accessible field net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket passengerIds [I
-accessible method net/minecraft/network/packet/s2c/play/EntityPassengersSetS2CPacket <init> (Lnet/minecraft/network/PacketByteBuf;)V
+accessible field net/minecraft/network/protocol/game/ClientboundSetPassengersPacket passengers [I
+accessible method net/minecraft/network/protocol/game/ClientboundSetPassengersPacket <init> (Lnet/minecraft/network/FriendlyByteBuf;)V
 
 # view
-accessible method net/minecraft/server/PlayerManager savePlayerData (Lnet/minecraft/server/network/ServerPlayerEntity;)V
+accessible method net/minecraft/server/players/PlayerList save (Lnet/minecraft/server/level/ServerPlayer;)V
 
 # send-chat
-accessible method net/minecraft/server/network/ServerPlayNetworkHandler handleDecoratedMessage (Lnet/minecraft/network/message/SignedMessage;)V
+accessible method net/minecraft/server/network/ServerGamePacketListenerImpl broadcastChatMessage (Lnet/minecraft/network/chat/PlayerChatMessage;)V
 
 # world
-accessible field net/minecraft/registry/entry/RegistryEntry$Reference value Ljava/lang/Object;
-accessible field net/minecraft/server/MinecraftServer worlds Ljava/util/Map;
-accessible field net/minecraft/server/MinecraftServer session Lnet/minecraft/world/level/storage/LevelStorage$Session;
-accessible field net/minecraft/world/GameRules$IntRule value I
-accessible field net/minecraft/world/GameRules RULE_TYPES Ljava/util/Map;
-accessible field net/minecraft/world/GameRules rules Ljava/util/Map;
-accessible method net/minecraft/world/border/WorldBorder$Properties <init> (DDDDIIDJD)V
+accessible field net/minecraft/core/Holder$Reference value Ljava/lang/Object;
+accessible field net/minecraft/server/MinecraftServer levels Ljava/util/Map;
+accessible field net/minecraft/server/MinecraftServer storageSource Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;
+accessible field net/minecraft/world/level/GameRules$IntegerValue value I
+accessible field net/minecraft/world/level/GameRules GAME_RULE_TYPES Ljava/util/Map;
+accessible field net/minecraft/world/level/GameRules rules Ljava/util/Map;
+accessible method net/minecraft/world/level/border/WorldBorder$Settings <init> (DDDDIIDJD)V

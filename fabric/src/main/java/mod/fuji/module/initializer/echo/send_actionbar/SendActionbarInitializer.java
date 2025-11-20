@@ -8,8 +8,8 @@ import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751975960555L, value = """
     This module provides `/send-actionbar` command.
@@ -26,8 +26,8 @@ public class SendActionbarInitializer extends ModuleInitializer {
 
     @CommandNode("send-actionbar")
     @CommandRequirement(level = 4)
-    private static int $sendActionBar(ServerPlayerEntity player, GreedyString rest) {
-        Text textByValue = TextHelper.getTextByValue(player, rest.getValue());
+    private static int $sendActionBar(ServerPlayer player, GreedyString rest) {
+        Component textByValue = TextHelper.getTextByValue(player, rest.getValue());
         TextHelper.sendText(player, textByValue, TextHelper.Sender.TextLocation.ACTION_BAR);
         return CommandHelper.Return.SUCCESS;
     }

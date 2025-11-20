@@ -8,7 +8,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class HealInitializer extends ModuleInitializer {
@@ -16,9 +16,9 @@ public class HealInitializer extends ModuleInitializer {
     @Document(id = 1751825152795L, value = "Fill the `health` and `hunger` for the player.")
     @CommandNode("heal")
     @CommandRequirement(level = 4)
-    private static int $heal(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $heal(@CommandSource @CommandTarget ServerPlayer player) {
         player.setHealth(player.getMaxHealth());
-        player.getHungerManager().setFoodLevel(20);
+        player.getFoodData().setFoodLevel(20);
         TextHelper.sendTextByKey(player, "heal");
         return CommandHelper.Return.SUCCESS;
     }

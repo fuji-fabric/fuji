@@ -7,8 +7,8 @@ import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,19 +16,19 @@ import java.util.List;
 
 public class JobGui extends PagedGui<CommandSchedulerJobDescriptor> {
 
-    public JobGui(ServerPlayerEntity player, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
+    public JobGui(ServerPlayer player, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "job.list.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<CommandSchedulerJobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<CommandSchedulerJobDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<CommandSchedulerJobDescriptor> entities, int pageIndex) {
         return new JobGui(player, entities, pageIndex);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandSchedulerJobDescriptor entity) {
         return new GuiElementBuilder()
-            .setName(Text.literal(entity.getName()))
+            .setName(Component.literal(entity.getName()))
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "job.props.enabled", entity.isEnable())

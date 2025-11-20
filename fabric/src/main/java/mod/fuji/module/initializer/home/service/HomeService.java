@@ -9,12 +9,12 @@ import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.home.HomeInitializer;
 import mod.fuji.module.initializer.home.command.argument.wrapper.HomeName;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class HomeService {
 
-    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull ServerPlayerEntity player) {
+    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull ServerPlayer player) {
         return withHomeMap(PlayerHelper.getPlayerName(player));
     }
 
@@ -29,7 +29,7 @@ public class HomeService {
             .get(homeName));
     }
 
-    public static void ensureHomeNameExisting(@NotNull ServerPlayerEntity player, @NotNull HomeName homeName) {
+    public static void ensureHomeNameExisting(@NotNull ServerPlayer player, @NotNull HomeName homeName) {
         String playerName = PlayerHelper.getPlayerName(player);
         String homeNameString = homeName.getValue();
         var unused = findHome(playerName, homeNameString)

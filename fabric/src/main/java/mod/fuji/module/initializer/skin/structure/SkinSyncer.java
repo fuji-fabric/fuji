@@ -6,20 +6,20 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.document.annotation.TestCase;
 import java.util.Collections;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.network.protocol.game.ClientboundChangeDifficultyPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
-import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 
 #if MC_VER <= MC_1_20_1
 import net.minecraft.world.biome.source.BiomeAccess;
@@ -27,7 +27,7 @@ import net.minecraft.world.biome.source.BiomeAccess;
 
 public class SkinSyncer {
 
-    public static void broadcastGameProfileChange(@NotNull ServerPlayerEntity player) {
+    public static void broadcastGameProfileChange(@NotNull ServerPlayer player) {
         PlayerHelper.Lookup.getOnlinePlayers()
             .forEach(observer -> {
                 sendPacketsToOnlinePlayers(observer, player);
@@ -44,7 +44,7 @@ public class SkinSyncer {
         "The chat message validation should be proper after a player changed its skin."
         , "It should work in both `online-mode` and `offline-mode` servers."
     })
-    private static void sendPacketsToSelfPlayer(@NotNull ServerPlayerEntity player) {
+    private static void sendPacketsToSelfPlayer(@NotNull ServerPlayer player) {
         // NOTE: This function is used to simulate the PlayerManager#respawnPlayer
         if (player.isRemoved()) {
             LogUtil.debug("Skip the sending packets to the self player, because it's already removed. (player = {})", PlayerHelper.getPlayerName(player));
@@ -55,75 +55,75 @@ public class SkinSyncer {
         #if MC_VER <= MC_1_20_1
         player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.getWorld().getDimensionKey(), player.getWorld().getRegistryKey(), BiomeAccess.hashSeed(player.getServerWorld().getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), player.getWorld().isDebugWorld(), player.getServerWorld().isFlat(), (byte) 3, player.getLastDeathPos(), player.getPortalCooldown()));
         #elif MC_VER > MC_1_20_1
-        player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(player.createCommonPlayerSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 3));
+        player.connection.send(new ClientboundRespawnPacket(player.createCommonSpawnInfo(EntityHelper.getServerWorld(player)), (byte) 3));
         #endif
 
         /* Re-initialize the chat to prevent chat validation error in the client. */
-        player.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.INITIALIZE_CHAT, player));
+        player.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.INITIALIZE_CHAT, player));
 
         /* Update the position and rotation. (Does not harm) */
-        player.networkHandler.requestTeleport(player.getX(), player.getY(), player.getZ(), player.getYaw(), player.getPitch());
+        player.connection.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
 
         /* Restore the velocity of the target player. */
-        player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+        player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
         /* Restore the previous difficulty. */
-        player.networkHandler.sendPacket(new DifficultyS2CPacket(EntityHelper.getServerWorld(player).getDifficulty(), EntityHelper.getServerWorld(player).getLevelProperties().isDifficultyLocked()));
+        player.connection.send(new ClientboundChangeDifficultyPacket(EntityHelper.getServerWorld(player).getDifficulty(), EntityHelper.getServerWorld(player).getLevelData().isDifficultyLocked()));
 
         /* Restore the previous inventory slots + selected slot. */
-        PlayerHelper.getPlayerManager().sendPlayerStatus(player);
+        PlayerHelper.getPlayerManager().sendAllPlayerInfo(player);
 
         /* Restore the previous abilities. */
-        player.sendAbilitiesUpdate();
+        player.onUpdateAbilities();
 
         /* Restore the previous status effects. */
-        for (StatusEffectInstance effect : player.getStatusEffects()) {
+        for (MobEffectInstance effect : player.getActiveEffects()) {
         #if MC_VER <= MC_1_20_4
         player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect));
         #elif MC_VER > MC_1_20_4
-        player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), effect, false));
+        player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effect, false));
         #endif
         }
 
         /* Restore the previous experience. */
-        player.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
+        player.connection.send(new ClientboundSetExperiencePacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
 
         /* Restore the previous vehicle and passengers of the player. */
         syncVehicleAndPassengers(player, player);
 
         /* Send the dimension info to the client to prevent it from getting stuck on the dimension loading screen. */
-        PlayerHelper.getPlayerManager().sendWorldInfo(player, PlayerHelper.getServerWorld(player));
+        PlayerHelper.getPlayerManager().sendLevelInfo(player, PlayerHelper.getServerWorld(player));
 
         /* Update the entity tracker. (Does not harm) */
-        player.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(player.getId(), player.getDataTracker().getChangedEntries()));
+        player.connection.send(new ClientboundSetEntityDataPacket(player.getId(), player.getEntityData().getNonDefaultValues()));
     }
 
-    private static void syncVehicleAndPassengers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
+    private static void syncVehicleAndPassengers(@NotNull ServerPlayer observer, @NotNull ServerPlayer player) {
         Entity vehicle = player.getVehicle();
         if (vehicle != null) {
-            observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(vehicle));
+            observer.connection.send(new ClientboundSetPassengersPacket(vehicle));
         }
-        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+        observer.connection.send(new ClientboundSetPassengersPacket(player));
     }
 
-    private static void sendPacketsToObservingPlayers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
+    private static void sendPacketsToObservingPlayers(@NotNull ServerPlayer observer, @NotNull ServerPlayer player) {
         /* Re-bind the observer.networkHandler to the player entity. */
-        ServerWorld playerServerWorld = PlayerHelper.getServerWorld(player);
-        var trackedPlayer = WorldHelper.getChunkStorage(playerServerWorld).entityTrackers.get(player.getId());
+        ServerLevel playerServerWorld = PlayerHelper.getServerWorld(player);
+        var trackedPlayer = WorldHelper.getChunkStorage(playerServerWorld).entityMap.get(player.getId());
         if (trackedPlayer != null) {
-            trackedPlayer.stopTracking(observer);
-            trackedPlayer.updateTrackedStatus(observer);
+            trackedPlayer.removePlayer(observer);
+            trackedPlayer.updatePlayer(observer);
         }
 
         /* Sync the passengers. */
-        observer.networkHandler.sendPacket(new EntityPassengersSetS2CPacket(player));
+        observer.connection.send(new ClientboundSetPassengersPacket(player));
     }
 
-    private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayerEntity observer, @NotNull ServerPlayerEntity player) {
+    private static void sendPacketsToOnlinePlayers(@NotNull ServerPlayer observer, @NotNull ServerPlayer player) {
         /* Update the game profile in player list. */
-        observer.networkHandler.sendPacket(new PlayerRemoveS2CPacket(Collections.singletonList(player.getUuid())));
-        observer.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.ADD_PLAYER, player));
-        observer.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_LISTED, player));
-        observer.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
+        observer.connection.send(new ClientboundPlayerInfoRemovePacket(Collections.singletonList(player.getUUID())));
+        observer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, player));
+        observer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, player));
+        observer.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player));
     }
 }

@@ -7,10 +7,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import lombok.Getter;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class AsyncChunkLoadTask extends GameTask {
@@ -19,7 +19,7 @@ public class AsyncChunkLoadTask extends GameTask {
     final CompletableFuture<Void> chunkAsyncLoadingFuture = new CompletableFuture<>();
     final AtomicBoolean consumed = new AtomicBoolean(false);
 
-    public AsyncChunkLoadTask(@NotNull ServerWorld serverWorld, @NotNull ChunkPos chunkPos, int timeoutTicks, @NotNull Consumer<Chunk> chunkConsumer, @NotNull Runnable onFailed) {
+    public AsyncChunkLoadTask(@NotNull ServerLevel serverWorld, @NotNull ChunkPos chunkPos, int timeoutTicks, @NotNull Consumer<ChunkAccess> chunkConsumer, @NotNull Runnable onFailed) {
         super(timeoutTicks);
 
         /* Set the onTick() function. */
@@ -30,7 +30,7 @@ public class AsyncChunkLoadTask extends GameTask {
             }
 
             /* Make the chunk future. */
-            CompletableFuture<Optional<Chunk>> chunkFuture = getChunkFuture(serverWorld, chunkPos);
+            CompletableFuture<Optional<ChunkAccess>> chunkFuture = getChunkFuture(serverWorld, chunkPos);
 
             /* Try to consume it. */
             @Unused CompletableFuture<Void> unused = chunkFuture
@@ -58,8 +58,8 @@ public class AsyncChunkLoadTask extends GameTask {
         });
     }
 
-    private static CompletableFuture<Optional<Chunk>> getChunkFuture(@NotNull ServerWorld serverWorld, @NotNull ChunkPos chunkPos) {
-        var future = serverWorld.getChunkManager().getChunkFuture(chunkPos.x, chunkPos.z, ChunkStatus.FULL, true);
+    private static CompletableFuture<Optional<ChunkAccess>> getChunkFuture(@NotNull ServerLevel serverWorld, @NotNull ChunkPos chunkPos) {
+        var future = serverWorld.getChunkSource().getChunkFutureMainThread(chunkPos.x, chunkPos.z, ChunkStatus.FULL, true);
 
         #if MC_VER <= MC_1_20_4
         return future.thenApply(it -> it.left());

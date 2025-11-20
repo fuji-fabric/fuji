@@ -8,8 +8,8 @@ import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.FujiIdentifier;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class FujiIdentifierArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -30,10 +30,10 @@ public class FujiIdentifierArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String idString = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
-        Identifier id;
+        ResourceLocation id;
         if(idString.contains(":")) {
             id = RegistryHelper.makeIdentifierOrThrow(idString);
         } else {

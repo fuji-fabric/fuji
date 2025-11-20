@@ -3,7 +3,7 @@ package mod.fuji.module.initializer.fuji.structure;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
 import mod.fuji.core.command.structure.CommandNodeWithPath;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 public class ServerCommandNodeWrapper extends CommandNodeWithPath {
 
@@ -11,7 +11,7 @@ public class ServerCommandNodeWrapper extends CommandNodeWithPath {
 
     public final String fromPackage;
 
-    public ServerCommandNodeWrapper(CommandNode<ServerCommandSource> node) {
+    public ServerCommandNodeWrapper(CommandNode<CommandSourceStack> node) {
         super(node);
         this.fromPackage = guessWhichPackageTheCommandIsFrom(node);
     }

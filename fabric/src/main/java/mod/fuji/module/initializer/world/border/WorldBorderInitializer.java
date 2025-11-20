@@ -13,17 +13,17 @@ import mod.fuji.module.initializer.world.border.config.model.WorldBorderConfigMo
 import mod.fuji.module.initializer.world.border.structure.BorderDescriptor;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.border.WorldBorder;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundSetBorderCenterPacket;
+import net.minecraft.network.protocol.game.ClientboundSetBorderLerpSizePacket;
+import net.minecraft.network.protocol.game.ClientboundSetBorderSizePacket;
+import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDistancePacket;
+import net.minecraft.network.protocol.game.ClientboundSetBorderWarningDelayPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.border.WorldBorder;
 
 @Document(id = 1752561532728L, value = """
     This module allows you to customize the `per-dimension border`.
@@ -78,32 +78,32 @@ public class WorldBorderInitializer extends ModuleInitializer {
     }
 
     private static void sendWorldBorderSyncPacketsToAllPlayers() {
-        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderCenterChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderSizeChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderInterpolateSizeS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningBlocksChangedS2CPacket(dimension.getWorldBorder()));
-        sendPerDimensionPacketToAllDimensions(dimension -> new WorldBorderWarningTimeChangedS2CPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderCenterPacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderSizePacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderLerpSizePacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderWarningDistancePacket(dimension.getWorldBorder()));
+        sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderWarningDelayPacket(dimension.getWorldBorder()));
     }
 
-    public static void sendWorldBorderSyncPacketsToPlayer(ServerPlayerEntity player, World world) {
-        player.networkHandler.sendPacket(new WorldBorderCenterChangedS2CPacket(world.getWorldBorder()));
-        player.networkHandler.sendPacket(new WorldBorderSizeChangedS2CPacket(world.getWorldBorder()));
-        player.networkHandler.sendPacket(new WorldBorderInterpolateSizeS2CPacket(world.getWorldBorder()));
-        player.networkHandler.sendPacket(new WorldBorderWarningBlocksChangedS2CPacket(world.getWorldBorder()));
-        player.networkHandler.sendPacket(new WorldBorderWarningTimeChangedS2CPacket(world.getWorldBorder()));
+    public static void sendWorldBorderSyncPacketsToPlayer(ServerPlayer player, Level world) {
+        player.connection.send(new ClientboundSetBorderCenterPacket(world.getWorldBorder()));
+        player.connection.send(new ClientboundSetBorderSizePacket(world.getWorldBorder()));
+        player.connection.send(new ClientboundSetBorderLerpSizePacket(world.getWorldBorder()));
+        player.connection.send(new ClientboundSetBorderWarningDistancePacket(world.getWorldBorder()));
+        player.connection.send(new ClientboundSetBorderWarningDelayPacket(world.getWorldBorder()));
     }
 
-    public static void sendPerDimensionPacketToAllDimensions(Function<ServerWorld, Packet<?>> packetProvider) {
+    public static void sendPerDimensionPacketToAllDimensions(Function<ServerLevel, Packet<?>> packetProvider) {
         // NOTE: I don't know which dimension is changed, so I just simply update the world border for all dimensions.
         WorldHelper
             .getWorlds()
             .forEach(dimension -> {
                 @SuppressWarnings("unused")
                 WorldBorder callGetterMethodToUpdateEffectiveDescriptor = dimension.getWorldBorder();
-                RegistryKey<World> dimensionRegistryKey = dimension.getRegistryKey();
+                ResourceKey<Level> dimensionRegistryKey = dimension.dimension();
                 Packet<?> packet = packetProvider.apply(dimension);
 
-                PlayerHelper.getPlayerManager().sendToDimension(packet, dimensionRegistryKey);
+                PlayerHelper.getPlayerManager().broadcastAll(packet, dimensionRegistryKey);
             });
     }
 }

@@ -2,9 +2,9 @@ package mod.fuji.module.initializer.head.structure;
 
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -77,12 +77,12 @@ public enum Category {
         this.icon = icon;
     }
 
-    public @NotNull ItemStack toItemStack(ServerPlayerEntity player) {
+    public @NotNull ItemStack toItemStack(ServerPlayer player) {
         ItemStackHelper.CustomName.setCustomName(icon, this.getText(player));
         return icon;
     }
 
-    public @NotNull Text getText(ServerPlayerEntity player) {
+    public @NotNull Component getText(ServerPlayer player) {
         return TextHelper.getTextByKey(player, "head.category." + name);
     }
 

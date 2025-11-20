@@ -9,9 +9,9 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class SendTitleInitializer extends ModuleInitializer {
 
     @CommandNode("send-title")
     @CommandRequirement(level = 4)
-    private static int $sendTitle(@CommandSource ServerCommandSource source, ServerPlayerEntity player
+    private static int $sendTitle(@CommandSource CommandSourceStack source, ServerPlayer player
         , Optional<String> mainTitle
         , Optional<String> subTitle
         , Optional<Integer> fadeInTicks
@@ -45,8 +45,8 @@ public class SendTitleInitializer extends ModuleInitializer {
         int $stayTicks = stayTicks.orElse(70);
         int $fadeOutTicks = fadeOutTicks.orElse(20);
 
-        Text mainTitleText = TextHelper.getTextByValue(player, $mainTitle);
-        Text subTitleText = TextHelper.getTextByValue(player, $subTitle);
+        Component mainTitleText = TextHelper.getTextByValue(player, $mainTitle);
+        Component subTitleText = TextHelper.getTextByValue(player, $subTitle);
 
         TextHelper.Sender.sendTitleToServerPlayerEntity(player, $fadeInTicks, $stayTicks, $fadeOutTicks, mainTitleText, subTitleText);
         return CommandHelper.Return.SUCCESS;

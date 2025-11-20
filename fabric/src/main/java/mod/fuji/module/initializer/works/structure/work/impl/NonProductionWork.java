@@ -5,14 +5,14 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.works.structure.WorkType;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor
 public class NonProductionWork extends Work {
-    public NonProductionWork(@NotNull ServerPlayerEntity player, String name) {
+    public NonProductionWork(@NotNull ServerPlayer player, String name) {
         super(player, name);
     }
 
@@ -27,7 +27,7 @@ public class NonProductionWork extends Work {
     }
 
     @Override
-    public void openSpecializedSettingsGui(@NotNull ServerPlayerEntity player, SimpleGui parentGui) {
+    public void openSpecializedSettingsGui(@NotNull ServerPlayer player, SimpleGui parentGui) {
         TextHelper.sendTextByKey(player, "works.non_production_work.specialized_settings.not_found");
     }
 }

@@ -17,14 +17,14 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.duration_parser.DurationParser;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.command.EntitySelector;
-import net.minecraft.server.BannedIpEntry;
-import net.minecraft.server.BannedPlayerEntry;
+import net.minecraft.commands.arguments.selector.EntitySelector;
+import net.minecraft.server.players.IpBanListEntry;
+import net.minecraft.server.players.UserBanListEntry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -47,48 +47,48 @@ public class TempBanInitializer extends ModuleInitializer {
     // NOTE: The recreation of BanCommand and BanIpCommand, but with a specified expiry date.
 
     @CommandNode("ip")
-    private static int $ip(@CommandSource ServerCommandSource source, String ip, Duration expiry, GreedyString reason) throws CommandSyntaxException {
+    private static int $ip(@CommandSource CommandSourceStack source, String ip, Duration expiry, GreedyString reason) throws CommandSyntaxException {
 
         if (!InetAddresses.isInetAddress(ip)) {
-            throw new SimpleCommandExceptionType(Text.translatable("commands.banip.invalid")).create();
+            throw new SimpleCommandExceptionType(Component.translatable("commands.banip.invalid")).create();
         }
 
         // Add.
         Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
-        BannedIpEntry bannedIpEntry = new BannedIpEntry(ip, null, source.getName(), expire, reason.getValue());
-        source.getServer().getPlayerManager().getIpBanList().add(bannedIpEntry);
-        source.sendFeedback(() -> Text.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
+        IpBanListEntry bannedIpEntry = new IpBanListEntry(ip, null, source.getTextName(), expire, reason.getValue());
+        source.getServer().getPlayerList().getIpBans().add(bannedIpEntry);
+        source.sendSuccess(() -> Component.translatable("commands.banip.success", ip, bannedIpEntry.getReason()), true);
 
         // Kick.
-        List<ServerPlayerEntity> list = source.getServer().getPlayerManager().getPlayersByIp(ip);
+        List<ServerPlayer> list = source.getServer().getPlayerList().getPlayersWithAddress(ip);
         if (!list.isEmpty()) {
-            source.sendFeedback(() -> Text.translatable("commands.banip.info", list.size(), EntitySelector.getNames(list)), true);
+            source.sendSuccess(() -> Component.translatable("commands.banip.info", list.size(), EntitySelector.joinNames(list)), true);
         }
-        for (ServerPlayerEntity serverPlayerEntity : list) {
-            serverPlayerEntity.networkHandler.disconnect(Text.translatable("multiplayer.disconnect.ip_banned"));
+        for (ServerPlayer serverPlayerEntity : list) {
+            serverPlayerEntity.connection.disconnect(Component.translatable("multiplayer.disconnect.ip_banned"));
         }
 
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("player")
-    private static int $player(@CommandSource ServerCommandSource source, GameProfileCollection collection, Duration expiry, GreedyString reason) {
+    private static int $player(@CommandSource CommandSourceStack source, GameProfileCollection collection, Duration expiry, GreedyString reason) {
         MinecraftServer server = source.getServer();
-        PlayerManager playerManager = server.getPlayerManager();
+        PlayerList playerManager = server.getPlayerList();
         Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
 
         for (GameProfile gameProfile : collection.getValue().stream().map(GameProfileWrapper::toGameProfile).toList()) {
             // Add.
             GameProfileWrapper gameProfileWrapper = GameProfileWrapper.fromVanillaType(gameProfile);
 
-            BannedPlayerEntry bannedPlayerEntry = new BannedPlayerEntry(gameProfileWrapper.toVanillaType().orElseThrow(), null, source.getName(), expire, reason.getValue());
-            playerManager.getUserBanList().add(bannedPlayerEntry);
-            source.sendFeedback(() -> Text.translatable("commands.ban.success", Text.literal(AuthlibHelper.getName(gameProfile)), bannedPlayerEntry.getReason()), true);
+            UserBanListEntry bannedPlayerEntry = new UserBanListEntry(gameProfileWrapper.toVanillaType().orElseThrow(), null, source.getTextName(), expire, reason.getValue());
+            playerManager.getBans().add(bannedPlayerEntry);
+            source.sendSuccess(() -> Component.translatable("commands.ban.success", Component.literal(AuthlibHelper.getName(gameProfile)), bannedPlayerEntry.getReason()), true);
 
             // Kick.
-            ServerPlayerEntity serverPlayerEntity = playerManager.getPlayer(AuthlibHelper.getId(gameProfile));
+            ServerPlayer serverPlayerEntity = playerManager.getPlayer(AuthlibHelper.getId(gameProfile));
             if (serverPlayerEntity != null) {
-                serverPlayerEntity.networkHandler.disconnect(Text.translatable("multiplayer.disconnect.banned"));
+                serverPlayerEntity.connection.disconnect(Component.translatable("multiplayer.disconnect.banned"));
             }
         }
 

@@ -2,14 +2,14 @@ package mod.fuji.core.gui.component.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EditSignGui extends InputSignGui {
 
-    public EditSignGui(@NotNull ServerPlayerEntity player, @Nullable String defaultValue) {
+    public EditSignGui(@NotNull ServerPlayer player, @Nullable String defaultValue) {
         super(player, null);
 
         /* Set the default value. */
@@ -18,7 +18,7 @@ public class EditSignGui extends InputSignGui {
             for (int i = 0; i < lines.size(); i++) {
                 if (i > 3) break;
                 String line = lines.get(i);
-                this.setLine(i, Text.literal(line));
+                this.setLine(i, Component.literal(line));
             }
         }
     }

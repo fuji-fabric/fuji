@@ -17,8 +17,8 @@ import mod.fuji.module.initializer.motd.config.model.MotdConfigModel;
 import mod.fuji.module.initializer.motd.structure.MotdEntry;
 import java.util.UUID;
 import lombok.Cleanup;
-import net.minecraft.server.ServerMetadata;
-import net.minecraft.text.Text;
+import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ public class MotdInitializer extends ModuleInitializer {
 
     private static final Path ICON_FOLDER = ReflectionUtil.computeModuleConfigPath(MotdInitializer.class).resolve("icon");
 
-    public static Optional<ServerMetadata.Favicon> getEffectiveMotdIcon(@Nullable String preferIcon) {
+    public static Optional<ServerStatus.Favicon> getEffectiveMotdIcon(@Nullable String preferIcon) {
         ByteArrayOutputStream byteArrayOutputStream;
         try {
             /* Mkdir the icon dir. */
@@ -92,14 +92,14 @@ public class MotdInitializer extends ModuleInitializer {
             return Optional.empty();
         }
 
-        return Optional.of(new ServerMetadata.Favicon(byteArrayOutputStream.toByteArray()));
+        return Optional.of(new ServerStatus.Favicon(byteArrayOutputStream.toByteArray()));
     }
 
     public static @NotNull MotdEntry getEffectiveMotdEntry() {
         return RandomUtil.drawList(config.model().getMessages());
     }
 
-    public static @NotNull ServerMetadata.Players getEffectivePlayersInfo(@NotNull ServerMetadata.Players original) {
+    public static @NotNull ServerStatus.Players getEffectivePlayersInfo(@NotNull ServerStatus.Players original) {
         var configSection = config.model().getPlayersInfo();
 
         int deltaMax = RandomUtil.getRandomNumber(configSection.getMaxPlayers().getDeltaMin(), configSection.getMaxPlayers().getDeltaMax());
@@ -129,17 +129,17 @@ public class MotdInitializer extends ModuleInitializer {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();
-        return new ServerMetadata.Players(max, online, $sample);
+        return new ServerStatus.Players(max, online, $sample);
     }
 
-    public static @NotNull ServerMetadata.Version getEffectiveVersion(ServerMetadata.Version original) {
+    public static @NotNull ServerStatus.Version getEffectiveVersion(ServerStatus.Version original) {
         var configSection = config.model().getVersionText();
 
         if (configSection.isEnable()) {
             String text = configSection.getText();
             String gameVersion = TextHelper.Parsers.parsePlaceholderString(null, text);
             int protocolVersion = -42;
-            return new ServerMetadata.Version(gameVersion, protocolVersion);
+            return new ServerStatus.Version(gameVersion, protocolVersion);
         } else {
             return original;
         }
@@ -148,15 +148,15 @@ public class MotdInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void onRequestServerMetadataHandler(ModifyServerMetadataEvent event) {
-        ServerMetadata original = event.getServerMetadata();
+        ServerStatus original = event.getServerMetadata();
 
         MotdEntry motdEntry = MotdInitializer.getEffectiveMotdEntry();
-        Text text = TextHelper.getTextByValue(null, motdEntry.getText());
-        Optional<ServerMetadata.Favicon> icon = MotdInitializer.getEffectiveMotdIcon(motdEntry.getIcon());
-        Optional<ServerMetadata.Players> players = original.comp_1274().map(MotdInitializer::getEffectivePlayersInfo);
-        Optional<ServerMetadata.Version> version = original.comp_1275().map(MotdInitializer::getEffectiveVersion);
+        Component text = TextHelper.getTextByValue(null, motdEntry.getText());
+        Optional<ServerStatus.Favicon> icon = MotdInitializer.getEffectiveMotdIcon(motdEntry.getIcon());
+        Optional<ServerStatus.Players> players = original.players().map(MotdInitializer::getEffectivePlayersInfo);
+        Optional<ServerStatus.Version> version = original.version().map(MotdInitializer::getEffectiveVersion);
 
-        ServerMetadata serverMetadata = new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
+        ServerStatus serverMetadata = new ServerStatus(text, players, version, icon, original.enforcesSecureChat());
         event.setServerMetadata(serverMetadata);
     }
 

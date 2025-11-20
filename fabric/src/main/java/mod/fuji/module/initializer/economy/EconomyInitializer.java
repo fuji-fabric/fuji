@@ -29,10 +29,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 @Document(id = 1751826915564L, value = """
     This module enables the `economy gameplay`.
@@ -86,9 +86,9 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy providers")
     @CommandRequirement(level = 4)
-    private static int $providers(@CommandSource ServerCommandSource source) {
+    private static int $providers(@CommandSource CommandSourceStack source) {
         Collection<EconomyProvider> providers = EconomyService.getProviders();
-        TextHelper.sendMessageByText(source, Text.literal("There are %d providers installed in this server.".formatted(providers.size())));
+        TextHelper.sendMessageByText(source, Component.literal("There are %d providers installed in this server.".formatted(providers.size())));
 
         providers.forEach(provider -> {
             MinecraftServer server = ServerHelper.getServer();
@@ -96,7 +96,7 @@ public class EconomyInitializer extends ModuleInitializer {
             TextHelper.sendTextByKey(source, "line.separator");
             TextHelper.sendTextByKey(source, "economy.provider.id", provider.id());
 
-            Text providerNameText = TextHelper.getTextByKey(source, "economy.provider.name.display");
+            Component providerNameText = TextHelper.getTextByKey(source, "economy.provider.name.display");
             providerNameText = TextHelper.Replacer.replaceTextWithNamedArgument(providerNameText, "name", (matcher) -> provider.name());
             TextHelper.sendMessageByText(source, providerNameText);
 
@@ -105,7 +105,7 @@ public class EconomyInitializer extends ModuleInitializer {
             currencies.forEach(currency -> {
                 TextHelper.sendTextByKey(source, "economy.currency.id", currency.id());
 
-                Text currencyNameText = TextHelper.getTextByKey(source, "economy.currency.name.display");
+                Component currencyNameText = TextHelper.getTextByKey(source, "economy.currency.name.display");
                 currencyNameText = TextHelper.Replacer.replaceTextWithNamedArgument(currencyNameText, "name", (matcher) -> currency.name());
                 TextHelper.sendMessageByText(source, currencyNameText);
 
@@ -122,18 +122,18 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy accounts")
     @CommandRequirement(level = 4)
-    private static int $accounts(@CommandSource ServerCommandSource source, OfflineGameProfile player) {
+    private static int $accounts(@CommandSource CommandSourceStack source, OfflineGameProfile player) {
         Collection<EconomyAccount> accounts = EconomyService.getUserAccounts(player.getValue());
         accounts.forEach(account -> printEconomyAccountInfo(source, account));
 
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void printEconomyAccountInfo(ServerCommandSource source, EconomyAccount account) {
-        Text accountNameText = TextHelper.getTextByKey(source, "economy.account.name.display");
+    private static void printEconomyAccountInfo(CommandSourceStack source, EconomyAccount account) {
+        Component accountNameText = TextHelper.getTextByKey(source, "economy.account.name.display");
         accountNameText = TextHelper.Replacer.replaceTextWithNamedArgument(accountNameText, "name", (matcher) -> account.name());
 
-        Text balanceText = TextHelper.getTextByKey(source, "economy.account.balance.display");
+        Component balanceText = TextHelper.getTextByKey(source, "economy.account.balance.display");
         balanceText = TextHelper.Replacer.replaceTextWithNamedArgument(balanceText, "balance", (matcher) -> account.formattedBalance());
 
         TextHelper.sendMessageByText(source, accountNameText);
@@ -146,8 +146,8 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy account")
     @CommandRequirement(level = 4)
-    private static int $account(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId) {
-        Identifier $currencyId = currencyId.getValue();
+    private static int $account(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId) {
+        ResourceLocation $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         printEconomyAccountInfo(source, economyAccount);
 
@@ -159,9 +159,9 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy balance")
     @CommandRequirement(level = 4)
-    private static int $balance(@CommandSource ServerPlayerEntity player) {
+    private static int $balance(@CommandSource ServerPlayer player) {
         OfflineGameProfile offlineGameProfile = new OfflineGameProfile(player.getGameProfile());
-        $accounts(player.getCommandSource(), offlineGameProfile);
+        $accounts(player.createCommandSourceStack(), offlineGameProfile);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -170,7 +170,7 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy balance-top gui")
     @CommandRequirement(level = 4)
-    private static int $balanceTopGui(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
+    private static int $balanceTopGui(@CommandSource ServerPlayer player, CurrencyId currencyId) {
         BalanceTopGui.make(player, currencyId.getValue())
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -181,7 +181,7 @@ public class EconomyInitializer extends ModuleInitializer {
         """)
     @CommandNode("economy balance-top")
     @CommandRequirement(level = 4)
-    private static int $balanceTop(@CommandSource ServerPlayerEntity player, CurrencyId currencyId) {
+    private static int $balanceTop(@CommandSource ServerPlayer player, CurrencyId currencyId) {
         List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(player, currencyId.getValue());
         PagedMessageText pagedMessageText = PagedMessageText.makePagedMessageText(player, entities, EconomyService.getBalanceTopPageSize(), (entity, index, pageBuilder) -> {
             int numbering = index + 1;
@@ -196,8 +196,8 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826931165L, value = "Give `amount` to the player's `account` for `specified currency`.")
     @CommandNode("economy give")
     @CommandRequirement(level = 4)
-    private static int $give(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        Identifier $currencyId = currencyId.getValue();
+    private static int $give(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        ResourceLocation $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
@@ -209,8 +209,8 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826933066L, value = "Take `amount` from the player's `account` for `specified currency`.")
     @CommandNode("economy take")
     @CommandRequirement(level = 4)
-    private static int $take(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        Identifier $currencyId = currencyId.getValue();
+    private static int $take(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        ResourceLocation $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
@@ -222,7 +222,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826934778L, value = "Pay specified `amount` of `currency` to another player's account.")
     @CommandNode("economy pay")
     @CommandRequirement(level = 4)
-    private static int $pay(@CommandSource ServerPlayerEntity source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+    private static int $pay(@CommandSource ServerPlayer source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         EconomyService.transferCurrency(source, player, currencyId.getValue(), amount);
         return CommandHelper.Return.SUCCESS;
     }
@@ -231,8 +231,8 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826937120L, value = "Has the specified amount of currency?")
     @CommandNode("has-currency?")
     @CommandRequirement(level = 4)
-    private static int $hasCurrency(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        Identifier $currencyId = currencyId.getValue();
+    private static int $hasCurrency(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        ResourceLocation $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
@@ -244,8 +244,8 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826939422L, value = "Set the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy set")
     @CommandRequirement(level = 4)
-    private static int $set(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        Identifier $currencyId = currencyId.getValue();
+    private static int $set(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
+        ResourceLocation $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
 
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
@@ -258,7 +258,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @Document(id = 1751826942040L, value = "Clear the `amount` of the player's `account` for `specified currency`.")
     @CommandNode("economy clear")
     @CommandRequirement(level = 4)
-    private static int $clear(@CommandSource ServerCommandSource source, OfflineGameProfile player, CurrencyId currencyId, Optional<Boolean> confirm) {
+    private static int $clear(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             $set(source, player, currencyId, 0);
             return CommandHelper.Return.SUCCESS;

@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerTickStartEventMixin {
 
     @EventProducer(ServerTickStartEvent.class)
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;tickWorlds(Ljava/util/function/BooleanSupplier;)V"), method = "tick")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;tickChildren(Ljava/util/function/BooleanSupplier;)V"), method = "tickServer")
     void produceServerTickStartEvent(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerTickStartEvent event = new ServerTickStartEvent(server);

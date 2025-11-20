@@ -2,38 +2,38 @@ package mod.fuji.core.service.paged_text;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.command_callback.CommandCallbackManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
 public class PagedMessageText extends PagedText {
 
-    public PagedMessageText(ServerPlayerEntity player, String string) {
+    public PagedMessageText(ServerPlayer player, String string) {
         String[] split = string.split(NEW_PAGE_DELIMITER);
         this.pages = new ArrayList<>();
         Arrays.stream(split).forEach(it -> this.pages.add(TextHelper.getTextByValue(player, it)));
         generateClickCallbacks(player);
     }
 
-    public PagedMessageText(ServerPlayerEntity player, List<Text> pages) {
+    public PagedMessageText(ServerPlayer player, List<Component> pages) {
         this.pages = pages;
         generateClickCallbacks(player);
     }
 
-    public static @NotNull <T> PagedMessageText makePagedMessageText(ServerPlayerEntity player, List<T> entities, int pageSize, TriConsumer<T, Integer, MutableText> entityConsumer) {
-        List<Text> pages = new ArrayList<>();
-        MutableText pageBuilder = Text.empty();
+    public static @NotNull <T> PagedMessageText makePagedMessageText(ServerPlayer player, List<T> entities, int pageSize, TriConsumer<T, Integer, MutableComponent> entityConsumer) {
+        List<Component> pages = new ArrayList<>();
+        MutableComponent pageBuilder = Component.empty();
         for (int i = 0; i < entities.size(); i++) {
             if ((i % pageSize == 0 && i != 0)) {
                 pages.add(pageBuilder);
-                pageBuilder = Text.empty();
+                pageBuilder = Component.empty();
             }
 
             T entity = entities.get(i);
@@ -48,7 +48,7 @@ public class PagedMessageText extends PagedText {
         return new PagedMessageText(player, pages);
     }
 
-    private void generateClickCallbacks(ServerPlayerEntity player) {
+    private void generateClickCallbacks(ServerPlayer player) {
         /* generate page callbacks */
         List<String> pageCallbacks = new ArrayList<>();
         for (int i = 0; i < getPages().size(); i++) {
@@ -63,7 +63,7 @@ public class PagedMessageText extends PagedText {
         /* generate paginator */
         int totalPages = getPages().size();
         for (int i = 0; i < getPages().size(); i++) {
-            MutableText text = getPages().get(i).copy();
+            MutableComponent text = getPages().get(i).copy();
 
             int currentPage = i + 1;
             /* make the paginator */
@@ -92,7 +92,7 @@ public class PagedMessageText extends PagedText {
     }
 
 
-    public void sendPage(ServerPlayerEntity player, int pageIndex) {
+    public void sendPage(ServerPlayer player, int pageIndex) {
         TextHelper.sendMessageByText(player, this.getPages().get(pageIndex));
     }
 

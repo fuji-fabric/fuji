@@ -17,9 +17,9 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
 import mod.fuji.module.initializer.maintenance.service.MaintenanceService;
 import java.util.Optional;
-import net.minecraft.server.ServerMetadata;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.network.protocol.status.ServerStatus;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 
 @Document(id = 1756285767531L, value = """
@@ -37,7 +37,7 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
 
     @CommandNode("maintenance on")
     @CommandRequirement(level = 4)
-    private static int $on(@CommandSource ServerCommandSource source) {
+    private static int $on(@CommandSource CommandSourceStack source) {
         MaintenanceService.setMaintenanceModeStatus(true);
         TextHelper.sendTextByKey(source, "maintenance.on");
         return CommandHelper.Return.SUCCESS;
@@ -45,7 +45,7 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
 
     @CommandNode("maintenance off")
     @CommandRequirement(level = 4)
-    private static int $off(@CommandSource ServerCommandSource source) {
+    private static int $off(@CommandSource CommandSourceStack source) {
         MaintenanceService.setMaintenanceModeStatus(false);
         TextHelper.sendTextByKey(source, "maintenance.off");
         return CommandHelper.Return.SUCCESS;
@@ -53,7 +53,7 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
 
     @CommandNode("maintenance kick-all")
     @CommandRequirement(level = 4)
-    private static int $kickAll(@CommandSource ServerCommandSource source) {
+    private static int $kickAll(@CommandSource CommandSourceStack source) {
         PlayerHelper.Lookup.getOnlinePlayers()
             .forEach(player -> {
                 if (!MaintenanceService.canJoinNow(player)) {
@@ -69,12 +69,12 @@ public class MaintenanceModuleInitializer extends ModuleInitializer {
             return;
         }
 
-        ServerMetadata original = event.getServerMetadata();
-        Text text = MaintenanceService.getEffectiveMaintenanceMessageText();
-        Optional<ServerMetadata.Players> players = original.comp_1274();
-        Optional<ServerMetadata.Version> version = original.comp_1275();
-        Optional<ServerMetadata.Favicon> icon = original.comp_1276();
-        ServerMetadata newValue = new ServerMetadata(text, players, version, icon, original.secureChatEnforced());
+        ServerStatus original = event.getServerMetadata();
+        Component text = MaintenanceService.getEffectiveMaintenanceMessageText();
+        Optional<ServerStatus.Players> players = original.players();
+        Optional<ServerStatus.Version> version = original.version();
+        Optional<ServerStatus.Favicon> icon = original.favicon();
+        ServerStatus newValue = new ServerStatus(text, players, version, icon, original.enforcesSecureChat());
         event.setServerMetadata(newValue);
     }
 

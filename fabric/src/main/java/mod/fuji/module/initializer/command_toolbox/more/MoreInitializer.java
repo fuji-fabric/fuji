@@ -7,7 +7,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 
 public class MoreInitializer extends ModuleInitializer {
@@ -15,12 +15,12 @@ public class MoreInitializer extends ModuleInitializer {
     @Document(id = 1751825196038L, value = "Set the count of item in hand to max count.")
     @CommandNode("more")
     @CommandRequirement(level = 4)
-    private static int $more(@CommandSource ServerCommandSource source, Optional<Boolean> oversize) {
+    private static int $more(@CommandSource CommandSourceStack source, Optional<Boolean> oversize) {
         return CommandHelper.Pattern.withItemInMainHandCommand(source, (player, itemStack) -> {
             int newCount = oversize
                 .filter(it -> it)
                 .map(it -> 64)
-                .orElseGet(itemStack::getMaxCount);
+                .orElseGet(itemStack::getMaxStackSize);
 
             itemStack.setCount(newCount);
             return CommandHelper.Return.SUCCESS;

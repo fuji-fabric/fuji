@@ -9,11 +9,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.command.argument.wrapper.impl.NotSupportedType;
 #elif MC_VER > MC_1_20_1
-import net.minecraft.command.argument.ScoreboardSlotArgumentType;
-import net.minecraft.scoreboard.ScoreboardDisplaySlot;
+import net.minecraft.commands.arguments.ScoreboardSlotArgument;
+import net.minecraft.world.scores.DisplaySlot;
 #endif
 
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -24,17 +24,17 @@ public class ScoreboardSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_1
         return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_1
-        return ScoreboardSlotArgumentType.scoreboardSlot();
+        return ScoreboardSlotArgument.displaySlot();
         #endif
 
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_1
         return new GreedyString(StringArgumentType.getString(context, commandArgument.getArgumentName()));
         #elif MC_VER > MC_1_20_1
-        return ScoreboardSlotArgumentType.getScoreboardSlot(context, commandArgument.getArgumentName());
+        return ScoreboardSlotArgument.getDisplaySlot(context, commandArgument.getArgumentName());
         #endif
     }
 
@@ -43,7 +43,7 @@ public class ScoreboardSlotArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_1
         return List.of(NotSupportedType.class);
         #elif MC_VER > MC_1_20_1
-        return List.of(ScoreboardDisplaySlot.class);
+        return List.of(DisplaySlot.class);
         #endif
     }
 

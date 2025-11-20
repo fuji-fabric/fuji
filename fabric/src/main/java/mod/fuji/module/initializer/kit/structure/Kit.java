@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.kit.structure;
 
 import lombok.Value;
 import lombok.With;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 

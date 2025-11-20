@@ -11,11 +11,11 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.echo.send_dialog.structure.DialogGui;
 import java.util.Optional;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751826984411L, value = """
     Send the `text` using the `dialog GUI`.
@@ -31,8 +31,8 @@ public class SendDialogInitializer extends ModuleInitializer {
     @Document(id = 1751826986144L, value = "Send a dialog GUI to a player.")
     @CommandNode("send-dialog")
     @CommandRequirement(level = 4)
-    private static int $sendDialog(@CommandSource ServerCommandSource source
-        , ServerPlayerEntity player
+    private static int $sendDialog(@CommandSource CommandSourceStack source
+        , ServerPlayer player
         , Optional<Integer> rows
         , Optional<Integer> yesButtonSlotIndex
         , Optional<ItemStackWrapper> yesButtonItem
@@ -48,22 +48,22 @@ public class SendDialogInitializer extends ModuleInitializer {
         /* Extract the arguments. */
         Integer $rows = rows.orElse(1);
         String $title = title.getValue();
-        Text dialogTitleText = TextHelper.getTextByValue(player, $title);
+        Component dialogTitleText = TextHelper.getTextByValue(player, $title);
 
         int $yesButtonSlotIndex = yesButtonSlotIndex.orElse(2);
         ItemStack $yesButtonItem = yesButtonItem
             .map(ItemStackWrapper::getItemStack)
-            .orElse(Items.SLIME_BALL.getDefaultStack());
+            .orElse(Items.SLIME_BALL.getDefaultInstance());
         String $yesButtonName = yesButtonName.orElse("<green><b>YES");
-        Text $$yesButtonName = TextHelper.getTextByValue(player, $yesButtonName);
+        Component $$yesButtonName = TextHelper.getTextByValue(player, $yesButtonName);
         String $yesButtonCommand = yesButtonCommand.orElse("");
 
         int $noButtonSlotIndex = noButtonSlotIndex.orElse(6);
         ItemStack $noButtonItem = noButtonItem
             .map(ItemStackWrapper::getItemStack)
-            .orElse(Items.MAGMA_CREAM.getDefaultStack());
+            .orElse(Items.MAGMA_CREAM.getDefaultInstance());
         String $noButtonName = noButtonName.orElse("<dark_red><b>NO");
-        Text $$noButtonName = TextHelper.getTextByValue(player, $noButtonName);
+        Component $$noButtonName = TextHelper.getTextByValue(player, $noButtonName);
         String $noButtonCommand = noButtonCommand.orElse("");
         boolean $canCloseUsingNoButton = canCloseUsingNoButton.orElse(false);
 

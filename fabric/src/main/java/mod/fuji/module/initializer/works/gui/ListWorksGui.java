@@ -14,19 +14,19 @@ import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.works.WorksInitializer;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
 import java.util.List;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class ListWorksGui extends CrudPagedGui<Work> {
 
-    public ListWorksGui(ServerPlayerEntity player, @NotNull List<Work> entities, int pageIndex) {
+    public ListWorksGui(ServerPlayer player, @NotNull List<Work> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "works.list.title"), entities, pageIndex);
 
         /* Place buttons in footer. */
@@ -49,7 +49,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
     }
 
     @Override
-    protected @NotNull PagedGui<Work> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Work> entities, int pageIndex) {
+    protected @NotNull PagedGui<Work> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Work> entities, int pageIndex) {
         return new ListWorksGui(player, entities, pageIndex);
     }
 
@@ -59,7 +59,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected GuiElementBuilder toGuiElementBuilder(Work entity) {
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
 
         return GuiElementBuilder
             .from(entity.getEntityIcon())
@@ -79,7 +79,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean canOperateOnThisEntity(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private boolean canOperateOnThisEntity(@NotNull ServerPlayer player, @NotNull Work work) {
         return PlayerHelper.getPlayerName(player).equals(work.creator)
             || CommandHelper.Requirement.isOperator(player);
     }
@@ -106,9 +106,9 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected void onLeftClickEntity(Work entity) {
-        RegistryKey<World> worldKey = RegistryKey.of(RegistryKeys.WORLD, RegistryHelper.makeIdentifierOrThrow(entity.level));
-        ServerPlayerEntity player = getPlayer();
-        ServerWorld dimension = ServerHelper.getServer().getWorld(worldKey);
+        ResourceKey<Level> worldKey = ResourceKey.create(Registries.DIMENSION, RegistryHelper.makeIdentifierOrThrow(entity.level));
+        ServerPlayer player = getPlayer();
+        ServerLevel dimension = ServerHelper.getServer().getLevel(worldKey);
 
         if (dimension != null) {
             new GlobalPos(dimension, entity.x, entity.y, entity.z, entity.yaw, entity.pitch)
@@ -122,7 +122,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected void onRightShiftClickEntity(Work entity) {
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
         if (!canUpdateEntity(entity)) {
             TextHelper.sendTextByKey(player, "works.work.set.no_perm");
             return;
@@ -133,7 +133,7 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected void onRightClickEntity(Work entity) {
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
         if (!canUpdateEntity(entity)) {
             TextHelper.sendTextByKey(player, "works.work.set.no_perm");
             return;

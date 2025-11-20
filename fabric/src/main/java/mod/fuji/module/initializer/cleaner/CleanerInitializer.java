@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.cleaner.config.model.CleanerConfigModel;
 import mod.fuji.module.initializer.cleaner.config.transformer.CleanerV1SchemaTransformer;
 import mod.fuji.module.initializer.cleaner.service.CleanerService;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1751826898176L, value = """
     This module provides an `entity cleaner`.
@@ -77,7 +77,7 @@ public class CleanerInitializer extends ModuleInitializer {
 
     @Document(id = 1756788946930L, value = "Perform entity cleanup, and generate a cleanup report if any entities are removed.")
     @CommandNode("clean")
-    private static int $clean(@CommandSource ServerCommandSource source) {
+    private static int $clean(@CommandSource CommandSourceStack source) {
         CleanerService.cleanEntities();
         return CommandHelper.Return.SUCCESS;
     }

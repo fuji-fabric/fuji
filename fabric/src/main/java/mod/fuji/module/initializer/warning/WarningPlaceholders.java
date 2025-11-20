@@ -11,8 +11,8 @@ import mod.fuji.module.initializer.warning.structure.Warning;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class WarningPlaceholders {
@@ -20,28 +20,28 @@ public class WarningPlaceholders {
     @DocStringProvider(id = 1754640787907L, value = "Returns the `created date` of the last created warning.")
     public static void registerLastWarningCreatedDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("last_warning_created_date", 1754640787907L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Text.of(ChronosUtil.Formatter.formatDate(it.getCreatedTimestamp()))));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Component.nullToEmpty(ChronosUtil.Formatter.formatDate(it.getCreatedTimestamp()))));
     }
 
     @DocStringProvider(id = 1754641490973L, value = "Returns the `creator name` of the last created warning.")
     public static void registerLastWarningCreatorNamePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("last_warning_creator_name", 1754641490973L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Text.of(it.getCreatorName())));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Component.nullToEmpty(it.getCreatorName())));
     }
 
     @DocStringProvider(id = 1754641445726L, value = "Returns the `expiration date` of the last created warning.")
     public static void registerLastWarningExpirationDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("last_warning_expiration_date", 1754641445726L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Text.of(ChronosUtil.Formatter.formatDate(it.getExpirationTimestamp()))));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Component.nullToEmpty(ChronosUtil.Formatter.formatDate(it.getExpirationTimestamp()))));
     }
 
     @DocStringProvider(id = 1754641570588L, value = "Returns the `reason` of the last created warning.")
     public static void registerLastWarningReasonPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("last_warning_reason", 1754641570588L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Text.of(it.getDescription())));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> mapWarningIntoText(player, it -> Component.nullToEmpty(it.getDescription())));
     }
 
-    private static @NotNull Text mapWarningIntoText(ServerPlayerEntity player, Function<Warning, Text> mapper) {
+    private static @NotNull Component mapWarningIntoText(ServerPlayer player, Function<Warning, Component> mapper) {
         String playerName = PlayerHelper.getPlayerName(player);
         Optional<Warning> first = WarningService
             .getPlayerWarnings(playerName)

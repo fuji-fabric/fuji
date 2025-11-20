@@ -8,8 +8,8 @@ import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.service.FakePlayerManagerService;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,12 +37,12 @@ public abstract class PlayerCommandMixin {
     }
 
     @Inject(method = "spawn", at = @At("HEAD"), remap = false, cancellable = true)
-    private static void checkFakePlayerCapsOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, @NotNull CallbackInfoReturnable<Integer> cir) {
+    private static void checkFakePlayerCapsOnSpawnCommand(@NotNull CommandContext<CommandSourceStack> context, @NotNull CallbackInfoReturnable<Integer> cir) {
         if (CommandHelper.Source.isExecutedByConsole(context)) {
             return;
         }
 
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         if (!FakePlayerManagerService.canSpawnMoreFakePlayers(player)) {
             TextHelper.sendTextByKey(player, "fake_player_manager.spawn.limit_exceed");
             cir.setReturnValue(CommandHelper.Return.FAILURE);
@@ -50,13 +50,13 @@ public abstract class PlayerCommandMixin {
     }
 
     @Inject(method = "spawn", at = @At("TAIL"), remap = false)
-    private static void trackSpawnedFakePlayerOnSpawnCommand(@NotNull CommandContext<ServerCommandSource> context, CallbackInfoReturnable<Integer> cir) {
+    private static void trackSpawnedFakePlayerOnSpawnCommand(@NotNull CommandContext<CommandSourceStack> context, CallbackInfoReturnable<Integer> cir) {
         if (CommandHelper.Source.isExecutedByConsole(context)) {
             return;
         }
 
         /* Transform the fake player name to get the proper fake player name. */
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         String fakePlayerName = StringArgumentType.getString(context, "player");
         fakePlayerName = FakePlayerManagerService.getTransformedFakePlayerName(fakePlayerName);
 
@@ -66,7 +66,7 @@ public abstract class PlayerCommandMixin {
     }
 
     @Inject(method = "cantManipulate", at = @At("HEAD"), remap = false, cancellable = true)
-    private static void validateAuthorityOnPlayerCommands(@NotNull CommandContext<ServerCommandSource> context, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    private static void validateAuthorityOnPlayerCommands(@NotNull CommandContext<CommandSourceStack> context, @NotNull CallbackInfoReturnable<Boolean> cir) {
         String fakePlayerName = StringArgumentType.getString(context, "player");
 
         if (!FakePlayerManagerService.canManipulateFakePlayer(context, fakePlayerName)) {

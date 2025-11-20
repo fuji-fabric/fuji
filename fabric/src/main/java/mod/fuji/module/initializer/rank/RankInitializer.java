@@ -23,8 +23,8 @@ import mod.fuji.module.initializer.rank.structure.RankNode;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 
 @Document(id = 1754411151804L, value = """
@@ -97,7 +97,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754412528895L, value = "List all defined `rank nodes`.")
     @CommandNode("rank list all-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listAllRankNodes(@CommandSource ServerCommandSource source) {
+    private static int $listAllRankNodes(@CommandSource CommandSourceStack source) {
         TextHelper.sendTextByKey(source, "rank.list.all_rank_nodes", RankService.getAllRankIds());
         return CommandHelper.Return.SUCCESS;
     }
@@ -105,7 +105,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754412670219L, value = "Query the info of the specified `rank node`.")
     @CommandNode("rank info")
     @CommandRequirement(level = 4)
-    private static int $info(@CommandSource ServerCommandSource source, RankNode rankNode) {
+    private static int $info(@CommandSource CommandSourceStack source, RankNode rankNode) {
         RankService.sendRankNodeInfo(source, rankNode, true);
         return CommandHelper.Return.SUCCESS;
     }
@@ -113,7 +113,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754414840437L, value = "List all available `starting rank nodes` for the specified player.")
     @CommandNode("rank list starting-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listStartingRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $listStartingRankNodes(@CommandSource CommandSourceStack source, ServerPlayer target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> availableStartingRankNodes = RankService
             .getAvailableStartingRankNodes(target)
@@ -127,7 +127,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754415572673L, value = "Query the rank progress of the specified player.")
     @CommandNode("rank progress")
     @CommandRequirement(level = 4)
-    private static int $rankProgress(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $rankProgress(@CommandSource CommandSourceStack source, ServerPlayer target) {
         return RankService.getCurrentRankNode(target)
             .map(currentRankNode -> {
                 RankService.sendRankNodeInfo(source, currentRankNode, false);
@@ -142,14 +142,14 @@ public class RankInitializer extends ModuleInitializer {
 
     @Document(id = 1754420858807L, value = "Query the rank progress.")
     @CommandNode("rank progress")
-    private static int $rankProgress(@CommandSource ServerPlayerEntity player) {
-        return $rankProgress(player.getCommandSource(), player);
+    private static int $rankProgress(@CommandSource ServerPlayer player) {
+        return $rankProgress(player.createCommandSourceStack(), player);
     }
 
     @Document(id = 1754417962937L, value = "Set the rank for specified player.")
     @CommandNode("rank set")
     @CommandRequirement(level = 4)
-    private static int $setRank(@CommandSource ServerCommandSource source, ServerPlayerEntity target, RankNode rankNode) {
+    private static int $setRank(@CommandSource CommandSourceStack source, ServerPlayer target, RankNode rankNode) {
         RankService.moveTo(target, rankNode);
         TextHelper.sendTextByKey(source, "rank.set", PlayerHelper.getPlayerName(target), rankNode.getId());
         return CommandHelper.Return.SUCCESS;
@@ -157,7 +157,7 @@ public class RankInitializer extends ModuleInitializer {
 
     @Document(id = 1754418507342L, value = "Rank up to the next available rank node.")
     @CommandNode("rank up")
-    private static int $rankUp(@CommandSource ServerPlayerEntity player, NextAvailableRankNode nextRank, Optional<Boolean> confirm) {
+    private static int $rankUp(@CommandSource ServerPlayer player, NextAvailableRankNode nextRank, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
             RankNode $nextRank = nextRank.getValue();
             RankService.tryMoveTo(player, $nextRank);
@@ -167,7 +167,7 @@ public class RankInitializer extends ModuleInitializer {
 
     @Document(id = 1754423529102L, value = "Rank down to the previous available rank node.")
     @CommandNode("rank down")
-    private static int $rankDown(@CommandSource ServerPlayerEntity player, PreviousAvailableRankNode previousRank, Optional<Boolean> confirm) {
+    private static int $rankDown(@CommandSource ServerPlayer player, PreviousAvailableRankNode previousRank, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
             RankNode $previousRank = previousRank.getValue();
             RankService.moveTo(player, $previousRank);
@@ -179,7 +179,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754421296792L, value = "Set the specified player's rank to none.")
     @CommandNode("rank remove")
     @CommandRequirement(level = 4)
-    private static int $removeRank(@CommandSource ServerCommandSource source, ServerPlayerEntity player, Optional<Boolean> confirm) {
+    private static int $removeRank(@CommandSource CommandSourceStack source, ServerPlayer player, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             RankService.moveTo(player, null);
             TextHelper.sendTextByKey(source, "rank.remove", PlayerHelper.getPlayerName(player));
@@ -190,7 +190,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754424553830L, value = "List all available `next rank nodes` for the specified player.")
     @CommandNode("rank list next-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listNextRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $listNextRankNodes(@CommandSource CommandSourceStack source, ServerPlayer target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> ids = RankService.getNextAvailableRankNodes(target).stream().map(RankNode::getId).toList();
         TextHelper.sendTextByKey(source, "rank.list.next_rank_nodes", playerName, ids);
@@ -200,7 +200,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754424619470L, value = "List all available `previous rank nodes` for the specified player.")
     @CommandNode("rank list previous-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listPreviousRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $listPreviousRankNodes(@CommandSource CommandSourceStack source, ServerPlayer target) {
         String playerName = PlayerHelper.getPlayerName(target);
         List<String> ids = RankService.getPreviousAvailableRankNodes(target).stream().map(RankNode::getId).toList();
         TextHelper.sendTextByKey(source, "rank.list.previous_rank_nodes", playerName, ids);
@@ -210,7 +210,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754430022210L, value = "List all `walked rank nodes` for the specified player.")
     @CommandNode("rank list walked-rank-nodes")
     @CommandRequirement(level = 4)
-    private static int $listWalkedRankNodes(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $listWalkedRankNodes(@CommandSource CommandSourceStack source, ServerPlayer target) {
         String playerName = PlayerHelper.getPlayerName(target);
         Set<String> ids = RankService.getWalkedRankNodeIds(target);
         TextHelper.sendTextByKey(source, "rank.list.walked_rank_nodes", playerName, ids);
@@ -220,7 +220,7 @@ public class RankInitializer extends ModuleInitializer {
     @Document(id = 1754466143852L, value = "If there is only one `next rank node` for the player, then rank up to that node, else do nothing.")
     @CommandNode("rank try-up")
     @CommandRequirement(level = 4)
-    private static int $tryUp(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $tryUp(@CommandSource CommandSourceStack source, ServerPlayer target) {
         List<RankNode> nextAvailableRankNodes = RankService.getNextAvailableRankNodes(target);
         if (nextAvailableRankNodes.size() != 1) {
             return CommandHelper.Return.FAILURE;

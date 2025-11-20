@@ -2,7 +2,7 @@ package mod.fuji.core.service.random_teleport.generator;
 
 import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Random;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 public class PositionXZGenerator {

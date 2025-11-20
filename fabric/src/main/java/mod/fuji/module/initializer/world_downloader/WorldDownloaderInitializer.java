@@ -21,13 +21,13 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.world_downloader.config.model.WorldDownloaderConfigModel;
 import mod.fuji.module.initializer.world_downloader.structure.FileDownloadHandler;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -78,7 +78,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
 
     @Document(id = 1751826617256L, value = "Download the region file around you.")
     @CommandNode("download")
-    private static int $download(@CommandSource ServerPlayerEntity player) {
+    private static int $download(@CommandSource ServerPlayer player) {
         /* Ensure the download server is set up. */
         if (httpServer == null) {
             restartHttpServer();
@@ -107,18 +107,18 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static @NotNull File compressRegionFile(@NotNull ServerPlayerEntity player) {
+    public static @NotNull File compressRegionFile(@NotNull ServerPlayer player) {
         /* Get region location. */
-        ChunkPos chunkPos = player.getChunkPos();
+        ChunkPos chunkPos = player.chunkPosition();
         int regionX = chunkPos.getRegionX();
         int regionZ = chunkPos.getRegionZ();
 
         /* Get world folder. */
-        ServerWorld world = EntityHelper.getServerWorld(player);
+        ServerLevel world = EntityHelper.getServerWorld(player);
         MinecraftServer server = world.getServer();
-        RegistryKey<World> dimensionKey = world.getRegistryKey();
-        LevelStorage.Session session = server.session;
-        File worldDirectory = session.getWorldDirectory(dimensionKey).toFile();
+        ResourceKey<Level> dimensionKey = world.dimension();
+        LevelStorageSource.LevelStorageAccess session = server.storageSource;
+        File worldDirectory = session.getDimensionPath(dimensionKey).toFile();
 
         /* Compress files. */
         String regionName = "r." + regionX + "." + regionZ + ".mca";

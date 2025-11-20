@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Arrays;
 import java.util.List;
 import mod.fuji.module.initializer.command_meta.OR.argument.wrapper.OrGreedyCommandString;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1756384425927L, value = """
     Provides the `/OR` command, which allows composing the return values of multiple commands.
@@ -29,7 +29,7 @@ public class OrInitializer extends ModuleInitializer {
     @Document(id = 1756384432603L, value = "Returns `SUCCESS` if and only if `any of` the commands returns `SUCCESS`.")
     @CommandNode("OR")
     @CommandRequirement(level = 4)
-    private static int $or(@CommandSource ServerCommandSource source, OrGreedyCommandString rest) {
+    private static int $or(@CommandSource CommandSourceStack source, OrGreedyCommandString rest) {
         String $rest = rest.getValue();
         List<String> commands = Arrays
             .stream($rest.split("OR"))

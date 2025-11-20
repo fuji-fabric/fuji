@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1753466282781L, value = """
@@ -98,7 +98,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     @Document(id = 1753467248049L, value = "Update all `leaderboards` for `online players`.")
     @CommandNode("leaderboard update-all")
     @CommandRequirement(level = 4)
-    private static int $updateAll(@CommandSource ServerCommandSource source) {
+    private static int $updateAll(@CommandSource CommandSourceStack source) {
         LeaderBoardService.updateLeaderBoards();
         TextHelper.sendTextByKey(source, "leaderboard.update.all");
         return CommandHelper.Return.SUCCESS;
@@ -107,7 +107,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     @Document(id = 1753493701376L, value = "List the lowest N players for specified leaderboard.")
     @CommandNode("leaderboard lowest")
     @CommandRequirement(level = 4)
-    private static int $lowest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
+    private static int $lowest(@CommandSource ServerPlayer player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
         printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, false);
         return CommandHelper.Return.SUCCESS;
     }
@@ -115,12 +115,12 @@ public class LeaderBoardInitializer extends ModuleInitializer {
     @Document(id = 1753496925314L, value = "List the highest N players for specified leaderboard.")
     @CommandNode("leaderboard highest")
     @CommandRequirement(level = 4)
-    private static int $highest(@CommandSource ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
+    private static int $highest(@CommandSource ServerPlayer player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize) {
         printLeaderBoardAsPagedMessage(player, leaderboard, timeWindow, pageSize, true);
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void printLeaderBoardAsPagedMessage(ServerPlayerEntity player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize, boolean reversed) {
+    private static void printLeaderBoardAsPagedMessage(ServerPlayer player, @NotNull LeaderBoardDescriptor leaderboard, @NotNull LeaderBoardTimeWindow timeWindow, Optional<Integer> pageSize, boolean reversed) {
         Integer $pageSize = pageSize
             .filter(i -> i != 0)
             .orElseGet(LeaderBoardService::getDefaultPageSize);
@@ -136,7 +136,7 @@ public class LeaderBoardInitializer extends ModuleInitializer {
             int numbering = index + 1;
             String playerName = entity.getOwnerCache().getPlayerName();
             int score = entity.getEffectiveScore();
-            Text entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", numbering, playerName, score);
+            Component entryText = TextHelper.getTextByKey(player, "leaderboard.list.entry", numbering, playerName, score);
             pageBuilder.append(entryText);
         });
         pagedMessageText.sendPage(player, 0);

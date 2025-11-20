@@ -16,9 +16,9 @@ import mod.fuji.core.event.message.player.ModifyPlayerDisplayNameEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_toolbox.nickname.config.model.NicknameConfigModel;
 import mod.fuji.module.initializer.command_toolbox.nickname.config.model.NicknameDataModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1758032261807L, value = """
@@ -35,7 +35,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<NicknameConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, NicknameConfigModel.class);
 
-    private static String formatNickname(@NotNull ServerPlayerEntity player, @NotNull String inputNickName) {
+    private static String formatNickname(@NotNull ServerPlayer player, @NotNull String inputNickName) {
         // Parse the placeholders first to make the Java Formatter happy.
         String nicknameFormat = config.model().getNicknameFormat();
         nicknameFormat = TextHelper.Operators.getString(TextHelper.getTextByValue(player, nicknameFormat));
@@ -46,7 +46,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
     @Document(id = 1751825221904L, value = "Set the display name.")
     @CommandNode("set")
-    private static int $set(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
+    private static int $set(@CommandSource @CommandTarget ServerPlayer player, GreedyString format) {
         String playerName = PlayerHelper.getPlayerName(player);
         String $format = format.getValue();
         $format = formatNickname(player, $format);
@@ -61,7 +61,7 @@ public class NicknameInitializer extends ModuleInitializer {
 
     @Document(id = 1751825227207L, value = "Clear the display name.")
     @CommandNode("reset")
-    private static int $reset(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $reset(@CommandSource @CommandTarget ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
 
         data.model().format.player2format.remove(playerName);
@@ -74,11 +74,11 @@ public class NicknameInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void modifyPlayerDisplayName(ModifyPlayerDisplayNameEvent event) {
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         String playerName = PlayerHelper.getPlayerName(player);
         String preferredNicknameFormat = NicknameInitializer.data.model().format.player2format.get(playerName);
         if (preferredNicknameFormat != null) {
-            Text newValue = TextHelper.getTextByValue(null, preferredNicknameFormat);
+            Component newValue = TextHelper.getTextByValue(null, preferredNicknameFormat);
             event.setText(newValue);
         }
     }

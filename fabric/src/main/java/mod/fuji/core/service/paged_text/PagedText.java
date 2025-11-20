@@ -2,7 +2,7 @@ package mod.fuji.core.service.paged_text;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public class PagedText {
 
     protected static final String NEW_PAGE_DELIMITER = "<newpage>";
 
-    protected List<Text> pages;
+    protected List<Component> pages;
 
 }

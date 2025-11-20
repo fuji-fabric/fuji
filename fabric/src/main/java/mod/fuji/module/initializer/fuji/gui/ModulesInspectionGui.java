@@ -14,11 +14,11 @@ import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 
 public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
-    public ModulesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+    public ModulesInspectionGui(SimpleGui parent, ServerPlayer player, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.title"), entities, pageIndex);
 
         int enabledModules = ModuleLoadDeterminer.getEnabledModulePaths().size();
         int allModules = ModuleLoadDeterminer.getDeclaredModulePaths().size();
-        List<Text> lore = List.of(
+        List<Component> lore = List.of(
             TextHelper.getTextByKey(player, "fuji.inspect.modules.gui.reimu.lore", enabledModules, allModules)
         );
 
@@ -46,12 +46,12 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected @NotNull PagedGui<Pair<String, Boolean>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
+    protected @NotNull PagedGui<Pair<String, Boolean>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Pair<String, Boolean>> entities, int pageIndex) {
         return new ModulesInspectionGui(parent, player, entities, pageIndex);
     }
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-    public static ModulesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static ModulesInspectionGui inspectAll(SimpleGui parent, ServerPlayer player) {
         List<Pair<String, Boolean>> entities = ModuleLoadDeterminer.MODULE_ENABLE_STATUS
             .entrySet()
             .stream()
@@ -67,7 +67,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull Pair<String, Boolean> entity) {
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
 
         /* Attach module enable status. */
         boolean moduleEnableStatus = entity.getValue();
@@ -96,8 +96,8 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
 
         /* Make the element. */
         Item itemMaterial = getItemMaterial(entity);
-        Text itemName = Text.literal(modulePathString)
-                            .formatted(Formatting.YELLOW);
+        Component itemName = Component.literal(modulePathString)
+                            .withStyle(ChatFormatting.YELLOW);
 
         return new GuiElementBuilder()
             .setItem(itemMaterial)
@@ -118,7 +118,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String modulePathString, boolean moduleEnableStatus) {
+    private void openModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString, boolean moduleEnableStatus) {
         ModuleDetailsInspectionGui
             .inspectModuleDetails(parent, player, modulePathString, moduleEnableStatus)
             .open();

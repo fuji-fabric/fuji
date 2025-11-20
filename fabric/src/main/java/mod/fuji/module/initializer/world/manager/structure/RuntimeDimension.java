@@ -4,21 +4,21 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.module.initializer.world.manager.service.WorldService;
 import java.util.Optional;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.RandomSequences;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 
-public class RuntimeDimension extends ServerWorld {
+public class RuntimeDimension extends ServerLevel {
 
     #if MC_VER <= MC_1_20_2
     public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, net.minecraft.server.WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<net.minecraft.world.spawner.Spawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
@@ -29,14 +29,14 @@ public class RuntimeDimension extends ServerWorld {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, worldGenerationProgressListener, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #elif MC_VER >= MC_1_21_9
-    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, boolean debugWorld, long seed, List<net.minecraft.world.spawner.SpecialSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequencesState randomSequencesState) {
+    public RuntimeDimension(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<net.minecraft.world.level.CustomSpawner> spawners, boolean shouldTickTime, @Nullable RandomSequences randomSequencesState) {
         super(server, workerExecutor, session, properties, worldKey, dimensionOptions, debugWorld, seed, spawners, shouldTickTime, randomSequencesState);
     }
     #endif
 
     private Optional<RuntimeDimensionProperties> getRuntimeDimensionProperties() {
         // NOTE: Other mods may warp the this.properties variable.
-        if (this.properties instanceof RuntimeDimensionProperties runtimeDimensionProperties) {
+        if (this.levelData instanceof RuntimeDimensionProperties runtimeDimensionProperties) {
             return Optional.of(runtimeDimensionProperties);
         }
 
@@ -46,7 +46,7 @@ public class RuntimeDimension extends ServerWorld {
     @Override
     public long getSeed() {
         // NOTE: Override the getSeed() method to provide the custom seed before the seed is used by super class.
-        String dimensionId = RegistryHelper.getIdAsString(this.getRegistryKey());
+        String dimensionId = RegistryHelper.getIdAsString(this.dimension());
         Optional<RuntimeDimensionDescriptor> dimensionNode = WorldService.getRuntimeDimensionDescriptor(dimensionId);
         if (dimensionNode.isPresent()) {
             return dimensionNode.get().seed;
@@ -66,8 +66,8 @@ public class RuntimeDimension extends ServerWorld {
             }
 
             // NOTE: Ignore the step logics for `Time` in `level.dat`, simply mirror it. (Or the scheduled functions will be broken).
-            if (runtimeDimensionProperties.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
-                runtimeDimensionProperties.setTimeOfDay(runtimeDimensionProperties.getTimeOfDay() + 1L);
+            if (runtimeDimensionProperties.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
+                runtimeDimensionProperties.setDayTime(runtimeDimensionProperties.getDayTime() + 1L);
             }
 
         }, super::tickTime);

@@ -11,9 +11,9 @@ import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.home.service.HomeService;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
 
     private final String targetPlayerName;
 
-    private ListHomesGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String targetPlayerName, @NotNull List<GlobalPos> entities, int pageIndex) {
+    private ListHomesGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull String targetPlayerName, @NotNull List<GlobalPos> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "home.list.gui.title", targetPlayerName), entities, pageIndex);
         this.targetPlayerName = targetPlayerName;
 
@@ -31,7 +31,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
         );
     }
 
-    public static ListHomesGui make(@NotNull ServerPlayerEntity player, @NotNull String targetPlayerName) {
+    public static ListHomesGui make(@NotNull ServerPlayer player, @NotNull String targetPlayerName) {
         List<GlobalPos> entities = HomeService
             .withHomeMap(targetPlayerName)
             .values()
@@ -40,7 +40,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
     }
 
     @Override
-    protected @NotNull PagedGui<GlobalPos> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GlobalPos> entities, int pageIndex) {
+    protected @NotNull PagedGui<GlobalPos> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<GlobalPos> entities, int pageIndex) {
         return new ListHomesGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 
@@ -52,13 +52,13 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
             .inverse()
             .get(entity);
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.addAll(entity.asLore(player));
         lore.add(TextHelper.getTextByKey(player, "prompt.click.teleport"));
 
         return new GuiElementBuilder()
             .setItem(Items.PINK_BED)
-            .setName(Text.literal(homeName))
+            .setName(Component.literal(homeName))
             .setLore(lore)
             .setCallback((clickType) -> {
                 if (clickType.isLeft) {

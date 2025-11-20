@@ -7,26 +7,26 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.screen.StonecutterScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.StonecutterMenu;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.network.chat.Component;
 
 public class StoneCutterInitializer extends ModuleInitializer {
 
     @CommandNode("stonecutter")
     @CommandRequirement(level = 4)
-    private static int $stonecutter(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new StonecutterScreenHandler(i, inventory, ScreenHandlerContext.create(PlayerHelper.getServerWorld(p), p.getBlockPos())) {
+    private static int $stonecutter(@CommandSource @CommandTarget ServerPlayer player) {
+        player.openMenu(new SimpleMenuProvider((i, inventory, p) -> new StonecutterMenu(i, inventory, ContainerLevelAccess.create(PlayerHelper.getServerWorld(p), p.blockPosition())) {
             @Override
-            public boolean canUse(PlayerEntity player) {
+            public boolean stillValid(Player player) {
                 return true;
             }
-        }, Text.translatable("container.stonecutter")));
-        player.incrementStat(Stats.INTERACT_WITH_STONECUTTER);
+        }, Component.translatable("container.stonecutter")));
+        player.awardStat(Stats.INTERACT_WITH_STONECUTTER);
         return CommandHelper.Return.SUCCESS;
     }
 }

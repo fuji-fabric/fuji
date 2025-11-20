@@ -7,15 +7,15 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CrudPagedGui<T> extends PagedGui<T> {
 
-    public CrudPagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
+    public CrudPagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull Component prefixTitle, @NotNull List<T> entities, int pageIndex) {
         super(parent, player, prefixTitle, entities, pageIndex);
 
         if (this.canCreateEntity()) {

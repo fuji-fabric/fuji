@@ -1,7 +1,7 @@
 package mod.fuji.core.document.descriptor;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 public class PermissionDescriptor extends StringDescriptor {

@@ -3,10 +3,10 @@ package mod.fuji.core.service.display.gui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
     protected final List<ItemStack> offhand = new ArrayList<>();
     protected final List<ItemStack> main = new ArrayList<>();
 
-    public InventoryDisplayGuiFactory(@Nullable SimpleGui parentGui, Text title, List<ItemStack> main, List<ItemStack> armor, List<ItemStack> offhand) {
+    public InventoryDisplayGuiFactory(@Nullable SimpleGui parentGui, Component title, List<ItemStack> main, List<ItemStack> armor, List<ItemStack> offhand) {
         super(title);
         this.parentGui = parentGui;
         this.main.addAll(main);
@@ -29,7 +29,7 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
         this.offhand.addAll(offhand);
     }
 
-    public InventoryDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer) {
+    public InventoryDisplayGuiFactory(@NotNull ServerPlayer sourcePlayer) {
         super(sourcePlayer);
         this.parentGui = null;
         InventoryHelper.getMainStacks(sourcePlayer).forEach(itemStack -> main.add(itemStack.copy()));
@@ -39,9 +39,9 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+    public @NotNull SimpleGui build(ServerPlayer viewingPlayer) {
         /* Place the placeholder items. */
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, viewingPlayer, false) {
+        SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x6, viewingPlayer, false) {
             @Override
             public void onClose() {
                 if (parentGui != null) {

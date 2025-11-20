@@ -6,7 +6,7 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.service.style_striper.StyleStriper;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.color.anvil.config.model.ColorAnvilConfigModel;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751824946979L, value = """
@@ -16,7 +16,7 @@ public class ColorAnvilInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<ColorAnvilConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ColorAnvilConfigModel.class);
 
-    public static @NotNull String stripeStyleTags(@NotNull PlayerEntity player, @NotNull String string) {
+    public static @NotNull String stripeStyleTags(@NotNull Player player, @NotNull String string) {
          return StyleStriper.stripe(player, "anvil", string);
     }
 }

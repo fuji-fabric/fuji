@@ -16,8 +16,8 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.trigger.config.model.ChatTriggerConfigModel;
 import java.util.List;
 import java.util.regex.Matcher;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826730890L, value = """
@@ -51,7 +51,7 @@ public class ChatTriggerInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatTriggerConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatTriggerConfigModel.class);
 
-    private static void processChatTriggers(@NotNull ServerCommandSource source, @NotNull String chatString) {
+    private static void processChatTriggers(@NotNull CommandSourceStack source, @NotNull String chatString) {
         LogUtil.debug("Process chat triggers for input: chatString = {}", chatString);
 
         /* Enumerate triggers. */
@@ -76,8 +76,8 @@ public class ChatTriggerInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void handleOnPlayerChatEvent(PlayerChatMessagePostEvent event) {
-        SignedMessage signedMessage = event.getSignedMessage();
-        String chatString = TextHelper.Operators.getString(signedMessage.getContent());
+        PlayerChatMessage signedMessage = event.getSignedMessage();
+        String chatString = TextHelper.Operators.getString(signedMessage.decoratedContent());
 
         ChatTriggerInitializer.processChatTriggers(CommandHelper.Source.getCommandSource(event.getPlayer()), chatString);
     }

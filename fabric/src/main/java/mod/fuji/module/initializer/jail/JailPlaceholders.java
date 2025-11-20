@@ -8,8 +8,8 @@ import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailRecord;
 import java.util.function.Function;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("CodeBlock2Expr")
 public class JailPlaceholders {
@@ -20,7 +20,7 @@ public class JailPlaceholders {
     public static void registerJailIdPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_id", 1753756120399L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getOwnerJailDescriptor().getId()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getOwnerJailDescriptor().getId()));
         });
     }
 
@@ -40,7 +40,7 @@ public class JailPlaceholders {
     public static void registerJailCreatorNamePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_creator_name", 1753756207503L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getCreatorName()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getCreatorName()));
         });
     }
 
@@ -50,7 +50,7 @@ public class JailPlaceholders {
     public static void registerJailRemainingJailDurationPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_remaining_duration", 1753756370321L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getRemainingJailDuration()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getRemainingJailDuration()));
         });
     }
 
@@ -60,7 +60,7 @@ public class JailPlaceholders {
     public static void registerJailSpecifiedJailDurationPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_specified_duration", 1753756478336L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor,(player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getSpecifiedJailDuration()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getSpecifiedJailDuration()));
         });
     }
 
@@ -70,7 +70,7 @@ public class JailPlaceholders {
     public static void registerJailReasonPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_reason", 1753756541250L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getReason()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getReason()));
         });
     }
 
@@ -80,7 +80,7 @@ public class JailPlaceholders {
     public static void registerJailCreatedDatePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_created_date", 1753756611853L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getFormattedCreatedTimestamp()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getFormattedCreatedTimestamp()));
         });
     }
 
@@ -90,7 +90,7 @@ public class JailPlaceholders {
     public static void registerJailDimensionPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_dimension", 1753759462210L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(it.getOwnerJailDescriptor().getGlobalPosition().getLevel()));
+            return getJailRecordText(player, it -> Component.nullToEmpty(it.getOwnerJailDescriptor().getGlobalPosition().getLevel()));
         });
     }
 
@@ -100,7 +100,7 @@ public class JailPlaceholders {
     public static void registerJailXPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_x", 1753759553388L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getX())));
+            return getJailRecordText(player, it -> Component.nullToEmpty(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getX())));
         });
     }
 
@@ -110,7 +110,7 @@ public class JailPlaceholders {
     public static void registerJailYPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_y", 1753759629341L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getY())));
+            return getJailRecordText(player, it -> Component.nullToEmpty(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getY())));
         });
     }
     @DocStringProvider(id = 1753759649983L, value = """
@@ -119,7 +119,7 @@ public class JailPlaceholders {
     public static void registerJailZPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_z", 1753759649983L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getZ())));
+            return getJailRecordText(player, it -> Component.nullToEmpty(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getZ())));
         });
     }
     @DocStringProvider(id = 1753759662834L, value = """
@@ -128,7 +128,7 @@ public class JailPlaceholders {
     public static void registerJailYawPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_yaw", 1753759662834L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getYaw())));
+            return getJailRecordText(player, it -> Component.nullToEmpty(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getYaw())));
         });
     }
     @DocStringProvider(id = 1753759691598L, value = """
@@ -137,12 +137,12 @@ public class JailPlaceholders {
     public static void registerJailPitchPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("jail_pitch", 1753759691598L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player) -> {
-            return getJailRecordText(player, it -> Text.of(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getPitch())));
+            return getJailRecordText(player, it -> Component.nullToEmpty(String.valueOf(it.getOwnerJailDescriptor().getGlobalPosition().getPitch())));
         });
     }
 
 
-    private static Text getJailRecordText(ServerPlayerEntity player, Function<JailRecord, Text> jailRecordMapper) {
+    private static Component getJailRecordText(ServerPlayer player, Function<JailRecord, Component> jailRecordMapper) {
         String playerName= PlayerHelper.getPlayerName(player);
         return JailService.getActiveJailRecord(playerName)
             .map(jailRecordMapper)

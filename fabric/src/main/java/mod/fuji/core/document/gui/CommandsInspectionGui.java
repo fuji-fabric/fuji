@@ -12,10 +12,10 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import net.minecraft.item.Items;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,22 +24,22 @@ import java.util.List;
 
 public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
-    public CommandsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+    public CommandsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<CommandDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.fuji_commands.gui.title"), entities, pageIndex);
     }
 
-    public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static CommandsInspectionGui inspectAll(SimpleGui parent, ServerPlayer player) {
         List<CommandDescriptor> entities = CommandDescriptor.getCommandDescriptors();
 
         return new CommandsInspectionGui(parent, player, entities, 0);
     }
 
-    public static int inspectCommandDescriptors(CommandContext<ServerCommandSource> ctx, Predicate<CommandDescriptor> filter) {
+    public static int inspectCommandDescriptors(CommandContext<CommandSourceStack> ctx, Predicate<CommandDescriptor> filter) {
         Stream<CommandDescriptor> commandDescriptorStream = CommandDescriptor.REGISTERED_COMMAND_DESCRIPTORS
             .stream()
             .filter(filter);
 
-        ServerCommandSource source = ctx.getSource();
+        CommandSourceStack source = ctx.getSource();
         return Optional.ofNullable(source.getPlayer())
             .map(player -> {
                 new CommandsInspectionGui(null, player, commandDescriptorStream.toList(), 0).open();
@@ -48,32 +48,32 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
             .orElseGet(() -> {
                 commandDescriptorStream.forEach(it -> {
                     String string = it.getFlatCommandPath().toString();
-                    TextHelper.sendMessageByText(source, Text.literal(string));
+                    TextHelper.sendMessageByText(source, Component.literal(string));
                 });
                 return CommandHelper.Return.SUCCESS;
             });
     }
 
     @Override
-    protected @NotNull PagedGui<CommandDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<CommandDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<CommandDescriptor> entities, int pageIndex) {
         return new CommandsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    private @NotNull List<Text> asLore(@NotNull CommandDescriptor entity) {
-        List<Text> lore = new ArrayList<>();
+    private @NotNull List<Component> asLore(@NotNull CommandDescriptor entity) {
+        List<Component> lore = new ArrayList<>();
 
         /* Attach method document. */
         if (entity.document.isPresent()) {
-            List<Text> methodDocumentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.document.get());
+            List<Component> methodDocumentTextList = TextHelper.getDocumentTextList(getPlayer(), entity.document.get());
             lore.addAll(methodDocumentTextList);
         }
 
         /* Attach parameters document. */
-        List<Text> parameterDocumentTextList = entity.commandArguments
+        List<Component> parameterDocumentTextList = entity.commandArguments
             .stream()
             .filter(it -> it.getDocument() != null)
             .map(it -> {
-                Text documentText = TextHelper.getDocumentText(getPlayer(), "◉ %s: %s".formatted(it.getArgumentName(), it.getDocument()));
+                Component documentText = TextHelper.getDocumentText(getPlayer(), "◉ %s: %s".formatted(it.getArgumentName(), it.getDocument()));
                 return documentText;
             }).toList();
         lore.addAll(parameterDocumentTextList);
@@ -84,7 +84,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandDescriptor entity) {
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
 
         /* Add basic properties of command descriptor. */
         CommandRequirementDescriptor commandRequirement = CommandDescriptor.CommandRequirement.computeCommandRequirement(entity);
@@ -98,15 +98,15 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         ));
 
         /* Add documents lore of this command. */
-        List<Text> documents = asLore(entity);
+        List<Component> documents = asLore(entity);
         if (!documents.isEmpty()) {
-            documents.add(0, Text.empty());
+            documents.add(0, Component.empty());
             lore.addAll(documents);
         }
 
         /* Make the GUI. */
         return new GuiElementBuilder()
-            .setName(Text.literal(entity.getUserFriendlyCommandSyntax()))
+            .setName(Component.literal(entity.getUserFriendlyCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
             .build();

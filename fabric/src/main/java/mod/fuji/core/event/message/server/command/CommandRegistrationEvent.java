@@ -4,9 +4,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import mod.fuji.core.event.message.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CommandRegistrationEvent extends BaseEvent {
-    @NotNull CommandManager commandManager;
-    @NotNull CommandDispatcher<ServerCommandSource> dispatcher;
-    @NotNull CommandRegistryAccess registryAccess;
-    @NotNull CommandManager.RegistrationEnvironment environment;
+    @NotNull Commands commandManager;
+    @NotNull CommandDispatcher<CommandSourceStack> dispatcher;
+    @NotNull CommandBuildContext registryAccess;
+    @NotNull Commands.CommandSelection environment;
 }

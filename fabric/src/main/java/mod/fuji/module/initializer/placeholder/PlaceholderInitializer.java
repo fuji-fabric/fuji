@@ -28,13 +28,13 @@ import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.module.initializer.placeholder.gui.PlaceholderGui;
 import mod.fuji.module.initializer.placeholder.structure.SumUpPlaceholder;
 import java.time.format.DateTimeFormatter;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -70,20 +70,20 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     @Document(id = 1751826515140L, value = "List all placeholders registered in server.")
     @CommandNode("list")
-    private static int $list(@CommandSource ServerPlayerEntity player) {
-        List<Identifier> list = Placeholders.getPlaceholders().keySet().asList();
+    private static int $list(@CommandSource ServerPlayer player) {
+        List<ResourceLocation> list = Placeholders.getPlaceholders().keySet().asList();
         new PlaceholderGui(player, list, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826519376L, value = "Parse a placeholder with a contextual player.")
     @CommandNode("parse")
-    private static int $parse(@CommandSource ServerCommandSource source
-        , Optional<ServerPlayerEntity> player
+    private static int $parse(@CommandSource CommandSourceStack source
+        , Optional<ServerPlayer> player
         , GreedyString input) {
-        ServerPlayerEntity target = player.orElse(null);
+        ServerPlayer target = player.orElse(null);
 
-        Text text = TextHelper.getTextByValue(target, input.getValue());
+        Component text = TextHelper.getTextByValue(target, input.getValue());
         TextHelper.sendMessageByText(source, text);
         return CommandHelper.Return.SUCCESS;
     }
@@ -93,7 +93,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerServerPlaytimePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_playtime", 1751999849427L);
-        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().playtime)));
+        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Component.literal(String.valueOf(SumUpPlaceholder.ofServer().playtime)));
     }
 
     @DocStringProvider(id = 1751999873162L, value = """
@@ -102,7 +102,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     private static void registerPlayerPlaytimePlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_playtime", 1751999873162L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).playtime)));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Component.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getStringUUID()).playtime)));
     }
 
     @DocStringProvider(id = 1751999885958L, value = """
@@ -110,7 +110,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerServerMovedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_moved", 1751999885958L);
-        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().moved)));
+        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Component.literal(String.valueOf(SumUpPlaceholder.ofServer().moved)));
     }
 
     @DocStringProvider(id = 1751999903574L, value = """
@@ -118,7 +118,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerPlayerMovedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_moved", 1751999903574L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).moved)));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Component.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getStringUUID()).moved)));
     }
 
     @DocStringProvider(id = 1751999917216L, value = """
@@ -126,7 +126,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerServerKilledPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_killed", 1751999917216L);
-        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().killed)));
+        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Component.literal(String.valueOf(SumUpPlaceholder.ofServer().killed)));
     }
 
     @DocStringProvider(id = 1751999930297L, value = """
@@ -134,7 +134,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerPlayerKilledPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_killed", 1751999930297L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).killed)));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Component.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getStringUUID()).killed)));
     }
 
     @DocStringProvider(id = 1751999941071L, value = """
@@ -142,7 +142,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerServerPlacedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_placed", 1751999941071L);
-        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().placed)));
+        PlaceholderHelper.registerServerPlaceholder(descriptor, server -> Component.literal(String.valueOf(SumUpPlaceholder.ofServer().placed)));
     }
 
     @DocStringProvider(id = 1751999952462L, value = """
@@ -150,7 +150,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerPlayerPlacedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_placed", 1751999952462L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).placed)));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Component.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getStringUUID()).placed)));
     }
 
     @DocStringProvider(id = 1751999963243L, value = """
@@ -158,7 +158,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerServerMinedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("server_mined", 1751999963243L);
-        PlaceholderHelper.registerServerPlaceholder(descriptor, (server) -> Text.literal(String.valueOf(SumUpPlaceholder.ofServer().mined)));
+        PlaceholderHelper.registerServerPlaceholder(descriptor, (server) -> Component.literal(String.valueOf(SumUpPlaceholder.ofServer().mined)));
     }
 
     @DocStringProvider(id = 1751999973284L, value = """
@@ -166,7 +166,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
         """)
     private static void registerPlayerMinedPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_mined", 1751999973284L);
-        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Text.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getUuidAsString()).mined)));
+        PlaceholderHelper.registerPlayerPlaceholder(descriptor, player -> Component.literal(String.valueOf(SumUpPlaceholder.ofPlayer(player.getStringUUID()).mined)));
     }
 
     @DocStringProvider(id = 1751999986462L, value = """
@@ -175,7 +175,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     public static void registerPrefixPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_prefix", 1751999986462L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
-            String prefix = LuckpermsHelper.getPrefix(player.getUuid());
+            String prefix = LuckpermsHelper.getPrefix(player.getUUID());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
@@ -186,7 +186,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
     public static void registerSuffixPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("player_suffix", 1751999997365L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, arg) -> {
-            String prefix = LuckpermsHelper.getSuffix(player.getUuid());
+            String prefix = LuckpermsHelper.getSuffix(player.getUUID());
             return TextHelper.getTextByValue(player, prefix);
         });
     }
@@ -202,15 +202,15 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int blockX = player.getBlockX();
             int blockY = player.getBlockY();
             int blockZ = player.getBlockZ();
-            ServerWorld world = PlayerHelper.getServerWorld(player);
+            ServerLevel world = PlayerHelper.getServerWorld(player);
             String dimensionName = RegistryHelper.getIdAsString(world);
             String dimensionDisplayName = TextHelper.Translator.getLanguageValueByKey(player, dimensionName);
-            String biomeName = WorldHelper.getBiomeId(world, player.getBlockPos());
-            Text positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
+            String biomeName = WorldHelper.getBiomeId(world, player.blockPosition());
+            Component positionText = TextHelper.getTextByKey(player, "placeholder.position", dimensionDisplayName, blockX, blockY, blockZ, biomeName);
 
             /* Attach the position of current dimension. */
             String currentPosition = "(%d, %d, %d)".formatted(blockX, blockY, blockZ);
-            MutableText hoverText = Text.empty();
+            MutableComponent hoverText = Component.empty();
             hoverText.append(TextHelper.getTextByKey(player, "placeholder.current_position", currentPosition));
 
             /* Attach the position of linked dimension. */
@@ -242,7 +242,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
             return positionText
                 .copy()
-                .fillStyle(Style.EMPTY
+                .withStyle(Style.EMPTY
                     .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
                     .withClickEvent(TextHelper.Events.ClickEvent.makeSuggestCommandAction(xaeroCommand)));
         });
@@ -250,7 +250,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void removeSumUpPlaceholderOnPlayerLeft(PlayerLeftEvent event) {
-        SumUpPlaceholder.uuid2stats.remove(event.getPlayer().getUuidAsString());
+        SumUpPlaceholder.uuid2stats.remove(event.getPlayer().getStringUUID());
     }
 
     @Override
@@ -301,15 +301,15 @@ public class PlaceholderInitializer extends ModuleInitializer {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("date", 1752000061565L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, arg) -> {
             if (arg == null || arg.isBlank()) {
-                return Text.literal(ChronosUtil.Formatter.getFormattedCurrentDate());
+                return Component.literal(ChronosUtil.Formatter.getFormattedCurrentDate());
             }
 
             try {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(arg);
                 String currentDate = ChronosUtil.Formatter.getFormattedCurrentDate(formatter);
-                return Text.literal(currentDate);
+                return Component.literal(currentDate);
             } catch (Exception e) {
-                return Text.of("Invalid date formatter: " + arg);
+                return Component.nullToEmpty("Invalid date formatter: " + arg);
             }
         });
     }
@@ -329,11 +329,11 @@ public class PlaceholderInitializer extends ModuleInitializer {
                 String placeholder = matcher.group(1);
                 int level = Integer.parseInt(matcher.group(2));
 
-                if (level == 1) return Text.literal("%" + placeholder + "%");
+                if (level == 1) return Component.literal("%" + placeholder + "%");
                 if (level > 1)
-                    return Text.literal("%fuji:escape " + placeholder + " " + (level - 1) + "%");
+                    return Component.literal("%fuji:escape " + placeholder + " " + (level - 1) + "%");
             }
-            return Text.literal("%" + args + "%");
+            return Component.literal("%" + args + "%");
         });
     }
 
@@ -343,8 +343,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerProtectPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("protect", 1752000094346L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            if (args == null) return Text.empty();
-            return Text.literal(args);
+            if (args == null) return Component.empty();
+            return Component.literal(args);
         });
     }
 
@@ -355,8 +355,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerHasPermissionPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("has_permission", 1752000110013L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
-            boolean value = LuckpermsHelper.hasPermission(player.getUuid(), new PermissionDescriptor(true, args, 0));
-            return Text.literal(String.valueOf(value));
+            boolean value = LuckpermsHelper.hasPermission(player.getUUID(), new PermissionDescriptor(true, args, 0));
+            return Component.literal(String.valueOf(value));
         });
     }
 
@@ -368,8 +368,8 @@ public class PlaceholderInitializer extends ModuleInitializer {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("get_meta", 1752000128157L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             MetaDescriptor<String> tempMeta = new MetaDescriptor<>(true, args, String::valueOf, 0);
-            Optional<String> metaValue = LuckpermsHelper.getMeta(player.getUuid(), tempMeta);
-            return Text.literal(metaValue.orElse("META_NOT_FOUND_ERROR"));
+            Optional<String> metaValue = LuckpermsHelper.getMeta(player.getUUID(), tempMeta);
+            return Component.literal(metaValue.orElse("META_NOT_FOUND_ERROR"));
         });
     }
 
@@ -379,10 +379,10 @@ public class PlaceholderInitializer extends ModuleInitializer {
     private void registerRandomPlayerPlaceholder() {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("random_player", 1752000163280L);
         PlaceholderHelper.registerServerPlaceholder(descriptor, (server, args) -> {
-            List<ServerPlayerEntity> playerList = PlayerHelper.Lookup.getOnlinePlayers();
-            ServerPlayerEntity serverPlayerEntity = RandomUtil.drawList(playerList);
+            List<ServerPlayer> playerList = PlayerHelper.Lookup.getOnlinePlayers();
+            ServerPlayer serverPlayerEntity = RandomUtil.drawList(playerList);
             String playerName = PlayerHelper.getPlayerName(serverPlayerEntity);
-            return Text.literal(playerName);
+            return Component.literal(playerName);
         });
     }
 
@@ -407,7 +407,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
                 return PlaceholderHelper.makeInvalidArgsErrorText();
             }
 
-            return Text.literal(String.valueOf(i));
+            return Component.literal(String.valueOf(i));
         });
     }
 
@@ -421,12 +421,12 @@ public class PlaceholderInitializer extends ModuleInitializer {
             int filledHearts = (int) (player.getHealth() / 2);
             int unfilledHearts = totalHearts - filledHearts;
             String str = "♥".repeat(filledHearts) + "♡".repeat(unfilledHearts);
-            return Text.literal(str);
+            return Component.literal(str);
         });
     }
 
     private void registerRotatePlaceholder() {
-        Placeholders.register(Identifier.of(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
+        Placeholders.register(ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
             String namespace = "default";
             if (ctx.player() != null) {
                 namespace = PlayerHelper.getPlayerName(ctx.player());
@@ -439,7 +439,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             String frame = rotateMap.get(args);
             rotateMap.put(args, StringUtils.rotate(frame, -1));
 
-            return PlaceholderResult.value(Text.literal(frame));
+            return PlaceholderResult.value(Component.literal(frame));
         });
     }
 

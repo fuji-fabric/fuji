@@ -9,14 +9,14 @@ import mod.fuji.core.structure.GlobalBlockPos;
 import mod.fuji.module.initializer.color.sign.ColorSignInitializer;
 import mod.fuji.module.initializer.color.sign.structure.SignCache;
 import java.util.concurrent.atomic.AtomicReference;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.entity.SignText;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ import java.util.UUID;
 public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @Shadow
-    public abstract @Nullable UUID getEditor();
+    public abstract @Nullable UUID getPlayerWhoMayEdit();
 
     public SignBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -47,26 +47,26 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             return signText;
         }
 
-        if (!WorldHelper.isServerWorld(this.world)) return signText;
+        if (!WorldHelper.isServerWorld(this.level)) return signText;
 
 
         /* Parse input strings. */
-        Text[] messages = signText.getMessages(false);
-        Text[] newMessages = new Text[messages.length];
+        Component[] messages = signText.getMessages(false);
+        Component[] newMessages = new Component[messages.length];
         for (int i = 0; i < messages.length; i++) {
             /* Get the line string from the sign text. */
             // NOTE: The messages[i] may be null if you write nothing.
-            if (messages[i] == null) messages[i] = Text.literal("");
+            if (messages[i] == null) messages[i] = Component.literal("");
             AtomicReference<String> lineString = new AtomicReference<>(messages[i].getString());
 
             /* Stripe style tags. */
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 Optional
-                    .ofNullable(getEditor())
+                    .ofNullable(getPlayerWhoMayEdit())
                     .ifPresent(editorUUID -> {
-                        Optional<ServerPlayerEntity> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(editorUUID);
+                        Optional<ServerPlayer> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(editorUUID);
                         if (playerOpt.isPresent()) {
-                            ServerPlayerEntity player = playerOpt.get();
+                            ServerPlayer player = playerOpt.get();
                             lineString.set(ColorSignInitializer.stripeStyleTags(player, lineString.get()));
                         }
                     });
@@ -78,10 +78,10 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
         /* Write sign cache. */
         List<String> lines = Arrays.stream(messages)
-            .map(Text::getString)
+            .map(Component::getString)
             .toList();
 
-        GlobalBlockPos globalBlockPos = new GlobalBlockPos(getWorld(), getPos());
+        GlobalBlockPos globalBlockPos = new GlobalBlockPos(getLevel(), getBlockPos());
         @Nullable SignCache signCache = ColorSignInitializer.readSignCache(globalBlockPos);
         if (signCache == null) signCache = new SignCache(List.of(), List.of());
         if (isFront) {
@@ -92,7 +92,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
         ColorSignInitializer.writeSignCache(globalBlockPos, signCache);
 
         /* Return the modified text. */
-        return new SignText(newMessages, newMessages, signText.getColor(), signText.isGlowing());
+        return new SignText(newMessages, newMessages, signText.getColor(), signText.hasGlowingText());
     }
 
 }

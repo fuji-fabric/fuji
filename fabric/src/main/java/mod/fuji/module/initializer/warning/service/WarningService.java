@@ -17,9 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,7 +77,7 @@ public class WarningService {
         WarningInitializer.data.writeStorage();
     }
 
-    public static void processNotify(@NotNull ServerPlayerEntity targetPlayer, boolean isJoin) {
+    public static void processNotify(@NotNull ServerPlayer targetPlayer, boolean isJoin) {
         /* Does the player have any warnings? */
         String playerName = PlayerHelper.getPlayerName(targetPlayer);
         List<Warning> activeWarnings = getPlayerWarnings(playerName)
@@ -91,7 +91,7 @@ public class WarningService {
         PlayerHelper.Lookup
             .getOnlinePlayers()
             .stream()
-            .filter(it -> LuckpermsHelper.hasPermission(it.getUuid(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))
+            .filter(it -> LuckpermsHelper.hasPermission(it.getUUID(), WarningInitializer.NOTIFY_WARNINGS_PERMISSION))
             .forEach(it -> {
                 int activeWarningsSize = activeWarnings.size();
                 if (isJoin) {
@@ -135,9 +135,9 @@ public class WarningService {
             LogUtil.info("Execute the warning rule for player {}: warning rule = {}", targetPlayerName, warningRule);
 
             // NOTE: Load the dummy offline server player entity, to provide the placeholder parsing context. (Use `/when-online` to execute commands on real server player entity.)
-            ServerCommandSource offlineServerCommandSource = PlayerHelper.Loader
+            CommandSourceStack offlineServerCommandSource = PlayerHelper.Loader
                 .loadDummyPlayer(targetPlayerName)
-                .getCommandSource();
+                .createCommandSourceStack();
             ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(offlineServerCommandSource);
 
             List<String> commands = warningRule.getCommands();
@@ -145,7 +145,7 @@ public class WarningService {
         }
     }
 
-    public static void processWarningReminder(@NotNull ServerPlayerEntity targetPlayer) {
+    public static void processWarningReminder(@NotNull ServerPlayer targetPlayer) {
         var config = WarningInitializer.config.model().getWarningReminder();
         if (!config.isRemindWarnedPlayerOnJoinServer()) {
             return;
@@ -169,7 +169,7 @@ public class WarningService {
             String description = entity.getDescription();
             String createdDate = ChronosUtil.Formatter.formatDate(entity.getCreatedTimestamp());
             String expirationDate = ChronosUtil.Formatter.formatDate(entity.getExpirationTimestamp());
-            Text entityText = TextHelper.getTextByKey(targetPlayer, "warning.remind.entry", description, createdDate, expirationDate);
+            Component entityText = TextHelper.getTextByKey(targetPlayer, "warning.remind.entry", description, createdDate, expirationDate);
             builder.append(entityText);
         });
         pagedMessageText.sendPage(targetPlayer, 0);

@@ -9,10 +9,10 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.ItemStackWrapper;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStackArgumentType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.item.ItemInput;
+import net.minecraft.commands.arguments.item.ItemArgument;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -21,20 +21,20 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ItemStackArgumentType.itemStack(CommandHelper.getCommandRegistryAccess());
+        return ItemArgument.item(CommandHelper.getCommandRegistryAccess());
     }
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        ItemStackArgument itemStackArgument = ItemStackArgumentType.getItemStackArgument(context, commandArgument.getArgumentName());
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        ItemInput itemStackArgument = ItemArgument.getItem(context, commandArgument.getArgumentName());
         ItemStack itemStack = ItemStackHelper.Parser.createItemStack(itemStackArgument);
         String inputString;
 
         #if MC_VER <= MC_1_20_4
         inputString = itemStackArgument.asString();
         #elif MC_VER > MC_1_20_4
-        inputString = itemStackArgument.asString(mod.fuji.core.auxiliary.minecraft.RegistryHelper.getDefaultWrapperLookup());
+        inputString = itemStackArgument.serialize(mod.fuji.core.auxiliary.minecraft.RegistryHelper.getDefaultWrapperLookup());
         #endif
 
         return new ItemStackWrapper(itemStack, inputString);

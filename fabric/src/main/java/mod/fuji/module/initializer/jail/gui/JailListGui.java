@@ -8,24 +8,24 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class JailListGui extends PagedGui<JailDescriptor> {
 
-    public JailListGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<JailDescriptor> entities, int pageIndex) {
+    public JailListGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<JailDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "jail.list.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<JailDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JailDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<JailDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<JailDescriptor> entities, int pageIndex) {
         return new JailListGui(parent, player, entities, pageIndex);
     }
 
-    public static JailListGui make(@NotNull ServerPlayerEntity player) {
+    public static JailListGui make(@NotNull ServerPlayer player) {
         List<JailDescriptor> entities = JailService.getJailDescriptors();
         return new JailListGui(null, player, entities, 0);
     }
@@ -37,7 +37,7 @@ public class JailListGui extends PagedGui<JailDescriptor> {
 
         builder
             .setItem(Items.IRON_BARS)
-            .setName(Text.literal(entity.getId()))
+            .setName(Component.literal(entity.getId()))
             .setLore(List.of(TextHelper.getTextByKey(this.getPlayer(), "prompt.click.see_inside")))
             .setCallback(() -> {
                 JailInfoGui

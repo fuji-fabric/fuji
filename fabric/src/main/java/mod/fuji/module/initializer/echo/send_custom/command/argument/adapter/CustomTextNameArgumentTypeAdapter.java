@@ -11,7 +11,7 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.echo.send_custom.SendCustomInitializer;
 import mod.fuji.module.initializer.echo.send_custom.command.argument.wrapper.CustomTextName;
 import lombok.Cleanup;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,13 +28,13 @@ public class CustomTextNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         return new CustomTextName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(
             CommandHelper.Suggestion.iterable(() -> {
                     try {

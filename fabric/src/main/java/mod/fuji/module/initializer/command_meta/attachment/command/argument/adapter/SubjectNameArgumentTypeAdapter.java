@@ -8,7 +8,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.service.attachment.AttachmentManager;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public class SubjectNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         return new SubjectName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
@@ -37,7 +37,7 @@ public class SubjectNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests((ctx, builder) -> {
             AttachmentManager.listSubjectNames().forEach(builder::suggest);
             return builder.buildFuture();

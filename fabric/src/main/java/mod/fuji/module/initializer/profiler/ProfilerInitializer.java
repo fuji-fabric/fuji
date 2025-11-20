@@ -10,7 +10,7 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.profiler.config.ProfilerConfigModel;
 import mod.fuji.module.initializer.profiler.gui.ProfilerGui;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751824800643L, value = """
     To query the server health status.
@@ -27,7 +27,7 @@ public class ProfilerInitializer extends ModuleInitializer {
 
     @Document(id = 1751824806374L, value = "Open the server health status GUI.")
     @CommandNode("profiler")
-    private static int $profiler(@CommandSource ServerPlayerEntity player) {
+    private static int $profiler(@CommandSource ServerPlayer player) {
         new ProfilerGui(player)
             .open();
 

@@ -6,7 +6,7 @@ import mod.fuji.module.initializer.command_menu.structure.MenuDescriptor;
 import mod.fuji.module.initializer.command_menu.structure.SlotDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.HashMap;

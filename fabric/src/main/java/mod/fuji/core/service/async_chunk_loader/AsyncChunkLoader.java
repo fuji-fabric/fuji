@@ -4,9 +4,9 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.service.game_task.GameTaskManager;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import org.jetbrains.annotations.NotNull;
 
 @TestCase(action = "Test the functionality of async chunk loading.", targets = {
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 })
 public class AsyncChunkLoader {
 
-    public static @NotNull CompletableFuture<Void> loadChunkAsync(@NotNull ServerWorld serverWorld, @NotNull ChunkPos chunkPos, int timeoutTicks, @NotNull Consumer<Chunk> chunkConsumer, @NotNull Runnable onFailed) {
+    public static @NotNull CompletableFuture<Void> loadChunkAsync(@NotNull ServerLevel serverWorld, @NotNull ChunkPos chunkPos, int timeoutTicks, @NotNull Consumer<ChunkAccess> chunkConsumer, @NotNull Runnable onFailed) {
         AsyncChunkLoadTask task = new AsyncChunkLoadTask(serverWorld, chunkPos, timeoutTicks, chunkConsumer, onFailed);
         GameTaskManager.submitTask(task);
         return task.getChunkAsyncLoadingFuture();

@@ -7,22 +7,22 @@ import mod.fuji.core.extension.PlayerCombatExtension;
 import mod.fuji.core.service.bossbar.BossBarTicket;
 import mod.fuji.core.structure.GlobalPos;
 import lombok.Getter;
-import net.minecraft.entity.boss.ServerBossBar;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Getter
 public abstract class InterruptibleTicket extends BossBarTicket {
-    protected final @NotNull ServerPlayerEntity player;
+    protected final @NotNull ServerPlayer player;
     protected final @NotNull GlobalPos source;
     protected final @NotNull Interruptible interruptible;
 
     public InterruptibleTicket(
-        ServerBossBar bossBar
+            ServerBossEvent bossBar
         , int totalMS
-        , @NotNull ServerPlayerEntity player
+        , @NotNull ServerPlayer player
         , @NotNull GlobalPos source
         , @NotNull Interruptible interruptible
     ) {

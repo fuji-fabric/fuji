@@ -20,7 +20,7 @@ import mod.fuji.module.initializer.command_scheduler.config.model.CommandSchedul
 import mod.fuji.module.initializer.command_scheduler.gui.JobGui;
 import mod.fuji.module.initializer.command_scheduler.job.CommandScheduleJob;
 import mod.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.quartz.JobDataMap;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public class CommandSchedulerInitializer extends ModuleInitializer {
 
     @Document(id = 1751826757048L, value = "List all defined jobs.")
     @CommandNode("list")
-    private static int $list(@CommandSource ServerPlayerEntity player) {
+    private static int $list(@CommandSource ServerPlayer player) {
         List<CommandSchedulerJobDescriptor> jobs = scheduler.model().jobs;
         new JobGui(player, jobs, 0)
             .open();

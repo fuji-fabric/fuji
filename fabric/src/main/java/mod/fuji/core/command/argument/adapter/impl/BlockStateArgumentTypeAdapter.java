@@ -6,9 +6,9 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
-import net.minecraft.block.BlockState;
-import net.minecraft.command.argument.BlockStateArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.commands.arguments.blocks.BlockStateArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +17,12 @@ public class BlockStateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return BlockStateArgumentType.blockState(CommandHelper.getCommandRegistryAccess());
+        return BlockStateArgument.block(CommandHelper.getCommandRegistryAccess());
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return BlockStateArgumentType.getBlockState(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return BlockStateArgument.getBlock(context, commandArgument.getArgumentName());
     }
 
     @Override

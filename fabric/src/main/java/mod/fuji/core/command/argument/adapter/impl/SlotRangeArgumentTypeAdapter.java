@@ -8,10 +8,10 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 #elif MC_VER > MC_1_20_4
-import net.minecraft.command.argument.SlotRangeArgumentType;
-import net.minecraft.inventory.SlotRange;
+import net.minecraft.commands.arguments.SlotsArgument;
+import net.minecraft.world.inventory.SlotRange;
 #endif
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -22,16 +22,16 @@ public class SlotRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_4
             return StringArgumentType.greedyString();
         #elif MC_VER > MC_1_20_4
-            return SlotRangeArgumentType.slotRange();
+            return SlotsArgument.slots();
         #endif
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_4
         return new GreedyString(StringArgumentType.getString(context, commandArgument.getArgumentName()));
         #elif MC_VER > MC_1_20_4
-        return SlotRangeArgumentType.getSlotRange(context, commandArgument.getArgumentName());
+        return SlotsArgument.getSlots(context, commandArgument.getArgumentName());
         #endif
     }
 

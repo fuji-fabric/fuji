@@ -12,12 +12,12 @@ import java.io.IOException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -61,11 +61,11 @@ public class DeathNode {
     public int expLevel;
     public float expProgress;
 
-    public static DeathNode fromNbt(NbtCompound nbt) {
+    public static DeathNode fromNbt(CompoundTag nbt) {
         DeathNode deathNode = new DeathNode();
 
         /* Read remark tag. */
-        NbtCompound remarkTag = NbtHelper.Primitives.getCompound(nbt, REMARK_KEY).get();
+        CompoundTag remarkTag = NbtHelper.Primitives.getCompound(nbt, REMARK_KEY).get();
 
         deathNode.time = NbtHelper.Primitives.getString(remarkTag, TIME_KEY).get();
         deathNode.dimension = NbtHelper.Primitives.getString(remarkTag, DIMENSION_KEY).get();
@@ -75,14 +75,14 @@ public class DeathNode {
         deathNode.reason = NbtHelper.Primitives.getString(remarkTag, REASON_KEY).get();
 
         /* Read inventory tag. */
-        NbtCompound inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY).get();
+        CompoundTag inventoryNode = NbtHelper.Primitives.getCompound(nbt, INVENTORY_KEY).get();
 
         // restore main stacks (1*9 slots + 3*9 slots)
-        deathNode.main = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(ITEM_KEY));
+        deathNode.main = ItemStackHelper.Codec.readSlotsNode((ListTag) inventoryNode.get(ITEM_KEY));
 
-        deathNode.armor = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(ARMOR_KEY));
+        deathNode.armor = ItemStackHelper.Codec.readSlotsNode((ListTag) inventoryNode.get(ARMOR_KEY));
 
-        deathNode.offhand = ItemStackHelper.Codec.readSlotsNode((NbtList) inventoryNode.get(OFFHAND_KEY));
+        deathNode.offhand = ItemStackHelper.Codec.readSlotsNode((ListTag) inventoryNode.get(OFFHAND_KEY));
 
         deathNode.score = NbtHelper.Primitives.getInt(inventoryNode, SCORE_KEY).get();
         deathNode.expLevel = NbtHelper.Primitives.getInt(inventoryNode, XP_LEVEL_KEY).get();
@@ -92,22 +92,22 @@ public class DeathNode {
     }
 
     @SneakyThrows(IOException.class)
-    public static void createDeathNode(@NotNull ServerPlayerEntity player) {
+    public static void createDeathNode(@NotNull ServerPlayer player) {
         if (player.getInventory().isEmpty()) return;
 
         NbtHelper.Storage.withNbtFile(DeathLogInitializer.getDeathDataPath(PlayerHelper.getPlayerName(player)), root -> {
-            NbtList deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DEATHS_KEY, new NbtList());
+            ListTag deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DEATHS_KEY, new ListTag());
             deathNodeList.add(makeDeathNodeNbt(player));
         });
     }
 
-    private static void writeRemarkNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
+    private static void writeRemarkNode(@NotNull CompoundTag parent, @NotNull ServerPlayer player) {
         String time = ChronosUtil.Formatter.getFormattedCurrentDate();
-        String reason = player.getDamageTracker().getDeathMessage().getString();
-        String dimension = PlayerHelper.getServerWorld(player).getRegistryKey().getValue().toString();
-        Vec3d position = EntityHelper.getPos(player);
+        String reason = player.getCombatTracker().getDeathMessage().getString();
+        String dimension = PlayerHelper.getServerWorld(player).dimension().location().toString();
+        Vec3 position = EntityHelper.getPos(player);
 
-        NbtCompound remarkTag = new NbtCompound();
+        CompoundTag remarkTag = new CompoundTag();
         remarkTag.putString(TIME_KEY, time);
         remarkTag.putString(REASON_KEY, reason);
         remarkTag.putString(DIMENSION_KEY, dimension);
@@ -117,12 +117,12 @@ public class DeathNode {
         parent.put(REMARK_KEY, remarkTag);
     }
 
-    private static void writeInventoryNode(@NotNull NbtCompound parent, @NotNull ServerPlayerEntity player) {
-        NbtCompound inventoryTag = new NbtCompound();
+    private static void writeInventoryNode(@NotNull CompoundTag parent, @NotNull ServerPlayer player) {
+        CompoundTag inventoryTag = new CompoundTag();
 
-        inventoryTag.put(ARMOR_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getArmorStacks(player)));
-        inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getOffhandStack(player)));
-        inventoryTag.put(ITEM_KEY, ItemStackHelper.Codec.writeSlotsNode(new NbtList(), InventoryHelper.getMainStacks(player)));
+        inventoryTag.put(ARMOR_KEY, ItemStackHelper.Codec.writeSlotsNode(new ListTag(), InventoryHelper.getArmorStacks(player)));
+        inventoryTag.put(OFFHAND_KEY, ItemStackHelper.Codec.writeSlotsNode(new ListTag(), InventoryHelper.getOffhandStack(player)));
+        inventoryTag.put(ITEM_KEY, ItemStackHelper.Codec.writeSlotsNode(new ListTag(), InventoryHelper.getMainStacks(player)));
 
         inventoryTag.putInt(SCORE_KEY, player.getScore());
         inventoryTag.putInt(XP_LEVEL_KEY, player.experienceLevel);
@@ -130,15 +130,15 @@ public class DeathNode {
         parent.put(INVENTORY_KEY, inventoryTag);
     }
 
-    private static @NotNull NbtCompound makeDeathNodeNbt(@NotNull ServerPlayerEntity player) {
-        NbtCompound node = new NbtCompound();
+    private static @NotNull CompoundTag makeDeathNodeNbt(@NotNull ServerPlayer player) {
+        CompoundTag node = new CompoundTag();
         writeInventoryNode(node, player);
         writeRemarkNode(node, player);
         return node;
     }
 
-    public @NotNull List<Text> getLore(ServerPlayerEntity player) {
-        List<Text> lore = new ArrayList<>();
+    public @NotNull List<Component> getLore(ServerPlayer player) {
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(player, "deathlog.view.time", this.time));
         lore.add(TextHelper.getTextByKey(player, "deathlog.view.dimension", this.dimension));
         lore.add(TextHelper.getTextByKey(player, "deathlog.view.coordinate", this.x, this.y, this.z));

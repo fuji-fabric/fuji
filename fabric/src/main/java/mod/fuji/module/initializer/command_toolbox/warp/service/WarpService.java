@@ -8,7 +8,7 @@ import mod.fuji.module.initializer.command_toolbox.warp.WarpInitializer;
 import mod.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,10 +23,10 @@ public class WarpService {
             });
     }
 
-    public static void doWarp(@NotNull WarpDescriptor warpDescriptor, @NotNull ServerPlayerEntity player) {
+    public static void doWarp(@NotNull WarpDescriptor warpDescriptor, @NotNull ServerPlayer player) {
         warpDescriptor.getPosition().teleport(player);
 
-        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
+        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.createCommandSourceStack());
         List<String> commandList = warpDescriptor.getEvent().getOnWarped().getCommandList();
         CommandExecutor.executeBatch(extendedCommandSource, commandList);
         TextHelper.sendTextByKey(player,"warp.tp.success", warpDescriptor.getDisplayName());
@@ -46,7 +46,7 @@ public class WarpService {
         return WarpInitializer.data.model().warps.keySet().stream().toList();
     }
 
-    public static void createWarp(@NotNull ServerPlayerEntity player, @NotNull String warpId) {
+    public static void createWarp(@NotNull ServerPlayer player, @NotNull String warpId) {
         WarpDescriptor newValue = new WarpDescriptor(GlobalPos.of(player)).withDisplayName(warpId);
         WarpInitializer.data.model().warps.put(warpId, newValue);
     }

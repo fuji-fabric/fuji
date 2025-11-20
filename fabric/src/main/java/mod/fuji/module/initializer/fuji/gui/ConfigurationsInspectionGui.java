@@ -13,10 +13,10 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.inspector.FailedToInspectException;
 import mod.fuji.core.document.inspector.JavaObjectInspector;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,17 +26,17 @@ import java.util.List;
 @TestCase(action = "Inspect the configurations of `command_menu` module.", targets = "It should be able to inspect complex data structures.")
 public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandler<?>> {
 
-    public ConfigurationsInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    public ConfigurationsInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.configuration.gui.title"), entities, pageIndex);
     }
 
-    public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static ConfigurationsInspectionGui inspectAll(SimpleGui parent, ServerPlayer player) {
         List<BaseConfigurationHandler<?>> entities = BaseConfigurationHandler.getObjectConfigurationHandlers();
         return new ConfigurationsInspectionGui(parent, player, entities, 0);
     }
 
     @Override
-    protected @NotNull PagedGui<BaseConfigurationHandler<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseConfigurationHandler<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<BaseConfigurationHandler<?>> entities, int pageIndex) {
         return new ConfigurationsInspectionGui(parent, player, entities, pageIndex);
     }
 
@@ -48,7 +48,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         String configRelativePath = entity.computeRelativePathBasedOnGameDir();
         String fromModule = entity.getSourceModule();
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.addAll(List.of(
             TextHelper.getTextByKey(getPlayer(), "from_module", fromModule)
             , TextHelper.getTextByKey(getPlayer(), "fuji.inspect.configuration.class", configHandlerClassName)
@@ -69,7 +69,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
         SimpleGui trueParentGui = this.getParent() != null ? this.getParent() : this.getBackendGui();
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setItem(toItem(entity))
-            .setName(Text.literal(configRelativePath))
+            .setName(Component.literal(configRelativePath))
             .setLore(lore)
             .setCallback(() -> openRootJavaObjectInspectorGui(trueParentGui, entity, configRelativePath));
 

@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 @Cite({
@@ -43,8 +43,8 @@ import org.jetbrains.annotations.NotNull;
 @TestCase(action = "List the command tree of a normal user.", targets = "The command permissions should be handled properly.")
 public class CommandAnnotationProcessor {
 
-    public static CommandDispatcher<ServerCommandSource> COMMAND_DISPATCHER;
-    public static CommandRegistryAccess COMMAND_REGISTRY_ACCESS;
+    public static CommandDispatcher<CommandSourceStack> COMMAND_DISPATCHER;
+    public static CommandBuildContext COMMAND_REGISTRY_ACCESS;
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
     private static void setupCommandManagerReferences(CommandRegistrationEvent event) {
@@ -56,7 +56,7 @@ public class CommandAnnotationProcessor {
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void updateCommandTree(CommandRegistrationEvent event) {
         // NOTE: The `/reload` command invalidates the old CommandManager reference, here we have to capture the new reference to CommandManager.
-        CommandManager commandManager = event.getCommandManager();
+        Commands commandManager = event.getCommandManager();
         CommandHelper.Tree.updateCommandTree(commandManager);
     }
 

@@ -5,9 +5,9 @@ import mod.fuji.core.annotation.HotPath;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.module.initializer.world.border.WorldBorderInitializer;
 import mod.fuji.module.initializer.world.border.structure.BorderDescriptor;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.border.WorldBorder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.border.WorldBorder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 #if MC_VER < MC_1_21_9
 @Mixin(World.class)
 #elif MC_VER >= MC_1_21_9
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 #endif
 public class BorderMixin {
 
@@ -26,7 +26,7 @@ public class BorderMixin {
     @ModifyReturnValue(method = "getWorldBorder", at = @At("RETURN"))
     WorldBorder modifyTheReturnValueOfGetWorldBorder(WorldBorder original) {
         if (dimensionId == null) {
-            World world = (World) (Object) this;
+            Level world = (Level) (Object) this;
             dimensionId = RegistryHelper.getIdAsString(world);
         }
 

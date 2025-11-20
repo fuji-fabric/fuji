@@ -10,67 +10,67 @@ import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.boss.BossBar;
-import net.minecraft.entity.boss.ServerBossBar;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.scoreboard.ScoreboardCriterion;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.BossEvent;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.function.CommandFunction;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.UserCache;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.ColumnPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.functions.CommandFunction;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.players.CachedUserNameToIdResolver;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.server.level.ColumnPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -130,27 +130,27 @@ public class DependencyTest {
 
         /* Allowed Minecraft entities. */
         allowedReferences.add(MinecraftServer.class.getName());
-        allowedReferences.add(PlayerManager.class.getName());
-        allowedReferences.add(UserCache.class.getName());
+        allowedReferences.add(PlayerList.class.getName());
+        allowedReferences.add(CachedUserNameToIdResolver.class.getName());
 
         allowedReferences.add(Registry.class.getName());
+        allowedReferences.add(BuiltInRegistries.class.getName());
         allowedReferences.add(Registries.class.getName());
-        allowedReferences.add(RegistryKeys.class.getName());
-        allowedReferences.add(RegistryKey.class.getName());
-        allowedReferences.add(RegistryEntry.class.getName());
-        allowedReferences.add(Identifier.class.getName());
-        allowedReferences.add(SimpleRegistry.class.getName());
+        allowedReferences.add(ResourceKey.class.getName());
+        allowedReferences.add(Holder.class.getName());
+        allowedReferences.add(ResourceLocation.class.getName());
+        allowedReferences.add(MappedRegistry.class.getName());
 
         allowedReferences.add("net.minecraft.nbt.");
         allowedReferences.add("net.minecraft.storage.ReadView");
         allowedReferences.add("net.minecraft.util.ErrorReporter");
         allowedReferences.add("net.minecraft.component.");
 
-        allowedReferences.add(MessageType.class.getName());
+        allowedReferences.add(ChatType.class.getName());
 
 
-        allowedReferences.add(ServerPlayerEntity.class.getName());
-        allowedReferences.add(PlayerEntity.class.getName());
+        allowedReferences.add(ServerPlayer.class.getName());
+        allowedReferences.add(Player.class.getName());
         allowedReferences.add("net.minecraft.entity.Leashable");
         allowedReferences.add("net.minecraft.entity.decoration.BlockAttachedEntity");
         allowedReferences.add("net.minecraft.entity.decoration.LeashKnotEntity");
@@ -158,30 +158,30 @@ public class DependencyTest {
         allowedReferences.add("net.minecraft.entity.vehicle.BoatEntity");
         allowedReferences.add("net.minecraft.entity.vehicle.VehicleEntity");
 
-        allowedReferences.add(ServerCommandSource.class.getName());
-        allowedReferences.add(CommandManager.class.getName());
-        allowedReferences.add(CommandRegistryAccess.class.getName());
+        allowedReferences.add(CommandSourceStack.class.getName());
+        allowedReferences.add(Commands.class.getName());
+        allowedReferences.add(CommandBuildContext.class.getName());
 
-        allowedReferences.add(Text.class.getName());
+        allowedReferences.add(Component.class.getName());
         allowedReferences.add(Style.class.getName());
-        allowedReferences.add(Formatting.class.getName());
-        allowedReferences.add(MutableText.class.getName());
+        allowedReferences.add(ChatFormatting.class.getName());
+        allowedReferences.add(MutableComponent.class.getName());
         allowedReferences.add(ClickEvent.class.getName());
 
         allowedReferences.add(ItemStack.class.getName());
 
-        allowedReferences.add(World.class.getName());
-        allowedReferences.add(ServerWorld.class.getName());
-        allowedReferences.add(Chunk.class.getName());
+        allowedReferences.add(Level.class.getName());
+        allowedReferences.add(ServerLevel.class.getName());
+        allowedReferences.add(ChunkAccess.class.getName());
         allowedReferences.add(ChunkPos.class.getName());
         allowedReferences.add(ChunkHolder.class.getName());
-        allowedReferences.add(ChunkSectionPos.class.getName());
+        allowedReferences.add(SectionPos.class.getName());
         allowedReferences.add(Direction.class.getName());
         allowedReferences.add(DimensionType.class.getName());
-        allowedReferences.add(DimensionTypes.class.getName());
+        allowedReferences.add(BuiltinDimensionTypes.class.getName());
 
-        allowedReferences.add(Vec3d.class.getName());
-        allowedReferences.add(Vec2f.class.getName());
+        allowedReferences.add(Vec3.class.getName());
+        allowedReferences.add(Vec2.class.getName());
 
         allowedReferences.add(Item.class.getName());
 
@@ -192,38 +192,38 @@ public class DependencyTest {
         allowedReferences.add(BlockState.class.getName());
 
         allowedReferences.add(Entity.class.getName());
-        allowedReferences.add(MobEntity.class.getName());
+        allowedReferences.add(Mob.class.getName());
 
         allowedReferences.add(DamageSource.class.getName());
 
-        allowedReferences.add(BossBar.class.getName());
-        allowedReferences.add(ServerBossBar.class.getName());
+        allowedReferences.add(BossEvent.class.getName());
+        allowedReferences.add(ServerBossEvent.class.getName());
 
-        allowedReferences.add(ScreenHandlerType.class.getName());
-        allowedReferences.add(GenericContainerScreenHandler.class.getName());
+        allowedReferences.add(MenuType.class.getName());
+        allowedReferences.add(ChestMenu.class.getName());
         allowedReferences.add(EquipmentSlot.class.getName());
-        allowedReferences.add(SimpleInventory.class.getName());
-        allowedReferences.add(DefaultedList.class.getName());
+        allowedReferences.add(SimpleContainer.class.getName());
+        allowedReferences.add(NonNullList.class.getName());
 
         allowedReferences.add(DyeColor.class.getName());
 
         allowedReferences.add(SoundEvent.class.getName());
-        allowedReferences.add(SoundCategory.class.getName());
+        allowedReferences.add(SoundSource.class.getName());
 
         allowedReferences.add("net.minecraft.network.packet.");
-        allowedReferences.add(ServerPlayNetworkHandler.class.getName());
+        allowedReferences.add(ServerGamePacketListenerImpl.class.getName());
 
         allowedReferences.add("net.minecraft.command.argument.");
         allowedReferences.add("net.minecraft.scoreboard.ScoreboardDisplaySlot");
         allowedReferences.add("net.minecraft.scoreboard.ScoreboardObjective");
-        allowedReferences.add(NumberRange.class.getName());
+        allowedReferences.add(MinMaxBounds.class.getName());
         allowedReferences.add("net.minecraft.inventory.SlotRange");
         allowedReferences.add(ColumnPos.class.getName());
-        allowedReferences.add(Team.class.getName());
-        allowedReferences.add(ParticleEffect.class.getName());
-        allowedReferences.add(GameMode.class.getName());
+        allowedReferences.add(PlayerTeam.class.getName());
+        allowedReferences.add(ParticleOptions.class.getName());
+        allowedReferences.add(GameType.class.getName());
         allowedReferences.add(CommandFunction.class.getName());
-        allowedReferences.add(ScoreboardCriterion.class.getName());
+        allowedReferences.add(ObjectiveCriteria.class.getName());
 
         allowedReferences.add(ShulkerBoxBlock.class.getName());
 

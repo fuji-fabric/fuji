@@ -16,10 +16,9 @@ import mod.fuji.module.initializer.command_menu.CommandMenuInitializer;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,44 +115,45 @@ public class SlotDescriptor {
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    public boolean canViewThisSlot(ServerPlayerEntity player) {
-        if (!player.hasPermissionLevel(this.viewRequirement.level)) return false;
+    public boolean canViewThisSlot(ServerPlayer player) {
+        if (!player.hasPermissions(this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
             && !this.viewRequirement.string.isEmpty()
-            && !LuckpermsHelper.hasPermission(player.getUuid(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
+            && !LuckpermsHelper.hasPermission(player.getUUID(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
 
         return true;
     }
 
-    public record CommandMenuSlotClickCallback(ServerPlayerEntity viewingPlayer, MenuDescriptor menuDescriptor, SlotDescriptor slotDescriptor) implements GuiElementInterface.ClickCallback {
+    public record CommandMenuSlotClickCallback(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor, SlotDescriptor slotDescriptor) implements GuiElementInterface.ClickCallback {
+
 
         @SuppressWarnings("UnnecessaryReturnStatement")
         @Override
-        public void click(int i, ClickType clickType, SlotActionType clickType1, @NotNull SlotGuiInterface slotGuiInterface) {
+        public void click(int i, ClickType clickType, net.minecraft.world.inventory.ClickType clickType1, SlotGuiInterface slotGuiInterface) {
 
             /* Dispatch click type. */
             if (clickType == ClickType.MOUSE_LEFT && !slotDescriptor.commands.onLeftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onLeftClickCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onLeftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_RIGHT && !slotDescriptor.commands.onRightClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onRightClickCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onRightClickCommands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_LEFT_SHIFT && !slotDescriptor.commands.onLeftShiftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onLeftShiftClickCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onLeftShiftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_RIGHT_SHIFT && !slotDescriptor.commands.onRightShiftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onRightShiftClickCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onRightShiftClickCommands);
                 tryCloseThisMenu();
                 return;
             }
             if (clickType == ClickType.MOUSE_MIDDLE && !slotDescriptor.commands.onMiddleClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), slotDescriptor.commands.onMiddleClickCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onMiddleClickCommands);
                 tryCloseThisMenu();
                 return;
             }
@@ -168,7 +168,7 @@ public class SlotDescriptor {
         }
     }
 
-    public GuiElementInterface buildGuiElement(ServerPlayerEntity viewingPlayer, MenuDescriptor menuDescriptor) {
+    public GuiElementInterface buildGuiElement(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor) {
         ItemStack itemStack = ItemStackHelper.Parser.parseItemStack(this.item);
         GuiElementBuilder slotElementBuilder = GuiElementBuilder.from(itemStack);
 
@@ -183,12 +183,12 @@ public class SlotDescriptor {
         }
 
         if (this.displayName != null) {
-            Text displayName = TextHelper.getTextByValue(viewingPlayer, this.displayName);
+            Component displayName = TextHelper.getTextByValue(viewingPlayer, this.displayName);
             slotElementBuilder.setName(displayName);
         }
 
         if (this.lore != null && !this.lore.isEmpty()) {
-            List<Text> lore = new ArrayList<>();
+            List<Component> lore = new ArrayList<>();
             this.lore.forEach(it -> lore.add(TextHelper.getTextByValue(viewingPlayer, it)));
             slotElementBuilder.setLore(lore);
         }

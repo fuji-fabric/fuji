@@ -4,8 +4,8 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.OperationArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.OperationArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -13,17 +13,17 @@ import org.jetbrains.annotations.NotNull;
 public class OperationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return OperationArgumentType.operation();
+        return OperationArgument.operation();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return OperationArgumentType.getOperation(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return OperationArgument.getOperation(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(OperationArgumentType.Operation.class);
+        return List.of(OperationArgument.Operation.class);
     }
 
     @Override

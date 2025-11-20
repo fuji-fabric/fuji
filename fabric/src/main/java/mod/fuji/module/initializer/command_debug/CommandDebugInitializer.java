@@ -10,7 +10,7 @@ import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1751827007525L, value = """
     This module provides debug tools for the executing command.
@@ -23,7 +23,7 @@ public class CommandDebugInitializer extends ModuleInitializer {
 
     @CommandNode("command-debug")
     @CommandRequirement(level = 4)
-    private static int $debug(@CommandSource ServerCommandSource source, GreedyCommandString command) throws CommandSyntaxException {
+    private static int $debug(@CommandSource CommandSourceStack source, GreedyCommandString command) throws CommandSyntaxException {
         String commandString = command.getValue();
 
         int returnValue = CommandHelper
@@ -31,7 +31,7 @@ public class CommandDebugInitializer extends ModuleInitializer {
             .execute(commandString, source);
 
         TextHelper.sendTextByKey(source, "command.string", commandString);
-        TextHelper.sendTextByKey(source, "command.source", source.getName());
+        TextHelper.sendTextByKey(source, "command.source", source.getTextName());
         TextHelper.sendTextByKey(source, "command.return", returnValue);
         return CommandHelper.Return.SUCCESS;
     }

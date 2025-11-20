@@ -10,7 +10,7 @@ import mod.fuji.core.service.cache.CacheManager;
 import mod.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import java.time.Duration;
 import java.util.function.Supplier;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class GameProfileCacheService {
@@ -22,7 +22,7 @@ public class GameProfileCacheService {
         setGameProfileCache(event.getPlayer());
     }
 
-    public static void setGameProfileCache(@NotNull ServerPlayerEntity player) {
+    public static void setGameProfileCache(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         GameProfileWrapper cachedGameProfile = getCachedGameProfile(player);
         LogUtil.debug("Set game profile cache for player {}. (cache = {})", playerName, cachedGameProfile);
@@ -32,7 +32,7 @@ public class GameProfileCacheService {
         return getCachedGameProfile(onlinePlayerName, Duration.ofDays(7), () -> supplyOnlineGameProfile(onlinePlayerName));
     }
 
-    public static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull ServerPlayerEntity player) {
+    public static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return getCachedGameProfile(playerName, Duration.ofMillis(0), () -> supplyOfflineGameProfile(player));
     }
@@ -42,7 +42,7 @@ public class GameProfileCacheService {
             .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileWrapper.class, expirationDuration, supplier);
     }
 
-    private static @NotNull GameProfileWrapper supplyOfflineGameProfile(@NotNull ServerPlayerEntity serverPlayerEntity) {
+    private static @NotNull GameProfileWrapper supplyOfflineGameProfile(@NotNull ServerPlayer serverPlayerEntity) {
         return GameProfileWrapper.fromVanillaType(serverPlayerEntity.getGameProfile());
     }
 

@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.world.gamerule.structure;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 
 @Data
 @NoArgsConstructor

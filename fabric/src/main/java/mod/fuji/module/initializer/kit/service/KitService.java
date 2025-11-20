@@ -8,10 +8,10 @@ import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.module.initializer.kit.KitInitializer;
 import mod.fuji.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class KitService {
     @SneakyThrows(IOException.class)
     public static void createKit(@NotNull Kit kit) {
         NbtHelper.Storage.withNbtFile(getKitPath(kit.getName()), root -> {
-            NbtList nbtList = new NbtList();
+            ListTag nbtList = new ListTag();
             ItemStackHelper.Codec.writeSlotsNode(nbtList, kit.getStackList());
             LogUtil.debug("createKit: nbtList = {}", nbtList);
             root.put(INVENTORY_KEY, nbtList);
@@ -80,19 +80,19 @@ public class KitService {
         List<ItemStack> kitStacks = NbtHelper.Storage.withNbtFile(getKitPath(kitName), root -> {
             /* Write empty list if there is no INVENTORY tag. */
             if (root.get(INVENTORY_KEY) == null) {
-                root.put(INVENTORY_KEY, new NbtList());
+                root.put(INVENTORY_KEY, new ListTag());
             }
 
             /* Read slots from inventory tag. */
-            NbtList nbtList = (NbtList) root.get(INVENTORY_KEY);
+            ListTag nbtList = (ListTag) root.get(INVENTORY_KEY);
             return ItemStackHelper.Codec.readSlotsNode(nbtList);
         });
 
         return new Kit(kitName, kitStacks);
     }
 
-    public static void giveKit(ServerPlayerEntity player, Kit kit) {
-        PlayerInventory playerInventory = player.getInventory();
+    public static void giveKit(ServerPlayer player, Kit kit) {
+        Inventory playerInventory = player.getInventory();
         List<ItemStack> tryAgainList = new ArrayList<>();
 
         /* Enumerate the kit items. */
@@ -105,16 +105,16 @@ public class KitService {
 
             /* Try to insert the item in specified slot. */
             ItemStack copy = template.copy();
-            if (!playerInventory.getStack(i).isEmpty() || !playerInventory.insertStack(i, copy)) {
+            if (!playerInventory.getItem(i).isEmpty() || !playerInventory.add(i, copy)) {
                 tryAgainList.add(copy);
             }
         }
 
         /* Try to insert the item in any slot. */
-        tryAgainList.removeIf(playerInventory::insertStack);
+        tryAgainList.removeIf(playerInventory::add);
 
         /* The inventory of player is full, just drop the item in the ground */
-        tryAgainList.forEach(it -> player.dropItem(it, true));
+        tryAgainList.forEach(it -> player.drop(it, true));
     }
 
 }

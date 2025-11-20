@@ -4,8 +4,8 @@ import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -17,7 +17,7 @@ public class GlobalBlockPos {
     int y;
     int z;
 
-    public GlobalBlockPos(World world, BlockPos blockPos) {
+    public GlobalBlockPos(Level world, BlockPos blockPos) {
         this.dimension = RegistryHelper.getIdAsString(world);
         this.x = blockPos.getX();
         this.y = blockPos.getY();

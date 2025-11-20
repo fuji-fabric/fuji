@@ -13,8 +13,8 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.afk.config.model.AfkConfigModel;
 import mod.fuji.module.initializer.afk.service.AfkService;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 
 @Document(id = 1751826238005L, value = """
@@ -39,7 +39,7 @@ public class AfkInitializer extends ModuleInitializer {
 
     @CommandNode("afk")
     @Document(id = 1751826266551L, value = "Enter afk state.")
-    private static int $afk(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $afk(@CommandSource @CommandTarget ServerPlayer player) {
         // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
         if (!AfkService.canEnterAfk(player)) {
             TextHelper.sendTextByKey(player, "afk.on.failed");
@@ -54,7 +54,7 @@ public class AfkInitializer extends ModuleInitializer {
     @Document(id = 1751826271499L, value = "Test if a player is in afk state.")
     @CommandNode("is-afk?")
     @CommandRequirement(level = 4)
-    private static int $isAfk(@CommandSource ServerCommandSource source, ServerPlayerEntity player) {
+    private static int $isAfk(@CommandSource CommandSourceStack source, ServerPlayer player) {
         boolean value = AfkService.isAfk(player);
         return CommandHelper.Return.returnBoolean(source, value);
     }

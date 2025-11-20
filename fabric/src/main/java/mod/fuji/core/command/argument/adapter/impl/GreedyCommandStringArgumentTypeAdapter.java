@@ -14,8 +14,8 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyCommandString;
 import mod.fuji.core.document.annotation.TestCase;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -36,7 +36,7 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String string = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return new GreedyCommandString(string);
     }
@@ -73,14 +73,14 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         "Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`"
     })
     @Override
-    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected @NotNull RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests((context, builder) -> {
                 /* Skip for non-player command source. */
                 if (context.getSource().getPlayer() == null) {
                     return builder.buildFuture();
                 }
-                ServerPlayerEntity player = context.getSource().getPlayer();
+                ServerPlayer player = context.getSource().getPlayer();
 
                 /* Define the input string. */
                 @NotNull final String input = builder.getInput();
@@ -119,7 +119,7 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
         return builder;
     }
 
-    private SuggestionsBuilder makeCommandStringSuggestionsBuilder(@NotNull ServerPlayerEntity player, @NotNull SuggestionsBuilder builder) {
+    private SuggestionsBuilder makeCommandStringSuggestionsBuilder(@NotNull ServerPlayer player, @NotNull SuggestionsBuilder builder) {
         /* Make bounded builder. */
         builder = getBoundedBuilder(builder);
 
@@ -130,7 +130,7 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
 
         /* Define the command string and its offset. */
         // List the command suggestions in the admin view.
-        ServerCommandSource commandSource = CommandHelper.Source.getCommandSource(player).withLevel(4);
+        CommandSourceStack commandSource = CommandHelper.Source.getCommandSource(player).withPermission(4);
 
         // Initialize the command string.
         @NotNull String commandString = remainingString;

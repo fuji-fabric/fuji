@@ -14,8 +14,8 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectId;
 import mod.fuji.module.initializer.command_meta.attachment.command.argument.wrapper.SubjectName;
 import lombok.SneakyThrows;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.io.IOException;
 
@@ -38,14 +38,14 @@ public class AttachmentInitializer extends ModuleInitializer {
 
     @CommandNode("set")
     @SneakyThrows(IOException.class)
-    private static int $set(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid, GreedyString data) {
+    private static int $set(@CommandSource CommandContext<CommandSourceStack> ctx, SubjectName subject, SubjectId uuid, GreedyString data) {
         AttachmentManager.setAttachment(subject.getValue(), uuid.getValue(), data.getValue());
         return CommandHelper.Return.SUCCESS;
     }
 
     @SneakyThrows(IOException.class)
     @CommandNode("unset")
-    private static int $unset(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid) {
+    private static int $unset(@CommandSource CommandContext<CommandSourceStack> ctx, SubjectName subject, SubjectId uuid) {
         boolean flag = AttachmentManager.unsetAttachment(subject.getValue(), uuid.getValue());
         TextHelper.sendTextByKey(ctx.getSource(), flag ? "operation.success" : "operation.fail");
         return CommandHelper.Return.SUCCESS;
@@ -53,10 +53,10 @@ public class AttachmentInitializer extends ModuleInitializer {
 
     @SneakyThrows(IOException.class)
     @CommandNode("get")
-    private static int $get(@CommandSource CommandContext<ServerCommandSource> ctx, SubjectName subject, SubjectId uuid) {
+    private static int $get(@CommandSource CommandContext<CommandSourceStack> ctx, SubjectName subject, SubjectId uuid) {
         String attachment = AttachmentManager.getAttachment(subject.getValue(), uuid.getValue());
 
-        TextHelper.sendMessageByText(ctx.getSource(), Text.literal(attachment));
+        TextHelper.sendMessageByText(ctx.getSource(), Component.literal(attachment));
         return CommandHelper.Return.SUCCESS;
     }
 }

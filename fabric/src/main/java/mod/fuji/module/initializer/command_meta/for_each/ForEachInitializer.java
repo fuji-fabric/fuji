@@ -10,7 +10,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751823973159L, value = """
     This module provides the `/foreach` command.
@@ -28,8 +28,8 @@ public class ForEachInitializer extends ModuleInitializer {
     private static int $foreach(GreedyCommandString rest) {
         String $rest = rest.getValue();
 
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.getCommandSource()), $rest);
+        for (ServerPlayer player : PlayerHelper.Lookup.getOnlinePlayers()) {
+            CommandExecutor.executeSingle(ExtendedCommandSource.asConsole(player.createCommandSourceStack()), $rest);
         }
         return CommandHelper.Return.SUCCESS;
     }

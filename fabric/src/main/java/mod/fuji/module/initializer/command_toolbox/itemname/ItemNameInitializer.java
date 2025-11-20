@@ -8,16 +8,16 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 public class ItemNameInitializer extends ModuleInitializer {
 
     @CommandNode("itemname set")
     @CommandRequirement(level = 4)
-    private static int $set(@CommandSource ServerPlayerEntity player, GreedyString name) {
+    private static int $set(@CommandSource ServerPlayer player, GreedyString name) {
         return CommandHelper.Pattern.withItemInMainHandCommand(player, (item) -> {
-            Text nameText = TextHelper.getTextByValue(player, name.getValue());
+            Component nameText = TextHelper.getTextByValue(player, name.getValue());
             ItemStackHelper.CustomName.setCustomName(item,nameText);
             return CommandHelper.Return.SUCCESS;
         });
@@ -25,7 +25,7 @@ public class ItemNameInitializer extends ModuleInitializer {
 
     @CommandNode("itemname reset")
     @CommandRequirement(level = 4)
-    private static int $reset(@CommandSource ServerPlayerEntity player) {
+    private static int $reset(@CommandSource ServerPlayer player) {
         return CommandHelper.Pattern.withItemInMainHandCommand(player, (item) -> {
             ItemStackHelper.CustomName.removeCustomName(item);
             return CommandHelper.Return.SUCCESS;

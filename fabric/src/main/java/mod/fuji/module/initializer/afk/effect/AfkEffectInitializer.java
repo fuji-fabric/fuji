@@ -8,7 +8,7 @@ import mod.fuji.core.event.message.entity.LivingEntityDamageEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.afk.effect.config.model.AfkEffectConfigModel;
 import mod.fuji.module.initializer.afk.service.AfkService;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751826206965L, value = """
     This module provides special `effects` for `afk player`:
@@ -22,7 +22,7 @@ public class AfkEffectInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void processInvulnerableEffect(LivingEntityDamageEvent event) {
-        if (event.getLivingEntity() instanceof ServerPlayerEntity player) {
+        if (event.getLivingEntity() instanceof ServerPlayer player) {
             if (AfkEffectInitializer.config.model().invulnerable
                 && AfkService.isAfk(player)) {
                 event.setDamage(0);

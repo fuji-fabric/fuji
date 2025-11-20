@@ -12,7 +12,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -26,13 +26,13 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(PlayerHelper.Cache::getOfflinePlayerNames));
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String offlinePlayerName = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
         return PlayerHelper.Cache

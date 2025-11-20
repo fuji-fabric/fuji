@@ -6,9 +6,9 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
-import net.minecraft.command.argument.ParticleEffectArgumentType;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.ParticleArgument;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -16,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 public class ParticleEffectArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ParticleEffectArgumentType.particleEffect(CommandHelper.getCommandRegistryAccess());
+        return ParticleArgument.particle(CommandHelper.getCommandRegistryAccess());
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ParticleEffectArgumentType.getParticle(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ParticleArgument.getParticle(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(ParticleEffect.class);
+        return List.of(ParticleOptions.class);
     }
 
     @Override

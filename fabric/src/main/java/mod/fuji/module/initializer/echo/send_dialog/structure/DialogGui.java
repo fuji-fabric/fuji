@@ -6,30 +6,30 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 public class DialogGui extends SimpleGui {
 
     private final int rows;
-    private final Text title;
+    private final Component title;
 
     private final int yesButtonSlotIndex;
     private final ItemStack yesButtonItem;
-    private final Text yesButtonName;
+    private final Component yesButtonName;
     private final String yesButtonCommand;
 
     private final int noButtonSlotIndex;
     private final ItemStack noButtonItem;
-    private final Text noButtonName;
+    private final Component noButtonName;
     private final String noButtonCommand;
 
     private boolean reopenThisGUi = true;
     private final boolean canCloseUsingNoButton;
 
-    private DialogGui(ServerPlayerEntity player, Text title, int rows, int yesButtonSlotIndex, ItemStack yesButtonItem, Text yesButtonName, String yesButtonCommand
-    , int noButtonSlotIndex, ItemStack noButtonItem, Text noButtonName, String noButtonCommand, boolean canCloseUsingNoButton) {
+    private DialogGui(ServerPlayer player, Component title, int rows, int yesButtonSlotIndex, ItemStack yesButtonItem, Component yesButtonName, String yesButtonCommand
+    , int noButtonSlotIndex, ItemStack noButtonItem, Component noButtonName, String noButtonCommand, boolean canCloseUsingNoButton) {
         super(GuiHelper.Handler.getGenericContainerType(rows), player, false);
         /* Remember the variables. */
         this.title = title;
@@ -67,7 +67,7 @@ public class DialogGui extends SimpleGui {
         GuiHelper.Placer.fillEmptySlots(this, GuiHelper.Button.makeSlotPlaceholderButton());
     }
 
-    private void onNoButtonClicked(ServerPlayerEntity player, String noButtonCommand) {
+    private void onNoButtonClicked(ServerPlayer player, String noButtonCommand) {
         if (this.canCloseUsingNoButton) {
             reopenThisGUi = false;
         }
@@ -78,7 +78,7 @@ public class DialogGui extends SimpleGui {
         }
     }
 
-    private void onYesButtonClicked(ServerPlayerEntity player, String yesButtonCommand) {
+    private void onYesButtonClicked(ServerPlayer player, String yesButtonCommand) {
         reopenThisGUi = false;
         close();
 
@@ -87,9 +87,9 @@ public class DialogGui extends SimpleGui {
         }
     }
 
-    public static DialogGui makeDialogGui(int rows, ServerPlayerEntity player, Text title
-        , int yesButtonSlotIndex, ItemStack yesButtonItem, Text yesButtonName, String yesButtonCommand
-        , int noButtonSlotIndex, ItemStack noButtonItem, Text noButtonName, String noButtonCommand
+    public static DialogGui makeDialogGui(int rows, ServerPlayer player, Component title
+        , int yesButtonSlotIndex, ItemStack yesButtonItem, Component yesButtonName, String yesButtonCommand
+        , int noButtonSlotIndex, ItemStack noButtonItem, Component noButtonName, String noButtonCommand
         , boolean canCloseUsingNoButton) {
         return new DialogGui(player, title, rows, yesButtonSlotIndex, yesButtonItem, yesButtonName, yesButtonCommand, noButtonSlotIndex, noButtonItem, noButtonName, noButtonCommand, canCloseUsingNoButton);
     }

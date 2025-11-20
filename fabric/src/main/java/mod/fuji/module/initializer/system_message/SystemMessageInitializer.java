@@ -13,9 +13,9 @@ import mod.fuji.module.initializer.system_message.config.model.SystemMessageConf
 import mod.fuji.module.initializer.system_message.config.transformer.SystemMessageV1SchemaTransformer;
 import mod.fuji.module.initializer.system_message.structure.SystemMessageRule;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,7 +111,7 @@ public class SystemMessageInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SystemMessageConfigModel.class)
         .installTransformer(new SystemMessageV1SchemaTransformer());
 
-    public static Optional<MutableText> computeTranslatableTextResult(@NotNull SystemMessageRule rule, @Nullable ServerPlayerEntity receiverPlayer, @NotNull String translatableKey, Object... args) {
+    public static Optional<MutableComponent> computeTranslatableTextResult(@NotNull SystemMessageRule rule, @Nullable ServerPlayer receiverPlayer, @NotNull String translatableKey, Object... args) {
         /* Return the new value. */
         LogUtil.debug("Process system message: translatable key = {}, player = {}", translatableKey, receiverPlayer);
 
@@ -129,12 +129,12 @@ public class SystemMessageInitializer extends ModuleInitializer {
         }
 
         /* Replace with a new value. */
-        TranslatableTextContent forceFallbackToSpecifiedValue = new TranslatableTextContent("fuji_system_message_module$force_fallback", value, args);
-        String resolveArgumentsAsString = MutableText
-            .of(forceFallbackToSpecifiedValue)
+        TranslatableContents forceFallbackToSpecifiedValue = new TranslatableContents("fuji_system_message_module$force_fallback", value, args);
+        String resolveArgumentsAsString = MutableComponent
+            .create(forceFallbackToSpecifiedValue)
             .getString();
 
-        MutableText newText = TextHelper.getTextByValue(receiverPlayer, resolveArgumentsAsString).copy();
+        MutableComponent newText = TextHelper.getTextByValue(receiverPlayer, resolveArgumentsAsString).copy();
         LogUtil.debug("Replace the translatable text {} with new value {}.", translatableKey, newText);
         return Optional.of(newText);
     }

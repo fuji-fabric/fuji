@@ -13,10 +13,10 @@ import mod.fuji.module.initializer.title.structure.TitlePreference;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,22 +36,22 @@ public class TitleService {
         return TitleInitializer.config.model().getTitleDescriptors();
     }
 
-    public static boolean isTitleObtained(ServerPlayerEntity player, String titleId) {
-        return LuckpermsHelper.hasPermission(player.getUuid(), TITLE_OBTAINED_PERMISSION_DESCRIPTOR, titleId);
+    public static boolean isTitleObtained(ServerPlayer player, String titleId) {
+        return LuckpermsHelper.hasPermission(player.getUUID(), TITLE_OBTAINED_PERMISSION_DESCRIPTOR, titleId);
     }
 
-    public static Optional<TitleDescriptor> getActiveTitle(ServerPlayerEntity player) {
+    public static Optional<TitleDescriptor> getActiveTitle(ServerPlayer player) {
         return withPreference(player, (preference) -> getTitle(preference.getActiveTitleId()));
     }
 
-    public static void setActiveTitle(ServerPlayerEntity player, @Nullable String titleId) {
+    public static void setActiveTitle(ServerPlayer player, @Nullable String titleId) {
         withPreference(player, (preference) -> {
             preference.setActiveTitleId(titleId);
             return null;
         });
     }
 
-    public static <T> T withPreference(ServerPlayerEntity player, Function<TitlePreference, T> function) {
+    public static <T> T withPreference(ServerPlayer player, Function<TitlePreference, T> function) {
         List<TitlePreference> preferences = TitleInitializer.data.model().getPreferences();
         String playerName = PlayerHelper.getPlayerName(player);
         Optional<TitlePreference> first = preferences
@@ -80,7 +80,7 @@ public class TitleService {
         return TitleInitializer.config.model().getNoActiveTitleText();
     }
 
-    public static List<TitleDescriptor> getObtainedTitles(ServerPlayerEntity player) {
+    public static List<TitleDescriptor> getObtainedTitles(ServerPlayer player) {
         return getAllTitles()
             .stream()
             .filter(descriptor -> isTitleObtained(player, descriptor.getId()))
@@ -100,11 +100,11 @@ public class TitleService {
             if (activeTitle.isPresent()) {
                 TitleDescriptor titleDescriptor = activeTitle.get();
 
-                MutableText titleText = TextHelper.getTextByValue(player, titleDescriptor.getDisplayName()).copy();
+                MutableComponent titleText = TextHelper.getTextByValue(player, titleDescriptor.getDisplayName()).copy();
 
-                List<Text> loreTextList = TextHelper.getTextListByValue(player, titleDescriptor.getLore());
-                MutableText hoverText = TextHelper.Operators.condenseTextList(loreTextList);
-                titleText.fillStyle(Style
+                List<Component> loreTextList = TextHelper.getTextListByValue(player, titleDescriptor.getLore());
+                MutableComponent hoverText = TextHelper.Operators.condenseTextList(loreTextList);
+                titleText.withStyle(Style
                     .EMPTY
                     .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
 

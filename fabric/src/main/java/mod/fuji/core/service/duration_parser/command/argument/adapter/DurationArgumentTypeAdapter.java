@@ -12,7 +12,7 @@ import mod.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.service.duration_parser.DurationParser;
 import java.util.List;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DurationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -22,7 +22,7 @@ public class DurationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String durationString = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
         return DurationParser
@@ -46,7 +46,7 @@ public class DurationArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> List.of("30m", "12h", "1d", "3d", "1w", "1M")));
     }

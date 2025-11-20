@@ -17,19 +17,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.Heightmap;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +42,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
     private static final PermissionDescriptor CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION = new PermissionDescriptor("top_chunks.teleport", 1752000233472L);
 
     /* Chunk global position. */
-    private final ServerWorld dimension;
+    private final ServerLevel dimension;
     private final ChunkPos chunkPos;
 
     /* Chunk score. */
@@ -52,31 +52,31 @@ public class ChunkScore implements Comparable<ChunkScore> {
     /* Players in the chunk. */
     private final Set<String> players = new HashSet<>();
 
-    public ChunkScore(ServerWorld dimension, ChunkPos chunkPos) {
+    public ChunkScore(ServerLevel dimension, ChunkPos chunkPos) {
         this.dimension = dimension;
         this.chunkPos = chunkPos;
     }
 
-    public static boolean canClickToTeleportToThisChunk(@Nullable ServerPlayerEntity player) {
+    public static boolean canClickToTeleportToThisChunk(@Nullable ServerPlayer player) {
         if (player == null) {
             return false;
         }
-        return CommandHelper.Requirement.isOperator(player) || LuckpermsHelper.hasPermission(player.getUuid(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
+        return CommandHelper.Requirement.isOperator(player) || LuckpermsHelper.hasPermission(player.getUUID(), CLICK_TO_TELEPORT_TO_CHUNK_LOCATION_PERMISSION);
     }
 
     public void plusEntity(@NotNull Entity entity) {
-        String type = entity.getType().getTranslationKey();
+        String type = entity.getType().getDescriptionId();
 
         type2amount.putIfAbsent(type, 0);
         type2amount.put(type, type2amount.get(type) + 1);
 
-        if (entity instanceof ServerPlayerEntity player) {
+        if (entity instanceof ServerPlayer player) {
             this.players.add(PlayerHelper.getPlayerName(player));
         }
     }
 
     public void plusBlockEntity(@NotNull BlockEntity blockEntity) {
-        String type = blockEntity.getCachedState().getBlock().getTranslationKey();
+        String type = blockEntity.getBlockState().getBlock().getDescriptionId();
 
         type2amount.putIfAbsent(type, 0);
         type2amount.put(type, type2amount.get(type) + 1);
@@ -100,10 +100,10 @@ public class ChunkScore implements Comparable<ChunkScore> {
         return Integer.compare(that.score, this.score);
     }
 
-    public @NotNull Text toText(@NotNull ServerCommandSource source) {
+    public @NotNull Component toText(@NotNull CommandSourceStack source) {
         /* Make hover text. */
-        MutableText hoverText = Text.empty()
-            .formatted(Formatting.GOLD)
+        MutableComponent hoverText = Component.empty()
+            .withStyle(ChatFormatting.GOLD)
             .append(TextHelper.getTextByKey(source, "top_chunks.prop.dimension", RegistryHelper.getIdAsString(this.dimension)))
             .append(TextHelper.TEXT_NEWLINE)
             .append(this.computeChunkLocationText(source))
@@ -118,7 +118,7 @@ public class ChunkScore implements Comparable<ChunkScore> {
         Style chunkScoreTextStyle = Style
             .EMPTY
             .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText))
-            .withFormatting(this.players.isEmpty() ? Formatting.GRAY : Formatting.DARK_GREEN);
+            .applyFormat(this.players.isEmpty() ? ChatFormatting.GRAY : ChatFormatting.DARK_GREEN);
         if (ChunkScore.canClickToTeleportToThisChunk(source.getPlayer())) {
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(source, "prompt.click.teleport"));
@@ -128,13 +128,13 @@ public class ChunkScore implements Comparable<ChunkScore> {
         }
 
         /* Make chunk score text. */
-        MutableText chunkScoreText = Text.empty()
-            .append(Text.literal(this.toString()))
-            .fillStyle(chunkScoreTextStyle);
+        MutableComponent chunkScoreText = Component.empty()
+            .append(Component.literal(this.toString()))
+            .withStyle(chunkScoreTextStyle);
         return chunkScoreText;
     }
 
-    public Text computeChunkLocationText(@NotNull ServerCommandSource source) {
+    public Component computeChunkLocationText(@NotNull CommandSourceStack source) {
         if (TopChunksInitializer.config.model().hide_location) {
             if (CommandHelper.Requirement.isAdmin(source)) {
                 return TextHelper.getTextByKey(source, "top_chunks.prop.chunk.hide_location.bypass", this.chunkPos.toString());
@@ -147,14 +147,14 @@ public class ChunkScore implements Comparable<ChunkScore> {
         }
     }
 
-    public void teleportToThisChunk(ServerPlayerEntity player) {
-        BlockPos chunkCenterPos = new BlockPos(chunkPos.getCenterX(), 128, chunkPos.getCenterZ());
-        int y = dimension.getTopPosition(Heightmap.Type.MOTION_BLOCKING, chunkCenterPos).getY();
+    public void teleportToThisChunk(ServerPlayer player) {
+        BlockPos chunkCenterPos = new BlockPos(chunkPos.getMiddleBlockX(), 128, chunkPos.getMiddleBlockZ());
+        int y = dimension.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, chunkCenterPos).getY();
         // NOTE: If the chunk is unloaded, the map height will be -64
         if (y == -64) {
             y = 128;
         }
-        new GlobalPos(dimension, chunkCenterPos.getX(), y, chunkCenterPos.getZ(), player.getYaw(), player.getPitch())
+        new GlobalPos(dimension, chunkCenterPos.getX(), y, chunkCenterPos.getZ(), player.getYRot(), player.getXRot())
             .teleport(player);
     }
 }

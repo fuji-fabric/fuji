@@ -8,8 +8,8 @@ import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import mod.fuji.module.initializer.economy.service.EconomyService;
 import java.util.Optional;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class EconomyPlaceholders {
 
@@ -30,15 +30,15 @@ public class EconomyPlaceholders {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("balance", 1753668968954L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             GameProfile gameProfile = player.getGameProfile();
-            Optional<Identifier> currencyId = RegistryHelper.makeIdentifier(args);
+            Optional<ResourceLocation> currencyId = RegistryHelper.makeIdentifier(args);
             return currencyId
                 .map($currencyId -> {
                     Optional<EconomyAccount> economyAccount = EconomyService.getUserAccount(gameProfile, $currencyId);
                     return economyAccount
                         .map(EconomyAccount::formattedBalance)
-                        .orElseGet(() -> Text.literal("[ECONOMY-ACCOUNT-NOT-FOUND-FOR-THIS-USER]"));
+                        .orElseGet(() -> Component.literal("[ECONOMY-ACCOUNT-NOT-FOUND-FOR-THIS-USER]"));
                 })
-                .orElse(Text.literal("[INVALID-CURRENCY-ID]"));
+                .orElse(Component.literal("[INVALID-CURRENCY-ID]"));
         });
     }
 

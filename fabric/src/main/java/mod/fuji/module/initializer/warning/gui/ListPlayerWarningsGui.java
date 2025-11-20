@@ -15,25 +15,25 @@ import mod.fuji.module.initializer.warning.service.WarningService;
 import mod.fuji.module.initializer.warning.structure.Warning;
 import mod.fuji.module.initializer.warning.structure.PlayerWarnings;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
     private final String targetPlayerName;
 
-    public ListPlayerWarningsGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, String targetPlayerName, @NotNull List<Warning> entities, int pageIndex) {
+    public ListPlayerWarningsGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, String targetPlayerName, @NotNull List<Warning> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "warning.list.gui.title", targetPlayerName), entities, pageIndex);
         this.targetPlayerName = targetPlayerName;
     }
 
     @Override
-    protected @NotNull PagedGui<Warning> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Warning> entities, int pageIndex) {
+    protected @NotNull PagedGui<Warning> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Warning> entities, int pageIndex) {
         return new ListPlayerWarningsGui(parent, player, this.targetPlayerName, entities, pageIndex);
     }
 
-    public static ListPlayerWarningsGui make(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull String targetPlayerName) {
+    public static ListPlayerWarningsGui make(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull String targetPlayerName) {
         PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
         return new ListPlayerWarningsGui(parent, player, targetPlayerName, playerWarnings.getWarnings(), 0);
     }
@@ -78,22 +78,22 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
 
     @Override
     protected boolean canCreateEntity() {
-        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), WarningInitializer.CREATE_WARNINGS_PERMISSION);
+        return LuckpermsHelper.hasPermission(getPlayer().getUUID(), WarningInitializer.CREATE_WARNINGS_PERMISSION);
     }
 
     @Override
     protected boolean canReadEntity(Warning entity) {
-        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), WarningInitializer.READ_WARNINGS_PERMISSION);
+        return LuckpermsHelper.hasPermission(getPlayer().getUUID(), WarningInitializer.READ_WARNINGS_PERMISSION);
     }
 
     @Override
     protected boolean canUpdateEntity(Warning entity) {
-        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), WarningInitializer.UPDATE_WARNINGS_PERMISSION);
+        return LuckpermsHelper.hasPermission(getPlayer().getUUID(), WarningInitializer.UPDATE_WARNINGS_PERMISSION);
     }
 
     @Override
     protected boolean canDeleteEntity(Warning entity) {
-        return LuckpermsHelper.hasPermission(getPlayer().getUuid(), WarningInitializer.DELETE_WARNINGS_PERMISSION);
+        return LuckpermsHelper.hasPermission(getPlayer().getUUID(), WarningInitializer.DELETE_WARNINGS_PERMISSION);
     }
 
     @Override

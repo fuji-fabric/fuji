@@ -18,7 +18,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_alias.config.model.CommandAliasConfigModel;
 import mod.fuji.module.initializer.command_alias.service.CommandAliasService;
 import mod.fuji.module.initializer.command_alias.structure.AliasCommandDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1751826302190L, value = """
     This module allows defining `aliases` for `an existing target command`.
@@ -48,7 +48,7 @@ public class CommandAliasInitializer extends ModuleInitializer {
 
     @Document(id = 1756022056042L, value = "List all registered alias-commands in server.")
     @CommandNode("list")
-    private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $list(@CommandSource CommandContext<CommandSourceStack> ctx) {
         return CommandsInspectionGui
             .inspectCommandDescriptors(ctx, it -> it instanceof AliasCommandDescriptor);
     }

@@ -10,7 +10,7 @@ import java.util.Map;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1756103268606L, value = """
@@ -41,11 +41,11 @@ public class Tags extends ArrayList<String> {
         });
     }
 
-    public static boolean hasAnyTagPermission(@NotNull PlayerEntity player, String tagKind, Tags tags) {
+    public static boolean hasAnyTagPermission(@NotNull Player player, String tagKind, Tags tags) {
         boolean result = false;
         for (String tag : tags) {
             PermissionDescriptor permission = getOrCreateTagPermission(tagKind);
-            if (LuckpermsHelper.hasPermission(player.getUuid(), permission, tagKind, tag)) {
+            if (LuckpermsHelper.hasPermission(player.getUUID(), permission, tagKind, tag)) {
                 result = true;
                 break;
             }

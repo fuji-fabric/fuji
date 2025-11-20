@@ -7,8 +7,8 @@ import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.level.ServerPlayer;
 
 
 @Document(id = 1751976535305L, value = """
@@ -26,9 +26,9 @@ public class SendChatInitializer extends ModuleInitializer {
 
     @CommandNode("send-chat")
     @CommandRequirement(level = 4)
-    private static int $sendChat(ServerPlayerEntity player, GreedyString message) {
-        SignedMessage signedMessage = SignedMessage.ofUnsigned(message.getValue());
-        player.networkHandler.handleDecoratedMessage(signedMessage);
+    private static int $sendChat(ServerPlayer player, GreedyString message) {
+        PlayerChatMessage signedMessage = PlayerChatMessage.system(message.getValue());
+        player.connection.broadcastChatMessage(signedMessage);
         return CommandHelper.Return.SUCCESS;
     }
 

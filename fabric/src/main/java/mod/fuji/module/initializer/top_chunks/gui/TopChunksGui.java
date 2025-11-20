@@ -9,10 +9,10 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.service.type_formatter.TypeFormatter;
 import mod.fuji.module.initializer.top_chunks.service.TopChunksService;
 import mod.fuji.module.initializer.top_chunks.structure.ChunkScore;
-import net.minecraft.item.Items;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,33 +21,33 @@ import java.util.List;
 
 public class TopChunksGui extends PagedGui<ChunkScore> {
 
-    public TopChunksGui(ServerPlayerEntity player, @NotNull List<ChunkScore> entities, int pageIndex) {
+    public TopChunksGui(ServerPlayer player, @NotNull List<ChunkScore> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "top_chunks.list.gui.title"),
             TopChunksService.trimChunkScoreList(entities), pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<ChunkScore> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ChunkScore> entities, int pageIndex) {
+    protected @NotNull PagedGui<ChunkScore> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<ChunkScore> entities, int pageIndex) {
         return new TopChunksGui(player, entities, pageIndex);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull ChunkScore entity) {
-        ServerCommandSource commandSource = getPlayer().getCommandSource();
+        CommandSourceStack commandSource = getPlayer().createCommandSourceStack();
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.dimension", RegistryHelper.getIdAsString(entity.getDimension())));
         lore.add(entity.computeChunkLocationText(commandSource));
         lore.add(TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.players", entity.getPlayers()));
         lore.add(TypeFormatter.formatTypes(commandSource, entity.getType2amount()));
 
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
         if (ChunkScore.canClickToTeleportToThisChunk(player)) {
             lore.add(TextHelper.TEXT_EMPTY);
             lore.add(TextHelper.getTextByKey(player,"prompt.click.teleport"));
         }
 
-        Text scoreText = TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.score", entity.getScore());
+        Component scoreText = TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.score", entity.getScore());
         return new GuiElementBuilder()
             .setItem(entity.getPlayers().isEmpty() ? Items.WHITE_STAINED_GLASS : Items.LIME_STAINED_GLASS)
             .setName(scoreText)

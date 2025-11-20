@@ -3,20 +3,20 @@ package mod.fuji.core.event.message.player;
 import mod.fuji.core.event.message.BaseEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PlayerInteractItemPreEvent extends BaseEvent {
-    @NotNull ServerPlayerEntity player;
-    @NotNull World world;
+    @NotNull ServerPlayer player;
+    @NotNull Level world;
     @NotNull ItemStack itemStack;
-    @NotNull Hand hand;
-    @NotNull CallbackInfoReturnable<ActionResult> callbackInfoReturnable;
+    @NotNull InteractionHand hand;
+    @NotNull CallbackInfoReturnable<InteractionResult> callbackInfoReturnable;
 }

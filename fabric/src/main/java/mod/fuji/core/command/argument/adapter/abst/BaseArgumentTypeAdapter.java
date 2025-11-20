@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -126,10 +126,10 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
 
     protected abstract ArgumentType<?> makeArgumentType();
 
-    protected abstract Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument);
+    protected abstract Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument);
 
-    public final @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeComposedRequiredArgumentBuilder(@NotNull String argumentName) {
-        RequiredArgumentBuilder<ServerCommandSource, ?> result = makeRequiredArgumentBuilder(argumentName);
+    public final @NotNull RequiredArgumentBuilder<CommandSourceStack, ?> makeComposedRequiredArgumentBuilder(@NotNull String argumentName) {
+        RequiredArgumentBuilder<CommandSourceStack, ?> result = makeRequiredArgumentBuilder(argumentName);
 
         /* Command assistant feature. */
         if (Configs.MAIN_CONTROL_CONFIG.model().core.command.assistant.enable) {
@@ -140,12 +140,12 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     }
 
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         ArgumentType<?> argumentType = this.makeArgumentType();
-        return CommandManager.argument(argumentName, argumentType);
+        return Commands.argument(argumentName, argumentType);
     }
 
-    public final @NotNull Object makeParameterValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public final @NotNull Object makeParameterValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         Object argumentValue = this.makeArgumentValue(context, commandArgument);
         if (commandArgument.isOptional()) {
             return Optional.of(argumentValue);
@@ -157,7 +157,7 @@ public abstract class BaseArgumentTypeAdapter implements SourceModuleGetter {
     /**
  * This method is used for an @CommandSource type adapter.
  **/
-    public boolean verifyCommandSource(@NotNull CommandContext<ServerCommandSource> context) {
+    public boolean verifyCommandSource(@NotNull CommandContext<CommandSourceStack> context) {
         return true;
     }
 

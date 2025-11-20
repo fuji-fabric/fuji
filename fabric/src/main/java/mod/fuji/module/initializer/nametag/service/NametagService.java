@@ -13,11 +13,11 @@ import mod.fuji.module.initializer.nametag.structure.NametagPlayerPreferences;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class NametagService {
-    public static Map<ServerPlayerEntity, NametagEntity> nametagEntityMap = new ConcurrentHashMap<>();
+    public static Map<ServerPlayer, NametagEntity> nametagEntityMap = new ConcurrentHashMap<>();
 
     public static void refreshNametagEntities() {
         /* Remove invalid nametag entities. */
@@ -29,7 +29,7 @@ public class NametagService {
             .forEach(NametagService::refreshNametagEntity);
     }
 
-    private static void refreshNametagEntity(@NotNull ServerPlayerEntity player) {
+    private static void refreshNametagEntity(@NotNull ServerPlayer player) {
         /* Skip making the nametag entity for the player, if a discard reason is present. */
         if (getNametagEntityRemovalReason(player).isPresent()) return;
 
@@ -42,7 +42,7 @@ public class NametagService {
         nametagEntity.updateTrackedData();
     }
 
-    private static @NotNull NametagEntity setupNametagEntity(@NotNull ServerPlayerEntity player) {
+    private static @NotNull NametagEntity setupNametagEntity(@NotNull ServerPlayer player) {
         /* Make the nametag entity. */
         NametagEntity nametagEntity = NametagEntity.make(player);
 
@@ -54,7 +54,7 @@ public class NametagService {
         return nametagEntity;
     }
 
-    public static Optional<NametagEntity> getNametagEntity(@NotNull ServerPlayerEntity player) {
+    public static Optional<NametagEntity> getNametagEntity(@NotNull ServerPlayer player) {
         return Optional.ofNullable(nametagEntityMap.get(player));
     }
 
@@ -63,7 +63,7 @@ public class NametagService {
         nametagEntityMap.values().forEach(NametagEntity::tick);
     }
 
-    private static void removeNametagEntity(ServerPlayerEntity player) {
+    private static void removeNametagEntity(ServerPlayer player) {
         Optional
             .ofNullable(nametagEntityMap.get(player))
             .ifPresent(NametagEntity::setRemoved);
@@ -84,7 +84,7 @@ public class NametagService {
         nametagEntityMap.values().forEach(NametagEntity::setRemoved);
     }
 
-    public static @NotNull NametagPlayerPreferences getOrCreateNametagPlayerPreferences(@NotNull ServerPlayerEntity player) {
+    public static @NotNull NametagPlayerPreferences getOrCreateNametagPlayerPreferences(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return NametagInitializer.data.model()
             .getPreferences()
@@ -93,15 +93,15 @@ public class NametagService {
 
     @SuppressWarnings("RedundantIfStatement")
     public static boolean shouldRenderNametagEntity(@NotNull NametagEntity nametagEntity) {
-        ServerPlayerEntity ownerPlayer = nametagEntity.getOwnerPlayer();
-        if (ownerPlayer.isSneaking()) return false;
+        ServerPlayer ownerPlayer = nametagEntity.getOwnerPlayer();
+        if (ownerPlayer.isShiftKeyDown()) return false;
         if (ownerPlayer.isInvisible()) return false;
 
         return true;
     }
 
-    public static Optional<String> getNametagEntityRemovalReason(@NotNull ServerPlayerEntity ownerPlayer) {
-        if (ownerPlayer.isDead()) return Optional.of("The entity is dead.");
+    public static Optional<String> getNametagEntityRemovalReason(@NotNull ServerPlayer ownerPlayer) {
+        if (ownerPlayer.isDeadOrDying()) return Optional.of("The entity is dead.");
 
         // NOTE: when the player jumps into the ender portal in the end, its world is minecraft:overworld, its removal reason is `CHANGED_DIMENSION`
         if (ownerPlayer.getRemovalReason() != null) return Optional.of("The entity is removed.");

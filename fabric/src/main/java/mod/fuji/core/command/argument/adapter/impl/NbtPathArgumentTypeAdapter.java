@@ -4,8 +4,8 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.NbtPathArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.NbtPathArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -14,17 +14,17 @@ public class NbtPathArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return NbtPathArgumentType.nbtPath();
+        return NbtPathArgument.nbtPath();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return NbtPathArgumentType.getNbtPath(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return NbtPathArgument.getPath(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(NbtPathArgumentType.NbtPath.class);
+        return List.of(NbtPathArgument.NbtPath.class);
     }
 
     @Override

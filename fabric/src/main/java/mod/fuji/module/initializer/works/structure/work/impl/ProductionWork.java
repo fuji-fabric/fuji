@@ -17,20 +17,20 @@ import mod.fuji.module.initializer.works.structure.WorkType;
 import mod.fuji.module.initializer.works.structure.WorksBinding;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
 import lombok.NoArgsConstructor;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.HopperBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.vehicle.HopperMinecartEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.MinecartHopper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class ProductionWork extends Work implements Schedulable {
 
     public @NotNull Sample sample = new Sample();
 
-    public ProductionWork(@NotNull ServerPlayerEntity player, String name) {
+    public ProductionWork(@NotNull ServerPlayer player, String name) {
         super(player, name);
     }
 
@@ -57,8 +57,8 @@ public class ProductionWork extends Work implements Schedulable {
         return WorkType.ProductionWork.name();
     }
 
-    private @NotNull List<Text> formatSampleCounter(ServerPlayerEntity player) {
-        List<Text> ret = new ArrayList<>();
+    private @NotNull List<Component> formatSampleCounter(ServerPlayer player) {
+        List<Component> ret = new ArrayList<>();
         long currentTimeMS = System.currentTimeMillis();
 
         Stream<Map.Entry<String, Long>> sortedStream = this.sample.sampleCounter.entrySet().stream().sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
@@ -67,8 +67,8 @@ public class ProductionWork extends Work implements Schedulable {
             String key = entry.getKey();
             double rate = entry.getValue() * ((double) (3600 * 1000) / (Math.min(this.sample.sampleEndTimeMS, currentTimeMS) - this.sample.sampleStartTimeMS));
 
-            Text text = TextHelper.getTextByKey(player, "works.production_work.prop.sample_counter.entry", entry.getValue(), rate);
-            text = TextHelper.Replacer.replaceTextWithNamedArgument(text, "item", (matcher) -> Text.translatable(key));
+            Component text = TextHelper.getTextByKey(player, "works.production_work.prop.sample_counter.entry", entry.getValue(), rate);
+            text = TextHelper.Replacer.replaceTextWithNamedArgument(text, "item", (matcher) -> Component.translatable(key));
             ret.add(text);
         });
 
@@ -79,9 +79,9 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    public @NotNull List<Text> ofLore(ServerPlayerEntity player) {
+    public @NotNull List<Component> ofLore(ServerPlayer player) {
         /* construct lore */
-        List<Text> ret = super.ofLore(player);
+        List<Component> ret = super.ofLore(player);
         // note: hide sample info in lore if sample not exists
         if (this.sample.sampleStartTimeMS == 0) {
             ret.addAll(TextHelper.getTextListByKey(player, "works.production_work.sample.not_exists"));
@@ -111,7 +111,7 @@ public class ProductionWork extends Work implements Schedulable {
         return Items.REDSTONE;
     }
 
-    public void openInputSampleDistanceGui(@NotNull ServerPlayerEntity player) {
+    public void openInputSampleDistanceGui(@NotNull ServerPlayer player) {
         new InputSignGui(player, TextHelper.getTextByKey(player, "works.production_work.prompt.input.sample_distance")) {
             @Override
             public void onClose() {
@@ -142,8 +142,8 @@ public class ProductionWork extends Work implements Schedulable {
     }
 
     @Override
-    public void openSpecializedSettingsGui(ServerPlayerEntity player, @NotNull SimpleGui parentGui) {
-        final SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X1, player, false);
+    public void openSpecializedSettingsGui(ServerPlayer player, @NotNull SimpleGui parentGui) {
+        final SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x1, player, false);
         gui.setTitle(TextHelper.getTextByKey(player, "works.work.set.specialized_settings.title"));
         gui.addSlot(new GuiElementBuilder()
             .setItem(Items.CLOCK)
@@ -182,32 +182,32 @@ public class ProductionWork extends Work implements Schedulable {
         return sb.toString();
     }
 
-    private int resolveHoppers(@NotNull ServerPlayerEntity player) {
+    private int resolveHoppers(@NotNull ServerPlayer player) {
         // clear cache entry
         WorksBinding.unbind(this);
 
         // add cache entry
         int hopperBlockCount = 0;
         int minecartHopperCount = 0;
-        ServerWorld world = EntityHelper.getServerWorld(player);
+        ServerLevel world = EntityHelper.getServerWorld(player);
 
         for (ChunkHolder chunkHolder : WorldHelper.getChunks(world)) {
-            WorldChunk worldChunk = chunkHolder.getWorldChunk();
+            LevelChunk worldChunk = chunkHolder.getTickingChunk();
             if (worldChunk == null) continue;
             /* count for block entities */
             for (BlockEntity blockEntity : worldChunk.getBlockEntities().values()) {
                 // improve: check type first for performance
                 if (blockEntity instanceof HopperBlockEntity) {
-                    if (insideSampleDistance(player.getBlockPos(), blockEntity.getPos())) {
-                        WorksBinding.bind(blockEntity.getPos(), this);
+                    if (insideSampleDistance(player.blockPosition(), blockEntity.getBlockPos())) {
+                        WorksBinding.bind(blockEntity.getBlockPos(), this);
                         hopperBlockCount++;
                     }
                 }
             }
         }
         for (Entity entity : WorldHelper.getEntities(world)) {
-            if (entity instanceof HopperMinecartEntity) {
-                if (insideSampleDistance(player.getBlockPos(), entity.getBlockPos())) {
+            if (entity instanceof MinecartHopper) {
+                if (insideSampleDistance(player.blockPosition(), entity.blockPosition())) {
                     WorksBinding.bind(entity.getId(), this);
                     minecartHopperCount++;
                 }
@@ -225,10 +225,10 @@ public class ProductionWork extends Work implements Schedulable {
         }
     }
 
-    private void startSample(@NotNull ServerPlayerEntity player) {
+    private void startSample(@NotNull ServerPlayer player) {
         this.sample.sampleStartTimeMS = System.currentTimeMillis();
         this.sample.sampleEndTimeMS = this.sample.sampleStartTimeMS + WorksInitializer.config.model().sample_time_ms;
-        this.sample.sampleDimension = EntityHelper.getServerWorld(player).getRegistryKey().getValue().toString();
+        this.sample.sampleDimension = EntityHelper.getServerWorld(player).dimension().location().toString();
         this.sample.sampleX = player.getX();
         this.sample.sampleY = player.getY();
         this.sample.sampleZ = player.getZ();
@@ -263,7 +263,7 @@ public class ProductionWork extends Work implements Schedulable {
 
     public void addCounter(@NotNull ItemStack itemStack) {
         HashMap<String, Long> counter = this.sample.sampleCounter;
-        String key = itemStack.getItem().getTranslationKey();
+        String key = itemStack.getItem().getDescriptionId();
         counter.put(key, counter.getOrDefault(key, 0L) + itemStack.getCount());
     }
 

@@ -11,15 +11,15 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import java.util.List;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.DimensionArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.DimensionArgument;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return DimensionArgumentType.dimension();
+        return DimensionArgument.dimension();
     }
 
     /**
@@ -30,7 +30,7 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
  **/
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(
             (ctx, builder) -> {
@@ -42,8 +42,8 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new Dimension(DimensionArgumentType.getDimensionArgument(context, commandArgument.getArgumentName()));
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return new Dimension(DimensionArgument.getDimension(context, commandArgument.getArgumentName()));
     }
 
     @Override

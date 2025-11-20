@@ -6,7 +6,7 @@ import mod.fuji.module.initializer.command_cooldown.CommandCooldownInitializer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class UnnamedCooldownService {
@@ -17,7 +17,7 @@ public class UnnamedCooldownService {
         return CommandCooldownInitializer.config.model().getUnnamedCooldown();
     }
 
-    public static long computeRemainingUnnamedCooldownDuration(@NotNull ServerPlayerEntity player, @NotNull String commandLine) {
+    public static long computeRemainingUnnamedCooldownDuration(@NotNull ServerPlayer player, @NotNull String commandLine) {
         String key = PlayerHelper.getPlayerName(player);
         Cooldown<String> unnamedCooldown = playerName2UnnamedCooldown.computeIfAbsent(key, k -> new Cooldown<>());
 

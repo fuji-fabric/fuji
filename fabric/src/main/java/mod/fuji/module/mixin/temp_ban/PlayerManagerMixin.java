@@ -1,30 +1,30 @@
 package mod.fuji.module.mixin.temp_ban;
 
-import net.minecraft.server.BannedIpList;
-import net.minecraft.server.BannedPlayerList;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.text.Text;
+import net.minecraft.server.players.IpBanList;
+import net.minecraft.server.players.UserBanList;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public abstract class PlayerManagerMixin {
 
-    @Accessor
-    abstract BannedPlayerList getBannedProfiles();
+    @Accessor("bans")
+    abstract UserBanList getBannedProfiles();
 
-    @Accessor
-    abstract BannedIpList getBannedIps();
+    @Accessor("ipBans")
+    abstract IpBanList getBannedIps();
 
     // NOTE: The code is used to fix a bug that mojang didn't notice.
-    @Inject(method = "checkCanJoin", at = @At(value = "HEAD"))
-    void removeInvalidTempBanEntries(CallbackInfoReturnable<Text> cir)
+    @Inject(method = "canPlayerLogin", at = @At(value = "HEAD"))
+    void removeInvalidTempBanEntries(CallbackInfoReturnable<Component> cir)
     {
-        getBannedProfiles().removeInvalidEntries();
-        getBannedIps().removeInvalidEntries();
+        getBannedProfiles().removeExpired();
+        getBannedIps().removeExpired();
     }
 
 }

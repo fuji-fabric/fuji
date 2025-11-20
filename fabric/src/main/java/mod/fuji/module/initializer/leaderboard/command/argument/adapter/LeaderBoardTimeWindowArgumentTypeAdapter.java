@@ -9,7 +9,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.leaderboard.structure.LeaderBoardTimeWindow;
 import java.util.List;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -19,7 +19,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String string = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return LeaderBoardTimeWindow.valueOf(string);
     }
@@ -36,7 +36,7 @@ public class LeaderBoardTimeWindowArgumentTypeAdapter extends BaseArgumentTypeAd
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.enums(LeaderBoardTimeWindow::values));
     }

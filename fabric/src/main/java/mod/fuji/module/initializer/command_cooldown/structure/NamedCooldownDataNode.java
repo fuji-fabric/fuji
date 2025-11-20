@@ -7,7 +7,7 @@ import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -23,7 +23,7 @@ public class NamedCooldownDataNode {
     @ToString.Exclude
     transient NamedCooldownDescriptor descriptor;
 
-    public static String toKey(@NotNull ServerPlayerEntity player) {
+    public static String toKey(@NotNull ServerPlayer player) {
         return PlayerHelper.getPlayerName(player);
     }
 

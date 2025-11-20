@@ -16,8 +16,8 @@ import mod.fuji.module.initializer.command_attachment.service.CommandAttachmentS
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
 
@@ -38,11 +38,11 @@ public class TestSteppingOnBlockJob extends FixedIntervalJob {
         JobManager.addJob(job);
     }
 
-    private static void testSteppingBlockForPlayer(@NotNull ServerPlayerEntity player) {
+    private static void testSteppingBlockForPlayer(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         String lastSteppingBlockUUID = player2lastSteppingBlockUUID.get(playerName);
-        ServerWorld serverWorld = EntityHelper.getServerWorld(player);
-        String currentSteppingBlockUUID = UuidHelper.getAttachedUuid(serverWorld, player.getSteppingPos());
+        ServerLevel serverWorld = EntityHelper.getServerWorld(player);
+        String currentSteppingBlockUUID = UuidHelper.getAttachedUuid(serverWorld, player.getOnPos());
 
         /* Ignore the trigger if last stepping block is the same. */
         if (currentSteppingBlockUUID.equals(lastSteppingBlockUUID)) return;

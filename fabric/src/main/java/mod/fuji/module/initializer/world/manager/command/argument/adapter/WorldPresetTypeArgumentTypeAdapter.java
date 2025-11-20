@@ -9,7 +9,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.WorldPresetType;
 import java.util.List;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldPresetTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -19,7 +19,7 @@ public class WorldPresetTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         return WorldPresetType.valueOf(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
@@ -35,7 +35,7 @@ public class WorldPresetTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter 
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.enums(WorldPresetType::values));
     }
 }

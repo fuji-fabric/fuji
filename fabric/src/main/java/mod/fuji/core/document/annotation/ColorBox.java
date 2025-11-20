@@ -1,7 +1,7 @@
 package mod.fuji.core.document.annotation;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;

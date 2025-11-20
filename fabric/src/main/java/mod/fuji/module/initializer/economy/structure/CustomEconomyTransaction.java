@@ -2,19 +2,19 @@ package mod.fuji.module.initializer.economy.structure;
 
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyTransaction;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("ClassCanBeRecord")
 public class CustomEconomyTransaction implements EconomyTransaction {
 
     private final EconomyAccount account;
     private final boolean isSuccessful;
-    private final Text message;
+    private final Component message;
     private final long previousBalance;
     private final long transactionAmount;
     private final long finalBalance;
 
-    public CustomEconomyTransaction(EconomyAccount account, boolean isSuccessful, Text message, long previousBalance, long transactionAmount, long finalBalance) {
+    public CustomEconomyTransaction(EconomyAccount account, boolean isSuccessful, Component message, long previousBalance, long transactionAmount, long finalBalance) {
         this.account = account;
         this.isSuccessful = isSuccessful;
         this.message = message;
@@ -29,7 +29,7 @@ public class CustomEconomyTransaction implements EconomyTransaction {
     }
 
     @Override
-    public Text message() {
+    public Component message() {
         return this.message;
     }
 

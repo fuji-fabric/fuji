@@ -18,7 +18,7 @@ import mod.fuji.evaluator.evaluator.value.LispList;
 import mod.fuji.evaluator.evaluator.value.LispObject;
 import mod.fuji.evaluator.reader.LispReader;
 import mod.fuji.evaluator.reader.token.Token;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1758985259601L, value = """
     This module provides an `evaluator` for `Lisp dialect language`.
@@ -32,14 +32,14 @@ public class EvaluatorInitializer extends ModuleInitializer {
     @Document(id = 1759152497031L, value = "Alias to `/lisp eval` command.")
     @CommandNode("lisp")
     @CommandRequirement(level = 4)
-    private static int $root(@CommandSource ServerCommandSource source, GreedyString form) {
+    private static int $root(@CommandSource CommandSourceStack source, GreedyString form) {
         return $eval(source, form);
     }
 
     @Document(id = 1759152513020L, value = "Eval a lisp form.")
     @CommandNode("lisp eval")
     @CommandRequirement(level = 4)
-    private static int $eval(@CommandSource ServerCommandSource source, GreedyString form) {
+    private static int $eval(@CommandSource CommandSourceStack source, GreedyString form) {
         try {
             final String $form = form.getValue();
             LispReader lispReader = new LispReader($form);

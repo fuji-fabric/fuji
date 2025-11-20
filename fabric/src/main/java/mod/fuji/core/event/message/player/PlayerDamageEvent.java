@@ -4,8 +4,8 @@ import mod.fuji.core.event.message.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class PlayerDamageEvent extends BaseEvent {
 
-    @NotNull ServerPlayerEntity player;
+    @NotNull ServerPlayer player;
     @NotNull DamageSource damageSource;
     float damage;
 

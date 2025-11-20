@@ -9,7 +9,7 @@ import mod.fuji.module.initializer.command_permission.CommandPermissionInitializ
 import mod.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import java.util.function.Predicate;
 import net.luckperms.api.util.Tristate;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 @TestCase(action = "Issue `/fuji reload` and `/reload` commands in `neoforge single player world`.", targets = {
@@ -17,11 +17,11 @@ import org.jetbrains.annotations.NotNull;
 })
 public class WrappedPredicate<T> implements Predicate<T> {
 
-    final CommandNode<ServerCommandSource> commandNode;
+    final CommandNode<CommandSourceStack> commandNode;
     final Predicate<Object> originalRequirement;
     String commandPath;
 
-    public WrappedPredicate(CommandNode<ServerCommandSource> commandNode, Predicate<Object> originalRequirement) {
+    public WrappedPredicate(CommandNode<CommandSourceStack> commandNode, Predicate<Object> originalRequirement) {
         this.commandNode = commandNode;
         this.originalRequirement = originalRequirement;
     }
@@ -37,7 +37,7 @@ public class WrappedPredicate<T> implements Predicate<T> {
     @Override
     public boolean test(@NotNull Object commandSource) {
         /* If the command source is client command source, use the original predicate. */
-        if (commandSource instanceof ServerCommandSource serverCommandSource) {
+        if (commandSource instanceof CommandSourceStack serverCommandSource) {
             try {
                 /* Ignore the non-player command source. */
                 if (serverCommandSource.getPlayer() == null) {
@@ -61,7 +61,7 @@ public class WrappedPredicate<T> implements Predicate<T> {
                 }
 
                 /* Ask luckperms if the player can use the command. */
-                Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(serverCommandSource.getPlayer().getUuid(), CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
+                Tristate luckpermsPermissionTestResult = LuckpermsHelper.getPermission(serverCommandSource.getPlayer().getUUID(), CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION, commandPath);
                 CommandPermissionService.processVerboseModeFeature("LUCKPERMS", serverCommandSource, commandPath, luckpermsPermissionTestResult);
 
                 return CommandPermissionService.canUseThisCommand(serverCommandSource, luckpermsPermissionTestResult, this.originalRequirement);

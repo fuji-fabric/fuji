@@ -17,16 +17,16 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import lombok.Data;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Data
-public class ComposedCommandSuggestionsProvider implements SuggestionProvider<ServerCommandSource> {
+public class ComposedCommandSuggestionsProvider implements SuggestionProvider<CommandSourceStack> {
 
     final @NotNull ArgumentType<?> argumentType;
-    final @Nullable SuggestionProvider<ServerCommandSource> originalCustomSuggestionsProvider;
-    final @NotNull BiConsumer<CommandContext<ServerCommandSource>, SuggestionsBuilder> onAskServerSideCommandSuggestionsHook;
+    final @Nullable SuggestionProvider<CommandSourceStack> originalCustomSuggestionsProvider;
+    final @NotNull BiConsumer<CommandContext<CommandSourceStack>, SuggestionsBuilder> onAskServerSideCommandSuggestionsHook;
 
     @TestCase(action = "Test the command suggestion functionality.", targets = {
         "Issue `/command-attachment attach-entity-one <uuid>` command, it should suggest the looking at entity UUID.",
@@ -35,7 +35,7 @@ public class ComposedCommandSuggestionsProvider implements SuggestionProvider<Se
         "Issue `/command-attachment attach-block-one ` command, it should filter out the duplicated suggestions. (client-side suggestions and server-side suggestions)"
     })
     @Override
-    public @NotNull CompletableFuture<Suggestions> getSuggestions(@NotNull CommandContext<ServerCommandSource> context, @NotNull SuggestionsBuilder builder) throws CommandSyntaxException {
+    public @NotNull CompletableFuture<Suggestions> getSuggestions(@NotNull CommandContext<CommandSourceStack> context, @NotNull SuggestionsBuilder builder) throws CommandSyntaxException {
         /* Run the onAskServerSideCommandSuggestions hook. */
         AsyncUtil.runAsyncAndHandleExceptions(() -> {
             this.onAskServerSideCommandSuggestionsHook.accept(context, builder);

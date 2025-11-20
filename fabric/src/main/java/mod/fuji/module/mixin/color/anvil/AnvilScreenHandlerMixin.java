@@ -4,17 +4,17 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.color.anvil.ColorAnvilInitializer;
 import java.util.concurrent.atomic.AtomicReference;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.AnvilScreenHandler;
-import net.minecraft.screen.ForgingScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 #if MC_VER > MC_1_21
-import net.minecraft.screen.slot.ForgingSlotsManager;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 #endif
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,32 +23,32 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(AnvilScreenHandler.class)
-public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
+@Mixin(AnvilMenu.class)
+public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 
     @Shadow
-    private String newItemName;
+    private String itemName;
 
     #if MC_VER <= MC_1_21
     public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> screenHandlerType, int i, PlayerInventory playerInventory, ScreenHandlerContext screenHandlerContext) {
         super(screenHandlerType, i, playerInventory, screenHandlerContext);
     }
     #elif MC_VER > MC_1_21
-    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> screenHandlerType, int i, PlayerInventory playerInventory, ScreenHandlerContext screenHandlerContext, ForgingSlotsManager forgingSlotsManager) {
+    public AnvilScreenHandlerMixin(@Nullable MenuType<?> screenHandlerType, int i, Inventory playerInventory, ContainerLevelAccess screenHandlerContext, ItemCombinerMenuSlotDefinition forgingSlotsManager) {
         super(screenHandlerType, i, playerInventory, screenHandlerContext, forgingSlotsManager);
     }
     #endif
 
     @Unique
-    private @NotNull Text parseInputNewItemName() {
-        AtomicReference<Text> modifiedText = new AtomicReference<>();
+    private @NotNull Component parseInputNewItemName() {
+        AtomicReference<Component> modifiedText = new AtomicReference<>();
         PlayerHelper.Kind.withServerPlayerEntity(player, () -> {
             /* Stripe style tags. */
             if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-                PlayerEntity player = super.player;
-                newItemName = ColorAnvilInitializer.stripeStyleTags(player, newItemName);
+                Player player = super.player;
+                itemName = ColorAnvilInitializer.stripeStyleTags(player, itemName);
             }
-            modifiedText.set(TextHelper.getTextByValue(null, newItemName));
+            modifiedText.set(TextHelper.getTextByValue(null, itemName));
         });
 
         return modifiedText.get();
@@ -61,7 +61,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object updateResult(Object text)
     #elif MC_VER > MC_1_20_6
-    @ModifyArg(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    @ModifyArg(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object updateResult(Object text)
     #endif
     {
@@ -75,7 +75,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object newItemName(Object text)
     #elif MC_VER > MC_1_20_6
-    @ModifyArg(method = "setNewItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;set(Lnet/minecraft/component/ComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    @ModifyArg(method = "setItemName", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
     public @NotNull Object newItemName(Object text)
     #endif
     {

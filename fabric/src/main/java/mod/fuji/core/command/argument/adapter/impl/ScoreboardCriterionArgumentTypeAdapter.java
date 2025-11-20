@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.ScoreboardCriterionArgumentType;
-import net.minecraft.scoreboard.ScoreboardCriterion;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.ObjectiveCriteriaArgument;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -14,17 +14,17 @@ import org.jetbrains.annotations.NotNull;
 public class ScoreboardCriterionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ScoreboardCriterionArgumentType.scoreboardCriterion();
+        return ObjectiveCriteriaArgument.criteria();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ScoreboardCriterionArgumentType.getCriterion(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ObjectiveCriteriaArgument.getCriteria(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(ScoreboardCriterion.class);
+        return List.of(ObjectiveCriteria.class);
     }
 
     @Override

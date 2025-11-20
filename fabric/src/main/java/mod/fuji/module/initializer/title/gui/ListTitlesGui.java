@@ -12,14 +12,14 @@ import mod.fuji.module.initializer.title.structure.TitleDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ListTitlesGui extends PagedGui<TitleDescriptor> {
 
-    public ListTitlesGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<TitleDescriptor> entities, int pageIndex) {
+    public ListTitlesGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<TitleDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "title.list.gui.title"), entities, pageIndex);
 
         drawInfoButton();
@@ -44,7 +44,7 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
     }
 
     private void drawInfoButton() {
-        ServerPlayerEntity player = this.getPlayer();
+        ServerPlayer player = this.getPlayer();
 
         Optional<String> activeTitle = TitleService
             .getActiveTitle(player)
@@ -61,24 +61,24 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
         return entities == TitleInitializer.config.model().getTitleDescriptors();
     }
 
-    public static ListTitlesGui makeInstance(@NotNull ServerPlayerEntity player, List<TitleDescriptor> entities) {
+    public static ListTitlesGui makeInstance(@NotNull ServerPlayer player, List<TitleDescriptor> entities) {
         return new ListTitlesGui(null, player, entities, 0);
     }
 
     @Override
-    protected @NotNull PagedGui<TitleDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<TitleDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<TitleDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<TitleDescriptor> entities, int pageIndex) {
         return new ListTitlesGui(parent, player, entities, pageIndex);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull TitleDescriptor entity) {
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
 
         GuiElementBuilder builder = GuiElementBuilder
             .from(entity.toItemStack());
         builder.setName(TextHelper.getTextByValue(player, entity.getDisplayName()));
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(player, "entity.obtained", TitleService.isTitleObtained(player, entity.getId()), entity.getId()));
         lore.addAll(TextHelper.getTextListByValue(player, entity.getLore()));
         builder.setLore(lore);

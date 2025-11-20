@@ -6,7 +6,7 @@ import java.util.List;
 import mod.fuji.core.command.argument.adapter.impl.SeparatedGreedyCommandStringArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.command_meta.IF.argument.wrapper.IfGreedyCommandString;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class IfGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCommandStringArgumentTypeAdapter {
@@ -26,7 +26,7 @@ public class IfGreedyCommandStringArgumentTypeAdapter extends SeparatedGreedyCom
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String string = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return new IfGreedyCommandString(string);
     }

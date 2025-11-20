@@ -11,16 +11,16 @@ import mod.fuji.core.gui.component.gui.ConfirmSignGui;
 import mod.fuji.core.gui.component.gui.InputSignGui;
 import mod.fuji.module.initializer.works.WorksInitializer;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class WorkGeneralSettingsGui extends SimpleGui {
 
-    public WorkGeneralSettingsGui(@NotNull SimpleGui parentGui, @NotNull ServerPlayerEntity player, @NotNull Work work) {
-        super(ScreenHandlerType.GENERIC_9X1, player, false);
+    public WorkGeneralSettingsGui(@NotNull SimpleGui parentGui, @NotNull ServerPlayer player, @NotNull Work work) {
+        super(MenuType.GENERIC_9x1, player, false);
 
         this.setTitle(TextHelper.getTextByKey(player, "works.work.set.general_settings.title"));
 
@@ -35,7 +35,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         );
     }
 
-    private void placeSetEntityDeleteButton(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private void placeSetEntityDeleteButton(@NotNull ServerPlayer player, @NotNull Work work) {
         this.addSlot(new GuiElementBuilder()
             .setItem(Items.BARRIER)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.delete"))
@@ -50,13 +50,13 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         );
     }
 
-    private void placeSetEntityIntroductionButton(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private void placeSetEntityIntroductionButton(@NotNull ServerPlayer player, @NotNull Work work) {
         this.addSlot(new GuiElementBuilder()
             .setItem(Items.PAINTING)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.icon"))
             .setCallback(() -> {
                 /* Verify. */
-                ItemStack mainHandItem = player.getMainHandStack();
+                ItemStack mainHandItem = player.getMainHandItem();
                 if (mainHandItem.isEmpty()) {
                     TextHelper.sendTextByKey(player, "works.work.set.target.icon.no_item");
                     close();
@@ -71,12 +71,12 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         );
     }
 
-    private void placeSetEntityPositionButton(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private void placeSetEntityPositionButton(@NotNull ServerPlayer player, @NotNull Work work) {
         this.addSlot(new GuiElementBuilder()
             .setItem(Items.END_PORTAL_FRAME)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.position"))
             .setCallback(() -> {
-                work.level = EntityHelper.getServerWorld(player).getRegistryKey().getValue().toString();
+                work.level = EntityHelper.getServerWorld(player).dimension().location().toString();
                 work.x = EntityHelper.getPos(player).x;
                 work.y = EntityHelper.getPos(player).y;
                 work.z = EntityHelper.getPos(player).z;
@@ -86,7 +86,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         );
     }
 
-    private void placeSetEntityIconButton(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private void placeSetEntityIconButton(@NotNull ServerPlayer player, @NotNull Work work) {
         this.addSlot(new GuiElementBuilder()
             .setItem(Items.CHERRY_HANGING_SIGN)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.introduction"))
@@ -103,7 +103,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
         );
     }
 
-    private void placeSetEntityNameButton(@NotNull ServerPlayerEntity player, @NotNull Work work) {
+    private void placeSetEntityNameButton(@NotNull ServerPlayer player, @NotNull Work work) {
         this.addSlot(new GuiElementBuilder()
             .setItem(Items.NAME_TAG)
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.name"))

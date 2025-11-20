@@ -9,32 +9,32 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.nametag.NametagInitializer;
 import mod.fuji.module.initializer.nametag.service.NametagService;
 import lombok.Getter;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.decoration.Brightness;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Brightness;
+import net.minecraft.world.entity.Display;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-public class NametagEntity extends DisplayEntity.TextDisplayEntity {
+public class NametagEntity extends Display.TextDisplay {
 
     @Getter
-    final ServerPlayerEntity ownerPlayer;
+    final ServerPlayer ownerPlayer;
 
     boolean shouldRenderPreviousValue = false;
 
-    private NametagEntity(@NotNull EntityType<?> entityType, @NotNull World world, @NotNull ServerPlayerEntity ownerPlayer) {
+    private NametagEntity(@NotNull EntityType<?> entityType, @NotNull Level world, @NotNull ServerPlayer ownerPlayer) {
         super(entityType, world);
         this.ownerPlayer = ownerPlayer;
     }
 
-    public static @NotNull NametagEntity make(@NotNull ServerPlayerEntity player) {
+    public static @NotNull NametagEntity make(@NotNull ServerPlayer player) {
         LogUtil.debug("Make nametag for player: {}", PlayerHelper.getPlayerName(player));
 
         /* Subclassing the display entity to make nametag entity. */
@@ -56,14 +56,14 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
 
     public void setRemoved() {
         this.remove(Entity.RemovalReason.DISCARDED);
-        PacketHelper.sendPacketToAll(new EntitiesDestroyS2CPacket(this.getId()));
+        PacketHelper.sendPacketToAll(new ClientboundRemoveEntitiesPacket(this.getId()));
     }
 
     private void setDisplayFlag(byte flag, boolean value) {
-        DataTracker dataTracker = this.getDataTracker();
-        byte oldValue = dataTracker.get(DisplayEntity.TextDisplayEntity.TEXT_DISPLAY_FLAGS);
+        SynchedEntityData dataTracker = this.getEntityData();
+        byte oldValue = dataTracker.get(Display.TextDisplay.DATA_STYLE_FLAGS_ID);
         byte newValue = EntityHelper.withFlagValue(oldValue, flag, value);
-        dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT_DISPLAY_FLAGS, newValue);
+        dataTracker.set(Display.TextDisplay.DATA_STYLE_FLAGS_ID, newValue);
     }
 
     public void updateTrackedData() {
@@ -71,47 +71,47 @@ public class NametagEntity extends DisplayEntity.TextDisplayEntity {
         var config = NametagInitializer.config.model();
 
         // Set billboard mode.
-        setBillboardMode(BillboardMode.CENTER);
+        setBillboardConstraints(BillboardConstraints.CENTER);
 
         // Set text.
-        Text text = TextHelper.getTextByValue(this.ownerPlayer, config.style.text);
+        Component text = TextHelper.getTextByValue(this.ownerPlayer, config.style.text);
         this.setText(text);
 
         // Set translation.
-        getDataTracker().set(TRANSLATION, new Vector3f(config.style.offset.x, config.style.offset.y, config.style.offset.z));
+        getEntityData().set(DATA_TRANSLATION_ID, new Vector3f(config.style.offset.x, config.style.offset.y, config.style.offset.z));
 
         // Set extension.
-        setDisplayWidth(config.style.size.width);
-        setDisplayHeight(config.style.size.height);
+        setWidth(config.style.size.width);
+        setHeight(config.style.size.height);
 
         // Set color.
-        setBackground(config.style.color.background);
+        setBackgroundColor(config.style.color.background);
         setTextOpacity(config.style.color.text_opacity);
         if (config.style.brightness.override_brightness) {
-            setBrightness(new Brightness(config.style.brightness.block, config.style.brightness.sky));
+            setBrightnessOverride(new Brightness(config.style.brightness.block, config.style.brightness.sky));
         }
 
         // Set scale.
         if (NametagService.shouldRenderNametagEntity(this)) {
-            getDataTracker().set(SCALE, new Vector3f(config.style.scale.x, config.style.scale.y, config.style.scale.z));
+            getEntityData().set(DATA_SCALE_ID, new Vector3f(config.style.scale.x, config.style.scale.y, config.style.scale.z));
         } else {
-            getDataTracker().set(SCALE, new Vector3f(0, 0, 0));
+            getEntityData().set(DATA_SCALE_ID, new Vector3f(0, 0, 0));
         }
 
         // Set shadow.
-        setDisplayFlag(SHADOW_FLAG, config.style.shadow.shadow);
+        setDisplayFlag(FLAG_SHADOW, config.style.shadow.shadow);
         setShadowRadius(config.style.shadow.shadow_radius);
         setShadowStrength(config.style.shadow.shadow_strength);
 
         // Set view distance.
-        setDisplayFlag(SEE_THROUGH_FLAG, config.render.see_through_blocks);
+        setDisplayFlag(FLAG_SEE_THROUGH, config.render.see_through_blocks);
         setViewRange(config.render.view_range);
 
         /* Send entity tracker update packet. */
         Optional
-            .ofNullable(this.getDataTracker().getDirtyEntries())
+            .ofNullable(this.getEntityData().packDirty())
             .ifPresent(dirtyEntries -> {
-                EntityTrackerUpdateS2CPacket entityTrackerUpdateS2CPacket = new EntityTrackerUpdateS2CPacket(this.getId(), dirtyEntries);
+                ClientboundSetEntityDataPacket entityTrackerUpdateS2CPacket = new ClientboundSetEntityDataPacket(this.getId(), dirtyEntries);
                 PacketHelper.sendPacketToAll(entityTrackerUpdateS2CPacket);
             });
     }

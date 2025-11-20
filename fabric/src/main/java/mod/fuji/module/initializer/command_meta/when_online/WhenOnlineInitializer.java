@@ -22,8 +22,8 @@ import mod.fuji.module.initializer.command_meta.when_online.gui.ListWhenOnlineTi
 import mod.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751824024333L, value = """
     This module provides the `/when-online \\<player\\> \\<cmd\\>` command.
@@ -44,8 +44,8 @@ public class WhenOnlineInitializer extends ModuleInitializer {
     @Document(id = 1755412463665L, value = "Execute the specified command `exactly once`, when the target player `is online`.")
     @CommandNode("when-online")
     @CommandRequirement(level = 4)
-    private static int $whenOnline(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyCommandString command) {
-        String $creatorName = source.getName();
+    private static int $whenOnline(@CommandSource CommandSourceStack source, OfflinePlayerName targetPlayer, GreedyCommandString command) {
+        String $creatorName = source.getTextName();
         String $targetPlayerName = targetPlayer.getValue();
         String $command = command.getValue();
 
@@ -60,7 +60,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
     @Document(id = 1755412352252L, value = "An alias command for `/when-online list` command.")
     @CommandNode("when-online")
     @CommandRequirement(level = 4)
-    private static int $root(@CommandSource ServerPlayerEntity player) {
+    private static int $root(@CommandSource ServerPlayer player) {
         return $list(player);
     }
 
@@ -68,7 +68,7 @@ public class WhenOnlineInitializer extends ModuleInitializer {
     @Document(id = 1755412381305L, value = "List all submitted `when-online` tickets.")
     @CommandNode("when-online list")
     @CommandRequirement(level = 4)
-    private static int $list(@CommandSource ServerPlayerEntity player) {
+    private static int $list(@CommandSource ServerPlayer player) {
         ListWhenOnlineTicketsGui
             .make(player)
             .open();
@@ -99,9 +99,9 @@ public class WhenOnlineInitializer extends ModuleInitializer {
                 ticket.executedTimestamp = System.currentTimeMillis();
 
                 /* Execute the specified command. */
-                Optional<ServerPlayerEntity> onlinePlayer = PlayerHelper.Lookup.getOnlinePlayerByName(ticket.targetPlayer);
+                Optional<ServerPlayer> onlinePlayer = PlayerHelper.Lookup.getOnlinePlayerByName(ticket.targetPlayer);
                 onlinePlayer.ifPresentOrElse($onlinePlayer -> {
-                    ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.getCommandSource());
+                    ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole($onlinePlayer.createCommandSourceStack());
                     String commandString = ticket.command;
                     CommandExecutor.executeSingle(extendedCommandSource, commandString);
                 }, () -> LogUtil.warn("Failed to execute the when-online ticket, the online player is null.", ticket));

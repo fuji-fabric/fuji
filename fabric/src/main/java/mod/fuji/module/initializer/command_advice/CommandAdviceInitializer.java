@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -94,8 +94,8 @@ public class CommandAdviceInitializer extends ModuleInitializer {
         "Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `non-damaged diamond sword`.",
         "Issue `/repair` with `iron_ingot x 16`, `gold_ingot x 16` and `damaged diamond sword`."
     })
-    private static void processCommandAdvice(@NotNull Object executor, @NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull Optional<CallbackInfo> callbackInfo, @NotNull Optional<Integer> targetCommandReturnValue) {
-        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, target command return value = {}", adviceType, commandString, source.getName(), executor, targetCommandReturnValue);
+    private static void processCommandAdvice(@NotNull Object executor, @NotNull CommandSourceStack source, @NotNull String commandString, @NotNull CommandAdviceType adviceType, @NotNull Optional<CallbackInfo> callbackInfo, @NotNull Optional<Integer> targetCommandReturnValue) {
+        LogUtil.debug("Process Command Advice: advice type = {}, command string = {}, command source = {}, executor = {}, target command return value = {}", adviceType, commandString, source.getTextName(), executor, targetCommandReturnValue);
 
         /* Create the command advice stream. */
         Stream<CommandAdviceEntry> filterCommandAdvices = config.model()
@@ -218,7 +218,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static @NotNull List<Integer> executeAdviceCommands(@NotNull ServerCommandSource source, @NotNull String commandString, @NotNull CommandAdviceEntry commandAdvice) {
+    private static @NotNull List<Integer> executeAdviceCommands(@NotNull CommandSourceStack source, @NotNull String commandString, @NotNull CommandAdviceEntry commandAdvice) {
         /* Initialize the matcher .*/
         Matcher matcher = commandAdvice
             .getMatcher()

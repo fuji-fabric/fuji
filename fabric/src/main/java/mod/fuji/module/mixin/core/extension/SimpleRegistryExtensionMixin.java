@@ -10,17 +10,17 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 #endif
 
-import net.minecraft.registry.MutableRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntry.Reference;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 #if MC_VER <= MC_1_20_4
 #elif MC_VER > MC_1_20_4
-import net.minecraft.registry.entry.RegistryEntryInfo;
+import net.minecraft.core.RegistrationInfo;
 #endif
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,32 +31,32 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@Mixin(SimpleRegistry.class)
-public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryExtension<T>, MutableRegistry<T> {
+@Mixin(MappedRegistry.class)
+public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryExtension<T>, WritableRegistry<T> {
 
     @Shadow
     @Final
-    private Map<T, RegistryEntry.Reference<T>> valueToEntry;
+    private Map<T, Holder.Reference<T>> byValue;
 
     @Shadow
     @Final
-    private Map<Identifier, RegistryEntry.Reference<T>> idToEntry;
+    private Map<ResourceLocation, Holder.Reference<T>> byLocation;
 
     @Shadow
     @Final
-    private Map<RegistryKey<T>, RegistryEntry.Reference<T>> keyToEntry;
+    private Map<ResourceKey<T>, Holder.Reference<T>> byKey;
 
     #if MC_VER <= MC_1_20_4
     #elif MC_VER > MC_1_20_4
     @Shadow
     @Final
-    private Map<RegistryKey<T>, RegistryEntryInfo> keyToEntryInfo;
+    private Map<ResourceKey<T>, RegistrationInfo> registrationInfos;
     #endif
 
 
     @Shadow
     @Final
-    private ObjectList<RegistryEntry.Reference<T>> rawIdToEntry;
+    private ObjectList<Holder.Reference<T>> byId;
 
     #if MC_VER <= MC_1_20_2
     @Shadow
@@ -65,12 +65,12 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     #elif MC_VER > MC_1_20_2
     @Shadow
     @Final
-    private Reference2IntMap<T> entryToRawId;
+    private Reference2IntMap<T> toId;
     #endif
 
     @Shadow
     @Final
-    RegistryKey<? extends Registry<T>> key;
+    ResourceKey<? extends Registry<T>> key;
 
     @Shadow
     private boolean frozen;
@@ -78,20 +78,20 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
 
     @Override
     public boolean fuji$remove(@NotNull T entry) {
-        var registryEntry = this.valueToEntry.get(entry);
-        int rawId = this.entryToRawId.removeInt(entry);
+        var registryEntry = this.byValue.get(entry);
+        int rawId = this.toId.removeInt(entry);
         if (rawId == -1) {
             return false;
         }
 
         try {
-            this.keyToEntry.remove(registryEntry.registryKey());
-            this.idToEntry.remove(registryEntry.registryKey().getValue());
-            this.valueToEntry.remove(entry);
-            this.rawIdToEntry.set(rawId, null);
+            this.byKey.remove(registryEntry.key());
+            this.byLocation.remove(registryEntry.key().location());
+            this.byValue.remove(entry);
+            this.byId.set(rawId, null);
             #if MC_VER <= MC_1_20_4
             #elif MC_VER > MC_1_20_4
-            this.keyToEntryInfo.remove(this.key);
+            this.registrationInfos.remove(this.key);
             #endif
             return true;
         } catch (Throwable e) {
@@ -101,9 +101,9 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     }
 
     @Override
-    public boolean fuji$remove(Identifier key) {
-        var entry = this.idToEntry.get(key);
-        return entry != null && entry.hasKeyAndValue() && this.fuji$remove(entry.comp_349());
+    public boolean fuji$remove(ResourceLocation key) {
+        var entry = this.byLocation.get(key);
+        return entry != null && entry.isBound() && this.fuji$remove(entry.value());
     }
 
     @Override
@@ -116,8 +116,8 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
         return this.frozen;
     }
 
-    @ModifyReturnValue(method = "streamEntries", at = @At("RETURN"))
-    public Stream<Reference<T>> fixEntryStream(@NotNull Stream<RegistryEntry.Reference<T>> original) {
+    @ModifyReturnValue(method = "listElements", at = @At("RETURN"))
+    public Stream<Reference<T>> fixEntryStream(@NotNull Stream<Holder.Reference<T>> original) {
         return original.filter(Objects::nonNull);
     }
 }

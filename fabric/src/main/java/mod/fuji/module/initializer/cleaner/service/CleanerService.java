@@ -12,13 +12,13 @@ import mod.fuji.module.initializer.cleaner.structure.CleanupMethod;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,14 +71,14 @@ public class CleanerService {
         /* Clean entities in the server. */
         Map<String, Integer> cleanedEntities = new HashMap<>();
 
-        for (ServerWorld world : WorldHelper.getWorlds()) {
+        for (ServerLevel world : WorldHelper.getWorlds()) {
             for (Entity entity : WorldHelper.getEntities(world)) {
                 if (shouldIgnoreEntity(entity)) continue;
 
                 String entityKey = EntityHelper.toTranslatableKey(entity);
                 int entityCount = EntityHelper.getEntityEffectiveCount(entity);
 
-                findApplicableMatcher(entityKey, entity.age)
+                findApplicableMatcher(entityKey, entity.tickCount)
                     .ifPresent(matcher -> {
                         cleanedEntities.merge(entityKey, entityCount, Integer::sum);
                         cleanEntity(entity, matcher);
@@ -96,17 +96,17 @@ public class CleanerService {
 
         LogUtil.info("Cleaned entities: {}", cleanedEntitiesMap);
 
-        Text hoverText =
-            Text.empty()
-                .formatted(Formatting.GOLD)
+        Component hoverText =
+            Component.empty()
+                .withStyle(ChatFormatting.GOLD)
                 .append(TypeFormatter.formatTypes(null, cleanedEntitiesMap));
 
         PlayerHelper.Lookup
             .getOnlinePlayers()
             .forEach(player -> {
-                MutableText reportText = Text.empty()
+                MutableComponent reportText = Component.empty()
                     .append(TextHelper.getTextByKey(player, "cleaner.broadcast", cleanedEntitiesCount))
-                    .fillStyle(
+                    .withStyle(
                         Style.EMPTY
                             .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(hoverText)));
                 TextHelper.sendMessageByText(player, reportText);

@@ -38,15 +38,15 @@ import mod.fuji.module.initializer.command_attachment.structure.attachment_entry
 import mod.fuji.module.initializer.command_attachment.structure.attachment_entry.ItemStackCommandAttachmentEntry;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
 
 @Document(id = 1751826430284L, value = """
     This module allows `attaching` commands to various `objects`:
@@ -123,14 +123,14 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826433455L, value = "Attach one command to an item.")
     @CommandNode("attach-item-one")
-    private static int $attachItemOne(@CommandSource ServerPlayerEntity player
+    private static int $attachItemOne(@CommandSource ServerPlayer player
         , Optional<InteractType> interactType
         , Optional<Integer> maxUseTimes
         , Optional<ExecuteAsType> executeAsType
         , Optional<Boolean> destroyItem
         , GreedyCommandString command
     ) {
-        return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player.createCommandSourceStack(), (thePlayer, mainHandStack) -> {
             String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
             return CommandAttachmentService.withAttachmentDataNode(uuid, it -> {
                 CommandAttachments model = it.getAttachments();
@@ -152,7 +152,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826450179L, value = "Attach one command to an entity.")
     @CommandNode("attach-entity-one")
-    private static int $attachEntityOne(@CommandSource ServerPlayerEntity player
+    private static int $attachEntityOne(@CommandSource ServerPlayer player
         , Entity entity
         , Optional<InteractType> interactType
         , Optional<Integer> maxUseTimes
@@ -178,7 +178,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826465183L, value = "Attach one command to specified block.")
     @CommandNode("attach-block-one")
-    private static int $attachBlockOne(@CommandSource ServerPlayerEntity player
+    private static int $attachBlockOne(@CommandSource ServerPlayer player
         , BlockPos blockPos
         , Optional<InteractType> interactType
         , Optional<Integer> maxUseTimes
@@ -206,9 +206,9 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     @SuppressWarnings("CodeBlock2Expr")
     @Document(id = 1751826477036L, value = "Detach all attached commands in the item.")
     @CommandNode("detach-item-all")
-    private static int $detachItemAll(@CommandSource ServerPlayerEntity player, Optional<Boolean> confirm) {
+    private static int $detachItemAll(@CommandSource ServerPlayer player, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
-            return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+            return CommandHelper.Pattern.withItemInMainHandCommand(player.createCommandSourceStack(), (thePlayer, mainHandStack) -> {
                 String uuid = UuidHelper.getOrSetAttachedUuid(mainHandStack);
                 CommandAttachmentService.removeAttachmentDataNode(uuid);
                 return CommandHelper.Return.SUCCESS;
@@ -218,7 +218,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826478770L, value = "Detach all attached commands in the entity.")
     @CommandNode("detach-entity-all")
-    private static int $detachEntityAll(@CommandSource ServerPlayerEntity player, Entity entity, Optional<Boolean> confirm) {
+    private static int $detachEntityAll(@CommandSource ServerPlayer player, Entity entity, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
             String uuid = UuidHelper.getAttachedUuid(entity);
             CommandAttachmentService.removeAttachmentDataNode(uuid);
@@ -228,7 +228,7 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826482248L, value = "Detach all attached commands in the block.")
     @CommandNode("detach-block-all")
-    private static int $detachBlockAll(@CommandSource ServerPlayerEntity player, BlockPos blockPos, Optional<Boolean> confirm) {
+    private static int $detachBlockAll(@CommandSource ServerPlayer player, BlockPos blockPos, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(player, confirm, () -> {
             String uuid = UuidHelper.getAttachedUuid(EntityHelper.getServerWorld(player), blockPos);
             CommandAttachmentService.removeAttachmentDataNode(uuid);
@@ -238,30 +238,30 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @Document(id = 1751826486559L, value = "Query all attached commands in the item.")
     @CommandNode("query-item")
-    private static int $queryItem(@CommandSource ServerPlayerEntity player) {
-        return CommandHelper.Pattern.withItemInMainHandCommand(player.getCommandSource(), (thePlayer, mainHandStack) -> {
+    private static int $queryItem(@CommandSource ServerPlayer player) {
+        return CommandHelper.Pattern.withItemInMainHandCommand(player.createCommandSourceStack(), (thePlayer, mainHandStack) -> {
             Optional<String> uuid = UuidHelper.getAttachedUuid(mainHandStack);
-            return CommandAttachmentService.printAttachmentDataNode(player.getCommandSource(), uuid);
+            return CommandAttachmentService.printAttachmentDataNode(player.createCommandSourceStack(), uuid);
         });
     }
 
     @Document(id = 1751826488228L, value = "Query all attached commands in the entity.")
     @CommandNode("query-entity")
-    private static int $queryEntity(@CommandSource ServerCommandSource source, Entity entity) {
+    private static int $queryEntity(@CommandSource CommandSourceStack source, Entity entity) {
         String uuid = UuidHelper.getAttachedUuid(entity);
         return CommandAttachmentService.printAttachmentDataNode(source, Optional.of(uuid));
     }
 
     @Document(id = 1751826492923L, value = "Query all attached commands in the block.")
     @CommandNode("query-block")
-    private static int $queryBlock(@CommandSource ServerCommandSource source, BlockPos blockPos) {
-        String uuid = UuidHelper.getAttachedUuid(source.getWorld(), blockPos);
+    private static int $queryBlock(@CommandSource CommandSourceStack source, BlockPos blockPos) {
+        String uuid = UuidHelper.getAttachedUuid(source.getLevel(), blockPos);
         return CommandAttachmentService.printAttachmentDataNode(source, Optional.of(uuid));
     }
 
     @Document(id = 1756452396077L, value = "Open the command attachment editor.")
     @CommandNode("editor")
-    private static int $editor(@CommandSource ServerPlayerEntity player) {
+    private static int $editor(@CommandSource ServerPlayer player) {
         CommandAttachmentEditorGui
             .make(player)
             .open();
@@ -275,10 +275,10 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void consumePlayerActionEvent(PlayerActionEvent event) {
-        PlayerActionC2SPacket packet = event.getPacket();
-        if (packet.getAction() == PlayerActionC2SPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
-            ServerPlayerEntity player = event.getPlayer();
-            ItemStack itemStack = player.getMainHandStack();
+        ServerboundPlayerActionPacket packet = event.getPacket();
+        if (packet.getAction() == ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
+            ServerPlayer player = event.getPlayer();
+            ItemStack itemStack = player.getMainHandItem();
             UuidHelper
                 .getAttachedUuid(ItemStackHelper.CustomData.getCustomDataNbt(itemStack))
                 .ifPresent($uuid -> {
@@ -292,8 +292,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
 
-        ServerPlayerEntity player = event.getPlayer();
-        ServerWorld world = EntityHelper.getServerWorld(player);
+        ServerPlayer player = event.getPlayer();
+        ServerLevel world = EntityHelper.getServerWorld(player);
         String uuid = UuidHelper.getAttachedUuid(world, event.getBlockPos());
         CommandAttachmentService
             .findAttachmentDataNode(uuid)
@@ -318,11 +318,11 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
 
-        if (event.getHand() == Hand.MAIN_HAND) {
+        if (event.getHand() == InteractionHand.MAIN_HAND) {
             String uuid = UuidHelper.getAttachedUuid(event.getWorld(), event.getBlockHitResult().getBlockPos());
             CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, event.getPlayer(), List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {
                 // Cancel the action if the target block contains attached commands.
-                event.getCallbackInfoReturnable().setReturnValue(ActionResult.FAIL);
+                event.getCallbackInfoReturnable().setReturnValue(InteractionResult.FAIL);
             });
         }
     }
@@ -331,8 +331,8 @@ public class CommandAttachmentInitializer extends ModuleInitializer {
     private static void consumePlayerInteractEntityPreEvent(PlayerInteractEntityPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
 
-        if (event.getHand() == Hand.MAIN_HAND) {
-            String uuid = event.getEntity().getUuidAsString();
+        if (event.getHand() == InteractionHand.MAIN_HAND) {
+            String uuid = event.getEntity().getStringUUID();
             CommandAttachmentService.tryTriggerAttachmentDataNode(uuid, event.getPlayer(), List.of(InteractType.RIGHT_CLICK, InteractType.ANY_CLICK), () -> {});
         }
     }

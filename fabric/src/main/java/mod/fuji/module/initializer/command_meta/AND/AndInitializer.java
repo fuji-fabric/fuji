@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Arrays;
 import java.util.List;
 import mod.fuji.module.initializer.command_meta.AND.command.argument.wrapper.AndGreedyCommandString;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1756383926802L, value = """
     Provides the `/AND` command, which allows composing the return values of multiple commands.
@@ -29,7 +29,7 @@ public class AndInitializer extends ModuleInitializer {
     @Document(id = 1756383929301L, value = "Returns `SUCCESS` if and only if `all of` the commands returns `SUCCESS`.")
     @CommandNode("AND")
     @CommandRequirement(level = 4)
-    private static int $and(@CommandSource ServerCommandSource source, AndGreedyCommandString rest) {
+    private static int $and(@CommandSource CommandSourceStack source, AndGreedyCommandString rest) {
         String $rest = rest.getValue();
         List<String> commands = Arrays
             .stream($rest.split("AND"))

@@ -12,7 +12,7 @@ import mod.fuji.module.initializer.title.config.model.TitleConfigModel;
 import mod.fuji.module.initializer.title.config.model.TitleDataModel;
 import mod.fuji.module.initializer.title.gui.ListTitlesGui;
 import mod.fuji.module.initializer.title.service.TitleService;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1752999308751L, value = """
     This module allows you to define `titles` to display in the chat.
@@ -38,7 +38,7 @@ public class TitleInitializer extends ModuleInitializer {
         Open the `title` GUI.
         """)
     @CommandNode("title!")
-    private static int $title(@CommandSource ServerPlayerEntity player) {
+    private static int $title(@CommandSource ServerPlayer player) {
         ListTitlesGui
             .makeInstance(player, TitleService.getAllTitles())
             .open();

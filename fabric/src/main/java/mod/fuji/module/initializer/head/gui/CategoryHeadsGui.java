@@ -11,9 +11,9 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.head.HeadInitializer;
 import mod.fuji.module.initializer.head.structure.EconomyType;
 import mod.fuji.module.initializer.head.structure.Head;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,12 +21,12 @@ import java.util.List;
 
 public class CategoryHeadsGui extends PagedGui<Head> {
 
-    public CategoryHeadsGui(SimpleGui parent, ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
+    public CategoryHeadsGui(SimpleGui parent, ServerPlayer player, Component title, @NotNull List<Head> entities, int pageIndex) {
         super(parent, player, title, entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<Head> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Head> entities, int pageIndex) {
+    protected @NotNull PagedGui<Head> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Head> entities, int pageIndex) {
         return new CategoryHeadsGui(parent, player, title, entities, pageIndex);
     }
 
@@ -35,7 +35,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
         /* Add the price text to the head stack. */
         var builder = GuiElementBuilder.from(entity.toItemStack());
         if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
-            builder.addLoreLine(Text.empty());
+            builder.addLoreLine(Component.empty());
             builder.addLoreLine(TextHelper.getTextByKey(getPlayer(), "head.price").copy().append(EconomyType.getCostText()));
         }
 
@@ -51,34 +51,34 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     private void handleEntityClick(@NotNull Head head, @NotNull ClickType type) {
-        ServerPlayerEntity player = getPlayer();
-        ItemStack cursorStack = player.currentScreenHandler.getCursorStack();
+        ServerPlayer player = getPlayer();
+        ItemStack cursorStack = player.containerMenu.getCarried();
         ItemStack headStack = head.toItemStack();
 
         /* If cursor stack is empty, then we are safe to set the cursor stack. */
         if (cursorStack.isEmpty()) {
             if (type.shift) { // Shift click -> buy into inventory.
-                EconomyType.tryPurchaseHeads(player, 1, () -> player.getInventory().insertStack(headStack));
+                EconomyType.tryPurchaseHeads(player, 1, () -> player.getInventory().add(headStack));
             } else if (type.isMiddle) { // Double click -> buy to max count.
-                EconomyType.tryPurchaseHeads(player, headStack.getMaxCount(), () -> {
-                    headStack.setCount(headStack.getMaxCount());
-                    player.currentScreenHandler.setCursorStack(headStack);
+                EconomyType.tryPurchaseHeads(player, headStack.getMaxStackSize(), () -> {
+                    headStack.setCount(headStack.getMaxStackSize());
+                    player.containerMenu.setCarried(headStack);
                 });
             } else { // Single click -> buy one.
-                EconomyType.tryPurchaseHeads(player, 1, () -> player.currentScreenHandler.setCursorStack(headStack));
+                EconomyType.tryPurchaseHeads(player, 1, () -> player.containerMenu.setCarried(headStack));
             }
         } else if (ItemStackHelper.canCombine(headStack, cursorStack)) {
             if (type.isLeft) { // Single click -> buy one.
-                EconomyType.tryPurchaseHeads(player, 1, () -> cursorStack.increment(1));
+                EconomyType.tryPurchaseHeads(player, 1, () -> cursorStack.grow(1));
             } else if (type.isRight) { // Right click -> only allow to return of goods when it's free.
                 if (HeadInitializer.config.model().economy_type == EconomyType.FREE) {
-                    cursorStack.decrement(1);
+                    cursorStack.shrink(1);
                 }
             } else if (type.isMiddle) { // Double click -> buy to max count.
-                var amount = headStack.getMaxCount() - cursorStack.getCount();
+                var amount = headStack.getMaxStackSize() - cursorStack.getCount();
                 EconomyType.tryPurchaseHeads(player, amount, () -> {
-                    headStack.setCount(headStack.getMaxCount());
-                    player.currentScreenHandler.setCursorStack(headStack);
+                    headStack.setCount(headStack.getMaxStackSize());
+                    player.containerMenu.setCarried(headStack);
                 });
             }
         }

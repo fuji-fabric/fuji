@@ -4,7 +4,7 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +21,7 @@ public class StyleStriper {
 
     private static final Map<String, PermissionDescriptor> CREATED_STYLE_KINDS = new HashMap<>();
 
-    public static @NotNull String stripe(@NotNull PlayerEntity player, @NotNull String styleKind, @NotNull String inputString) {
+    public static @NotNull String stripe(@NotNull Player player, @NotNull String styleKind, @NotNull String inputString) {
         for (String tag : resolveTags(inputString)) {
             String tagType = extractTagType(tag);
             if (!canUseThisTagType(player, styleKind, tagType)) {
@@ -77,9 +77,9 @@ public class StyleStriper {
         });
     }
 
-    private static boolean canUseThisTagType(@NotNull PlayerEntity player, @NotNull String styleKind, @NotNull String tagType) {
+    private static boolean canUseThisTagType(@NotNull Player player, @NotNull String styleKind, @NotNull String tagType) {
         PermissionDescriptor permission = getOrCreatePermissionDescriptorForStyleKind(styleKind);
-        return LuckpermsHelper.hasPermission(player.getUuid(), permission, styleKind, tagType);
+        return LuckpermsHelper.hasPermission(player.getUUID(), permission, styleKind, tagType);
     }
 
 }

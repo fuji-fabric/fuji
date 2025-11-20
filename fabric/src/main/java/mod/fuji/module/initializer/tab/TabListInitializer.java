@@ -11,8 +11,8 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.ModifyPlayerListNameEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.tab.config.model.TabListConfigModel;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751826913154L, value = """
@@ -39,10 +39,10 @@ public class TabListInitializer extends ModuleInitializer {
     @EventConsumer
     private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
         // Respect other's modification.
-        @Nullable Text original = event.getText();
+        @Nullable Component original = event.getText();
         if (original == null) {
-            ServerPlayerEntity player = event.getPlayer();
-            Text newValue = TextHelper.getTextByValue(player, RandomUtil.drawList(TabListInitializer.config.model().getStyle().getBody()));
+            ServerPlayer player = event.getPlayer();
+            Component newValue = TextHelper.getTextByValue(player, RandomUtil.drawList(TabListInitializer.config.model().getStyle().getBody()));
             event.setText(newValue);
         }
     }

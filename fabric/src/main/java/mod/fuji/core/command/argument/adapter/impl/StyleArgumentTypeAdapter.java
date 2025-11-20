@@ -10,7 +10,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
 import net.minecraft.command.argument.StyleArgumentType;
 #elif MC_VER > MC_1_20_4
-import net.minecraft.command.argument.StyleArgumentType;
+import net.minecraft.commands.arguments.StyleArgument;
 #endif
 
 #if MC_VER <= MC_1_20_2
@@ -18,8 +18,8 @@ import net.minecraft.command.argument.StyleArgumentType;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 #endif
 
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Style;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Style;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -32,16 +32,16 @@ public class StyleArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
         return StyleArgumentType.style();
         #elif MC_VER > MC_1_20_4
-        return StyleArgumentType.style(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
+        return StyleArgument.style(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
         #endif
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         #if MC_VER <= MC_1_20_2
         return new GreedyString(StringArgumentType.getString(context, commandArgument.getArgumentName()));
         #elif MC_VER > MC_1_20_2
-        return StyleArgumentType.getStyle(context, commandArgument.getArgumentName());
+        return StyleArgument.getStyle(context, commandArgument.getArgumentName());
         #endif
     }
 

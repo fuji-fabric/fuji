@@ -10,20 +10,20 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.random_teleport.searcher.PositionYDownTopSearcher;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 
 public class DownInitializer extends ModuleInitializer {
 
     @Document(id = 1757792247065L, value = "Teleport to the lowest of your current position.")
     @CommandNode("down")
-    private static int $down(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        World world = PlayerHelper.getServerWorld(player);
-        BlockPos blockPos = player.getBlockPos();
-        Chunk chunk = world.getChunk(blockPos);
+    private static int $down(@CommandSource @CommandTarget ServerPlayer player) {
+        Level world = PlayerHelper.getServerWorld(player);
+        BlockPos blockPos = player.blockPosition();
+        ChunkAccess chunk = world.getChunk(blockPos);
         int resultY = new PositionYDownTopSearcher()
             .search(chunk, blockPos.getX(), blockPos.getZ())
             .orElseGet(blockPos::getY);

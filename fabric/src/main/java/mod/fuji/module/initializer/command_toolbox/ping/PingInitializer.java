@@ -8,8 +8,8 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class PingInitializer extends ModuleInitializer {
@@ -17,7 +17,7 @@ public class PingInitializer extends ModuleInitializer {
     @Document(id = 1751825386112L, value = "Query the ping of a player.")
     @CommandNode("ping")
     @CommandRequirement(level = 4)
-    private static int $ping(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $ping(@CommandSource CommandSourceStack source, ServerPlayer target) {
         String targetPlayerName = PlayerHelper.getPlayerName(target);
         int latency = PlayerHelper.getPing(target);
         TextHelper.sendTextByKey(source, "ping.player", targetPlayerName, latency);

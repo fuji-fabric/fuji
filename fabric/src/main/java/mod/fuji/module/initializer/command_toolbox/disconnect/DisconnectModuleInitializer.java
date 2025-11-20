@@ -10,9 +10,9 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @ColorBox(id = 1758033790822L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Dis-connect a player.
@@ -23,8 +23,8 @@ public class DisconnectModuleInitializer extends ModuleInitializer {
 
     @CommandNode("dis-connect")
     @CommandRequirement(level = 4)
-    private static int $disconnect(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target, GreedyString reason) {
-        Text reasonText = TextHelper.getTextByValue(target, reason.getValue());
+    private static int $disconnect(@CommandSource CommandSourceStack source, @CommandTarget ServerPlayer target, GreedyString reason) {
+        Component reasonText = TextHelper.getTextByValue(target, reason.getValue());
         PlayerHelper.disconnectPlayer(target, reasonText);
         return CommandHelper.Return.SUCCESS;
     }

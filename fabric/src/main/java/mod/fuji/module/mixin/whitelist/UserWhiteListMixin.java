@@ -5,14 +5,15 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import net.minecraft.server.Whitelist;
+import net.minecraft.server.players.UserWhiteList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(Whitelist.class)
+@Mixin(UserWhiteList.class)
 public class UserWhiteListMixin {
 
-    /**
+    // TODO(Ravel): wildcard and regex target are not supported
+/**
      * Once an offline-player join the server, then the offline-uuid will be added to usercache.json.
      * After that, the server will always use the player's offline-uuid in usercache.json to check whitelist (and other list, like ban list, op list).
      * <p>
@@ -23,16 +24,16 @@ public class UserWhiteListMixin {
      * <p>
      * This @Inject makes the whitelist.json only look-up for the player's name, not the uuid.
      *
-     * @see Whitelist#isAllowed(GameProfile)
-     * @see Whitelist#toString(GameProfile)
-     * @see net.minecraft.util.UserCache#add(GameProfile)
+     * @see UserWhiteList#isAllowed(GameProfile)
+     * @see UserWhiteList#toString(GameProfile)
+     * @see net.minecraft.server.players.CachedUserNameToIdResolver#add(GameProfile)
      **/
     #if MC_VER < MC_1_21_9
     @ModifyReturnValue(method = "toString*", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) GameProfile vanillaType)
     #elif MC_VER >= MC_1_21_9
-    @ModifyReturnValue(method = "toString*", at = @At("RETURN"))
-    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.PlayerConfigEntry vanillaType)
+    @ModifyReturnValue(method = "getKeyForUser*", at = @At("RETURN"))
+    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.players.NameAndId vanillaType)
     #endif
     {
         return GameProfileWrapper

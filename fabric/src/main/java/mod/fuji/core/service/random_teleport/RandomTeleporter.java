@@ -15,16 +15,16 @@ import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import mod.fuji.core.structure.GlobalPos;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Cite("https://github.com/John-Paul-R/Essential-Commands")
 public class RandomTeleporter {
 
-    public static void request(@NotNull ServerPlayerEntity player, @NotNull RandomTeleportSettings settings, @Nullable Consumer<GlobalPos> onCompleteHook) {
+    public static void request(@NotNull ServerPlayer player, @NotNull RandomTeleportSettings settings, @Nullable Consumer<GlobalPos> onCompleteHook) {
         AsyncUtil.runAsyncAndHandleExceptions(() -> {
             /* Start the timer. */
             String playerName = PlayerHelper.getPlayerName(player);
@@ -33,13 +33,13 @@ public class RandomTeleporter {
             TextHelper.sendTextByKey(player, "rtp.progress.started");
 
             /* Initialize world variable. */
-            Optional<ServerWorld> world = WorldHelper.getWorld(settings.getDimension());
+            Optional<ServerLevel> world = WorldHelper.getWorld(settings.getDimension());
             if (world.isEmpty()) {
                 LogUtil.warn("Abort rtp for {} (Target dimension not found in server)", player);
                 TextHelper.sendTextByKey(player, "world.dimension.not_found");
                 return;
             }
-            ServerWorld $world = world.get();
+            ServerLevel $world = world.get();
 
             /* Do search. */
             final PositionSearchContext context = PositionSearchContext.of(player, settings);

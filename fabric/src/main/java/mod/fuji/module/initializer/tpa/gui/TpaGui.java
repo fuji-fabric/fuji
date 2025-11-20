@@ -10,14 +10,14 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.tpa.service.TpaService;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TpaGui extends PagedGui<ServerPlayerEntity> {
+public class TpaGui extends PagedGui<ServerPlayer> {
 
-    public TpaGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<ServerPlayerEntity> entities, int pageIndex) {
+    public TpaGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<ServerPlayer> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "tpa.gui.title"), entities, pageIndex);
 
         GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button
@@ -26,12 +26,12 @@ public class TpaGui extends PagedGui<ServerPlayerEntity> {
     }
 
     @Override
-    protected @NotNull PagedGui<ServerPlayerEntity> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<ServerPlayerEntity> entities, int pageIndex) {
+    protected @NotNull PagedGui<ServerPlayer> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<ServerPlayer> entities, int pageIndex) {
         return new TpaGui(parent, player, entities, pageIndex);
     }
 
-    public static @NotNull TpaGui make(@NotNull ServerPlayerEntity player) {
-        List<ServerPlayerEntity> entities = PlayerHelper.Lookup
+    public static @NotNull TpaGui make(@NotNull ServerPlayer player) {
+        List<ServerPlayer> entities = PlayerHelper.Lookup
             .getOnlinePlayers()
             .stream()
             .filter(it -> !it.equals(player))
@@ -40,7 +40,7 @@ public class TpaGui extends PagedGui<ServerPlayerEntity> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull ServerPlayerEntity entity) {
+    protected @NotNull GuiElementInterface toGuiElement(@NotNull ServerPlayer entity) {
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
             .setName(TextHelper.getTextByKey(player, "player.name", PlayerHelper.getPlayerName(entity)))
@@ -56,7 +56,7 @@ public class TpaGui extends PagedGui<ServerPlayerEntity> {
     }
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    private void onEntityClicked(@NotNull ClickType clickType, @NotNull ServerPlayerEntity entity) {
+    private void onEntityClicked(@NotNull ClickType clickType, @NotNull ServerPlayer entity) {
         if (clickType.isLeft) {
             TpaService.doRequest(player, entity, false);
             close();

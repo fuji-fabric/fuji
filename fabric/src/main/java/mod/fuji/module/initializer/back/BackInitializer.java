@@ -19,8 +19,8 @@ import mod.fuji.module.initializer.back.config.model.BackConfigModel;
 import mod.fuji.module.initializer.back.config.model.BackLocationHistoryModel;
 import mod.fuji.module.initializer.back.service.BackService;
 import mod.fuji.module.initializer.back.structure.LocationEntry;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751825568845L, value = """
     This module allows players to `teleport back` to:
@@ -43,7 +43,7 @@ public class BackInitializer extends ModuleInitializer {
     @Document(id = 1751825574805L, value = "Push current location into the back location history.")
     @CommandNode("back push")
     @CommandRequirement(level = 4)
-    private static int $push(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $push(@CommandSource @CommandTarget ServerPlayer player) {
         return BackService.withLocationHistory(player, locationHistory -> {
             LocationEntry locationEntry = LocationEntry.makeLocationEntry(player);
             BackService.pushBackLocation(player,locationHistory,locationEntry);
@@ -54,7 +54,7 @@ public class BackInitializer extends ModuleInitializer {
     @Document(id = 1751825581305L, value = "Clear the back location history.")
     @CommandNode("back clear")
     @CommandRequirement(level = 4)
-    private static int $clear(@CommandSource CommandContext<ServerCommandSource> source, @CommandTarget ServerPlayerEntity player) {
+    private static int $clear(@CommandSource CommandContext<CommandSourceStack> source, @CommandTarget ServerPlayer player) {
         return BackService.withLocationHistory(player, locationHistory -> {
             locationHistory.clearEntries();
             String playerName = PlayerHelper.getPlayerName(player);
@@ -66,37 +66,37 @@ public class BackInitializer extends ModuleInitializer {
     @Document(id = 1751825587373L, value = "List the back location history.")
     @CommandNode("back list")
     @CommandRequirement(level = 4)
-    private static int $list(@CommandSource CommandContext<ServerCommandSource> source, ServerPlayerEntity player) {
+    private static int $list(@CommandSource CommandContext<CommandSourceStack> source, ServerPlayer player) {
         return BackService.listBackLocations(source.getSource(), player);
     }
 
     @Document(id = 1751825593993L, value = "List the back location history.")
     @CommandNode("back list")
-    private static int $list(@CommandSource ServerPlayerEntity source) {
+    private static int $list(@CommandSource ServerPlayer source) {
         return BackService.listBackLocations(CommandHelper.Source.getCommandSource(source), source);
     }
 
     @Document(id = 1751825598230L, value = "Back to the specified location.")
     @CommandNode("back")
-    private static int $back(@CommandSource ServerPlayerEntity player) {
+    private static int $back(@CommandSource ServerPlayer player) {
         return BackService.teleportBackLocation(player, 1, null);
     }
 
     @Document(id = 1751825604578L, value = "Back to the specified location.")
     @CommandNode("back")
-    private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation) {
+    private static int $back(@CommandSource ServerPlayer player, int lastNLocation) {
         return BackService.teleportBackLocation(player, lastNLocation, null);
     }
 
     @Document(id = 1751825608994L, value = "Back to the specified location.")
     @CommandNode("back")
-    private static int $back(@CommandSource ServerPlayerEntity player, int lastNLocation, Dimension targetDimension) {
+    private static int $back(@CommandSource ServerPlayer player, int lastNLocation, Dimension targetDimension) {
         return BackService.teleportBackLocation(player, lastNLocation, targetDimension);
     }
 
     @Document(id = 1751825615959L, value = "Back to the specified location.")
     @CommandNode("back 1")
-    private static int $back(@CommandSource ServerPlayerEntity player, Dimension targetDimension) {
+    private static int $back(@CommandSource ServerPlayer player, Dimension targetDimension) {
         return BackService.teleportBackLocation(player, 1, targetDimension);
     }
 

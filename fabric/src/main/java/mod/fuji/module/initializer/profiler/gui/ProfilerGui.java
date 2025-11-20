@@ -9,15 +9,15 @@ import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.module.initializer.profiler.ProfilerInitializer;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -34,8 +34,8 @@ public class ProfilerGui extends SimpleGui {
     private static final int LINE_SIZE = 9;
     private static final int CHUNK_AREA = (int) Math.pow(17.0D, 2.0D);
 
-    public ProfilerGui(ServerPlayerEntity player) {
-        super(ScreenHandlerType.GENERIC_9X6, player, false);
+    public ProfilerGui(ServerPlayer player) {
+        super(MenuType.GENERIC_9x6, player, false);
 
         this.setTitle(TextHelper.getTextByKey(getPlayer(), "profiler.gui.title"));
 
@@ -71,8 +71,8 @@ public class ProfilerGui extends SimpleGui {
     private List<GuiElementInterface> makeDimensionElements() {
         List<GuiElementInterface> elements = new ArrayList<>();
 
-        for (ServerWorld world : WorldHelper.getWorlds()) {
-            List<Text> lore = new ArrayList<>();
+        for (ServerLevel world : WorldHelper.getWorlds()) {
+            List<Component> lore = new ArrayList<>();
 
             /* Dimension name. */
             lore.add(TextHelper.getTextByKey(getPlayer(), "profiler.dimension.name", RegistryHelper.getIdAsString(world)));
@@ -80,19 +80,19 @@ public class ProfilerGui extends SimpleGui {
             /* Block entities. */
             int blockEntityCount = 0;
             for (ChunkHolder chunk : WorldHelper.getChunks(world)) {
-                WorldChunk worldChunk = chunk.getWorldChunk();
+                LevelChunk worldChunk = chunk.getTickingChunk();
                 if (worldChunk == null) continue;
                 blockEntityCount += worldChunk.getBlockEntities().size();
             }
             lore.add(TextHelper.getTextByKey(getPlayer(), "profiler.dimension.block_entities", blockEntityCount));
 
             /* Spawn info. */
-            SpawnHelper.Info spawnInfo = world.getChunkManager().getSpawnInfo();
+            NaturalSpawner.SpawnState spawnInfo = world.getChunkSource().getLastSpawnState();
             if (spawnInfo != null) {
-                spawnInfo.getGroupToCount().forEach((k, v) -> {
+                spawnInfo.getMobCategoryCounts().forEach((k, v) -> {
                     String groupName = k.getName();
                     int groupCount = v;
-                    int groupCapacity = k.getCapacity() * spawnInfo.getSpawningChunkCount() / CHUNK_AREA;
+                    int groupCapacity = k.getMaxInstancesPerChunk() * spawnInfo.getSpawnableChunkCount() / CHUNK_AREA;
 
                     lore.add(TextHelper.getTextByKey(getPlayer(), "profiler.dimension.entity_group", groupName, groupCount, groupCapacity));
                 });

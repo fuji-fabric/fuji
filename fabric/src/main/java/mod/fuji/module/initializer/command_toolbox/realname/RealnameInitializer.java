@@ -7,10 +7,10 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 
 
 public class RealnameInitializer extends ModuleInitializer {
@@ -19,20 +19,20 @@ public class RealnameInitializer extends ModuleInitializer {
     @SuppressWarnings("UnnecessaryLocalVariable")
     @Document(id = 1751825098969L, value = "Query the nickname-realname mapping.")
     @CommandNode("realname")
-    private static int $realname(@CommandSource ServerCommandSource source) {
-        MutableText builder = Text.empty();
+    private static int $realname(@CommandSource CommandSourceStack source) {
+        MutableComponent builder = Component.empty();
 
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            Text displayName = player.getDisplayName();
+        for (ServerPlayer player : PlayerHelper.Lookup.getOnlinePlayers()) {
+            Component displayName = player.getDisplayName();
             if (displayName == null) continue;
 
-            Text nickname = displayName;
-            Text realname = player.getName();
+            Component nickname = displayName;
+            Component realname = player.getName();
 
             builder.append(nickname)
-                .append(Text.literal(" -> "))
+                .append(Component.literal(" -> "))
                 .append(realname)
-                .append(Text.literal("\n"));
+                .append(Component.literal("\n"));
         }
 
         TextHelper.sendMessageByText(source, builder);

@@ -10,16 +10,16 @@ import mod.fuji.core.gui.component.gui.InputSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.kit.service.KitService;
 import mod.fuji.module.initializer.kit.structure.Kit;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class KitEditorGui extends PagedGui<Kit> {
 
-    public KitEditorGui(ServerPlayerEntity player, @NotNull List<Kit> entities, int pageIndex) {
+    public KitEditorGui(ServerPlayer player, @NotNull List<Kit> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "kit.gui.editor.title"), entities, pageIndex);
 
         /* Make footer. */
@@ -48,17 +48,17 @@ public class KitEditorGui extends PagedGui<Kit> {
         }.open()));
     }
 
-    public static KitEditorGui make(@NotNull ServerPlayerEntity player) {
+    public static KitEditorGui make(@NotNull ServerPlayer player) {
         List<Kit> kits = KitService.readKits();
         return new KitEditorGui(player, kits, 0);
     }
 
-    private void openKitEditingGui(@NotNull ServerPlayerEntity player, @NotNull Kit kit) {
+    private void openKitEditingGui(@NotNull ServerPlayer player, @NotNull Kit kit) {
         /* Place kit stacks. */
         int rows = 5;
-        SimpleInventory simpleInventory = new SimpleInventory(rows * 9);
+        SimpleContainer simpleInventory = new SimpleContainer(rows * 9);
         for (int i = 0; i < kit.getStackList().size(); i++) {
-            simpleInventory.setStack(i, kit.getStackList().get(i));
+            simpleInventory.setItem(i, kit.getStackList().get(i));
         }
 
         /* Set default items if the kit is empty. */
@@ -68,56 +68,56 @@ public class KitEditorGui extends PagedGui<Kit> {
 
         /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
-            simpleInventory.setStack(i, GuiHelper.Validator.makeBannedSlotPlaceholder().getItemStack());
+            simpleInventory.setItem(i, GuiHelper.Validator.makeBannedSlotPlaceholder().getItemStack());
         }
 
         /* Make a generic container GUI for kit editing. */
-        SimpleNamedScreenHandlerFactory simpleNamedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory((i, playerInventory, p) ->
-            new GenericContainerScreenHandler(ScreenHandlerType.GENERIC_9X5, i, playerInventory, simpleInventory, rows) {
+        SimpleMenuProvider simpleNamedScreenHandlerFactory = new SimpleMenuProvider((i, playerInventory, p) ->
+            new ChestMenu(MenuType.GENERIC_9x5, i, playerInventory, simpleInventory, rows) {
                 @Override
-                public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {
+                public void clicked(int i, int j, ClickType slotActionType, Player playerEntity) {
                     // NOTE: skip BARRIER item stack click.
                     if (GuiHelper.Validator.isBannedSlotIndex(this, i)) return;
-                    super.onSlotClick(i, j, slotActionType, playerEntity);
+                    super.clicked(i, j, slotActionType, playerEntity);
                 }
 
                 @Override
-                public void onClosed(PlayerEntity playerEntity) {
-                    super.onClosed(playerEntity);
+                public void removed(Player playerEntity) {
+                    super.removed(playerEntity);
 
                     /* Re-create the kit with modified stacks. */
                     List<ItemStack> newStacks = new ArrayList<>();
-                    for (int j = 0; j < simpleInventory.size(); j++) {
-                        newStacks.add(simpleInventory.getStack(j));
+                    for (int j = 0; j < simpleInventory.getContainerSize(); j++) {
+                        newStacks.add(simpleInventory.getItem(j));
                     }
                     KitService.createKit(kit.withStackList(newStacks));
                 }
 
             }, TextHelper.getTextByKey(player, "kit.gui.editor.kit.title", kit.getName()));
-        player.openHandledScreen(simpleNamedScreenHandlerFactory);
+        player.openMenu(simpleNamedScreenHandlerFactory);
     }
 
-    private static void placeDefaultKitItems(SimpleInventory simpleInventory) {
+    private static void placeDefaultKitItems(SimpleContainer simpleInventory) {
         // Mainhand.
-        simpleInventory.setStack(0, Items.IRON_SWORD.getDefaultStack());
+        simpleInventory.setItem(0, Items.IRON_SWORD.getDefaultInstance());
 
         // Food.
-        ItemStack food = Items.BREAD.getDefaultStack();
+        ItemStack food = Items.BREAD.getDefaultInstance();
         food.setCount(16);
-        simpleInventory.setStack(1, food);
+        simpleInventory.setItem(1, food);
 
         // Armors.
-        simpleInventory.setStack(36, Items.IRON_BOOTS.getDefaultStack());
-        simpleInventory.setStack(37, Items.IRON_LEGGINGS.getDefaultStack());
-        simpleInventory.setStack(38, Items.IRON_CHESTPLATE.getDefaultStack());
-        simpleInventory.setStack(39, Items.IRON_HELMET.getDefaultStack());
+        simpleInventory.setItem(36, Items.IRON_BOOTS.getDefaultInstance());
+        simpleInventory.setItem(37, Items.IRON_LEGGINGS.getDefaultInstance());
+        simpleInventory.setItem(38, Items.IRON_CHESTPLATE.getDefaultInstance());
+        simpleInventory.setItem(39, Items.IRON_HELMET.getDefaultInstance());
 
         // Offhand.
-        simpleInventory.setStack(40, Items.SHIELD.getDefaultStack());
+        simpleInventory.setItem(40, Items.SHIELD.getDefaultInstance());
     }
 
     @Override
-    protected @NotNull PagedGui<Kit> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Kit> entities, int pageIndex) {
+    protected @NotNull PagedGui<Kit> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Kit> entities, int pageIndex) {
         return new KitEditorGui(player, entities, pageIndex);
     }
 
@@ -125,7 +125,7 @@ public class KitEditorGui extends PagedGui<Kit> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull Kit entity) {
         return new GuiElementBuilder()
             .setItem(Items.CHEST)
-            .setName(Text.literal(entity.getName()))
+            .setName(Component.literal(entity.getName()))
             .setCallback((event) -> {
                 // Left Click -> Open Editing GUI for the kit.
                 if (event.isLeft) {

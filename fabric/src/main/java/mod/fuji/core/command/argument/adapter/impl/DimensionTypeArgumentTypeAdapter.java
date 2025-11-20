@@ -7,9 +7,9 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.DimensionType;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -18,12 +18,12 @@ public class DimensionTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return IdentifierArgumentType.identifier();
+        return ResourceLocationArgument.id();
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new DimensionType(IdentifierArgumentType.getIdentifier(context, commandArgument.getArgumentName()).toString());
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return new DimensionType(ResourceLocationArgument.getId(context, commandArgument.getArgumentName()).toString());
     }
 
     @Override
@@ -38,8 +38,8 @@ public class DimensionTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.identifiers(RegistryKeys.DIMENSION_TYPE));
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+        return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.identifiers(Registries.DIMENSION_TYPE));
     }
 
     @Override

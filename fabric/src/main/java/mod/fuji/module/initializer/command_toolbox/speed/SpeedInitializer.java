@@ -8,8 +8,8 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 
 @ColorBox(id = 1758036383834L, color = ColorBox.ColorBoxTypes.NOTE, value = """
@@ -30,9 +30,9 @@ public class SpeedInitializer extends ModuleInitializer {
 
     @CommandNode("speed walk set")
     @CommandRequirement(level = 4)
-    private static int $setWalkSpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target, float speed) {
-        target.getAbilities().setWalkSpeed(speed);
-        target.sendAbilitiesUpdate();
+    private static int $setWalkSpeed(@CommandSource CommandSourceStack source, ServerPlayer target, float speed) {
+        target.getAbilities().setWalkingSpeed(speed);
+        target.onUpdateAbilities();
         String targetName = PlayerHelper.getPlayerName(target);
         TextHelper.sendTextByKey(source, "speed.walk.set", targetName, speed);
         return CommandHelper.Return.SUCCESS;
@@ -40,9 +40,9 @@ public class SpeedInitializer extends ModuleInitializer {
 
     @CommandNode("speed fly set")
     @CommandRequirement(level = 4)
-    private static int $setFlySpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target, float speed) {
-        target.getAbilities().setFlySpeed(speed);
-        target.sendAbilitiesUpdate();
+    private static int $setFlySpeed(@CommandSource CommandSourceStack source, ServerPlayer target, float speed) {
+        target.getAbilities().setFlyingSpeed(speed);
+        target.onUpdateAbilities();
         String targetName = PlayerHelper.getPlayerName(target);
         TextHelper.sendTextByKey(source, "speed.fly.set", targetName, speed);
         return CommandHelper.Return.SUCCESS;
@@ -50,8 +50,8 @@ public class SpeedInitializer extends ModuleInitializer {
 
     @CommandNode("speed walk get")
     @CommandRequirement(level = 4)
-    private static int $getWalkSpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
-        float walkSpeed = target.getAbilities().getWalkSpeed();
+    private static int $getWalkSpeed(@CommandSource CommandSourceStack source, ServerPlayer target) {
+        float walkSpeed = target.getAbilities().getWalkingSpeed();
         String targetName = PlayerHelper.getPlayerName(target);
         TextHelper.sendTextByKey(source, "speed.walk.get", targetName, walkSpeed);
         return CommandHelper.Return.SUCCESS;
@@ -59,8 +59,8 @@ public class SpeedInitializer extends ModuleInitializer {
 
     @CommandNode("speed fly get")
     @CommandRequirement(level = 4)
-    private static int $getFlySpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
-        float flySpeed = target.getAbilities().getFlySpeed();
+    private static int $getFlySpeed(@CommandSource CommandSourceStack source, ServerPlayer target) {
+        float flySpeed = target.getAbilities().getFlyingSpeed();
         String targetName = PlayerHelper.getPlayerName(target);
         TextHelper.sendTextByKey(source, "speed.fly.get", targetName, flySpeed);
         return CommandHelper.Return.SUCCESS;
@@ -68,14 +68,14 @@ public class SpeedInitializer extends ModuleInitializer {
 
     @CommandNode("speed walk reset")
     @CommandRequirement(level = 4)
-    private static int $resetWalkSpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $resetWalkSpeed(@CommandSource CommandSourceStack source, ServerPlayer target) {
         $setWalkSpeed(source, target, 0.1F);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("speed fly reset")
     @CommandRequirement(level = 4)
-    private static int $resetFlySpeed(@CommandSource ServerCommandSource source, ServerPlayerEntity target) {
+    private static int $resetFlySpeed(@CommandSource CommandSourceStack source, ServerPlayer target) {
         $setFlySpeed(source, target, 0.05F);
         return CommandHelper.Return.SUCCESS;
     }

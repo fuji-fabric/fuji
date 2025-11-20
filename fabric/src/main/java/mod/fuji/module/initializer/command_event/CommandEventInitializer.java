@@ -19,9 +19,9 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_event.config.model.CommandEventConfigModel;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,10 +55,10 @@ public class CommandEventInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<CommandEventConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandEventConfigModel.class);
 
-    public static void executeCommandOnEvent(@Nullable ServerPlayerEntity player, @NotNull List<String> commands) {
-        ServerCommandSource commandSource = Optional
+    public static void executeCommandOnEvent(@Nullable ServerPlayer player, @NotNull List<String> commands) {
+        CommandSourceStack commandSource = Optional
             .ofNullable(player)
-            .map($player -> player.getCommandSource())
+            .map($player -> player.createCommandSourceStack())
             .orElseGet(CommandHelper.Source::getConsoleCommandSource);
 
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(commandSource), commands);
@@ -66,7 +66,7 @@ public class CommandEventInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void consumePlayerJoinedEvent(PlayerJoinedEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
 
         var onPlayerJoinedConfig = CommandEventInitializer.config.model().getEvent().getOnPlayerJoined();
         if (onPlayerJoinedConfig.isEnable()) {
@@ -77,7 +77,7 @@ public class CommandEventInitializer extends ModuleInitializer {
         if (onPlayerFirstJoinedConfig.isEnable()) {
             // NOTE: If you use `Stats.LEAVE_GAME < 1` as the stat value, then it will not get saved when the server is stopped by `/stop`.
             // The vanilla Minecraft thinks the `dis-connect` by the server is not identical to `leave the game` by the player.
-            int stat = player.getStatHandler().getStat(Stats.CUSTOM.getOrCreateStat(Stats.TOTAL_WORLD_TIME));
+            int stat = player.getStats().getValue(Stats.CUSTOM.get(Stats.TOTAL_WORLD_TIME));
             if (stat == 0) {
                 CommandEventInitializer.executeCommandOnEvent(player, onPlayerFirstJoinedConfig.getCommands());
             }
@@ -96,7 +96,7 @@ public class CommandEventInitializer extends ModuleInitializer {
     private static void consumePlayerDeathEvent(PlayerDeathEvent event) {
         var config = CommandEventInitializer.config.model().getEvent().getOnPlayerDeath();
         if (config.isEnable()) {
-            ServerPlayerEntity player = event.getPlayer();
+            ServerPlayer player = event.getPlayer();
             CommandEventInitializer.executeCommandOnEvent(player, config.getCommands());
         }
     }

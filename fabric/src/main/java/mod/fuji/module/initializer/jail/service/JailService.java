@@ -16,10 +16,10 @@ import mod.fuji.module.initializer.jail.structure.JailRecord;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,7 +102,7 @@ public class JailService {
             .findFirst();
     }
 
-    public static void createJailDescriptor(@NotNull String jailId, @NotNull ServerCommandSource source) {
+    public static void createJailDescriptor(@NotNull String jailId, @NotNull CommandSourceStack source) {
         GlobalPos globalPos = GlobalPos.of(source);
         JailDescriptor newValue = JailDescriptor.make(jailId, globalPos);
         JailInitializer.config.model().getJailDescriptors().add(newValue);
@@ -137,8 +137,8 @@ public class JailService {
     }
 
     private static void executeOnUnjailedCommands(JailDescriptor jail, String playerName) {
-        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnUnjailedEvent());
+        ServerPlayer offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.createCommandSourceStack()), jail.getEvents().getOnUnjailedEvent());
     }
 
     public static void deactivateJailRecord(JailRecord jailRecord) {
@@ -157,8 +157,8 @@ public class JailService {
     }
 
     private static void executeOnJailedCommands(JailDescriptor jail, String playerName) {
-        ServerPlayerEntity offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.getCommandSource()), jail.getEvents().getOnJailedEvent());
+        ServerPlayer offlinePlayerEntity = PlayerHelper.Loader.loadDummyPlayer(playerName);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(offlinePlayerEntity.createCommandSourceStack()), jail.getEvents().getOnJailedEvent());
     }
 
     public static void updateJailRecords(int passedTimeInMillSeconds) {
@@ -175,17 +175,17 @@ public class JailService {
                     .ifPresent(onlinePlayer -> {
                         LogUtil.debug("Execute patrol commands: jail = {}, jailedPlayer = {}", jail.getId(), playerName);
                         List<String> patrolCommands = jail.getPatrol().getPatrolCommands();
-                        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(onlinePlayer.getCommandSource()), patrolCommands);
+                        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(onlinePlayer.createCommandSourceStack()), patrolCommands);
                     });
             }));
     }
 
-    public static Text getNoJailStatusText() {
+    public static Component getNoJailStatusText() {
         String value = JailInitializer.config.model().getNoJailStatusText();
         return TextHelper.getTextByValue(null, value);
     }
 
-    public static @Nullable Text modifyDisplayName(@Nullable Text original, @NotNull PlayerEntity player) {
+    public static @Nullable Component modifyDisplayName(@Nullable Component original, @NotNull Player player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return getActiveJailRecord(playerName)
             .map(it -> TextHelper.getTextByValue(player, JailInitializer.config.model().getJailedPlayerTabListText()))

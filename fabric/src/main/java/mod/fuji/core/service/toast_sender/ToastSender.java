@@ -8,40 +8,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementCriterion;
-import net.minecraft.advancement.AdvancementDisplay;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.AdvancementProgress;
-import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.criterion.CriterionProgress;
-import net.minecraft.advancement.criterion.ImpossibleCriterion;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.CriterionProgress;
+import net.minecraft.advancements.critereon.ImpossibleTrigger;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 #if MC_VER <= MC_1_20_1
 import java.util.HashMap;
 #elif MC_VER > MC_1_20_1
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementRequirements;
 #endif
 
 
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
-    private static final Identifier SEND_TOAST_IDENTIFIER = Identifier.of("custom", "custom");
+    private static final ResourceLocation SEND_TOAST_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("custom", "custom");
 
-    public static void sendToast(@NotNull ServerPlayerEntity player, @NotNull AdvancementFrame advancementFrame, @NotNull ItemStack icon, @NotNull Text title) {
+    public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementType advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
         /* Make an advancement display. */
-        AdvancementDisplay advancementDisplay = new AdvancementDisplay(
+        DisplayInfo advancementDisplay = new DisplayInfo(
             icon
             , title
-            , Text.empty()
+            , Component.empty()
             ,
                 #if MC_VER <= MC_1_20_2
                     RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
@@ -50,7 +50,7 @@ public class ToastSender {
                 #elif MC_VER >= MC_1_21_5 && MC_VER < MC_1_21_9
                     Optional.of(new net.minecraft.util.AssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #elif MC_VER >= MC_1_21_9
-                    Optional.of(new net.minecraft.util.AssetInfo.TextureAssetInfo(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                    Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
                 #endif
 
             , advancementFrame // Type of display frame.
@@ -63,19 +63,19 @@ public class ToastSender {
         #if MC_VER <= MC_1_20_1
         Advancement advancementEntry
         #elif MC_VER > MC_1_20_1
-        AdvancementEntry advancementEntry
+        AdvancementHolder advancementEntry
         #endif
             = Advancement.Builder
-            .create()
+            .advancement()
             .display(advancementDisplay)
-            .rewards(AdvancementRewards.NONE)
+            .rewards(AdvancementRewards.EMPTY)
             .requirements(makeAdvancementRequirements())
-            .criterion(IMPOSSIBLE, makeAdvancementCriterion())
+            .addCriterion(IMPOSSIBLE, makeAdvancementCriterion())
             .build(SEND_TOAST_IDENTIFIER);
 
         /* Send packets. */
-        player.networkHandler.sendPacket(makeGrantPacket(advancementEntry, SEND_TOAST_IDENTIFIER));
-        player.networkHandler.sendPacket(makeRevokePacket(SEND_TOAST_IDENTIFIER));
+        player.connection.send(makeGrantPacket(advancementEntry, SEND_TOAST_IDENTIFIER));
+        player.connection.send(makeRevokePacket(SEND_TOAST_IDENTIFIER));
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
@@ -83,13 +83,13 @@ public class ToastSender {
     #if MC_VER <= MC_1_20_1
     AdvancementCriterion
     #elif MC_VER > MC_1_20_1
-    AdvancementCriterion<ImpossibleCriterion.Conditions>
+    Criterion<ImpossibleTrigger.TriggerInstance>
     #endif
     makeAdvancementCriterion() {
         #if MC_VER <= MC_1_20_1
             AdvancementCriterion advancementCriterion = new AdvancementCriterion(new ImpossibleCriterion.Conditions());
         #elif MC_VER > MC_1_20_1
-        AdvancementCriterion<ImpossibleCriterion.Conditions> advancementCriterion = new ImpossibleCriterion().create(new ImpossibleCriterion.Conditions());
+        Criterion<ImpossibleTrigger.TriggerInstance> advancementCriterion = new ImpossibleTrigger().createCriterion(new ImpossibleTrigger.TriggerInstance());
         #endif
 
         return advancementCriterion;
@@ -121,69 +121,69 @@ public class ToastSender {
         maps.put(IMPOSSIBLE, new AdvancementCriterion(new ImpossibleCriterion.Conditions()));
         advancementProgress.init(maps, makeAdvancementRequirements());
         #elif MC_VER > MC_1_20_1
-        advancementProgress.init(makeAdvancementRequirements());
+        advancementProgress.update(makeAdvancementRequirements());
         #endif
 
         return advancementProgress;
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static @NotNull AdvancementUpdateS2CPacket makeGrantPacket(
+    private static @NotNull ClientboundUpdateAdvancementsPacket makeGrantPacket(
         #if MC_VER <= MC_1_20_1
         Advancement advancementEntry
         #elif MC_VER > MC_1_20_1
-        AdvancementEntry advancementEntry
+            AdvancementHolder advancementEntry
         #endif
-        , Identifier identifier) {
+        , ResourceLocation identifier) {
 
         /* Make advancement progress. */
         AdvancementProgress advancementProgress = makeAdvancementProgress();
 
         /* Call obtain for criterion progress. */
-        CriterionProgress criterionProgress = advancementProgress.getCriterionProgress(IMPOSSIBLE);
+        CriterionProgress criterionProgress = advancementProgress.getCriterion(IMPOSSIBLE);
         if (criterionProgress == null) {
             LogUtil.error("It's strange that the statement `advancementProgress.getCriterionProgress(IMPOSSIBLE)` is null, aborting this advancement packet making.");
             throw new AbortCommandExecutionException();
         }
-        criterionProgress.obtain();
+        criterionProgress.grant();
 
         /* Send the packet. */
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of(advancementEntry);
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementEntry> toEarn = List.of(advancementEntry);
+        Collection<AdvancementHolder> toEarn = List.of(advancementEntry);
         #endif
 
-        Set<Identifier> toRemove = Set.of();
-        Map<Identifier, AdvancementProgress> toSetProgress = Map.of(identifier, advancementProgress);
+        Set<ResourceLocation> toRemove = Set.of();
+        Map<ResourceLocation, AdvancementProgress> toSetProgress = Map.of(identifier, advancementProgress);
         return makeAdvancementUpdatePacket(toEarn, toRemove, toSetProgress);
     }
 
-    private static AdvancementUpdateS2CPacket makeAdvancementUpdatePacket(
+    private static ClientboundUpdateAdvancementsPacket makeAdvancementUpdatePacket(
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementEntry> toEarn
+            Collection<AdvancementHolder> toEarn
         #endif
-        , Set<Identifier> toRemove, Map<Identifier, AdvancementProgress> toSetProgress)
+        , Set<ResourceLocation> toRemove, Map<ResourceLocation, AdvancementProgress> toSetProgress)
     {
         #if MC_VER <= MC_1_21_4
             return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress);
         #elif MC_VER >= MC_1_21_5
-        return new AdvancementUpdateS2CPacket(false, toEarn, toRemove, toSetProgress, true);
+        return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress, true);
         #endif
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static @NotNull AdvancementUpdateS2CPacket makeRevokePacket(Identifier identifier) {
+    private static @NotNull ClientboundUpdateAdvancementsPacket makeRevokePacket(ResourceLocation identifier) {
         #if MC_VER <= MC_1_20_1
             Collection<Advancement> toEarn = List.of();
         #elif MC_VER > MC_1_20_1
-        Collection<AdvancementEntry> toEarn = List.of();
+        Collection<AdvancementHolder> toEarn = List.of();
         #endif
 
-        Set<Identifier> toRemove = Set.of(identifier);
-        Map<Identifier, AdvancementProgress> toSetProgress = Map.of();
+        Set<ResourceLocation> toRemove = Set.of(identifier);
+        Map<ResourceLocation, AdvancementProgress> toSetProgress = Map.of();
         return makeAdvancementUpdatePacket(toEarn, toRemove, toSetProgress);
     }
 

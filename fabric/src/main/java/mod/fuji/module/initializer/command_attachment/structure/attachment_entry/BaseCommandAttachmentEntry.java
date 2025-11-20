@@ -9,8 +9,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"unused"})
@@ -28,12 +28,12 @@ public class BaseCommandAttachmentEntry implements LoreProvider {
     boolean vanishOnExhaust = false;
 
 
-    public void onUsed(@NotNull ServerPlayerEntity player) {
+    public void onUsed(@NotNull ServerPlayer player) {
         this.useTimes++;
     }
 
     @Override
-    public List<Text> asLore(@NotNull ServerPlayerEntity player) {
+    public List<Component> asLore(@NotNull ServerPlayer player) {
         return List.of(
             TextHelper.getTextByKey(player, "command_attachment.attachment.type", this.type),
             TextHelper.getTextByKey(player, "command_attachment.attachment.interact_type", this.interactType),

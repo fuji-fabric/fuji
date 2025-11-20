@@ -7,9 +7,9 @@ import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,13 +19,13 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
 
     private final String deadPlayerName;
 
-    public DeathNodeListGui(@Nullable SimpleGui parent, ServerPlayerEntity player, String deadPlayerName, @NotNull List<DeathNode> entities, int pageIndex) {
+    public DeathNodeListGui(@Nullable SimpleGui parent, ServerPlayer player, String deadPlayerName, @NotNull List<DeathNode> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "deathlog.death_node.list.gui.title", deadPlayerName), entities, pageIndex);
         this.deadPlayerName = deadPlayerName;
     }
 
     @Override
-    protected @NotNull PagedGui<DeathNode> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<DeathNode> entities, int pageIndex) {
+    protected @NotNull PagedGui<DeathNode> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<DeathNode> entities, int pageIndex) {
         return new DeathNodeListGui(parent, player, this.deadPlayerName, entities, pageIndex);
     }
 
@@ -33,7 +33,7 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull DeathNode entity) {
         return new GuiElementBuilder()
             .setItem(Items.CHEST)
-            .setName(Text.of(entity.time))
+            .setName(Component.nullToEmpty(entity.time))
             .setLore(entity.getLore(getPlayer()))
             .setCallback(() -> openDeathNodeDisplayGui(entity))
             .build();

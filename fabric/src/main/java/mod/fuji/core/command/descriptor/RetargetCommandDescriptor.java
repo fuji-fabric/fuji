@@ -11,8 +11,8 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class RetargetCommandDescriptor extends CommandDescriptor {
@@ -70,7 +70,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 .ifPresent(specifiedCommandSourceArgumentIndex -> {
                     /* Replace the original specified command source with console command source. */
                     CommandArgument weakenedCommandSourceArgument = CommandArgument
-                        .ofRequiredArgument(ServerCommandSource.class, "WEAKENED-OTHERS-COMMAND-SOURCE", false, OTHERS_COMMAND_REQUIREMENT)
+                        .ofRequiredArgument(CommandSourceStack.class, "WEAKENED-OTHERS-COMMAND-SOURCE", false, OTHERS_COMMAND_REQUIREMENT)
                         .setCommandSource(true);
                     commandArguments.set(specifiedCommandSourceArgumentIndex, weakenedCommandSourceArgument);
                 });
@@ -104,11 +104,11 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
     }
 
     @Override
-    protected @NotNull Command<ServerCommandSource> makeCommandAction() {
+    protected @NotNull Command<CommandSourceStack> makeCommandAction() {
         return withBaseCommandAction((commandContext) -> {
 
             LogUtil.debug("Execute retarget command (tree): initialing command source = {}, class = {}, method = {}"
-                , commandContext.getSource().getName()
+                , commandContext.getSource().getTextName()
                 , this.method.getDeclaringClass().getSimpleName()
                 , this.method.getName());
 
@@ -123,7 +123,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
 
             LogUtil.debug("Retrieved command targets: {}", targets.getValue().stream().map(PlayerHelper::getPlayerName).toList());
             int treeReturnValue = CommandHelper.Return.SUCCESS;
-            for (ServerPlayerEntity target : targets.getValue()) {
+            for (ServerPlayer target : targets.getValue()) {
                 List<Object> executingParameterValues = new ArrayList<>(initialingParameterValues);
                 // NOTE: Here you have to check whether the @CommandSource and @CommandTarget are in the same place, to handle the off-by-one error while injecting the parameter values.
                 if (this.commandTargetParameterIndex == this.commandSourceParameterIndex) {
@@ -135,7 +135,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
                 }
                 LogUtil.debug("Executing parameter values: {}", executingParameterValues);
                 LogUtil.debug("Execute retarget command (branch): initialing command source = {}, target = {}, class = {}, method = {}"
-                    , commandContext.getSource().getName()
+                    , commandContext.getSource().getTextName()
                     , PlayerHelper.getPlayerName(target)
                     , this.method.getDeclaringClass().getSimpleName()
                     , this.method.getName());
@@ -157,7 +157,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
             }
 
             LogUtil.debug("Get the command return value of retarget command (tree): initialing command source = {}, returnValue = {}"
-                , commandContext.getSource().getName()
+                , commandContext.getSource().getTextName()
                 , treeReturnValue);
             return treeReturnValue;
         });

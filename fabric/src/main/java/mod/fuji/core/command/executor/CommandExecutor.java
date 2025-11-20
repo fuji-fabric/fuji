@@ -6,12 +6,12 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import java.util.List;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.ChatFormatting;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,13 +59,13 @@ public class CommandExecutor {
         command = TextHelper.Parsers.escapeTags(command);
 
         /* Log the console if the command is executed by the console. */
-        if (!context.getExecutingSource().isExecutedByPlayer()) {
+        if (!context.getExecutingSource().isPlayer()) {
             LogUtil.warn("Failed to execute command: command = {}, context = {}, exception = {}", command, context, exception);
         }
 
         /* Echo to the initiating source. */
         // NOTE: If the executing command source is a dummy server player, then its network handler is null.
-        TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getName(), exception.getMessage());
+        TextHelper.sendTextByKey(context.getInitiatingSource(), "command.execute.echo.initiating_source", command, context.getExecutingSource().getTextName(), exception.getMessage());
 
         // If it's a command syntax exception, stream it to the initialing source.
         if (exception instanceof CommandSyntaxException commandSyntaxException) {
@@ -81,28 +81,28 @@ public class CommandExecutor {
         }
     }
 
-    private static void sendCommandSyntaxExceptionErrorText(@NotNull ServerCommandSource serverCommandSource, @NotNull String commandString, @NotNull CommandSyntaxException commandSyntaxException) {
-        serverCommandSource.sendError(Texts.toText(commandSyntaxException.getRawMessage()));
+    private static void sendCommandSyntaxExceptionErrorText(@NotNull CommandSourceStack serverCommandSource, @NotNull String commandString, @NotNull CommandSyntaxException commandSyntaxException) {
+        serverCommandSource.sendFailure(ComponentUtils.fromMessage(commandSyntaxException.getRawMessage()));
         if (commandSyntaxException.getInput() != null && commandSyntaxException.getCursor() >= 0) {
             int i = Math.min(commandSyntaxException.getInput().length(), commandSyntaxException.getCursor());
 
-            MutableText mutableText = Text.empty().formatted(Formatting.GRAY).styled(style -> {
+            MutableComponent mutableText = Component.empty().withStyle(ChatFormatting.GRAY).withStyle(style -> {
                 String suggestionString = "/" + commandString;
                 return style
                     .withClickEvent(TextHelper.Events.ClickEvent.makeSuggestCommandAction(suggestionString));
             });
 
             if (i > 10) {
-                mutableText.append(ScreenTexts.ELLIPSIS);
+                mutableText.append(CommonComponents.ELLIPSIS);
             }
 
             mutableText.append(commandSyntaxException.getInput().substring(Math.max(0, i - 10), i));
             if (i < commandSyntaxException.getInput().length()) {
-                MutableText text = Text.literal(commandSyntaxException.getInput().substring(i)).formatted(Formatting.RED, Formatting.UNDERLINE);
+                MutableComponent text = Component.literal(commandSyntaxException.getInput().substring(i)).withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE);
                 mutableText.append(text);
             }
-            mutableText.append(Text.translatable("command.context.here").formatted(Formatting.RED, Formatting.ITALIC));
-            serverCommandSource.sendError(mutableText);
+            mutableText.append(Component.translatable("command.context.here").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
+            serverCommandSource.sendFailure(mutableText);
         }
     }
 }

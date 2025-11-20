@@ -1,11 +1,11 @@
 package mod.fuji.module.mixin.world.manager.persist;
 
 import mod.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptions;
-import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.world.level.dimension.LevelStem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(DimensionOptions.class)
+@Mixin(LevelStem.class)
 public class DimensionOptionsMixin implements ExtendedDimensionOptions {
 
     @Unique

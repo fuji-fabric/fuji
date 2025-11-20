@@ -21,8 +21,8 @@ import mod.fuji.core.structure.TeleportTicket;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.teleport_warmup.config.model.TeleportWarmupConfigModel;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 
 @Document(id = 1751826791752L, value = """
     Adds a warmup cooldown before player teleportation.
@@ -66,7 +66,7 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<TeleportWarmupConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, TeleportWarmupConfigModel.class);
 
     @SuppressWarnings("RedundantIfStatement")
-    public static boolean shouldApplyTeleportWarmup(ServerWorld destinationDimension, ServerPlayerEntity player) {
+    public static boolean shouldApplyTeleportWarmup(ServerLevel destinationDimension, ServerPlayer player) {
         /* Skip the teleport warmup if target dimension is not in the list of effective dimensions */
         if (!config.model().dimension.effective_dimensions.contains(RegistryHelper.getIdAsString(destinationDimension))) {
             return false;
@@ -90,15 +90,15 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
         }
 
         /* Skip the teleport warmup if the player has the bypass permission. */
-        if (LuckpermsHelper.hasPermission(player.getUuid(), TELEPORT_WARMUP_BYPASS_PERMISSION)) {
+        if (LuckpermsHelper.hasPermission(player.getUUID(), TELEPORT_WARMUP_BYPASS_PERMISSION)) {
             return false;
         }
 
         return true;
     }
 
-    public static double getWarmupSeconds(ServerPlayerEntity player) {
-        Optional<Double> warmupSecondsSpecifiedByMeta = LuckpermsHelper.getMeta(player.getUuid(), TELEPORT_WARMUP_TIME_META);
+    public static double getWarmupSeconds(ServerPlayer player) {
+        Optional<Double> warmupSecondsSpecifiedByMeta = LuckpermsHelper.getMeta(player.getUUID(), TELEPORT_WARMUP_TIME_META);
         return warmupSecondsSpecifiedByMeta
             .orElse(config.model().warmup_second);
     }
@@ -108,8 +108,8 @@ public class TeleportWarmupInitializer extends ModuleInitializer {
     private static void handlePlayerPreTeleportEvent(PlayerTeleportPreEvent event) {
         if (event.getCallbackInfo().isCancelled()) return;
 
-        ServerPlayerEntity player = event.getPlayer();
-        ServerWorld destinationDimension = event.getDestinationDimension();
+        ServerPlayer player = event.getPlayer();
+        ServerLevel destinationDimension = event.getDestinationDimension();
 
         if (!TeleportWarmupInitializer.shouldApplyTeleportWarmup(destinationDimension, player)) {
             return;

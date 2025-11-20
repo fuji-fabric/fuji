@@ -32,46 +32,46 @@ import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import mod.fuji.core.document.annotation.TestCase;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandHelper {
 
-    public static @NotNull CommandDispatcher<ServerCommandSource> getCommandDispatcher() {
+    public static @NotNull CommandDispatcher<CommandSourceStack> getCommandDispatcher() {
         return CommandAnnotationProcessor.COMMAND_DISPATCHER;
     }
 
-    public static @NotNull CommandRegistryAccess getCommandRegistryAccess() {
+    public static @NotNull CommandBuildContext getCommandRegistryAccess() {
         return CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS;
     }
 
     public static class Path {
 
-        public static boolean isLinearCommandPath(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static boolean isLinearCommandPath(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             return toLinearCommandPathList(navigationNode)
                 .isPresent();
         }
 
         @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
-        public static Optional<List<String>> toLinearCommandPathList(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static Optional<List<String>> toLinearCommandPathList(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             List<String> names = new ArrayList<>();
-            CommandNode<ServerCommandSource> current = navigationNode;
+            CommandNode<CommandSourceStack> current = navigationNode;
 
             while (true) {
                 /* Visit. */
                 names.add(current.getName());
 
                 /* Go down. */
-                List<CommandNode<ServerCommandSource>> children = new ArrayList<>(current.getChildren());
+                List<CommandNode<CommandSourceStack>> children = new ArrayList<>(current.getChildren());
                 if (children.isEmpty()) {
                     break;
                 } else if (children.size() == 1) {
@@ -85,12 +85,12 @@ public class CommandHelper {
             return Optional.of(names);
         }
 
-        public static Optional<String> toLinearCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static Optional<String> toLinearCommandPathString(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             return toLinearCommandPathList(navigationNode)
                 .map(Path::joinCommandPath);
         }
 
-        public static @NotNull String toLinearCommandPathString(@NotNull List<CommandNode<ServerCommandSource>> nodes) {
+        public static @NotNull String toLinearCommandPathString(@NotNull List<CommandNode<CommandSourceStack>> nodes) {
             // Compute the `command node path` from the only one possible path.
             return nodes
                 .stream()
@@ -98,7 +98,7 @@ public class CommandHelper {
                 .collect(Collectors.joining("."));
         }
 
-        public static @NotNull String toFlatCommandPathString(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static @NotNull String toFlatCommandPathString(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             StringBuilder flatCommandPath = new StringBuilder();
             flatCommandPath.append(navigationNode.getName());
 
@@ -117,11 +117,11 @@ public class CommandHelper {
             return StringUtils.strip(path, ".");
         }
 
-        public static @NotNull List<String> getPrefixesOfCommandPath(@NotNull List<ParsedCommandNode<ServerCommandSource>> nodes) {
+        public static @NotNull List<String> getPrefixesOfCommandPath(@NotNull List<ParsedCommandNode<CommandSourceStack>> nodes) {
             List<String> prefixes = new ArrayList<>();
 
             String walkingPath = "";
-            for (ParsedCommandNode<ServerCommandSource> node : nodes) {
+            for (ParsedCommandNode<CommandSourceStack> node : nodes) {
                 String currentNodeName = node.getNode().getName();
                 walkingPath = walkingPath + "." + currentNodeName;
                 walkingPath = trimCommandPathString(walkingPath);
@@ -139,43 +139,43 @@ public class CommandHelper {
 
     public static class Node {
 
-        private static boolean isRootCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+        private static boolean isRootCommandNode(@NotNull CommandNode<CommandSourceStack> node) {
             return node.getName().isEmpty()
-                || node instanceof RootCommandNode<ServerCommandSource>;
+                || node instanceof RootCommandNode<CommandSourceStack>;
         }
 
         @SuppressWarnings("IfCanBeSwitch")
-        public static @NotNull String toCommandNodeTypeString(@NotNull CommandNode<ServerCommandSource> node) {
-            if (node instanceof LiteralCommandNode<ServerCommandSource>) return "LiteralCommandNode";
+        public static @NotNull String toCommandNodeTypeString(@NotNull CommandNode<CommandSourceStack> node) {
+            if (node instanceof LiteralCommandNode<CommandSourceStack>) return "LiteralCommandNode";
             if (node instanceof ArgumentCommandNode<?, ?>) return "ArgumentCommandNode";
-            if (node instanceof RootCommandNode<ServerCommandSource>) return "RootCommandNode";
+            if (node instanceof RootCommandNode<CommandSourceStack>) return "RootCommandNode";
 
             return "UnknownType";
         }
 
-        public static boolean isExecutableCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+        public static boolean isExecutableCommandNode(@NotNull CommandNode<CommandSourceStack> node) {
             return node.getCommand() != null;
         }
 
-        public static boolean isRedirectCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+        public static boolean isRedirectCommandNode(@NotNull CommandNode<CommandSourceStack> node) {
             return node.getRedirect() != null;
         }
 
-        public static boolean isExecutableOrRedirectCommandNode(@NotNull CommandNode<ServerCommandSource> node) {
+        public static boolean isExecutableOrRedirectCommandNode(@NotNull CommandNode<CommandSourceStack> node) {
             return isExecutableCommandNode(node) || isRedirectCommandNode(node);
         }
     }
 
     public static class Tree {
 
-        public static @NotNull List<List<RegisteredCommandNode>> findCommandTree(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static @NotNull List<List<RegisteredCommandNode>> findCommandTree(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             /* Set up the primary branch. */
             List<List<RegisteredCommandNode>> treeCollector = new ArrayList<>();
             List<RegisteredCommandNode> branchCollector = new ArrayList<>();
             treeCollector.add(branchCollector);
 
             /* Find recursively. */
-            RootCommandNode<ServerCommandSource> root = getRootCommandNode();
+            RootCommandNode<CommandSourceStack> root = getRootCommandNode();
             findCommandTreeRecursively(treeCollector, branchCollector, navigationNode, root);
             return treeCollector;
         }
@@ -184,8 +184,8 @@ public class CommandHelper {
          * Returns a chain of registered command nodes.
          **/
         @SuppressWarnings("UnnecessaryLocalVariable")
-        private static void findCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<ServerCommandSource> navigationNode, @NotNull CommandNode<ServerCommandSource> walkingNode) {
-            CommandNode<ServerCommandSource> parent = walkingNode;
+        private static void findCommandTreeRecursively(@NotNull List<List<RegisteredCommandNode>> treeCollector, @NotNull List<RegisteredCommandNode> branchCollector, @NotNull CommandNode<CommandSourceStack> navigationNode, @NotNull CommandNode<CommandSourceStack> walkingNode) {
+            CommandNode<CommandSourceStack> parent = walkingNode;
 
             Optional
                 .ofNullable(parent.getChild(navigationNode.getName()))
@@ -195,7 +195,7 @@ public class CommandHelper {
                     branchCollector.add(found);
 
                     /* Go down. */
-                    Collection<CommandNode<ServerCommandSource>> children = navigationNode.getChildren();
+                    Collection<CommandNode<CommandSourceStack>> children = navigationNode.getChildren();
                     children
                         .forEach(newNavigationNode -> {
                             if (children.size() == 1) {
@@ -215,61 +215,61 @@ public class CommandHelper {
         public static void removeCommandTree(@NotNull RegisteredCommandNode registeredCommandNode) {
             // NODE: Identify the `command node` by node name.
             @SuppressWarnings("unchecked")
-            CommandNodeExtension<ServerCommandSource> parentNode = (CommandNodeExtension<ServerCommandSource>) registeredCommandNode.getParent();
-            CommandNode<ServerCommandSource> childNode = registeredCommandNode.getNode();
+            CommandNodeExtension<CommandSourceStack> parentNode = (CommandNodeExtension<CommandSourceStack>) registeredCommandNode.getParent();
+            CommandNode<CommandSourceStack> childNode = registeredCommandNode.getNode();
             parentNode.fuji$getChildren().values().removeIf(it -> it.getName().equals(childNode.getName()));
             parentNode.fuji$getLiterals().values().removeIf(it -> it.getName().equals(childNode.getName()));
             parentNode.fuji$getArguments().values().removeIf(it -> it.getName().equals(childNode.getName()));
         }
 
         public static void updateCommandTree() {
-            @NotNull CommandManager commandManager = ServerHelper.getServer().getCommandManager();
+            @NotNull Commands commandManager = ServerHelper.getServer().getCommands();
             updateCommandTree(commandManager);
         }
 
-        public static void updateCommandTree(@NotNull CommandManager commandManager) {
+        public static void updateCommandTree(@NotNull Commands commandManager) {
             // NOTE: No need to update if the command manager is not initialized.
             ServerHelper.Lifecycle
                 .withServerInstantiated(() -> {
                     PlayerHelper.Lookup
                         .getOnlinePlayers()
-                        .forEach(commandManager::sendCommandTree);
+                        .forEach(commandManager::sendCommands);
                 });
         }
 
-        public static RootCommandNode<ServerCommandSource> getRootCommandNode() {
+        public static RootCommandNode<CommandSourceStack> getRootCommandNode() {
             return getCommandDispatcher().getRoot();
         }
 
-        public static Optional<CommandNode<ServerCommandSource>> findCommandNode(@NotNull List<String> commandNodePath) {
+        public static Optional<CommandNode<CommandSourceStack>> findCommandNode(@NotNull List<String> commandNodePath) {
             return Optional.ofNullable(getCommandDispatcher().findNode(commandNodePath));
         }
 
-        public static Optional<CommandNode<ServerCommandSource>> findCommandNode(@NotNull String commandPath) {
+        public static Optional<CommandNode<CommandSourceStack>> findCommandNode(@NotNull String commandPath) {
             List<String> splitCommandPath = Path.splitCommandPath(commandPath);
             return findCommandNode(splitCommandPath);
         }
 
-        public static @NotNull String findCommandNodePathString(@NotNull CommandNode<ServerCommandSource> leafNode) {
+        public static @NotNull String findCommandNodePathString(@NotNull CommandNode<CommandSourceStack> leafNode) {
             List<String> nodes = findCommandNodePathList(leafNode);
             return Path.joinCommandPath(nodes);
         }
 
-        private static @NotNull List<String> findCommandNodePathList(@NotNull CommandNode<ServerCommandSource> leafNode) {
-            CommandDispatcher<ServerCommandSource> dispatcher = getCommandDispatcher();
+        private static @NotNull List<String> findCommandNodePathList(@NotNull CommandNode<CommandSourceStack> leafNode) {
+            CommandDispatcher<CommandSourceStack> dispatcher = getCommandDispatcher();
 
             /* Find the first encountered path in root tree, ignore other paths if there are `forks` or `redirects`. */
             return new ArrayList<>(dispatcher.getPath(leafNode));
         }
 
-        public static List<CommandNode<ServerCommandSource>> getAllCommandNodes() {
-            List<CommandNode<ServerCommandSource>> result = new ArrayList<>();
-            RootCommandNode<ServerCommandSource> root = getCommandDispatcher().getRoot();
+        public static List<CommandNode<CommandSourceStack>> getAllCommandNodes() {
+            List<CommandNode<CommandSourceStack>> result = new ArrayList<>();
+            RootCommandNode<CommandSourceStack> root = getCommandDispatcher().getRoot();
             collectCommandNodes(result, root);
             return result;
         }
 
-        private static void collectCommandNodes(@NotNull List<CommandNode<ServerCommandSource>> collector, @NotNull CommandNode<ServerCommandSource> parent) {
+        private static void collectCommandNodes(@NotNull List<CommandNode<CommandSourceStack>> collector, @NotNull CommandNode<CommandSourceStack> parent) {
             /* Walk down and collect. */
             parent
                 .getChildren()
@@ -281,18 +281,18 @@ public class CommandHelper {
         }
 
         @SuppressWarnings("unchecked")
-        public static void replaceChild(final CommandNode<ServerCommandSource> parent, final CommandNode<ServerCommandSource> node) {
+        public static void replaceChild(final CommandNode<CommandSourceStack> parent, final CommandNode<CommandSourceStack> node) {
             if (node instanceof RootCommandNode) {
                 throw new UnsupportedOperationException("Cannot add a RootCommandNode as a child to any other CommandNode");
             }
 
-            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            CommandNodeExtension<CommandSourceStack> parentExtension = (CommandNodeExtension<CommandSourceStack>) parent;
             var parentChildren = parentExtension.fuji$getChildren();
 
-            final CommandNode<ServerCommandSource> child = parentChildren.get(node.getName());
+            final CommandNode<CommandSourceStack> child = parentChildren.get(node.getName());
             if (child != null) {
                 // We've found something to merge onto
-                CommandNodeExtension<ServerCommandSource> childExtension = (CommandNodeExtension<ServerCommandSource>) child;
+                CommandNodeExtension<CommandSourceStack> childExtension = (CommandNodeExtension<CommandSourceStack>) child;
                 if (node.getCommand() != null) {
                     childExtension.fuji$setCommand(node.getCommand());
                 }
@@ -304,7 +304,7 @@ public class CommandHelper {
                 if (node.getRequirement() != null) {
                     childExtension.fuji$setRequirement(node.getRequirement());
                 }
-                for (final CommandNode<ServerCommandSource> grandchild : node.getChildren()) {
+                for (final CommandNode<CommandSourceStack> grandchild : node.getChildren()) {
                     replaceChild(child, grandchild);
                 }
             } else {
@@ -313,9 +313,9 @@ public class CommandHelper {
         }
 
         @SuppressWarnings("unchecked")
-        private static void setMappings(@NotNull CommandNode<ServerCommandSource> parent, @NotNull CommandNode<ServerCommandSource> node) {
+        private static void setMappings(@NotNull CommandNode<CommandSourceStack> parent, @NotNull CommandNode<CommandSourceStack> node) {
             /* Get mappings. */
-            CommandNodeExtension<ServerCommandSource> parentExtension = (CommandNodeExtension<ServerCommandSource>) parent;
+            CommandNodeExtension<CommandSourceStack> parentExtension = (CommandNodeExtension<CommandSourceStack>) parent;
             var parentChildren = parentExtension.fuji$getChildren();
             var parentLiterals = parentExtension.fuji$getLiterals();
             var parentArguments = parentExtension.fuji$getArguments();
@@ -323,23 +323,23 @@ public class CommandHelper {
             /* Update the mappings. */
             parentChildren.put(node.getName(), node);
             if (node instanceof LiteralCommandNode) {
-                parentLiterals.put(node.getName(), (LiteralCommandNode<ServerCommandSource>) node);
+                parentLiterals.put(node.getName(), (LiteralCommandNode<CommandSourceStack>) node);
             } else if (node instanceof ArgumentCommandNode) {
-                parentArguments.put(node.getName(), (ArgumentCommandNode<ServerCommandSource, ?>) node);
+                parentArguments.put(node.getName(), (ArgumentCommandNode<CommandSourceStack, ?>) node);
             }
         }
 
         /**
          * Check if the given navigation command will override an existing command path in the server command tree.
          **/
-        public static boolean isCommandNodeRegistered(@NotNull CommandNode<ServerCommandSource> navigationNode) {
+        public static boolean isCommandNodeRegistered(@NotNull CommandNode<CommandSourceStack> navigationNode) {
             if (!Path.isLinearCommandPath(navigationNode)) {
                 LogUtil.warn("There are forks in the given command node: {}", Path.toLinearCommandPathList(navigationNode));
                 return false;
             }
 
-            CommandNode<ServerCommandSource> rootNode = getRootCommandNode();
-            @Nullable CommandNode<ServerCommandSource> walkingNode = rootNode.getChild(navigationNode.getName());
+            CommandNode<CommandSourceStack> rootNode = getRootCommandNode();
+            @Nullable CommandNode<CommandSourceStack> walkingNode = rootNode.getChild(navigationNode.getName());
             if (walkingNode == null) {
                 return false;
             }
@@ -353,14 +353,14 @@ public class CommandHelper {
             "Create the new command `/home tp -> /say` (without redirect) using `command_bundle` module, you should NOT see the override warning.",
             "Create the new command `/workbench -> /say` (not nested) using `command_alias` module, you should see the override warning."
         })
-        private static boolean isCommandNodeRegisteredRecursively(@NotNull CommandNode<ServerCommandSource> navigationNode, @Nullable CommandNode<ServerCommandSource> walkingNode) {
+        private static boolean isCommandNodeRegisteredRecursively(@NotNull CommandNode<CommandSourceStack> navigationNode, @Nullable CommandNode<CommandSourceStack> walkingNode) {
             /* Check pre-conditions. */
             if (walkingNode == null) {
                 return false;
             }
 
             /* Walk down. */
-            Collection<CommandNode<ServerCommandSource>> navigationNodeChildren = navigationNode.getChildren();
+            Collection<CommandNode<CommandSourceStack>> navigationNodeChildren = navigationNode.getChildren();
             if (navigationNodeChildren.isEmpty()) {
                 /* Case: the length of paths are the same. */
                 if (Node.isExecutableOrRedirectCommandNode(walkingNode)) {
@@ -378,8 +378,8 @@ public class CommandHelper {
                 boolean treeValue = false;
 
                 // NOTE: The navigation path must be unique, with no forks.
-                for (CommandNode<ServerCommandSource> navigationNodeChild : navigationNodeChildren) {
-                    @Nullable CommandNode<ServerCommandSource> walkingNodeChild = walkingNode.getChild(navigationNodeChild.getName());
+                for (CommandNode<CommandSourceStack> navigationNodeChild : navigationNodeChildren) {
+                    @Nullable CommandNode<CommandSourceStack> walkingNodeChild = walkingNode.getChild(navigationNodeChild.getName());
                     boolean branchValue = isCommandNodeRegisteredRecursively(navigationNodeChild, walkingNodeChild);
                     if (branchValue) {
                         /* Pass the true value up. */
@@ -395,12 +395,12 @@ public class CommandHelper {
 
     public static class Requirement {
 
-        public static boolean canUseCommandString(@NotNull ServerPlayerEntity player, @NotNull String commandString) {
+        public static boolean canUseCommandString(@NotNull ServerPlayer player, @NotNull String commandString) {
             /* Parse the command string into command nodes. */
-            ServerCommandSource commandSource = Source.getCommandSource(player);
-            ParseResults<ServerCommandSource> parseResults = getCommandDispatcher()
+            CommandSourceStack commandSource = Source.getCommandSource(player);
+            ParseResults<CommandSourceStack> parseResults = getCommandDispatcher()
                 .parse(commandString, commandSource);
-            CommandContextBuilder<ServerCommandSource> context = parseResults.getContext();
+            CommandContextBuilder<CommandSourceStack> context = parseResults.getContext();
 
             /* If any exceptions, refuse to use that command. */
             if (!parseResults.getExceptions().isEmpty()) {
@@ -408,7 +408,7 @@ public class CommandHelper {
             }
 
             /* If the nodes from parsed result is empty, refuse to use that command. */
-            List<ParsedCommandNode<ServerCommandSource>> nodes = context.getNodes();
+            List<ParsedCommandNode<CommandSourceStack>> nodes = context.getNodes();
             if (nodes.isEmpty()) return false;
 
             /* Check the requirement from root to leaf. */
@@ -418,16 +418,16 @@ public class CommandHelper {
                 .allMatch(it -> it.canUse(commandSource));
         }
 
-        public static boolean isOperator(@NotNull PlayerEntity player) {
+        public static boolean isOperator(@NotNull Player player) {
             var profile = GameProfileWrapper
                 .of(player)
                 .toVanillaType()
                 .orElseThrow();
-            return PlayerHelper.getPlayerManager().isOperator(profile);
+            return PlayerHelper.getPlayerManager().isOp(profile);
         }
 
-        public static boolean isAdmin(@NotNull ServerPlayerEntity player) {
-            ServerCommandSource commandSource = Source.getCommandSource(player);
+        public static boolean isAdmin(@NotNull ServerPlayer player) {
+            CommandSourceStack commandSource = Source.getCommandSource(player);
             return isAdmin(commandSource);
         }
 
@@ -435,8 +435,8 @@ public class CommandHelper {
          * By default, an `operator` has the permission level `4`.
          * However, it can be configured via `op-permission-level=4` option.
          **/
-        public static boolean isAdmin(@NotNull ServerCommandSource source) {
-            return source.hasPermissionLevel(4);
+        public static boolean isAdmin(@NotNull CommandSourceStack source) {
+            return source.hasPermission(4);
         }
 
         public static int getPermissionLevel(@NotNull GameProfile gameProfile) {
@@ -444,39 +444,39 @@ public class CommandHelper {
                 .fromVanillaType(gameProfile)
                 .toVanillaType()
                 .orElseThrow();
-            return ServerHelper.getServer().getPermissionLevel(vanillaType);
+            return ServerHelper.getServer().getProfilePermissions(vanillaType);
         }
     }
 
     public static class Source {
 
-        public static @NotNull ServerCommandSource getConsoleCommandSource() {
-            return ServerHelper.getServer().getCommandSource();
+        public static @NotNull CommandSourceStack getConsoleCommandSource() {
+            return ServerHelper.getServer().createCommandSourceStack();
         }
 
-        public static @NotNull ServerCommandSource getCommandSource(@NotNull ServerPlayerEntity player) {
+        public static @NotNull CommandSourceStack getCommandSource(@NotNull ServerPlayer player) {
             // NOTE: For Entity#getCommandSource(ServerWorld), the level permission is always 0
             // You should use ServerPlayerEntity#getCommandSource, which uses the proper level permission from the player.
-            return player.getCommandSource();
+            return player.createCommandSourceStack();
         }
 
-        public static void withServerPlayerEntity(@NotNull CommandContextBuilder<ServerCommandSource> contextBuilder, @NotNull Consumer<ServerPlayerEntity> consumer) {
-            @NotNull ServerCommandSource source = contextBuilder.getSource();
+        public static void withServerPlayerEntity(@NotNull CommandContextBuilder<CommandSourceStack> contextBuilder, @NotNull Consumer<ServerPlayer> consumer) {
+            @NotNull CommandSourceStack source = contextBuilder.getSource();
             withServerPlayerEntity(source, consumer);
         }
 
         @SuppressWarnings("UnnecessaryReturnStatement")
-        public static void withServerPlayerEntity(@NotNull CommandContext<?> context, @NotNull Consumer<ServerPlayerEntity> consumer) {
+        public static void withServerPlayerEntity(@NotNull CommandContext<?> context, @NotNull Consumer<ServerPlayer> consumer) {
             @NotNull Object source = context.getSource();
 
             /* Filter out the ClientCommandSource. */
-            if (source instanceof ServerCommandSource serverCommandSource) {
+            if (source instanceof CommandSourceStack serverCommandSource) {
                 withServerPlayerEntity(serverCommandSource, consumer);
                 return;
             }
         }
 
-        public static void withServerPlayerEntity(@NotNull ServerCommandSource serverCommandSource, @NotNull Consumer<ServerPlayerEntity> consumer) {
+        public static void withServerPlayerEntity(@NotNull CommandSourceStack serverCommandSource, @NotNull Consumer<ServerPlayer> consumer) {
             if (isExecutedByPlayer(serverCommandSource)) {
                 consumer.accept(serverCommandSource.getPlayer());
             }
@@ -487,11 +487,11 @@ public class CommandHelper {
          * Then the injected methods in brigadier will be called twice.
          * One for ClientCommandSource, one for ServerCommandSource.
          **/
-        public static void withServerCommandSource(@NotNull Object indicator, @NotNull Consumer<ServerCommandSource> consumer) {
+        public static void withServerCommandSource(@NotNull Object indicator, @NotNull Consumer<CommandSourceStack> consumer) {
             indicator = extractCommandSource(indicator);
 
             if (isServerCommandSource(indicator)) {
-                @NotNull ServerCommandSource serverCommandSource = (ServerCommandSource) indicator;
+                @NotNull CommandSourceStack serverCommandSource = (CommandSourceStack) indicator;
                 consumer.accept(serverCommandSource);
             }
         }
@@ -511,31 +511,31 @@ public class CommandHelper {
             return isServerCommandSource(indicator);
         }
 
-        public static boolean isExecutedByConsole(@NotNull CommandContext<ServerCommandSource> commandContext) {
-            @NotNull ServerCommandSource source = commandContext.getSource();
+        public static boolean isExecutedByConsole(@NotNull CommandContext<CommandSourceStack> commandContext) {
+            @NotNull CommandSourceStack source = commandContext.getSource();
             return isExecutedByConsole(source);
         }
 
-        public static boolean isExecutedByConsole(@NotNull ServerCommandSource commandSource) {
+        public static boolean isExecutedByConsole(@NotNull CommandSourceStack commandSource) {
             return !isExecutedByPlayer(commandSource);
         }
 
 
-        public static boolean isExecutedByPlayer(@NotNull CommandContext<ServerCommandSource> commandContext) {
-            @NotNull ServerCommandSource source = commandContext.getSource();
+        public static boolean isExecutedByPlayer(@NotNull CommandContext<CommandSourceStack> commandContext) {
+            @NotNull CommandSourceStack source = commandContext.getSource();
             return isExecutedByPlayer(source);
         }
 
-        public static boolean isExecutedByPlayer(@NotNull ServerCommandSource commandSource) {
+        public static boolean isExecutedByPlayer(@NotNull CommandSourceStack commandSource) {
             return commandSource.getPlayer() != null;
         }
 
-        public static boolean isSilent(@NotNull ServerCommandSource commandSource) {
+        public static boolean isSilent(@NotNull CommandSourceStack commandSource) {
             return commandSource.silent;
         }
 
         private static boolean isServerCommandSource(@NotNull Object object) {
-            return object instanceof ServerCommandSource;
+            return object instanceof CommandSourceStack;
         }
 
         private static @NotNull Object extractCommandSource(@NotNull Object object) {
@@ -560,7 +560,7 @@ public class CommandHelper {
             return value ? SUCCESS : FAILURE;
         }
 
-        public static int returnBoolean(@Unused ServerCommandSource source, boolean value) {
+        public static int returnBoolean(@Unused CommandSourceStack source, boolean value) {
             return fromBoolean(value);
         }
 
@@ -595,26 +595,26 @@ public class CommandHelper {
             return builder.buildFuture();
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull BiFunction<CommandContext<ServerCommandSource>, SuggestionsBuilder, Iterable<T>> iterableSupplier) {
+        public static <T> @NotNull SuggestionProvider<CommandSourceStack> iterable(@NotNull BiFunction<CommandContext<CommandSourceStack>, SuggestionsBuilder, Iterable<T>> iterableSupplier) {
             return (context, builder) -> makeSuggestionsCompletableFuture(builder, () -> iterableSupplier.apply(context, builder));
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
+        public static <T> @NotNull SuggestionProvider<CommandSourceStack> iterable(@NotNull Supplier<Iterable<T>> iterableSupplier) {
             return (context, builder) -> makeSuggestionsCompletableFuture(builder, iterableSupplier);
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> enums(@NotNull Supplier<T[]> enumValuesSupplier) {
+        public static <T> @NotNull SuggestionProvider<CommandSourceStack> enums(@NotNull Supplier<T[]> enumValuesSupplier) {
             return iterable(() -> Arrays.asList(enumValuesSupplier.get()));
         }
 
-        public static <T> @NotNull SuggestionProvider<ServerCommandSource> identifiers(@NotNull RegistryKey<? extends Registry<T>> registryKey) {
-            return iterable(() -> RegistryHelper.getRegistry(registryKey).getIds());
+        public static <T> @NotNull SuggestionProvider<CommandSourceStack> identifiers(@NotNull ResourceKey<? extends Registry<T>> registryKey) {
+            return iterable(() -> RegistryHelper.getRegistry(registryKey).keySet());
         }
 
-        public static @NotNull Suggestions listSuggestions(@NotNull ServerCommandSource commandSource, @NotNull String commandString) {
+        public static @NotNull Suggestions listSuggestions(@NotNull CommandSourceStack commandSource, @NotNull String commandString) {
             // NOTE: Be careful with the leading space characters and the trailing space characters.
-            CommandDispatcher<ServerCommandSource> commandDispatcher = getCommandDispatcher();
-            ParseResults<ServerCommandSource> parse = commandDispatcher.parse(commandString, commandSource);
+            CommandDispatcher<CommandSourceStack> commandDispatcher = getCommandDispatcher();
+            ParseResults<CommandSourceStack> parse = commandDispatcher.parse(commandString, commandSource);
             CompletableFuture<Suggestions> completionSuggestions = commandDispatcher.getCompletionSuggestions(parse);
             return completionSuggestions.join();
         }
@@ -622,8 +622,8 @@ public class CommandHelper {
 
     public static class Pattern {
 
-        public static int withServerPlayerCommand(@NotNull ServerCommandSource source, @NotNull Function<ServerPlayerEntity, Integer> function) {
-            ServerPlayerEntity player = source.getPlayer();
+        public static int withServerPlayerCommand(@NotNull CommandSourceStack source, @NotNull Function<ServerPlayer, Integer> function) {
+            ServerPlayer player = source.getPlayer();
             if (player == null) {
                 TextHelper.sendTextByKey(source, "command.player_only");
                 return Return.SUCCESS;
@@ -632,14 +632,14 @@ public class CommandHelper {
             return function.apply(player);
         }
 
-        public static int withItemInMainHandCommand(@NotNull ServerPlayerEntity source, @NotNull Function<ItemStack, Integer> consumer) {
-            ServerCommandSource commandSource = Source.getCommandSource(source);
+        public static int withItemInMainHandCommand(@NotNull ServerPlayer source, @NotNull Function<ItemStack, Integer> consumer) {
+            CommandSourceStack commandSource = Source.getCommandSource(source);
             return withItemInMainHandCommand(commandSource, (player, item) -> consumer.apply(item));
         }
 
-        public static int withItemInMainHandCommand(@NotNull ServerCommandSource source, @NotNull BiFunction<ServerPlayerEntity, ItemStack, Integer> consumer) {
+        public static int withItemInMainHandCommand(@NotNull CommandSourceStack source, @NotNull BiFunction<ServerPlayer, ItemStack, Integer> consumer) {
             return withServerPlayerCommand(source, player -> {
-                ItemStack mainHandStack = player.getMainHandStack();
+                ItemStack mainHandStack = player.getMainHandItem();
                 if (mainHandStack.isEmpty()) {
                     TextHelper.sendTextByKey(player, "item.empty.not_allow");
                     return Return.FAILURE;
@@ -648,12 +648,12 @@ public class CommandHelper {
             });
         }
 
-        public static int withCommandConfirmed(ServerPlayerEntity player, Optional<Boolean> confirm, Supplier<Integer> supplier) {
+        public static int withCommandConfirmed(ServerPlayer player, Optional<Boolean> confirm, Supplier<Integer> supplier) {
             return withCommandConfirmed(Source.getCommandSource(player), confirm, supplier);
         }
 
         @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "UnnecessaryLocalVariable"})
-        public static int withCommandConfirmed(ServerCommandSource source, Optional<Boolean> confirm, Supplier<Integer> supplier) {
+        public static int withCommandConfirmed(CommandSourceStack source, Optional<Boolean> confirm, Supplier<Integer> supplier) {
             boolean confirmed = confirm.orElse(false);
             if (!confirmed) {
                 TextHelper.sendTextByKey(source, "operation.confirm.failed");

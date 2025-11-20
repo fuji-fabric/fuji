@@ -11,9 +11,9 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import mod.fuji.module.initializer.head.HeadInitializer;
 import mod.fuji.module.initializer.head.structure.EconomyType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerHeadGui extends AnvilInputGui {
@@ -68,7 +68,7 @@ public class PlayerHeadGui extends AnvilInputGui {
 
                 /* Make head stack. */
                 if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
-                    builder.addLoreLine(Text.empty());
+                    builder.addLoreLine(Component.empty());
                     builder.addLoreLine(TextHelper.getTextByKey(player, "head.price").copy().append(EconomyType.getCostText()));
                 }
 
@@ -76,13 +76,13 @@ public class PlayerHeadGui extends AnvilInputGui {
                 ItemStack headStack = builder.asStack();
                 this.setSlot(2, headStack, (index, type, action, gui) ->
                     EconomyType.tryPurchaseHeads(player, 1, () -> {
-                        var cursorStack = getPlayer().currentScreenHandler.getCursorStack();
-                        if (player.currentScreenHandler.getCursorStack().isEmpty()) {
-                            player.currentScreenHandler.setCursorStack(headStack.copy());
-                        } else if (ItemStackHelper.canCombine(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxCount()) {
-                            cursorStack.increment(1);
+                        var cursorStack = getPlayer().containerMenu.getCarried();
+                        if (player.containerMenu.getCarried().isEmpty()) {
+                            player.containerMenu.setCarried(headStack.copy());
+                        } else if (ItemStackHelper.canCombine(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxStackSize()) {
+                            cursorStack.grow(1);
                         } else {
-                            player.dropItem(headStack.copy(), false);
+                            player.drop(headStack.copy(), false);
                         }
                     })
                 );

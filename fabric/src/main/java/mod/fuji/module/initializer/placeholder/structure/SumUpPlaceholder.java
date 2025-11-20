@@ -8,7 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import java.nio.charset.StandardCharsets;
 import lombok.Getter;
 import lombok.ToString;
-import net.minecraft.util.WorldSavePath;
+import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class SumUpPlaceholder {
     public int moved;
 
     private static Path getStatPath() {
-        return ServerHelper.getServer().getSavePath(WorldSavePath.STATS);
+        return ServerHelper.getServer().getWorldPath(LevelResource.PLAYER_STATS_DIR);
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")

@@ -11,14 +11,14 @@ import mod.fuji.module.initializer.works.WorksInitializer;
 import mod.fuji.module.initializer.works.config.model.WorksDataModel;
 import mod.fuji.module.initializer.works.structure.work.impl.NonProductionWork;
 import mod.fuji.module.initializer.works.structure.work.impl.ProductionWork;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class CreateWorkGui extends InputSignGui {
 
-    public CreateWorkGui(@NotNull ServerPlayerEntity player) {
+    public CreateWorkGui(@NotNull ServerPlayer player) {
         super(player, TextHelper.getTextByKey(player, "works.work.add.prompt.input.name"));
     }
 
@@ -33,7 +33,7 @@ public class CreateWorkGui extends InputSignGui {
         }
 
         /* input type */
-        SimpleGui selectWorkTypeGui = new SimpleGui(ScreenHandlerType.GENERIC_9X3, player, false);
+        SimpleGui selectWorkTypeGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
         selectWorkTypeGui.setTitle(TextHelper.getTextByKey(player, "works.work.add.select_work_type.title"));
         GuiHelper.Placer.fillGui(selectWorkTypeGui, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
 

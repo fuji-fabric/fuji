@@ -13,13 +13,13 @@ import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import net.minecraft.block.BlockState;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import org.jetbrains.annotations.NotNull;
 
 public class PositionSearcher {
@@ -33,12 +33,12 @@ public class PositionSearcher {
         TextHelper.sendTextByKey(context.getPlayer(), "rtp.progress.checking_chunk", blockPosInChunk.getX(), blockPosInChunk.getZ(), context.getAttempts(), context.getMaxAttempts());
 
         /* Adjust the selected block pos for biomes whitelist mode. */
-        final ServerWorld serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
+        final ServerLevel serverWorld = WorldHelper.getWorldOrThrow(settings.getDimension());
         if (settings.getBiomes().getOnlyAcceptBiomesMode().isEnable()) {
             // NOTE: Use the player's Y as the initial Y value for locateBiome()
-            blockPosInChunk = blockPosInChunk.withY(context.getPlayer().getBlockY());
+            blockPosInChunk = blockPosInChunk.atY(context.getPlayer().getBlockY());
 
-            Pair<BlockPos, RegistryEntry<Biome>> pair = serverWorld.locateBiome(it -> it.getKey()
+            Pair<BlockPos, Holder<Biome>> pair = serverWorld.findClosestBiome3d(it -> it.unwrapKey()
                 .map(biome -> {
                     String idAsString = RegistryHelper.getIdAsString(biome);
                     return settings.getBiomes().getOnlyAcceptBiomesMode().getAccept()
@@ -73,7 +73,7 @@ public class PositionSearcher {
         };
     }
 
-    private static @NotNull Consumer<Chunk> getChunkConsumer(@NotNull PositionSearchContext context, @NotNull ServerWorld serverWorld) {
+    private static @NotNull Consumer<ChunkAccess> getChunkConsumer(@NotNull PositionSearchContext context, @NotNull ServerLevel serverWorld) {
         return (chunk) -> {
             /* Filter by inhabited time. */
             if (chunk.getInhabitedTime() >= context.getSettings().getChunkInhabitedTimeLowerThanTicks()) {
@@ -82,7 +82,7 @@ public class PositionSearcher {
             }
 
             /* Iterate the candidate block pos. */
-            for (BlockPos.Mutable candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
+            for (BlockPos.MutableBlockPos candidateBlockPos : ChunkCandidateBlocksGenerator.getChunkCandidateBlocks(chunk.getPos())) {
                 final int blockPosX = candidateBlockPos.getX();
                 final int blockPosZ = candidateBlockPos.getZ();
 

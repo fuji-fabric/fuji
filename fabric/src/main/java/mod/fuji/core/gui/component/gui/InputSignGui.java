@@ -1,16 +1,16 @@
 package mod.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.gui.SignGui;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class InputSignGui extends SignGui {
 
-    public InputSignGui(@NotNull ServerPlayerEntity player, @Nullable Text promptText) {
+    public InputSignGui(@NotNull ServerPlayer player, @Nullable Component promptText) {
         super(player);
         this.setSignType(Blocks.CHERRY_WALL_SIGN);
         this.setColor(DyeColor.BLACK);

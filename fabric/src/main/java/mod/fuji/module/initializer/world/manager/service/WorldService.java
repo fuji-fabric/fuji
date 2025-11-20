@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.LevelStem;
 import org.jetbrains.annotations.NotNull;
 
 public class WorldService {
@@ -48,22 +48,22 @@ public class WorldService {
     }
 
     public static void submitDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
-        ServerWorld world = ticket.world;
+        ServerLevel world = ticket.world;
         saveChunksBeforeUnloadingTheDimension(world);
 
         ServerHelper.executeSync(() -> dimensionDeletionTicketQueue.add(ticket));
     }
 
-    private static void saveChunksBeforeUnloadingTheDimension(ServerWorld world) {
+    private static void saveChunksBeforeUnloadingTheDimension(ServerLevel world) {
         ServerHelper.executeSync(() -> {
-            world.savingDisabled = false;
+            world.noSave = false;
             #if MC_VER <= MC_1_21_4
             world.getChunkManager().removePersistentTickets();
             #elif MC_VER > MC_1_21_4
-            world.getChunkManager().shutdown();
+            world.getChunkSource().deactivateTicketsOnClosing();
             #endif
 
-            world.getChunkManager().tick(() -> true, false);
+            world.getChunkSource().tick(() -> true, false);
         });
     }
 
@@ -72,9 +72,9 @@ public class WorldService {
     }
 
     private static boolean tryConsumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
-        ServerWorld world = ticket.getWorld();
+        ServerLevel world = ticket.getWorld();
 
-        if (world.getPlayers().isEmpty() && !shouldDelayShutdown(world)) {
+        if (world.players().isEmpty() && !shouldDelayShutdown(world)) {
             consumeDimensionDeletionTicket(ticket);
             return true;
         } else {
@@ -83,11 +83,11 @@ public class WorldService {
         }
     }
 
-    private static boolean shouldDelayShutdown(ServerWorld world) {
+    private static boolean shouldDelayShutdown(ServerLevel world) {
         #if MC_VER <= MC_1_20_6
         return world.getChunkManager().threadedAnvilChunkStorage.shouldDelayShutdown();
         #elif MC_VER > MC_1_20_6
-        return world.getChunkManager().chunkLoadingManager.shouldDelayShutdown();
+        return world.getChunkSource().chunkMap.hasWork();
         #endif
     }
 
@@ -107,9 +107,9 @@ public class WorldService {
 
         try {
             /* Make the runtime dimension. */
-            Pair<ServerWorld, DimensionOptions> result = RuntimeDimensionMaker.makeRuntimeDimension(descriptor);
-            ServerWorld dimension = result.getKey();
-            DimensionOptions dimensionOptions = result.getValue();
+            Pair<ServerLevel, LevelStem> result = RuntimeDimensionMaker.makeRuntimeDimension(descriptor);
+            ServerLevel dimension = result.getKey();
+            LevelStem dimensionOptions = result.getValue();
 
             /* Load the runtime dimension. */
             RuntimeDimensionLoader.loadRuntimeDimension(dimension, dimensionOptions);
@@ -124,9 +124,9 @@ public class WorldService {
         }
     }
 
-    private static void evacuatePlayers(@NotNull ServerWorld dimension) {
-        List<ServerPlayerEntity> players = new ArrayList<>(dimension.getPlayers());
-        for (ServerPlayerEntity player : players) {
+    private static void evacuatePlayers(@NotNull ServerLevel dimension) {
+        List<ServerPlayer> players = new ArrayList<>(dimension.players());
+        for (ServerPlayer player : players) {
             GlobalPos from = GlobalPos.of(player);
             GlobalPos to = WorldHelper.SpawnPos.getSafeServerSpawnPos();
 
@@ -137,7 +137,7 @@ public class WorldService {
 
 
     private static void consumeDimensionDeletionTicket(@NotNull DimensionDeletionTicket ticket) {
-        ServerWorld world = ticket.getWorld();
+        ServerLevel world = ticket.getWorld();
         RuntimeDimensionLoader.unloadDimension(world);
 
         if (ticket.deleteWorldFiles) {
@@ -152,16 +152,16 @@ public class WorldService {
         TextHelper.sendTextByKey(ticket.source,"world.dimension.deleted", RegistryHelper.getIdAsString(ticket.world));
     }
 
-    private static void deleteDimensionFiles(@NotNull ServerWorld world) {
+    private static void deleteDimensionFiles(@NotNull ServerLevel world) {
         MinecraftServer server = world.getServer();
-        RegistryKey<World> dimensionKey = world.getRegistryKey();
+        ResourceKey<Level> dimensionKey = world.dimension();
 
         /* Delete world files. */
-        File worldDirectory = server.session.getWorldDirectory(dimensionKey).toFile();
+        File worldDirectory = server.storageSource.getDimensionPath(dimensionKey).toFile();
         IOUtil.deleteFilesAndPreserveDirs(worldDirectory);
     }
 
-    public static boolean existsDimension(Identifier dimensionId) {
+    public static boolean existsDimension(ResourceLocation dimensionId) {
         boolean dimensionExistedInRuntime = WorldHelper
             .getWorlds()
             .stream()

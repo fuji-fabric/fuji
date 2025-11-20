@@ -6,17 +6,17 @@ import mod.fuji.core.document.annotation.TestCase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.UserCache;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.players.CachedUserNameToIdResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,47 +32,47 @@ public class PlayerHelper {
     /**
  * It's possible to generate invalid player name using <code>/player abc++ spawn</code> command.
  **/
-    public static String getPlayerName(@NotNull PlayerEntity player) {
+    public static String getPlayerName(@NotNull Player player) {
         @NotNull GameProfile gameProfile = player.getGameProfile();
         return AuthlibHelper.getName(gameProfile);
     }
 
-    public static void playSound(@NotNull ServerPlayerEntity player, @NotNull SoundEvent soundEvent, @NotNull SoundCategory soundCategory, float volume, float pitch) {
+    public static void playSound(@NotNull ServerPlayer player, @NotNull SoundEvent soundEvent, @NotNull SoundSource soundCategory, float volume, float pitch) {
         #if MC_VER <= MC_1_20_4
         player.playSound(soundEvent, soundCategory, volume, pitch);
         #elif MC_VER > MC_1_20_4
-        player.playSoundToPlayer(soundEvent, soundCategory, volume, pitch);
+        player.playNotifySound(soundEvent, soundCategory, volume, pitch);
         #endif
     }
 
-    public static int getPing(@NotNull ServerPlayerEntity player) {
+    public static int getPing(@NotNull ServerPlayer player) {
         #if MC_VER <= MC_1_20_1
         return player.pingMilliseconds;
         #elif MC_VER > MC_1_20_1
-        return player.networkHandler.getLatency();
+        return player.connection.latency();
         #endif
     }
 
-    public static @NotNull ServerWorld getServerWorld(@NotNull ServerPlayerEntity player) {
+    public static @NotNull ServerLevel getServerWorld(@NotNull ServerPlayer player) {
         #if MC_VER <= MC_1_21_5
         return (ServerWorld) player.getWorld();
         #elif MC_VER > MC_1_21_5 && MC_VER < MC_1_21_9
         return player.getWorld();
         #elif MC_VER >= MC_1_21_9
-        return player.getEntityWorld();
+        return player.level();
         #endif
     }
 
-    public static @NotNull ServerWorld getServerWorld(@NotNull PlayerEntity player) {
-        return getServerWorld((ServerPlayerEntity) player);
+    public static @NotNull ServerLevel getServerWorld(@NotNull Player player) {
+        return getServerWorld((ServerPlayer) player);
     }
 
-    public static PlayerManager getPlayerManager() {
-        return ServerHelper.getServer().getPlayerManager();
+    public static PlayerList getPlayerManager() {
+        return ServerHelper.getServer().getPlayerList();
     }
 
-    public static void updateDisplayName(@NotNull ServerPlayerEntity player) {
-        PlayerListS2CPacket packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player);
+    public static void updateDisplayName(@NotNull ServerPlayer player) {
+        ClientboundPlayerInfoUpdatePacket packet = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player);
         PacketHelper.sendPacketToAll(packet);
     }
 
@@ -81,27 +81,27 @@ public class PlayerHelper {
             .forEach(PlayerHelper::updateDisplayName);
     }
 
-    public static void disconnectPlayer(@NotNull ServerPlayerEntity target, @NotNull Text reasonText) {
-        target.networkHandler.disconnect(reasonText);
+    public static void disconnectPlayer(@NotNull ServerPlayer target, @NotNull Component reasonText) {
+        target.connection.disconnect(reasonText);
     }
 
-    public static void dismountRidingEntity(@NotNull ServerPlayerEntity player) {
-        player.setSneaking(true);
-        player.tickRiding();
+    public static void dismountRidingEntity(@NotNull ServerPlayer player) {
+        player.setShiftKeyDown(true);
+        player.rideTick();
     }
 
     public static class Loader {
 
         private static final String DIMENSION_NBT_KEY = "Dimension";
 
-        private static ServerPlayerEntity makePlayer(@NotNull GameProfile gameProfile) {
+        private static ServerPlayer makePlayer(@NotNull GameProfile gameProfile) {
             MinecraftServer server = ServerHelper.getServer();
 
             #if MC_VER <= MC_1_20_1
             return new ServerPlayerEntity(server, server.getOverworld(), gameProfile);
             #elif MC_VER > MC_1_20_1
-            var syncedClientOptions = net.minecraft.network.packet.c2s.common.SyncedClientOptions.createDefault();
-            return new ServerPlayerEntity(server, server.getOverworld(), gameProfile, syncedClientOptions);
+            var syncedClientOptions = net.minecraft.server.level.ClientInformation.createDefault();
+            return new ServerPlayer(server, server.overworld(), gameProfile, syncedClientOptions);
             #endif
         }
 
@@ -111,7 +111,7 @@ public class PlayerHelper {
             #elif MC_VER >= MC_1_21_6 && MC_VER < MC_1_21_9
             @NotNull ServerPlayerEntity player, @Nullable net.minecraft.storage.ReadView playerData
             #elif MC_VER >= MC_1_21_9
-            @NotNull ServerPlayerEntity player, @Nullable net.minecraft.nbt.NbtCompound playerData
+                @NotNull ServerPlayer player, @Nullable net.minecraft.nbt.CompoundTag playerData
             #endif
         ) {
             /* Do nothing if player data is null. */
@@ -135,14 +135,14 @@ public class PlayerHelper {
 
         }
 
-        private static void setServerWorld(@NotNull ServerPlayerEntity player, @Nullable String dimensionId) {
-            Optional<ServerWorld> world = WorldHelper.getWorld(dimensionId);
-            world.ifPresent(player::setServerWorld);
+        private static void setServerWorld(@NotNull ServerPlayer player, @Nullable String dimensionId) {
+            Optional<ServerLevel> world = WorldHelper.getWorld(dimensionId);
+            world.ifPresent(player::setServerLevel);
         }
 
-        public static ServerPlayerEntity loadDummyPlayer(@NotNull String playerName) {
+        public static ServerPlayer loadDummyPlayer(@NotNull String playerName) {
             /* Check if the target player is online. */
-            Optional<ServerPlayerEntity> player = Lookup.getOnlinePlayerByName(playerName);
+            Optional<ServerPlayer> player = Lookup.getOnlinePlayerByName(playerName);
             if (player.isPresent()) {
                 return player.get();
             }
@@ -154,7 +154,7 @@ public class PlayerHelper {
             }
 
             /* Make the player instance. */
-            ServerPlayerEntity $player = makePlayer(gameProfile.get());
+            ServerPlayer $player = makePlayer(gameProfile.get());
 
             #if MC_VER <= MC_1_20_4
             net.minecraft.nbt.NbtCompound playerData = getPlayerManager().loadPlayerData($player);
@@ -166,7 +166,7 @@ public class PlayerHelper {
             Optional<net.minecraft.storage.ReadView> playerData = getPlayerManager().loadPlayerData($player, net.minecraft.util.ErrorReporter.Impl.EMPTY);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_9
-            Optional<NbtCompound> playerData = getPlayerManager().loadPlayerData($player.getPlayerConfigEntry());
+            Optional<CompoundTag> playerData = getPlayerManager().loadPlayerData($player.nameAndId());
             applyPlayerData($player, playerData.orElse(null));
             #endif
 
@@ -177,8 +177,8 @@ public class PlayerHelper {
 
     public static class Lookup {
 
-        public static List<ServerPlayerEntity> getOnlinePlayers() {
-            return getPlayerManager().getPlayerList();
+        public static List<ServerPlayer> getOnlinePlayers() {
+            return getPlayerManager().getPlayers();
         }
 
         public static List<String> getOnlinePlayerNames() {
@@ -188,24 +188,24 @@ public class PlayerHelper {
                 .toList();
         }
 
-        public static Optional<ServerPlayerEntity> getOnlinePlayerByName(@NotNull String playerName) {
+        public static Optional<ServerPlayer> getOnlinePlayerByName(@NotNull String playerName) {
             return getOnlinePlayers()
                 .stream()
                 .filter(it -> getPlayerName(it).equals(playerName))
                 .findFirst();
         }
 
-        public static Optional<ServerPlayerEntity> getOnlinePlayerByNameIgnoreCase(@NotNull String playerName) {
+        public static Optional<ServerPlayer> getOnlinePlayerByNameIgnoreCase(@NotNull String playerName) {
             return getOnlinePlayers()
                 .stream()
                 .filter(it -> getPlayerName(it).equalsIgnoreCase(playerName))
                 .findFirst();
         }
 
-        public static Optional<ServerPlayerEntity> getOnlinePlayerByUuid(@NotNull UUID playerUUID) {
+        public static Optional<ServerPlayer> getOnlinePlayerByUuid(@NotNull UUID playerUUID) {
             return getOnlinePlayers()
                 .stream()
-                .filter(player -> player.getUuid().equals(playerUUID))
+                .filter(player -> player.getUUID().equals(playerUUID))
                 .findFirst();
         }
 
@@ -221,8 +221,8 @@ public class PlayerHelper {
         /**
  * The carpet mod sub-classing the ServerPlayerEntity.
  **/
-        public static boolean isRealPlayer(@NotNull ServerPlayerEntity player) {
-            return player.getClass() == ServerPlayerEntity.class;
+        public static boolean isRealPlayer(@NotNull ServerPlayer player) {
+            return player.getClass() == ServerPlayer.class;
         }
 
         /**
@@ -232,8 +232,8 @@ public class PlayerHelper {
 
  **/
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-        public static boolean isServerPlayer(@NotNull PlayerEntity player) {
-            return player instanceof ServerPlayerEntity;
+        public static boolean isServerPlayer(@NotNull Player player) {
+            return player instanceof ServerPlayer;
         }
 
 
@@ -243,13 +243,13 @@ public class PlayerHelper {
             One for ClientPlayerEntity, one for ServerPlayerEntity.
 
  **/
-        public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Consumer<ServerPlayerEntity> consumer) {
+        public static void withServerPlayerEntity(@Nullable Player player, @NotNull Consumer<ServerPlayer> consumer) {
             if (player == null) return;
             if (!isServerPlayer(player)) return;
-            consumer.accept((ServerPlayerEntity) player);
+            consumer.accept((ServerPlayer) player);
         }
 
-        public static void withServerPlayerEntity(@Nullable PlayerEntity player, @NotNull Runnable runnable) {
+        public static void withServerPlayerEntity(@Nullable Player player, @NotNull Runnable runnable) {
             withServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
         }
     }
@@ -261,7 +261,7 @@ public class PlayerHelper {
             return getUserCache()
                 .map($userCache -> {
                     /* Make the list from user cache. */
-                    return $userCache.byName.values()
+                    return $userCache.profilesByName.values()
                         .stream()
                         .map(AuthlibHelper::getGameProfile)
                         .toList();
@@ -269,11 +269,12 @@ public class PlayerHelper {
                 .orElseGet(List::of);
         }
 
-        public static Optional<UserCache> getUserCache() {
+        public static Optional<CachedUserNameToIdResolver> getUserCache() {
             #if MC_VER < MC_1_21_9
             return Optional.ofNullable(ServerHelper.getServer().getUserCache());
             #elif MC_VER >= MC_1_21_9
-            return Optional.ofNullable((UserCache) ServerHelper.getServer().getApiServices().comp_4407());
+            //noinspection OptionalOfNullableMisuse
+            return Optional.ofNullable((CachedUserNameToIdResolver) ServerHelper.getServer().services().nameToIdCache());
             #endif
         }
 

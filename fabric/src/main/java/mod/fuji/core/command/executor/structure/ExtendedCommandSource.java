@@ -5,8 +5,8 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -24,15 +24,15 @@ import org.jetbrains.annotations.NotNull;
 @Value
 public class ExtendedCommandSource {
 
-    @NotNull ServerCommandSource initiatingSource;
-    @NotNull ServerCommandSource executingSource;
+    @NotNull CommandSourceStack initiatingSource;
+    @NotNull CommandSourceStack executingSource;
     boolean parsePlaceholders;
 
-    public ExtendedCommandSource(@NotNull ServerCommandSource initiatingSource, @NotNull ServerCommandSource executingSource, boolean parsePlaceholders) {
+    public ExtendedCommandSource(@NotNull CommandSourceStack initiatingSource, @NotNull CommandSourceStack executingSource, boolean parsePlaceholders) {
         this.initiatingSource = initiatingSource;
 
         if (CommandDescriptor.silentSpecialVariable.get()) {
-            this.executingSource = executingSource.withSilent();
+            this.executingSource = executingSource.withSuppressedOutput();
         } else {
             this.executingSource = executingSource;
         }
@@ -40,29 +40,29 @@ public class ExtendedCommandSource {
         this.parsePlaceholders = parsePlaceholders;
     }
 
-    public static ExtendedCommandSource fromSource(@NotNull ServerCommandSource initiatingSource) {
+    public static ExtendedCommandSource fromSource(@NotNull CommandSourceStack initiatingSource) {
         return new ExtendedCommandSource(initiatingSource, initiatingSource, true);
     }
 
-    public static ExtendedCommandSource asConsole(@NotNull ServerCommandSource initiatingSource) {
+    public static ExtendedCommandSource asConsole(@NotNull CommandSourceStack initiatingSource) {
         return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getConsoleCommandSource(), true);
     }
 
-    public static ExtendedCommandSource asPlayer(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
+    public static ExtendedCommandSource asPlayer(@NotNull CommandSourceStack initiatingSource, ServerPlayer executingPlayer) {
         return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer), true);
     }
 
-    public static ExtendedCommandSource asFakeOp(@NotNull ServerCommandSource initiatingSource, ServerPlayerEntity executingPlayer) {
-        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer).withLevel(4), true);
+    public static ExtendedCommandSource asFakeOp(@NotNull CommandSourceStack initiatingSource, ServerPlayer executingPlayer) {
+        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer).withPermission(4), true);
     }
 
     public boolean sameSource() {
-        return executingSource.getName().equals(initiatingSource.getName());
+        return executingSource.getTextName().equals(initiatingSource.getTextName());
     }
 
-    private ServerCommandSource getCommandSourceForPlaceholderParsing() {
+    private CommandSourceStack getCommandSourceForPlaceholderParsing() {
         // NOTE: Use the deepest command source to parse placeholders.
-        if (executingSource.isExecutedByPlayer()) {
+        if (executingSource.isPlayer()) {
             return executingSource;
         }
 
@@ -73,7 +73,7 @@ public class ExtendedCommandSource {
         /* Parse placeholders. */
         if (!this.parsePlaceholders) return string;
 
-        ServerPlayerEntity contextualPlayer = getCommandSourceForPlaceholderParsing().getPlayer();
+        ServerPlayer contextualPlayer = getCommandSourceForPlaceholderParsing().getPlayer();
         if (contextualPlayer != null) {
             string = TextHelper.Parsers.parsePlaceholderString(contextualPlayer, string);
         } else {
@@ -86,8 +86,8 @@ public class ExtendedCommandSource {
     @Override
     public String toString() {
         return "ExtendedCommandSource{" +
-            "initiatingSource=" + initiatingSource.getName() +
-            ", executingSource=" + executingSource.getName() +
+            "initiatingSource=" + initiatingSource.getTextName() +
+            ", executingSource=" + executingSource.getTextName() +
             ", parsePlaceholder=" + parsePlaceholders +
             '}';
     }

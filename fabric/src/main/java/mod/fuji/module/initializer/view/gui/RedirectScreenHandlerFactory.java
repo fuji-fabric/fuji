@@ -3,26 +3,26 @@ package mod.fuji.module.initializer.view.gui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 public abstract class RedirectScreenHandlerFactory {
 
     private final String targetPlayerName;
-    private final Text title;
+    private final Component title;
 
     private boolean onlineEditMode;
-    private ServerPlayerEntity targetPlayer;
+    private ServerPlayer targetPlayer;
 
-    public RedirectScreenHandlerFactory(String targetPlayerName, Text title) {
+    public RedirectScreenHandlerFactory(String targetPlayerName, Component title) {
         this.targetPlayerName = targetPlayerName;
         this.title = title;
 
@@ -30,12 +30,12 @@ public abstract class RedirectScreenHandlerFactory {
         this.loadTargetPlayer();
     }
 
-    protected ServerPlayerEntity getTargetPlayer() {
+    protected ServerPlayer getTargetPlayer() {
         return this.targetPlayer;
     }
 
     private void loadTargetPlayer() {
-        ServerPlayerEntity player = PlayerHelper.getPlayerManager().getPlayer(targetPlayerName);
+        ServerPlayer player = PlayerHelper.getPlayerManager().getPlayerByName(targetPlayerName);
         if (player != null) {
             onlineEditMode = true;
             targetPlayer = player;
@@ -52,47 +52,47 @@ public abstract class RedirectScreenHandlerFactory {
         return !PlayerHelper.Lookup.isPlayerOnline(targetPlayerName);
     }
 
-    protected abstract Inventory makeTargetInventoryRedirectScreen();
+    protected abstract Container makeTargetInventoryRedirectScreen();
 
-    protected abstract ScreenHandlerType<GenericContainerScreenHandler> getTargetInventorySize();
+    protected abstract MenuType<ChestMenu> getTargetInventorySize();
 
-    protected abstract boolean canClick(ScreenHandler screenHandler, int i);
+    protected abstract boolean canClick(AbstractContainerMenu screenHandler, int i);
 
     private void savePlayerData() {
-        ServerHelper.getServer().saveHandler.savePlayerData(targetPlayer);
+        ServerHelper.getServer().playerDataStorage.save(targetPlayer);
     }
 
-    private GenericContainerScreenHandler makeGenericContainerScreenHandler(int syncId, PlayerInventory sourceInventory, PlayerEntity source) {
+    private ChestMenu makeGenericContainerScreenHandler(int syncId, Inventory sourceInventory, Player source) {
         int rows = GuiHelper.Handler.getGenericContainerRows(getTargetInventorySize());
 
-        return new GenericContainerScreenHandler(getTargetInventorySize(), syncId, sourceInventory, makeTargetInventoryRedirectScreen(), rows) {
+        return new ChestMenu(getTargetInventorySize(), syncId, sourceInventory, makeTargetInventoryRedirectScreen(), rows) {
 
             @Override
-            public void onSlotClick(int i, int j, SlotActionType slotActionType, PlayerEntity playerEntity) {
+            public void clicked(int i, int j, ClickType slotActionType, Player playerEntity) {
                 if (!canClick(this, i)) return;
 
                 // save player data in time, in keep sync if player gets online.
                 if (!onlineEditMode) {
                     savePlayerData();
                 }
-                super.onSlotClick(i, j, slotActionType, playerEntity);
+                super.clicked(i, j, slotActionType, playerEntity);
             }
 
             @Override
-            public boolean canUse(PlayerEntity playerEntity) {
+            public boolean stillValid(Player playerEntity) {
                 return isRedirectValid();
             }
 
             @Override
-            public void onClosed(PlayerEntity playerEntity) {
-                super.onClosed(playerEntity);
-                PlayerHelper.getPlayerManager().savePlayerData(getTargetPlayer());
+            public void removed(Player playerEntity) {
+                super.removed(playerEntity);
+                PlayerHelper.getPlayerManager().save(getTargetPlayer());
             }
         };
     }
 
-    public SimpleNamedScreenHandlerFactory makeFactory() {
-        return new SimpleNamedScreenHandlerFactory(
+    public SimpleMenuProvider makeFactory() {
+        return new SimpleMenuProvider(
             this::makeGenericContainerScreenHandler, this.title);
     }
 

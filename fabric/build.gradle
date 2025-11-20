@@ -76,7 +76,8 @@ loom {
 dependencies {
     /* For mod loader: fabric-loader */
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings_version}"
+//    mappings "net.fabricmc:yarn:${project.yarn_mappings_version}"
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
     /* For fabric-carpet mod */

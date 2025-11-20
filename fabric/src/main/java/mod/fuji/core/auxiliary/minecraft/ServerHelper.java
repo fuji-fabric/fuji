@@ -25,7 +25,7 @@ public class ServerHelper {
     private static MinecraftServer server;
 
     public static void executeSync(Runnable runnable) {
-        getServer().executeSync(runnable);
+        getServer().executeIfPossible(runnable);
     }
 
     public static class Lifecycle {

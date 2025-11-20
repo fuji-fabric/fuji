@@ -11,9 +11,9 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.display.gui.InventoryDisplayGuiFactory;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
@@ -26,7 +26,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
+    public @NotNull SimpleGui build(ServerPlayer viewingPlayer) {
         SimpleGui displayGui = super.build(viewingPlayer);
 
         /* Place the back button. */
@@ -71,7 +71,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         }
     }
 
-    private void handleRestoreButton(ServerPlayerEntity viewingPlayer) {
+    private void handleRestoreButton(ServerPlayer viewingPlayer) {
             /* Ensure the restore target player's inventory is empty. */
             if (!viewingPlayer.getInventory().isEmpty()) {
                 TextHelper.sendTextByKey(viewingPlayer, "deathlog.restore.target_player.inventory_not_empty", PlayerHelper.getPlayerName(viewingPlayer));

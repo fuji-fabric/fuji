@@ -8,8 +8,8 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class HelpOpInitializer extends ModuleInitializer {
 
     @Document(id = 1751825137661L, value = "Send help messages to online ops.")
     @CommandNode("help-op")
-    private static int $helpOp(@CommandSource ServerPlayerEntity player, GreedyString message) {
-        List<ServerPlayerEntity> onlineOps = PlayerHelper.Lookup
+    private static int $helpOp(@CommandSource ServerPlayer player, GreedyString message) {
+        List<ServerPlayer> onlineOps = PlayerHelper.Lookup
             .getOnlinePlayers()
             .stream()
             .filter(CommandHelper.Requirement::isOperator)
@@ -30,7 +30,7 @@ public class HelpOpInitializer extends ModuleInitializer {
         }
 
         String playerName = PlayerHelper.getPlayerName(player);
-        Text text = TextHelper.getTextByKey(player, "helpop.format", playerName, message.getValue());
+        Component text = TextHelper.getTextByKey(player, "helpop.format", playerName, message.getValue());
         onlineOps.forEach(op -> TextHelper.sendMessageByText(op, text));
 
         TextHelper.sendTextByKey(player, "helpop.success");

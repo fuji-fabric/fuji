@@ -1,10 +1,10 @@
 package mod.fuji.module.initializer.fuji.structure;
 
 import lombok.Data;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 @Data
 public class IdentifierDescriptor {
-    private final Identifier identifier;
+    private final ResourceLocation identifier;
     private final boolean isDynamic;
 }

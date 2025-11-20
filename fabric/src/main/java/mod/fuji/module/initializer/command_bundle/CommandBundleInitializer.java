@@ -20,7 +20,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_bundle.config.model.CommandBundleConfigModel;
 import mod.fuji.module.initializer.command_bundle.service.CommandBundleService;
 import mod.fuji.module.initializer.command_bundle.structure.BundleCommandDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1751826356909L, value = """
     This module allows `creating` a new command (Called `template command` or `bundle command`):
@@ -163,21 +163,21 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @Document(id = 1751826359683L, value = "Register all commands defined in bundle-command configuration file.")
     @CommandNode("register")
-    private static int $registerAllBundleCommands(@CommandSource ServerCommandSource source) {
+    private static int $registerAllBundleCommands(@CommandSource CommandSourceStack source) {
         CommandBundleService.registerAllBundleCommands();
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826362252L, value = "Un-register all bundle-commands registered in server.")
     @CommandNode("un-register")
-    private static int $unregisterAllBundleCommands(@CommandSource ServerCommandSource source) {
+    private static int $unregisterAllBundleCommands(@CommandSource CommandSourceStack source) {
         CommandBundleService.unregisterAllBundleCommands();
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826364625L, value = "List all registered bundle-commands in server.")
     @CommandNode("list")
-    private static int $list(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $list(@CommandSource CommandContext<CommandSourceStack> ctx) {
         return CommandsInspectionGui
             .inspectCommandDescriptors(ctx, it -> it instanceof BundleCommandDescriptor);
     }

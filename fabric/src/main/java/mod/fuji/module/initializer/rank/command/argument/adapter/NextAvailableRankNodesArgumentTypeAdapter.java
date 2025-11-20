@@ -14,8 +14,8 @@ import mod.fuji.module.initializer.rank.service.RankService;
 import mod.fuji.module.initializer.rank.structure.RankNode;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -25,10 +25,10 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String rankId = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
 
         Optional<RankNode> nextRankNode = RankService
             .getNextAvailableRankNodes(player)
@@ -56,11 +56,11 @@ public class NextAvailableRankNodesArgumentTypeAdapter extends BaseArgumentTypeA
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable((context, builder) -> {
-                ServerPlayerEntity player = context.getSource().getPlayer();
+                ServerPlayer player = context.getSource().getPlayer();
                 if (player == null) {
                     return List.of();
                 }

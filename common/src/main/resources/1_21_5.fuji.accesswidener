@@ -1,20 +1,20 @@
 accessWidener v2 named
 
 # core
-accessible method net/minecraft/util/UserCache$Entry getProfile ()Lcom/mojang/authlib/GameProfile;
+accessible method net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
 
 # chat module
-accessible class net/minecraft/registry/RegistryLoader$Loader
+accessible class net/minecraft/resources/RegistryDataLoader$Loader
 
 # view module
-accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/PlayerSaveHandler;
+accessible field net/minecraft/server/MinecraftServer playerDataStorage Lnet/minecraft/world/level/storage/PlayerDataStorage;
 
 # world helper
-accessible field net/minecraft/server/world/ServerChunkLoadingManager chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+accessible field net/minecraft/server/level/ChunkMap visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # player
-accessible field net/minecraft/entity/LivingEntity equipment Lnet/minecraft/entity/EntityEquipment;
+accessible field net/minecraft/world/entity/LivingEntity equipment Lnet/minecraft/world/entity/EntityEquipment;
 
 # skin
-accessible field net/minecraft/server/world/ServerChunkLoadingManager entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-accessible class net/minecraft/server/world/ServerChunkLoadingManager$EntityTracker
+accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity

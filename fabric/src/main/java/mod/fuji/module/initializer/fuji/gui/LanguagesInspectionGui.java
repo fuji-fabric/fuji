@@ -8,19 +8,19 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
 
-    public LanguagesInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    public LanguagesInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "fuji.inspect.languages.gui.title"), entities, pageIndex);
     }
 
-    public static LanguagesInspectionGui inspectAll(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player) {
+    public static LanguagesInspectionGui inspectAll(@Nullable SimpleGui parent, @NotNull ServerPlayer player) {
         ArrayList<GuiElementInterface> entities = new ArrayList<>();
 
         /* Add loaded language files. */
@@ -73,7 +73,7 @@ public class LanguagesInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new LanguagesInspectionGui(parent, player, entities, pageIndex);
     }
 

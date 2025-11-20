@@ -5,13 +5,13 @@ import mod.fuji.auxiliary.WeaverUtil;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.player.PlayerInteractItemPreEvent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,19 +21,19 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @PhasedMixinTemplate
-@Mixin(ServerPlayerInteractionManager.class)
+@Mixin(ServerPlayerGameMode.class)
 public class PlayerInteractItemPreEventMixin {
 
     @Shadow
-    protected ServerWorld world;
+    protected ServerLevel level;
 
     @Shadow
     @Final
-    protected ServerPlayerEntity player;
+    protected ServerPlayer player;
 
     @EventProducer(PlayerInteractItemPreEvent.class)
-    @Inject(method = "interactItem", at = @At("HEAD"), cancellable = true)
-    void producePlayerInteractItemPreEvent(ServerPlayerEntity serverPlayerEntity, World world, @NotNull ItemStack itemStack, Hand hand, @NotNull CallbackInfoReturnable<ActionResult> cir) {
+    @Inject(method = "useItem", at = @At("HEAD"), cancellable = true)
+    void producePlayerInteractItemPreEvent(ServerPlayer serverPlayerEntity, Level world, @NotNull ItemStack itemStack, InteractionHand hand, @NotNull CallbackInfoReturnable<InteractionResult> cir) {
         PlayerInteractItemPreEvent event = new PlayerInteractItemPreEvent(player, world, itemStack, hand, cir);
         EventManager.dispatchEvent(PlayerInteractItemPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);
     }

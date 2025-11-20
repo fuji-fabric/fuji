@@ -9,9 +9,9 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.gameplay.multi_obsidian_platform.config.model.MultiObsidianPlatformConfigModel;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -36,18 +36,18 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
  * This method is used to fix Entity#position() drift.
  **/
     private static BlockPos findNearbyEndPortalBlock(@NotNull BlockPos bp) {
-        ServerWorld overworld = ServerHelper.getServer().getOverworld();
+        ServerLevel overworld = ServerHelper.getServer().overworld();
 
         /* Should we find nearby END_PORTAL block ? */
-        if (overworld.getBlockState(bp) == Blocks.END_PORTAL.getDefaultState()) return bp;
+        if (overworld.getBlockState(bp) == Blocks.END_PORTAL.defaultBlockState()) return bp;
 
         /* Let's find nearby END_PORTAL block */
         int searchRadius = 3;
         for (int y = -searchRadius; y < searchRadius; y++) {
             for (int x = -searchRadius; x < searchRadius; x++) {
                 for (int z = -searchRadius; z < searchRadius; z++) {
-                    BlockPos test = bp.add(x, y, z);
-                    if (overworld.getBlockState(test) == Blocks.END_PORTAL.getDefaultState()) return test;
+                    BlockPos test = bp.offset(x, y, z);
+                    if (overworld.getBlockState(test) == Blocks.END_PORTAL.defaultBlockState()) return test;
                 }
             }
         }
@@ -57,27 +57,27 @@ public class MultiObsidianPlatformInitializer extends ModuleInitializer {
     }
 
     private static BlockPos findCenterEndPortalBlock(@NotNull BlockPos bp) {
-        ServerWorld overworld = ServerHelper.getServer().getOverworld();
-        if (overworld.getBlockState(bp.north()) != Blocks.END_PORTAL.getDefaultState()) {
-            if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.getDefaultState()) {
+        ServerLevel overworld = ServerHelper.getServer().overworld();
+        if (overworld.getBlockState(bp.north()) != Blocks.END_PORTAL.defaultBlockState()) {
+            if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.defaultBlockState()) {
                 return bp.south().east();
-            } else if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.getDefaultState()) {
+            } else if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.defaultBlockState()) {
                 return bp.south().west();
             }
             return bp.south();
         }
-        if (overworld.getBlockState(bp.south()) != Blocks.END_PORTAL.getDefaultState()) {
-            if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.getDefaultState()) {
+        if (overworld.getBlockState(bp.south()) != Blocks.END_PORTAL.defaultBlockState()) {
+            if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.defaultBlockState()) {
                 return bp.north().east();
-            } else if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.getDefaultState()) {
+            } else if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.defaultBlockState()) {
                 return bp.north().west();
             }
             return bp.north();
         }
-        if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.getDefaultState()) {
+        if (overworld.getBlockState(bp.west()) != Blocks.END_PORTAL.defaultBlockState()) {
             return bp.east();
         }
-        if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.getDefaultState()) {
+        if (overworld.getBlockState(bp.east()) != Blocks.END_PORTAL.defaultBlockState()) {
             return bp.west();
         }
         // This is the center block.

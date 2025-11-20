@@ -13,25 +13,25 @@ import mod.fuji.module.initializer.command_meta.when_online.structure.WhenOnline
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import net.minecraft.item.Item;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
 
-    public ListWhenOnlineTicketsGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
+    public ListWhenOnlineTicketsGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "command_meta.when_online.gui.title"), entities, pageIndex)
         ;
     }
 
     @Override
-    protected @NotNull PagedGui<WhenOnlineTicket> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
+    protected @NotNull PagedGui<WhenOnlineTicket> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<WhenOnlineTicket> entities, int pageIndex) {
         return new ListWhenOnlineTicketsGui(parent, player, entities, pageIndex);
     }
 
-    public static ListWhenOnlineTicketsGui make(ServerPlayerEntity player) {
+    public static ListWhenOnlineTicketsGui make(ServerPlayer player) {
         List<WhenOnlineTicket> tickets = WhenOnlineInitializer.data.model().tickets
             .stream()
             // Put the un-executed tickets first.
@@ -47,7 +47,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull WhenOnlineTicket entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "entity.created_timestamp", ChronosUtil.Formatter.formatDate(entity.createdTimestamp)));
         lore.add(TextHelper.getTextByKey(getPlayer(), "entity.creator_name", entity.creatorName));
         lore.add(TextHelper.getTextByKey(getPlayer(), "player.target_player.name", entity.getTargetPlayer()));
@@ -66,7 +66,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
         return builder.build();
     }
 
-    private static GuiElementInterface.@NotNull ItemClickCallback onClickEntity(SimpleGui gui, ServerPlayerEntity player, WhenOnlineTicket entity) {
+    private static GuiElementInterface.@NotNull ItemClickCallback onClickEntity(SimpleGui gui, ServerPlayer player, WhenOnlineTicket entity) {
         return (a, b, c) -> {
             // Right click -> delete.
             if (b.isRight) {

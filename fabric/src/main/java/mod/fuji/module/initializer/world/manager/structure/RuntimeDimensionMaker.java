@@ -9,36 +9,36 @@ import mod.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptio
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import mod.fuji.module.initializer.world.manager.service.FlatPresetParser;
 import java.util.Optional;
-import net.minecraft.block.Block;
-import net.minecraft.entity.boss.dragon.EnderDragonFight;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.end.EndDragonFight;
+import net.minecraft.core.Registry;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeAccess;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
-import net.minecraft.world.gen.WorldPreset;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.FlatChunkGenerator;
-import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
-import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.world.RandomSequences;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.levelgen.presets.WorldPreset;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RuntimeDimensionMaker {
 
-    public static Pair<ServerWorld, DimensionOptions> makeRuntimeDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    public static Pair<ServerLevel, LevelStem> makeRuntimeDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         MinecraftServer server = ServerHelper.getServer();
 
         /* Make the dimension properties. */
@@ -46,18 +46,18 @@ public class RuntimeDimensionMaker {
         RuntimeDimensionProperties worldProperties = makeWorldProperties(runtimeDimensionDescriptor);
 
         /* Make the dimension options. */
-        @Nullable DimensionOptions dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
+        @Nullable LevelStem dimensionOptions = makeDimensionOptions(runtimeDimensionDescriptor);
 
         /* Mark the dimension options, to ignore it while world saving. */
         ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
 
         /* Make the dimension instance. */
-        Identifier dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
-        RegistryKey<World> worldRegistryKey = RegistryKey.of(RegistryKeys.WORLD, dimensionIdentifier);
+        ResourceLocation dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
+        ResourceKey<Level> worldRegistryKey = ResourceKey.create(Registries.DIMENSION, dimensionIdentifier);
 
-        ServerWorld dimension = new RuntimeDimension(server,
-            Util.getMainWorkerExecutor(),
-            server.session,
+        ServerLevel dimension = new RuntimeDimension(server,
+            Util.backgroundExecutor(),
+            server.storageSource,
             worldProperties,
             worldRegistryKey,
             dimensionOptions,
@@ -69,7 +69,7 @@ public class RuntimeDimensionMaker {
             #endif
 
             runtimeDimensionDescriptor.isDebugWorld(),
-            BiomeAccess.hashSeed(runtimeDimensionDescriptor.seed),
+            BiomeManager.obfuscateSeed(runtimeDimensionDescriptor.seed),
             ImmutableList.of(),
             runtimeDimensionDescriptor.shouldTickTime,
             makeRandomSequenceState(runtimeDimensionDescriptor));
@@ -83,23 +83,23 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull RuntimeDimensionProperties makeWorldProperties(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         MinecraftServer server = ServerHelper.getServer();
-        return new RuntimeDimensionProperties(server.getSaveProperties(), runtimeDimensionDescriptor);
+        return new RuntimeDimensionProperties(server.getWorldData(), runtimeDimensionDescriptor);
     }
 
-    private static @NotNull RandomSequencesState makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static @NotNull RandomSequences makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         long seed = runtimeDimensionDescriptor.seed;
-        return new RandomSequencesState(seed);
+        return new RandomSequences(seed);
     }
 
     @SuppressWarnings("deprecation")
-    private static void postRuntimeDimensionMake(ServerWorld dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static void postRuntimeDimensionMake(ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         // If the dimension type is THE_END, then start the dragon fight.
-        if (DimensionTypes.THE_END_ID.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
-            dimension.setEnderDragonFight(new EnderDragonFight(dimension, dimension.getSeed(), EnderDragonFight.Data.DEFAULT));
+        if (BuiltinDimensionTypes.END_EFFECTS.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
+            dimension.setDragonFight(new EndDragonFight(dimension, dimension.getSeed(), EndDragonFight.Data.DEFAULT));
         }
     }
 
-    private static @NotNull DimensionOptions makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static @NotNull LevelStem makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         if (runtimeDimensionDescriptor.worldPresetType != null) {
             return makeDimensionOptionsWithWorldPreset(runtimeDimensionDescriptor);
         } else {
@@ -107,16 +107,16 @@ public class RuntimeDimensionMaker {
         }
     }
 
-    private static @NotNull DimensionOptions makeDimensionOptionsWithWorldPreset(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
-        Registry<WorldPreset> worldPresetRegistry = RegistryHelper.getRegistry(RegistryKeys.WORLD_PRESET);
+    private static @NotNull LevelStem makeDimensionOptionsWithWorldPreset(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        Registry<WorldPreset> worldPresetRegistry = RegistryHelper.getRegistry(Registries.WORLD_PRESET);
         assert runtimeDimensionDescriptor.worldPresetType != null;
-        RegistryKey<WorldPreset> worldPresetKey = runtimeDimensionDescriptor.worldPresetType.toWorldPresetKey();
-        WorldPreset worldPreset = worldPresetRegistry.get(worldPresetKey);
+        ResourceKey<WorldPreset> worldPresetKey = runtimeDimensionDescriptor.worldPresetType.toWorldPresetKey();
+        WorldPreset worldPreset = worldPresetRegistry.getValue(worldPresetKey);
         if (worldPreset == null) {
             throw new RuntimeException("Failed to make DimensionOptions for dimension %s, the WorldPreset didn't existed in the registry.".formatted(runtimeDimensionDescriptor.dimension));
         }
 
-        Optional<DimensionOptions> overworldDimensionOptionsOptional = worldPreset.getOverworld();
+        Optional<LevelStem> overworldDimensionOptionsOptional = worldPreset.overworld();
         if (overworldDimensionOptionsOptional.isEmpty()) {
             throw new RuntimeException("Failed to make DimensionOptions for dimension %s, the WorldPreset#getOverworld() returns null.".formatted(runtimeDimensionDescriptor.dimension));
         }
@@ -124,13 +124,13 @@ public class RuntimeDimensionMaker {
         return overworldDimensionOptionsOptional.get();
     }
 
-    private static @NotNull DimensionOptions makeDimensionOptionsWithCustomization(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static @NotNull LevelStem makeDimensionOptionsWithCustomization(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         /* Get an existing dimension options from registry. */
-        RegistryEntry<DimensionType> dimensionTypeEntry = makeDimensionTypeEntry(runtimeDimensionDescriptor);
+        Holder<DimensionType> dimensionTypeEntry = makeDimensionTypeEntry(runtimeDimensionDescriptor);
         ChunkGenerator chunkGenerator = makeChunkGenerator(runtimeDimensionDescriptor);
 
         // NOTE: Make a new DimensionOptions instance. (One DimensionOptions instance can only be used by a ServerWorld instance)
-        return new DimensionOptions(dimensionTypeEntry, chunkGenerator);
+        return new LevelStem(dimensionTypeEntry, chunkGenerator);
     }
 
     private static @NotNull ChunkGenerator makeChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
@@ -146,9 +146,9 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
-        Registry<DimensionOptions> dimensionRegistry = RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
-        @Nullable DimensionOptions existedDimensionOptions = dimensionRegistry.get(dimensionTypeIdentifier);
+        Registry<LevelStem> dimensionRegistry = RegistryHelper.getRegistry(Registries.LEVEL_STEM);
+        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
+        @Nullable LevelStem existedDimensionOptions = dimensionRegistry.getValue(dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
             LogUtil.warn("Failed to make chunk generator for {}, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionDescriptor.getDimension(), dimensionTypeIdentifier);
             return makeFlatChunkGenerator(dimensionDescriptor);
@@ -156,37 +156,38 @@ public class RuntimeDimensionMaker {
 
         // NOTE: Copy the existed chunk generator, to ensure the settings of chunk generator is identical.
         // NOTE: For vanilla Minecraft dimensions, they both use `NoiseChunkGenerator`. However, for mods that adds custom chunk generators, this method will return whatever the chunk generator the mod is using.
-        return existedDimensionOptions.chunkGenerator();
+        return existedDimensionOptions.generator();
     }
 
-    private static @NotNull RegistryEntry<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
-        Optional<RegistryEntry<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.getRegistryEntry(RegistryKeys.DIMENSION_TYPE, dimensionTypeIdentifier);
+    private static @NotNull Holder<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
+        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
+        Optional<Holder<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.getRegistryEntry(Registries.DIMENSION_TYPE, dimensionTypeIdentifier);
         if (dimensionTypeEntryOptional.isEmpty()) {
             throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The Optional<RegistryEntry<DimensionType>> null.".formatted(dimensionTypeIdentifier));
         }
 
-        RegistryEntry<DimensionType> dimensionTypeRegistryEntry = dimensionTypeEntryOptional.get();
-        if (dimensionTypeRegistryEntry.comp_349() == null) {
-            throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The value of RegistryEntry<DimensionType>.comp_349() is null.".formatted(dimensionTypeIdentifier));
+        Holder<DimensionType> dimensionTypeRegistryEntry = dimensionTypeEntryOptional.get();
+        //noinspection ConstantValue
+        if (dimensionTypeRegistryEntry.value() == null) {
+            throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The value of RegistryEntry<DimensionType>.value() is null.".formatted(dimensionTypeIdentifier));
         }
         return dimensionTypeRegistryEntry;
     }
 
-    private static @NotNull FlatChunkGenerator makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
+    private static @NotNull FlatLevelSource makeFlatChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         /* Make the default flat chunk generator config. */
-        RegistryEntryLookup<Biome> biomeLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.BIOME);
-        RegistryEntryLookup<StructureSet> structureSetLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.STRUCTURE_SET);
-        RegistryEntryLookup<PlacedFeature> placedFeatureLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.PLACED_FEATURE);
-        FlatChunkGeneratorConfig flatChunkGeneratorConfig = FlatChunkGeneratorConfig.getDefaultConfig(biomeLookup, structureSetLookup, placedFeatureLookup);
+        HolderGetter<Biome> biomeLookup = RegistryHelper.getRegistryEntryLookup(Registries.BIOME);
+        HolderGetter<StructureSet> structureSetLookup = RegistryHelper.getRegistryEntryLookup(Registries.STRUCTURE_SET);
+        HolderGetter<PlacedFeature> placedFeatureLookup = RegistryHelper.getRegistryEntryLookup(Registries.PLACED_FEATURE);
+        FlatLevelGeneratorSettings flatChunkGeneratorConfig = FlatLevelGeneratorSettings.getDefault(biomeLookup, structureSetLookup, placedFeatureLookup);
 
         /* Make the parsed flat chunk generator config. */
         String presetString = dimensionDescriptor.chunkGeneratorParameters;
         if (presetString != null && !presetString.isBlank()) {
-            RegistryEntryLookup<Block> blockLookup = RegistryHelper.getRegistryEntryLookup(RegistryKeys.BLOCK);
+            HolderGetter<Block> blockLookup = RegistryHelper.getRegistryEntryLookup(Registries.BLOCK);
             flatChunkGeneratorConfig = FlatPresetParser.parsePresetString(blockLookup, biomeLookup, structureSetLookup, placedFeatureLookup, presetString, flatChunkGeneratorConfig);
         }
 
-        return new FlatChunkGenerator(flatChunkGeneratorConfig);
+        return new FlatLevelSource(flatChunkGeneratorConfig);
     }
 }

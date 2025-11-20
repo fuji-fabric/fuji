@@ -13,9 +13,9 @@ import mod.fuji.module.initializer.economy.service.EconomyService;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import java.util.UUID;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     }
 
     @Override
-    public Text name() {
+    public Component name() {
         return TextHelper.getTextByValue(this.gameProfile, this.currencyDescriptor.currencyName);
     }
 
@@ -45,7 +45,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         // NOTE: Make the `account ID` identical to `currency ID`, for simplicity.
         return RegistryHelper.makeIdentifierOrThrow(this.currencyDescriptor.currencyId);
     }
@@ -82,7 +82,7 @@ public class CustomEconomyAccount implements EconomyAccount {
 
         /* Check bounds. */
         boolean isSuccessful;
-        Text feedbackText;
+        Component feedbackText;
 
         if (finalBalance < 0
             || (transactionAmount > 0 && previousBalance > Long.MAX_VALUE - transactionAmount)

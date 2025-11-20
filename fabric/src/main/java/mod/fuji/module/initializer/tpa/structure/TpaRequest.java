@@ -4,7 +4,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.tpa.TpaInitializer;
 import mod.fuji.module.initializer.tpa.service.TpaService;
 import lombok.Data;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Timer;
@@ -13,12 +13,12 @@ import java.util.TimerTask;
 @Data
 public class TpaRequest {
 
-    public final ServerPlayerEntity sender;
-    public final ServerPlayerEntity receiver;
+    public final ServerPlayer sender;
+    public final ServerPlayer receiver;
     public final boolean tpahere;
     public Timer timeoutTimer;
 
-    public TpaRequest(@NotNull ServerPlayerEntity sender, @NotNull ServerPlayerEntity receiver, boolean tpahere) {
+    public TpaRequest(@NotNull ServerPlayer sender, @NotNull ServerPlayer receiver, boolean tpahere) {
         this.sender = sender;
         this.receiver = receiver;
         this.tpahere = tpahere;
@@ -29,11 +29,11 @@ public class TpaRequest {
             || (this.sender.equals(that.receiver) && this.receiver.equals(that.sender));
     }
 
-    public ServerPlayerEntity getTeleportWho() {
+    public ServerPlayer getTeleportWho() {
         return tpahere ? getReceiver() : getSender();
     }
 
-    public ServerPlayerEntity getTeleportTo() {
+    public ServerPlayer getTeleportTo() {
         return tpahere ? getSender() : getReceiver();
     }
 

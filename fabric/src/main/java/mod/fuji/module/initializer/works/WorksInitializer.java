@@ -14,7 +14,7 @@ import mod.fuji.module.initializer.works.config.model.WorksDataModel;
 import mod.fuji.module.initializer.works.gui.ListWorksGui;
 import mod.fuji.module.initializer.works.config.adapter.WorkTypeAdapter;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751825536620L, value = """
     Provides a `bill-board`, for `players` to post and share their works.
@@ -45,7 +45,7 @@ public class WorksInitializer extends ModuleInitializer {
 
     @Document(id = 1751825541296L, value = "Open the works GUI.")
     @CommandNode("works")
-    private static int $works(@CommandSource ServerPlayerEntity player) {
+    private static int $works(@CommandSource ServerPlayer player) {
         new ListWorksGui(player, works.model().works, 0)
             .open();
         return CommandHelper.Return.SUCCESS;

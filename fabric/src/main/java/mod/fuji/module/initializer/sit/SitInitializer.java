@@ -19,25 +19,25 @@ import mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.sit.config.model.SitConfigModel;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SideShapeType;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,19 +53,19 @@ public class SitInitializer extends ModuleInitializer {
 
     public static final BaseConfigurationHandler<SitConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, SitConfigModel.class);
 
-    private static final Vec3d CHAIR_ENTITY_OFFSET =
+    private static final Vec3 CHAIR_ENTITY_OFFSET =
         #if MC_VER <= MC_1_20_1
             new Vec3d(0, -1.175, 0);
         #elif MC_VER > MC_1_20_1
-            new Vec3d(0, -1.375, 0);
+            new Vec3(0, -1.375, 0);
         #endif
 
     private static final Set<Entity> SPAWNED_CHAIR_ENTITY_LIST = new HashSet<>();
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean canSitNow(ServerPlayerEntity player) {
-        return player.isOnGround()
-                && !player.hasVehicle()
+    public static boolean canSitNow(ServerPlayer player) {
+        return player.onGround()
+                && !player.isPassenger()
                 && !player.isSleeping()
                 && !player.isSwimming()
                 && !player.isSpectator();
@@ -74,21 +74,21 @@ public class SitInitializer extends ModuleInitializer {
     @SuppressWarnings("deprecation")
     @Document(id = 1751827002061L, value = "Sit in current position.")
     @CommandNode("sit")
-    private static int $sit(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $sit(@CommandSource @CommandTarget ServerPlayer player) {
         /* Check if we can sit at player's position. */
         // NOTE: Use the stepping block pos, so that we can always get the proper height, even if the player is standing on top of a slab/stair block.
-        BlockPos steppingBlockPos = player.getSteppingPos();
-        ServerWorld serverWorld = PlayerHelper.getServerWorld(player);
+        BlockPos steppingBlockPos = player.getOnPos();
+        ServerLevel serverWorld = PlayerHelper.getServerWorld(player);
         BlockState steppingBlockState = serverWorld.getBlockState(steppingBlockPos);
         if (!canSitNow(player)
             || steppingBlockState.isAir()
-            || steppingBlockState.isLiquid()) {
+            || steppingBlockState.liquid()) {
             TextHelper.sendTextByKey(player, "sit.fail");
             return CommandHelper.Return.FAILURE;
         }
 
         /* Spawn the chair entity, and let the player ride it. */
-        Vec3d lookTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
+        Vec3 lookTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
         Entity chairEntity = spawnChairEntity(serverWorld, steppingBlockPos, lookTarget);
         SPAWNED_CHAIR_ENTITY_LIST.add(chairEntity);
         EntityHelper.rideEntity(player, chairEntity);
@@ -98,21 +98,21 @@ public class SitInitializer extends ModuleInitializer {
 
     @SuppressWarnings({"Convert2MethodRef", "UnnecessaryLocalVariable"})
     private static double computeSensibleLengthY(VoxelShape voxelShape) {
-        double averageLengthY = voxelShape.getBoundingBoxes().stream().mapToDouble(it -> {
+        double averageLengthY = voxelShape.toAabbs().stream().mapToDouble(it -> {
                 #if MC_VER <= MC_1_20_1
                     return it.getYLength();
                 #elif MC_VER > MC_1_20_1
-                    return it.getLengthY();
+                    return it.getYsize();
                 #endif
         }).average().orElse(0);
         return averageLengthY;
     }
 
     @SuppressWarnings("Convert2MethodRef")
-    public static @NotNull Entity spawnChairEntity(@NotNull World world, @NotNull BlockPos targetBlockPos, @Nullable Vec3d lookingTarget) {
+    public static @NotNull Entity spawnChairEntity(@NotNull Level world, @NotNull BlockPos targetBlockPos, @Nullable Vec3 lookingTarget) {
 
         /* Compute the chair entity position. */
-        Vec3d chairEntityPosition =
+        Vec3 chairEntityPosition =
             WorldHelper.toBottomCenterPos(targetBlockPos)
             .add(0, 0.5, 0)
             .add(SitInitializer.CHAIR_ENTITY_OFFSET);
@@ -120,17 +120,17 @@ public class SitInitializer extends ModuleInitializer {
 
         /* Compute the proper height using outline shape. */
         // NOTE: If the block under the chair entity is empty, then the player should not be falling.
-        VoxelShape outlineShape = targetBlockState.getOutlineShape(world, targetBlockPos);
+        VoxelShape outlineShape = targetBlockState.getShape(world, targetBlockPos);
         double averageLengthY = computeSensibleLengthY(outlineShape);
-        if (!Block.isFaceFullSquare(outlineShape, Direction.UP)) {
+        if (!Block.isFaceFull(outlineShape, Direction.UP)) {
             chairEntityPosition = chairEntityPosition.add(0, - (1 - averageLengthY), 0);
         }
 
         /* Make the chair entity using armor stand entity. */
-        ArmorStandEntity chairEntity = new ArmorStandEntity(world, chairEntityPosition.x, chairEntityPosition.y, chairEntityPosition.z) {
+        ArmorStand chairEntity = new ArmorStand(world, chairEntityPosition.x, chairEntityPosition.y, chairEntityPosition.z) {
 
             private boolean hasPassenger = false;
-            private Vec3d dismountOffset = new Vec3d(0, averageLengthY,0);
+            private Vec3 dismountOffset = new Vec3(0, averageLengthY,0);
 
             @Override
             public void addPassenger(Entity passenger) {
@@ -139,12 +139,12 @@ public class SitInitializer extends ModuleInitializer {
             }
 
             @Override
-            public boolean canMoveVoluntarily() {
+            public boolean canSimulateMovement() {
                 return false;
             }
 
             @Override
-            public boolean collidesWithStateAtPos(BlockPos blockPos, BlockState blockState) {
+            public boolean isColliding(BlockPos blockPos, BlockState blockState) {
                 return false;
             }
 
@@ -159,14 +159,14 @@ public class SitInitializer extends ModuleInitializer {
                         .isAir();
             }
 
-            private Vec3d getDismountPosition() {
+            private Vec3 getDismountPosition() {
                 return getChairBlockPos()
-                    .toCenterPos()
+                    .getCenter()
                     .add(dismountOffset);
             }
 
             @Override
-            public Vec3d updatePassengerForDismount(LivingEntity livingEntity) {
+            public Vec3 getDismountLocationForPassenger(LivingEntity livingEntity) {
                 return getDismountPosition();
             }
 
@@ -177,9 +177,9 @@ public class SitInitializer extends ModuleInitializer {
 
                 /* If the chair block is broken, kick the player. */
                 if (isChairBlockBroken()) {
-                    Vec3d dismountPosition = getDismountPosition();
+                    Vec3 dismountPosition = getDismountPosition();
                     // NOTE: If the chair block is broken, the method `updatePassengerForDismount` will not be called. So we have to update the position manually.
-                    entity.refreshPositionAndAngles(dismountPosition.x, dismountPosition.y, dismountPosition.z, entity.getYaw(), entity.getPitch());
+                    entity.snapTo(dismountPosition.x, dismountPosition.y, dismountPosition.z, entity.getYRot(), entity.getXRot());
                     EntityHelper.killEntity(this);
                 }
             }
@@ -187,7 +187,7 @@ public class SitInitializer extends ModuleInitializer {
             @Override
             public void tick() {
                 /* Kill the chair entity, if the player left.  */
-                if (hasPassenger && getPassengerList().isEmpty()) {
+                if (hasPassenger && getPassengers().isEmpty()) {
                     EntityHelper.killEntity(this);
                 }
 
@@ -199,8 +199,8 @@ public class SitInitializer extends ModuleInitializer {
                 /* Sync the player's leg position. */
                 Entity passenger = getFirstPassenger();
                 if (passenger != null) {
-                    this.setYaw(passenger.getYaw());
-                    this.setPitch(passenger.getPitch());
+                    this.setYRot(passenger.getYRot());
+                    this.setXRot(passenger.getXRot());
                 }
 
                 /* Call super to handle default logic. */
@@ -211,15 +211,15 @@ public class SitInitializer extends ModuleInitializer {
 
         /* Set the properties of the chair entity. */
         if (lookingTarget != null) {
-            chairEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookingTarget.subtract(0, lookingTarget.getY() * 2, 0));
+            chairEntity.lookAt(EntityAnchorArgument.Anchor.EYES, lookingTarget.subtract(0, lookingTarget.y() * 2, 0));
         }
         chairEntity.setInvisible(true);
         chairEntity.setInvulnerable(true);
-        chairEntity.setCustomName(Text.literal("FUJI-SIT"));
+        chairEntity.setCustomName(Component.literal("FUJI-SIT"));
         chairEntity.setNoGravity(true);
 
         /* Spawn the chair entity. */
-        world.spawnEntity(chairEntity);
+        world.addFreshEntity(chairEntity);
         return chairEntity;
     }
 
@@ -235,36 +235,36 @@ public class SitInitializer extends ModuleInitializer {
     @EventConsumer
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
 
         /* Verify. */
         var config = SitInitializer.config.model();
         if (!config.right_click_to_sit.enable) return;
-        if (!config.right_click_to_sit.allow_sneaking_to_sit && player.isSneaking()) return;
+        if (!config.right_click_to_sit.allow_sneaking_to_sit && player.isShiftKeyDown()) return;
         if (!SitInitializer.canSitNow(player)) return;
-        if (config.right_click_to_sit.require_empty_hand_to_sit && !player.getMainHandStack().isEmpty()) return;
+        if (config.right_click_to_sit.require_empty_hand_to_sit && !player.getMainHandItem().isEmpty()) return;
 
         // Verify surrounding blocks.
-        World world = event.getWorld();
+        Level world = event.getWorld();
         BlockHitResult blockHitResult = event.getBlockHitResult();
         BlockPos hitBlockPos = blockHitResult.getBlockPos();
         BlockState hitBlockState = world.getBlockState(hitBlockPos);
         Block hitBlock = hitBlockState.getBlock();
-        if (config.right_click_to_sit.require_no_opaque_block_above_to_sit && world.getBlockState(hitBlockPos.add(0, 1, 0)).isOpaque()) return;
+        if (config.right_click_to_sit.require_no_opaque_block_above_to_sit && world.getBlockState(hitBlockPos.offset(0, 1, 0)).canOcclude()) return;
 
         // Only allow to right-click to sit on stair block or slab block.
-        if (!(hitBlock instanceof StairsBlock) && !(hitBlock instanceof SlabBlock)) return;
+        if (!(hitBlock instanceof StairBlock) && !(hitBlock instanceof SlabBlock)) return;
 
         // The face of chair must be up.
-        if (hitBlockState.isSideSolid(world, hitBlockPos, Direction.UP, SideShapeType.RIGID)) return;
+        if (hitBlockState.isFaceSturdy(world, hitBlockPos, Direction.UP, SupportType.RIGID)) return;
 
         // Verify max distance to sit.
         final double maxDistanceToSit = config.right_click_to_sit.max_distance_to_sit;
-        double givenDist = hitBlockPos.getSquaredDistance(player.getBlockPos());
+        double givenDist = hitBlockPos.distSqr(player.blockPosition());
         if (maxDistanceToSit > 0 && givenDist > maxDistanceToSit * maxDistanceToSit) return;
 
         /* Spawn the chair entity and ride it. */
-        Vec3d lookingTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
+        Vec3 lookingTarget = EntityHelper.getPos(player).add(0.5, 0, 0.5);
         Entity chairEntity = SitInitializer.spawnChairEntity(world, hitBlockPos, lookingTarget);
 
         // Dismount the player if there is another vehicle.
@@ -275,7 +275,7 @@ public class SitInitializer extends ModuleInitializer {
 
         // Ride the chair entity.
         EntityHelper.rideEntity(player, chairEntity);
-        event.getCallbackInfoReturnable().setReturnValue(ActionResult.SUCCESS);
+        event.getCallbackInfoReturnable().setReturnValue(InteractionResult.SUCCESS);
     }
 
 }

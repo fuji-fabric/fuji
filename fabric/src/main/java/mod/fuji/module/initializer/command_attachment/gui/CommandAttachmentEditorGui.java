@@ -19,11 +19,11 @@ import mod.fuji.module.initializer.command_attachment.structure.attachment_entry
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
 
     private final CommandAttachmentDataNode commandAttachmentDataNode;
 
-    public CommandAttachmentEditorGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex, CommandAttachmentDataNode commandAttachmentDataNode) {
+    public CommandAttachmentEditorGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex, CommandAttachmentDataNode commandAttachmentDataNode) {
         super(parent, player, TextHelper.getTextByKey(player, "command_attachment.editor.gui.title", commandAttachmentDataNode.getId()), entities, pageIndex);
         this.commandAttachmentDataNode = commandAttachmentDataNode;
 
@@ -41,12 +41,12 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
     }
 
     @Override
-    protected @NotNull PagedGui<BaseCommandAttachmentEntry> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseCommandAttachmentEntry> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<BaseCommandAttachmentEntry> entities, int pageIndex) {
         return new CommandAttachmentEditorGui(parent, player, entities, pageIndex, this.commandAttachmentDataNode);
     }
 
     @SuppressWarnings("OptionalIsPresent")
-    private static Optional<String> getTargetUuidForEditor(@NotNull ServerPlayerEntity player) {
+    private static Optional<String> getTargetUuidForEditor(@NotNull ServerPlayer player) {
         /* Try to get UUID from looking at entity. */
         Optional<String> lookingAtEntityUUID = WorldHelper.Raycast
             .getLookingAtEntity(player)
@@ -57,7 +57,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         }
 
         /* Try to get UUID from looking at block. */
-        ServerWorld world = EntityHelper.getServerWorld(player);
+        ServerLevel world = EntityHelper.getServerWorld(player);
         Optional<String> lookingAtBlockUUID = WorldHelper.Raycast
             .getLookingAtBlock(player)
             .map(block -> UuidHelper.getAttachedUuid(world, block))
@@ -67,7 +67,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         }
 
         /* Try to get UUID from main hand item. */
-        ItemStack mainHandStack = player.getMainHandStack();
+        ItemStack mainHandStack = player.getMainHandItem();
         Optional<String> mainHandItemUUID = UuidHelper.getAttachedUuid(mainHandStack);
         if (mainHandItemUUID.isPresent()) {
             return mainHandItemUUID;
@@ -77,12 +77,12 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         return Optional.empty();
     }
 
-    public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayerEntity player, @NotNull CommandAttachmentDataNode dataNode) {
+    public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayer player, @NotNull CommandAttachmentDataNode dataNode) {
         List<BaseCommandAttachmentEntry> entities = dataNode.getAttachments().getEntries();
         return new CommandAttachmentEditorGui(null, player, entities, 0, dataNode);
     }
 
-    public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayerEntity player) {
+    public static @NotNull CommandAttachmentEditorGui make(@NotNull ServerPlayer player) {
         return getTargetUuidForEditor(player)
             .flatMap(CommandAttachmentService::findAttachmentDataNode)
             .map(dataNode -> make(player, dataNode))

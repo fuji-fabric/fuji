@@ -7,24 +7,24 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.SimpleRegistry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
 
-public class FilteredRegistry<T> extends SimpleRegistry<T> {
+public class FilteredRegistry<T> extends MappedRegistry<T> {
 
     private final @NotNull Registry<T> source;
     private final Predicate<T> filter;
 
     public FilteredRegistry(@NotNull Registry<T> source, Predicate<T> filter) {
-        super(source.getKey(), source.getLifecycle());
+        super(source.key(), source.registryLifecycle());
         this.source = source;
         this.filter = filter;
     }
@@ -39,8 +39,8 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
      *
      */
     @Override
-    public Stream<RegistryEntry.Reference<T>> streamEntries() {
-        return this.source.streamEntries().filter((e) -> this.filter.test(e.value));
+    public Stream<Holder.Reference<T>> listElements() {
+        return this.source.listElements().filter((e) -> this.filter.test(e.value));
     }
 
 
@@ -55,24 +55,24 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
 
     @Nullable
     @Override
-    public Identifier getId(T value) {
-        return filter.test(value) ? this.source.getId(value) : null;
+    public ResourceLocation getKey(T value) {
+        return filter.test(value) ? this.source.getKey(value) : null;
     }
 
     @Override
-    public Optional<RegistryKey<T>> getKey(T entry) {
-        return filter.test(entry) ? this.source.getKey(entry) : Optional.empty();
+    public Optional<ResourceKey<T>> getResourceKey(T entry) {
+        return filter.test(entry) ? this.source.getResourceKey(entry) : Optional.empty();
     }
 
     @Override
-    public int getRawId(@Nullable T value) {
-        return filter.test(value) ? this.source.getRawId(value) : -1;
+    public int getId(@Nullable T value) {
+        return filter.test(value) ? this.source.getId(value) : -1;
     }
 
     @Nullable
     @Override
-    public T get(int index) {
-        return this.source.get(index);
+    public T byId(int index) {
+        return this.source.byId(index);
     }
 
     @Override
@@ -82,14 +82,14 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
 
     @Nullable
     @Override
-    public T get(@Nullable RegistryKey<T> key) {
-        return this.source.get(key);
+    public T getValue(@Nullable ResourceKey<T> key) {
+        return this.source.getValue(key);
     }
 
     @Nullable
     @Override
-    public T get(@Nullable Identifier id) {
-        return this.source.get(id);
+    public T getValue(@Nullable ResourceLocation id) {
+        return this.source.getValue(id);
     }
 
     #if MC_VER <= MC_1_20_4
@@ -100,19 +100,19 @@ public class FilteredRegistry<T> extends SimpleRegistry<T> {
     #endif
 
     @Override
-    public Lifecycle getLifecycle() {
-        return this.source.getLifecycle();
+    public Lifecycle registryLifecycle() {
+        return this.source.registryLifecycle();
     }
 
     @Override
-    public Set<Identifier> getIds() {
-        return this.source.getIds();
+    public Set<ResourceLocation> keySet() {
+        return this.source.keySet();
     }
 
     @Override
-    public Set<Map.Entry<RegistryKey<T>, T>> getEntrySet() {
-        Set<Map.Entry<RegistryKey<T>, T>> set = new HashSet<>();
-        for (Map.Entry<RegistryKey<T>, T> e : this.source.getEntrySet()) {
+    public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
+        Set<Map.Entry<ResourceKey<T>, T>> set = new HashSet<>();
+        for (Map.Entry<ResourceKey<T>, T> e : this.source.entrySet()) {
             try {
                 T value = e.getValue();
                 if (value == null) {

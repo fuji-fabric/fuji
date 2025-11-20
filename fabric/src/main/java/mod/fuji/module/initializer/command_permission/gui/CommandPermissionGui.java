@@ -9,8 +9,8 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.command_permission.CommandPermissionInitializer;
 import mod.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import mod.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper> {
 
-    public CommandPermissionGui(ServerPlayerEntity player, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
+    public CommandPermissionGui(ServerPlayer player, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "command_permission.list.gui.title"), entities, pageIndex);
 
         GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeHelpButton(player)
@@ -26,7 +26,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
     }
 
     @Override
-    protected @NotNull PagedGui<CommandNodePermissionWrapper> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
+    protected @NotNull PagedGui<CommandNodePermissionWrapper> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<CommandNodePermissionWrapper> entities, int pageIndex) {
         return new CommandPermissionGui(player, entities, pageIndex);
     }
 
@@ -36,7 +36,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
 
         return new GuiElementBuilder()
             .setItem(GuiHelper.Material.fromBooleanValue(commandNodeWrapped))
-            .setName(Text.literal(entity.getPath()))
+            .setName(Component.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
                 String commandPathString = entity.getPath();
                 String commandPermissionString = CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPathString);

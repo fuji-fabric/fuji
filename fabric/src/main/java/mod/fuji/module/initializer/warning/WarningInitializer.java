@@ -29,8 +29,8 @@ import mod.fuji.module.initializer.warning.service.WarningService;
 import mod.fuji.module.initializer.warning.structure.PlayerWarnings;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751827033037L, value = """
@@ -84,7 +84,7 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827034962L, value = "Open the warning GUI.")
     @CommandNode("warning")
     @CommandRequirement(level = 4)
-    private static int $warningRoot(@CommandSource ServerPlayerEntity player) {
+    private static int $warningRoot(@CommandSource ServerPlayer player) {
         $warningGui(player);
         return CommandHelper.Return.SUCCESS;
     }
@@ -92,7 +92,7 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827036716L, value = "Open the warning GUI.")
     @CommandNode("warning gui")
     @CommandRequirement(level = 4)
-    private static int $warningGui(@CommandSource ServerPlayerEntity player) {
+    private static int $warningGui(@CommandSource ServerPlayer player) {
         List<String> offlinePlayerNames = PlayerHelper.Cache.getOfflinePlayerNames();
         new WarningGui(null, player, offlinePlayerNames, 0)
             .open();
@@ -102,15 +102,15 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827038512L, value = "Create a new warning for the player.")
     @CommandNode("warning create")
     @CommandRequirement(level = 4)
-    private static int $createWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, GreedyString warning) {
+    private static int $createWarning(@CommandSource CommandSourceStack source, OfflinePlayerName targetPlayer, GreedyString warning) {
         return $createTemporalWarning(source, targetPlayer, new Duration(null), warning);
     }
 
     @Document(id = 1754620576300L, value = "Create a new warning with expiration for the player.")
     @CommandNode("warning create-temp")
     @CommandRequirement(level = 4)
-    private static int $createTemporalWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, Duration duration, GreedyString warning) {
-        String creatorName = source.getName();
+    private static int $createTemporalWarning(@CommandSource CommandSourceStack source, OfflinePlayerName targetPlayer, Duration duration, GreedyString warning) {
+        String creatorName = source.getTextName();
         String targetPlayerName = targetPlayer.getValue();
         String warningDescription = warning.getValue();
 
@@ -128,7 +128,7 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827040456L, value = "List the warnings of a player.")
     @CommandNode("warning list")
     @CommandRequirement(level = 4)
-    private static int $listWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer) {
+    private static int $listWarning(@CommandSource CommandSourceStack source, OfflinePlayerName targetPlayer) {
         String targetPlayerName = targetPlayer.getValue();
         PlayerWarnings playerWarnings = WarningService.getPlayerWarnings(targetPlayerName);
         TextHelper.sendTextByKey(source, "warning.list.message", targetPlayerName, playerWarnings.getWarnings().size());
@@ -147,7 +147,7 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827043371L, value = "Clear the warnings of a player.")
     @CommandNode("warning clear")
     @CommandRequirement(level = 4)
-    private static int $clearWarning(@CommandSource ServerCommandSource source, OfflinePlayerName targetPlayer, Optional<Boolean> confirm) {
+    private static int $clearWarning(@CommandSource CommandSourceStack source, OfflinePlayerName targetPlayer, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             String targetPlayerName = targetPlayer.getValue();
             int originalSize = WarningService.clearWarnings(targetPlayerName);
@@ -160,7 +160,7 @@ public class WarningInitializer extends ModuleInitializer {
     @Document(id = 1751827045167L, value = "Clear all warnings for all players.")
     @CommandNode("warning clear-all")
     @CommandRequirement(level = 4)
-    private static int $clearAllWarnings(@CommandSource ServerCommandSource source, Optional<Boolean> confirm) {
+    private static int $clearAllWarnings(@CommandSource CommandSourceStack source, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             WarningService.clearAllWarnings();
 
@@ -171,7 +171,7 @@ public class WarningInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void notifyOnPlayerJoined(PlayerJoinedEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         WarningService.processNotify(player, true);
         WarningService.processWarningReminder(player);
     }

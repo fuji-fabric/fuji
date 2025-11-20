@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -38,7 +38,7 @@ public class CustomEconomyProvider implements EconomyProvider {
     public static CustomEconomyProvider INSTANCE = new CustomEconomyProvider();
 
     public static final double SUPPORTED_PRECISE_FACTOR = 100.0;
-    public static Map<Identifier, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
+    public static Map<ResourceLocation, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
 
     public static void initializeCustomEconomyProvider() {
         // no-op
@@ -50,14 +50,14 @@ public class CustomEconomyProvider implements EconomyProvider {
         registerDefinedFujiCurrencies();
     }
 
-    public static CustomEconomyCurrency getCustomEconomyCurrency(Identifier currencyId) {
+    public static CustomEconomyCurrency getCustomEconomyCurrency(ResourceLocation currencyId) {
         return CURRENCY_ID_2_CURRENCY.get(currencyId);
     }
 
     @Override
-    public Text name() {
-        return Text.literal("FUJI_ECONOMY_PROVIDER")
-            .fillStyle(Style.EMPTY
+    public Component name() {
+        return Component.literal("FUJI_ECONOMY_PROVIDER")
+            .withStyle(Style.EMPTY
                 .withColor(TextHelper.PRIMARY_COLOR_INT));
     }
 
@@ -68,7 +68,7 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     private static void registerDefinedFujiCurrencies() {
         EconomyInitializer.config.model().currencies.forEach(descriptor -> {
-            Identifier currencyId = RegistryHelper.makeIdentifierOrThrow(descriptor.currencyId);
+            ResourceLocation currencyId = RegistryHelper.makeIdentifierOrThrow(descriptor.currencyId);
             RegistryHelper.ensureIdentifierNamespaceIsFuji(currencyId);
 
             CustomEconomyCurrency customEconomyCurrency = new CustomEconomyCurrency(descriptor);
@@ -112,7 +112,7 @@ public class CustomEconomyProvider implements EconomyProvider {
     public @Nullable EconomyCurrency getCurrency(MinecraftServer server, String pathOfCurrencyId) {
         // NOTE: The getCurrency() method only use the `path` component of `identifier` for `currency`.
 
-        Optional<Map.Entry<Identifier, CustomEconomyCurrency>> currencyOpt =
+        Optional<Map.Entry<ResourceLocation, CustomEconomyCurrency>> currencyOpt =
             CURRENCY_ID_2_CURRENCY
                 .entrySet()
                 .stream()

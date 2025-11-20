@@ -11,40 +11,40 @@ import mod.fuji.module.initializer.economy.service.EconomyService;
 import mod.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
 
-    private final Identifier currencyId;
+    private final ResourceLocation currencyId;
 
-    public BalanceTopGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Identifier currencyId, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+    public BalanceTopGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, ResourceLocation currencyId, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "economy.balance.top.gui.title", currencyId), entities, pageIndex);
         this.currencyId = currencyId;
     }
 
     @Override
-    protected @NotNull PagedGui<GameProfileAndEconomyAccount> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
+    protected @NotNull PagedGui<GameProfileAndEconomyAccount> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<GameProfileAndEconomyAccount> entities, int pageIndex) {
         return new BalanceTopGui(parent, player, this.currencyId, entities, pageIndex);
     }
 
-    public static BalanceTopGui make(ServerPlayerEntity player, Identifier currencyId) {
+    public static BalanceTopGui make(ServerPlayer player, ResourceLocation currencyId) {
         List<GameProfileAndEconomyAccount> entities = EconomyService.makeBalanceTopEntities(player, currencyId);
         return new BalanceTopGui(null, player, currencyId, entities, 0);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull GameProfileAndEconomyAccount entity) {
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.getString(entity.economyAccount.formattedBalance())));
 
         String name = AuthlibHelper.getName(entity.gameProfile);
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
-            .setName(Text.literal(name))
+            .setName(Component.literal(name))
             .setLore(lore);
 
         return builder.build();

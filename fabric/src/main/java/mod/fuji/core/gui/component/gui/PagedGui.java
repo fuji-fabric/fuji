@@ -9,12 +9,11 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +28,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     @Getter
     private final List<T> entities;
     private final int pageIndex;
-    private final Text prefixTitle;
+    private final Component prefixTitle;
     @Getter
     protected boolean streamMessageIntoToast = true;
 
@@ -37,8 +36,8 @@ public abstract class PagedGui<T> extends SimpleGui {
 
     private boolean openParentGuiWhenClose = true;
 
-    public PagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull Text prefixTitle, @NotNull List<T> entities, int pageIndex) {
-        super(ScreenHandlerType.GENERIC_9X6, player, false);
+    public PagedGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull Component prefixTitle, @NotNull List<T> entities, int pageIndex) {
+        super(MenuType.GENERIC_9x6, player, false);
         this.parent = parent;
         this.prefixTitle = prefixTitle;
         this.pageIndex = pageIndex;
@@ -53,7 +52,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         return super.open();
     }
 
-    protected abstract @NotNull PagedGui<T> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<T> entities, int pageIndex);
+    protected abstract @NotNull PagedGui<T> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<T> entities, int pageIndex);
 
     private void drawNavigator(int pageIndex) {
         GuiHelper.Placer.fillLastLineIfEmpty(this, GuiHelper.Button.makeSlotPlaceholderButton());
@@ -108,7 +107,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     })
     public @NotNull PagedGui<T> linkCurrentGuiAndSearch(@NotNull String keywords) {
         // NOTE: When search with keywords, we should remember previous GUI.
-        Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
+        Component resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", keywords);
         List<T> resultEntities = filterEntities(keywords);
 
         /* Skip the linking, if the none entity is filtered. */
@@ -127,7 +126,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     })
     public @NotNull PagedGui<T> skipCurrentGuiAndSearch(@NotNull Predicate<T> predicate) {
         // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, we return an intermediate GUI, someone else wil take bits from it.
-        Text resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
+        Component resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
         List<T> resultEntities = entities.stream()
             .filter(predicate)
             .toList();
@@ -184,7 +183,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     }
 
     private void drawTitle() {
-        MutableText formatted = this.prefixTitle.copy().append(TextHelper.getTextByKey(getPlayer(), "gui.page.title", this.getCurrentPageNumber(), this.getMaxPageNumber()));
+        MutableComponent formatted = this.prefixTitle.copy().append(TextHelper.getTextByKey(getPlayer(), "gui.page.title", this.getCurrentPageNumber(), this.getMaxPageNumber()));
         this.setTitle(formatted);
     }
 
@@ -245,11 +244,11 @@ public abstract class PagedGui<T> extends SimpleGui {
     })
     @SuppressWarnings("UnstableApiUsage")
     @Override
-    public boolean click(int index, ClickType type, SlotActionType action) {
+    public boolean click(int index, ClickType type, net.minecraft.world.inventory.ClickType action) {
         GuiElementInterface element = super.getSlot(index);
 
         /* Prevent the `gui callback` invoke if the `F` key is pressed. */
-        if (action.equals(SlotActionType.SWAP)) {
+        if (action.equals(net.minecraft.world.inventory.ClickType.SWAP)) {
             this.onSearchButtonClicked();
             return super.onClick(index, type, action, element);
         }

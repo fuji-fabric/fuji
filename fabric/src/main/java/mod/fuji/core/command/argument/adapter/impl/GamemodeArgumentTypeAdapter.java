@@ -6,9 +6,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.GameModeArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.world.GameMode;
+import net.minecraft.commands.arguments.GameModeArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.world.level.GameType;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -17,18 +17,18 @@ public class GamemodeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return GameModeArgumentType.gameMode();
+        return GameModeArgument.gameMode();
     }
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return GameModeArgumentType.getGameMode(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return GameModeArgument.getGameMode(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(GameMode.class);
+        return List.of(GameType.class);
     }
 
     @Override

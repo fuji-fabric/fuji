@@ -7,15 +7,15 @@ import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.fuji.structure.IdentifierDescriptor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryLoader;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,20 +28,20 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
 
     private final boolean isMetaRegistry;
 
-    public RegistriesInspectionGui(@Nullable SimpleGui parent, ServerPlayerEntity player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
+    public RegistriesInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, boolean isMetaRegistry, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "registry.list.gui.title"), entities, pageIndex);
         this.isMetaRegistry = isMetaRegistry;
     }
 
-    public static RegistriesInspectionGui inspectAll(ServerPlayerEntity player) {
+    public static RegistriesInspectionGui inspectAll(ServerPlayer player) {
         /* Get the identifiers of meta registries. */
-        List<Identifier> staticRegistries = Registries.REGISTRIES.getKeys()
+        List<ResourceLocation> staticRegistries = BuiltInRegistries.REGISTRY.registryKeySet()
             .stream()
-            .map(RegistryKey::getValue)
+            .map(ResourceKey::location)
             .toList();
-        List<Identifier> dynamicRegistries = RegistryLoader.DYNAMIC_REGISTRIES
+        List<ResourceLocation> dynamicRegistries = RegistryDataLoader.WORLDGEN_REGISTRIES
             .stream()
-            .map(it -> it.comp_985().getValue())
+            .map(it -> it.key().location())
             .toList();
 
         /* Map it to descriptor. */
@@ -54,20 +54,20 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
     }
 
     @Override
-    protected @NotNull PagedGui<IdentifierDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<IdentifierDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<IdentifierDescriptor> entities, int pageIndex) {
         return new RegistriesInspectionGui(parent, player, this.isMetaRegistry, entities, pageIndex);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull IdentifierDescriptor entity) {
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic()));
         if (this.isMetaRegistry) {
             lore.add(TextHelper.getTextByKey(getPlayer(), "prompt.click.see_inside"));
         }
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
-            .setName(Text.of(entity.getIdentifier().toString()))
+            .setName(Component.nullToEmpty(entity.getIdentifier().toString()))
             .setItem(getItem(entity))
             .setLore(lore)
             .setCallback(openRegistry(entity));
@@ -92,11 +92,11 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             if (!this.isMetaRegistry) return;
 
             /* try to get the registry from static registries */
-            Object o = Registries.REGISTRIES.get(entity.getIdentifier());
+            Object o = BuiltInRegistries.REGISTRY.getValue(entity.getIdentifier());
             if (o instanceof Registry<?> r) {
-                List<IdentifierDescriptor> ids = r.getKeys()
+                List<IdentifierDescriptor> ids = r.registryKeySet()
                     .stream()
-                    .map(RegistryKey::getValue)
+                    .map(ResourceKey::location)
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, false))
                     .toList();
@@ -106,15 +106,15 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             }
 
             /* try to get the registry from dynamic registries */
-            Optional<RegistryLoader.Entry<?>> first = RegistryLoader.DYNAMIC_REGISTRIES
+            Optional<RegistryDataLoader.RegistryData<?>> first = RegistryDataLoader.WORLDGEN_REGISTRIES
                 .stream()
-                .filter(it -> RegistryHelper.getIdAsString(it.comp_985())
+                .filter(it -> RegistryHelper.getIdAsString(it.key())
                     .equals(entity.getIdentifier().toString()))
                 .findFirst();
             if (first.isPresent()) {
                 List<IdentifierDescriptor> ids = RegistryHelper
-                    .getRegistry(first.get().comp_985())
-                    .getIds()
+                    .getRegistry(first.get().key())
+                    .keySet()
                     .stream()
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, true))

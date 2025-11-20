@@ -7,7 +7,7 @@ import mod.fuji.core.event.message.player.PlayerDamageEvent;
 import mod.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import java.util.Optional;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class BossBarManager {
 
     @EventConsumer
     private static void processOnPlayerDamagedEvent(PlayerDamageEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         tickets
             .stream()
             .filter(it -> it instanceof InterruptibleTicket interruptibleTicket
@@ -76,8 +76,8 @@ public class BossBarManager {
             // ensure visibility
             ticket.getBossBar().setVisible(true);
 
-            for (ServerPlayerEntity player : ticket.getPlayers()) {
-                if (player.isDisconnected()) {
+            for (ServerPlayer player : ticket.getPlayers()) {
+                if (player.hasDisconnected()) {
                     ticket.onPlayerDisconnected(player);
                     ticket.removePlayer(player);
                 }
@@ -115,7 +115,7 @@ public class BossBarManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends BossBarTicket> Optional<T> findBossbarTicket(@NotNull Class<T> ticketType, @NotNull ServerPlayerEntity player) {
+    public static <T extends BossBarTicket> Optional<T> findBossbarTicket(@NotNull Class<T> ticketType, @NotNull ServerPlayer player) {
         return getTickets()
             .stream()
             .filter(it -> {

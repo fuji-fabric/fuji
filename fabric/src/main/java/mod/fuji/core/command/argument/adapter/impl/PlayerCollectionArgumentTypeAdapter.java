@@ -7,8 +7,8 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.PlayerCollection;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerCollectionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return EntityArgumentType.players();
+        return EntityArgument.players();
     }
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new PlayerCollection(EntityArgumentType.getPlayers(context, commandArgument.getArgumentName()));
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return new PlayerCollection(EntityArgument.getPlayers(context, commandArgument.getArgumentName()));
     }
 
     @Override

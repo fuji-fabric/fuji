@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class SkinService {
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    public static int changeSkin(@NotNull ServerPlayerEntity player, @NotNull Supplier<Property> skinSupplier) {
+    public static int changeSkin(@NotNull ServerPlayer player, @NotNull Supplier<Property> skinSupplier) {
         changeSkinAsync(player.getGameProfile(), skinSupplier)
             .thenAccept(success -> {
 
@@ -142,7 +142,7 @@ public class SkinService {
 
             /* Check whether the new skin is identical to the old one. */
                 GameProfile gameProfile = pair.left();
-            @Nullable ServerPlayerEntity player = PlayerHelper.Lookup
+            @Nullable ServerPlayer player = PlayerHelper.Lookup
                 .getOnlinePlayerByUuid(AuthlibHelper.getId(gameProfile))
                 .orElse(null);
             if (player == null) {

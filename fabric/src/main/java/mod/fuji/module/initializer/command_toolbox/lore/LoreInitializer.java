@@ -10,8 +10,8 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class LoreInitializer extends ModuleInitializer {
 
     @Document(id =1751825438214L, value = "Clear all lore in item.")
     @CommandNode("unset")
-    private static int $unset(@CommandSource ServerCommandSource source) {
+    private static int $unset(@CommandSource CommandSourceStack source) {
         return CommandHelper.Pattern.withItemInMainHandCommand(source, (player, stack) -> {
             ItemStackHelper.Lore.setLore(stack, List.of());
             return CommandHelper.Return.SUCCESS;
@@ -36,9 +36,9 @@ public class LoreInitializer extends ModuleInitializer {
 
     @Document(id = 1751825447182L, value = "Set lore for item.")
     @CommandNode("set")
-    private static int $set(@CommandSource ServerCommandSource source, GreedyString lore) {
+    private static int $set(@CommandSource CommandSourceStack source, GreedyString lore) {
         return CommandHelper.Pattern.withItemInMainHandCommand(source, (player, stack) -> {
-            List<Text> texts = TextHelper.getTextListByValue(player, lore.getValue());
+            List<Component> texts = TextHelper.getTextListByValue(player, lore.getValue());
             ItemStackHelper.Lore.setLore(stack, texts);
             return CommandHelper.Return.SUCCESS;
         });

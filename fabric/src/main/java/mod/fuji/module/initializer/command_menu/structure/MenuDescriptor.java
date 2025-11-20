@@ -10,8 +10,8 @@ import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,23 +50,23 @@ public class MenuDescriptor {
         """)
     public List<SlotDescriptor> slots;
 
-    private ScreenHandlerType<?> getScreenHandlerType() {
+    private MenuType<?> getScreenHandlerType() {
         return GuiHelper.Handler.getGenericContainerType(this.lines);
     }
 
-    public SimpleGui build(ServerPlayerEntity viewingPlayer) {
+    public SimpleGui build(ServerPlayer viewingPlayer) {
         /* Make the menu GUI. */
         SimpleGui menuGui = new SimpleGui(this.getScreenHandlerType(), viewingPlayer, false) {
             @Override
             public void onOpen() {
                 super.onOpen();
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_open_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), commands.on_open_commands);
             }
 
             @Override
             public void onClose() {
                 super.onClose();
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.getCommandSource()), commands.on_closed_commands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), commands.on_closed_commands);
             }
         };
         menuGui.setTitle(TextHelper.getTextByValue(viewingPlayer, this.title));

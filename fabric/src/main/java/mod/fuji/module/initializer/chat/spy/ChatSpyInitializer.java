@@ -18,11 +18,11 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.spy.config.model.ChatSpyConfigModel;
 import mod.fuji.module.initializer.chat.spy.config.model.ChatSpyDataModel;
 import java.util.function.Function;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826708198L, value = """
@@ -49,7 +49,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
 
     @Document(id = 1751826711342L, value = "Enable/disable the chat spy mode for you.")
     @CommandNode("toggle")
-    private static int $toggle(@CommandSource ServerPlayerEntity player) {
+    private static int $toggle(@CommandSource ServerPlayer player) {
         withPlayerOptions(player, true, (playerOptions) -> {
             playerOptions.setEnabled(!playerOptions.isEnabled());
             TextHelper.sendTextByKey(player, playerOptions.isEnabled() ? "on" : "off");
@@ -58,7 +58,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static <T> T withPlayerOptions(@NotNull ServerPlayerEntity player, boolean writeStorage, @NotNull Function<ChatSpyDataModel.PerPlayerOptions, T> function) {
+    private static <T> T withPlayerOptions(@NotNull ServerPlayer player, boolean writeStorage, @NotNull Function<ChatSpyDataModel.PerPlayerOptions, T> function) {
         String key = PlayerHelper.getPlayerName(player);
         var playerOptions = data.model().getOptions().computeIfAbsent(key, k -> new ChatSpyDataModel.PerPlayerOptions());
 
@@ -69,7 +69,7 @@ public class ChatSpyInitializer extends ModuleInitializer {
         return apply;
     }
 
-    private static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayerEntity receiverPlayer, @NotNull Text contentText) {
+    private static void processChatSpy(@NotNull String messageTypeString, @NotNull ServerPlayer receiverPlayer, @NotNull Component contentText) {
         String contentString = TextHelper.Operators.getString(contentText);
         LogUtil.debug("Process chat spy: message type = {}, content string = {}", messageTypeString, contentString);
 
@@ -89,8 +89,8 @@ public class ChatSpyInitializer extends ModuleInitializer {
         }
         lastContentString = contentString;
 
-        Text receiverPlayerName = receiverPlayer.getDisplayName();
-        MutableText notificationText = Text.empty();
+        Component receiverPlayerName = receiverPlayer.getDisplayName();
+        MutableComponent notificationText = Component.empty();
         notificationText.append(contentText)
             .append(TextHelper.TEXT_SPACE)
             .append(TextHelper.getTextByKey(null, "chat.spy.indicator"))
@@ -112,12 +112,12 @@ public class ChatSpyInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWER)
     private static void consumePlayerChatMessageSentEvent(PlayerChatMessageSentEvent event) {
         /* Extract the message type string. */
-        MessageType.Parameters parameters = event.getParameters();
+        ChatType.Bound parameters = event.getParameters();
         String messageTypeString = RegistryHelper.getIdAsString(parameters);
 
         /* Process it. */
-        SignedMessage signedMessage = event.getSignedMessage();
-        Text contentText = parameters.applyChatDecoration(signedMessage.getContent());
+        PlayerChatMessage signedMessage = event.getSignedMessage();
+        Component contentText = parameters.decorate(signedMessage.decoratedContent());
         ChatSpyInitializer.processChatSpy(messageTypeString, event.getReceiverPlayer(), contentText);
     }
 

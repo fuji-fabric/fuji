@@ -8,7 +8,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class RepairInitializer extends ModuleInitializer {
@@ -16,13 +16,13 @@ public class RepairInitializer extends ModuleInitializer {
     @Document(id = 1751825460772L, value = "Repair the item in hand.")
     @CommandNode("repair")
     @CommandRequirement(level = 4)
-    private static int $repair(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        if (player.getMainHandStack().getDamage() == 0) {
+    private static int $repair(@CommandSource @CommandTarget ServerPlayer player) {
+        if (player.getMainHandItem().getDamageValue() == 0) {
             TextHelper.sendTextByKey(player, "repair.no_damage");
             return CommandHelper.Return.FAILURE;
         }
 
-        player.getMainHandStack().setDamage(0);
+        player.getMainHandItem().setDamageValue(0);
         TextHelper.sendTextByKey(player, "repair");
         return CommandHelper.Return.SUCCESS;
     }

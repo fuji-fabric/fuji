@@ -15,11 +15,11 @@ import mod.fuji.module.initializer.afk.config.model.AfkConfigModel;
 import mod.fuji.module.initializer.afk.structure.PlayerAfkState;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.entity.MovementType;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class AfkService {
@@ -29,19 +29,19 @@ public class AfkService {
     @TestCase(action = "Issue `/afk` and see the player list.", targets = "The display name of an afk player should be modified.")
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
     private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         if (isAfk(player)) {
-            Text newValue = getAfkText(player);
+            Component newValue = getAfkText(player);
             event.setText(newValue);
         }
     }
 
-    public static boolean isAfk(@NotNull ServerPlayerEntity player) {
+    public static boolean isAfk(@NotNull ServerPlayer player) {
         return getPlayerAfkState(player)
             .isAfk();
     }
 
-    public static void countAction(@NotNull ServerPlayerEntity player) {
+    public static void countAction(@NotNull ServerPlayer player) {
         PlayerAfkState playerAfkState = getPlayerAfkState(player);
 
         /* Set afk flag to false, once receive any input action. */
@@ -50,12 +50,12 @@ public class AfkService {
         }
     }
 
-    public static @NotNull Text getAfkText(@NotNull ServerPlayerEntity player) {
+    public static @NotNull Component getAfkText(@NotNull ServerPlayer player) {
         return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
     }
 
-    public static boolean isPlayerMovedBySelf(@NotNull MovementType movementType, @NotNull Vec3d vec3d) {
-        if (movementType == MovementType.PLAYER) {
+    public static boolean isPlayerMovedBySelf(@NotNull MoverType movementType, @NotNull Vec3 vec3d) {
+        if (movementType == MoverType.PLAYER) {
             // NOTE: In Minecraft's protocol, the client will send the velocity update packet even for (0, 0, 0)
             return Double.compare(vec3d.x, 0) != 0
                 || Double.compare(vec3d.y, 0) != 0
@@ -65,25 +65,25 @@ public class AfkService {
         return false;
     }
 
-    private static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayerEntity player) {
+    private static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return playerPreviousInputCounterMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
     }
 
-    private static void resetPlayerAfkState(@NotNull ServerPlayerEntity player) {
+    private static void resetPlayerAfkState(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         playerPreviousInputCounterMap.put(playerName, new PlayerAfkState());
     }
 
-    public static long getPreviousInputCounter(@NotNull ServerPlayerEntity player) {
+    public static long getPreviousInputCounter(@NotNull ServerPlayer player) {
         return getPlayerAfkState(player).getPreviousInputCounter();
     }
 
-    public static void setPreviousInputCounter(@NotNull ServerPlayerEntity player, long value) {
+    public static void setPreviousInputCounter(@NotNull ServerPlayer player, long value) {
         getPlayerAfkState(player).setPreviousInputCounter(value);
     }
 
-    public static void changeAfk(@NotNull ServerPlayerEntity player, boolean flag) {
+    public static void changeAfk(@NotNull ServerPlayer player, boolean flag) {
         // Check if the player can enter afk.
         if (flag && !canEnterAfk(player)) {
             return;
@@ -94,19 +94,19 @@ public class AfkService {
         playerAfkState.setAfk(flag);
 
         // Update tab list name.
-        PacketHelper.sendPacketToAll(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
+        PacketHelper.sendPacketToAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player));
 
         // Trigger afk events.
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
         List<String> commandList = playerAfkState.isAfk() ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
-        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), commandList);
+        CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.createCommandSourceStack()), commandList);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean canEnterAfk(@NotNull ServerPlayerEntity player) {
+    public static boolean canEnterAfk(@NotNull ServerPlayer player) {
         return PlayerHelper.Kind.isRealPlayer(player)
             && !player.isOnFire()
-            && !player.inPowderSnow
+            && !player.isInPowderSnow
             && !((PlayerCombatExtension) player).fuji$inCombat();
     }
 

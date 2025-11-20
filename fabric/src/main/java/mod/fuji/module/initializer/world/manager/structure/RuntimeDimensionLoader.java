@@ -5,19 +5,19 @@ import mod.fuji.core.auxiliary.minecraft.FabricApiHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.extension.SimpleRegistryExtension;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.LevelStem;
 import org.jetbrains.annotations.NotNull;
 
 #if MC_VER <= MC_1_20_4
 import com.mojang.serialization.Lifecycle;
 #elif MC_VER > MC_1_20_4
-import net.minecraft.registry.entry.RegistryEntryInfo;
+import net.minecraft.core.RegistrationInfo;
 #endif
 
 public class RuntimeDimensionLoader {
@@ -26,33 +26,33 @@ public class RuntimeDimensionLoader {
     #if MC_VER <= MC_1_20_4
     Lifecycle
     #elif MC_VER > MC_1_20_4
-    RegistryEntryInfo
+    RegistrationInfo
     #endif
     makeDefaultRegistryEntryInfo() {
         #if MC_VER <= MC_1_20_4
         return Lifecycle.stable();
         #elif MC_VER > MC_1_20_4
-        return RegistryEntryInfo.DEFAULT;
+        return RegistrationInfo.BUILT_IN;
         #endif
     }
 
-    public static void loadRuntimeDimension(ServerWorld dimension, DimensionOptions dimensionOptions) {
-        SimpleRegistry<DimensionOptions> dimensionOptionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
+    public static void loadRuntimeDimension(ServerLevel dimension, LevelStem dimensionOptions) {
+        MappedRegistry<LevelStem> dimensionOptionsRegistry = (MappedRegistry<LevelStem>) RegistryHelper.getRegistry(Registries.LEVEL_STEM);
         boolean original = ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$isFrozen();
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(false);
 
-        RegistryKey<World> worldRegistryKey = dimension.getRegistryKey();
-        RegistryKey<DimensionOptions> dimensionOptionsRegistryKey = RegistryKeys.toDimensionKey(worldRegistryKey);
+        ResourceKey<Level> worldRegistryKey = dimension.dimension();
+        ResourceKey<LevelStem> dimensionOptionsRegistryKey = Registries.levelToLevelStem(worldRegistryKey);
 
 
-        if (!dimensionOptionsRegistry.contains(dimensionOptionsRegistryKey)) {
+        if (!dimensionOptionsRegistry.containsKey(dimensionOptionsRegistryKey)) {
             LogUtil.debug("Add entry into Registry<DimensionOptions>: key = {}, value = {}", dimensionOptionsRegistryKey, dimensionOptions);
-            dimensionOptionsRegistry.add(dimensionOptionsRegistryKey, dimensionOptions, makeDefaultRegistryEntryInfo());
+            dimensionOptionsRegistry.register(dimensionOptionsRegistryKey, dimensionOptions, makeDefaultRegistryEntryInfo());
         }
         ((SimpleRegistryExtension<?>) dimensionOptionsRegistry).fuji$setFrozen(original);
 
         MinecraftServer server = ServerHelper.getServer();
-        server.worlds.put(dimension.getRegistryKey(), dimension);
+        server.levels.put(dimension.dimension(), dimension);
 
         try {
             FabricApiHelper.fireOnWorldLoadEvent(server, dimension);
@@ -61,10 +61,10 @@ public class RuntimeDimensionLoader {
         }
     }
 
-    public static void unloadDimension(@NotNull ServerWorld world) {
+    public static void unloadDimension(@NotNull ServerLevel world) {
         MinecraftServer server = world.getServer();
-        RegistryKey<World> dimensionKey = world.getRegistryKey();
-        if (server.worlds.remove(dimensionKey, world)) {
+        ResourceKey<Level> dimensionKey = world.dimension();
+        if (server.levels.remove(dimensionKey, world)) {
             /* Fire an unload event */
             try {
                 FabricApiHelper.fireOnWorldUnloadEvent(server,world);
@@ -73,8 +73,8 @@ public class RuntimeDimensionLoader {
             }
 
             /* Remove the entry from registry. */
-            SimpleRegistry<DimensionOptions> dimensionsRegistry = (SimpleRegistry<DimensionOptions>) RegistryHelper.getRegistry(RegistryKeys.DIMENSION);
-            SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.getValue());
+            MappedRegistry<LevelStem> dimensionsRegistry = (MappedRegistry<LevelStem>) RegistryHelper.getRegistry(Registries.LEVEL_STEM);
+            SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.location());
         }
     }
 }

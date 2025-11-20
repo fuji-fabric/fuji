@@ -14,9 +14,9 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.display.config.model.ChatDisplayConfigModel;
 import mod.fuji.module.initializer.chat.display.helper.DisplayHelper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751826642157L, value = """
     This module allows players to show things to others:
@@ -45,29 +45,29 @@ public class ChatDisplayInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<ChatDisplayConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatDisplayConfigModel.class);
     private static final String DISPLAY_TEXT_PLACEHOLDER = "display";
 
-    private static void broadcastDisplayText(ServerPlayerEntity player, String broadcastTextKey, MutableText displayText) {
-        Text broadcastText = TextHelper.getTextByKey(player, broadcastTextKey);
+    private static void broadcastDisplayText(ServerPlayer player, String broadcastTextKey, MutableComponent displayText) {
+        Component broadcastText = TextHelper.getTextByKey(player, broadcastTextKey);
         broadcastText = TextHelper.Replacer.replaceTextWithNamedArgument(broadcastText, DISPLAY_TEXT_PLACEHOLDER, (matcher) -> displayText);
         TextHelper.sendBroadcastByText(broadcastText);
     }
 
     @Document(id = 1751826645846L, value = "Show your item in main hand.")
     @CommandNode("chat display item")
-    private static int $displayItem(@CommandSource ServerPlayerEntity player) {
+    private static int $displayItem(@CommandSource ServerPlayer player) {
         broadcastDisplayText(player, "display.item.broadcast", DisplayHelper.createItemDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826648229L, value = "Show your inventory.")
     @CommandNode("chat display inv")
-    private static int $displayInv(@CommandSource ServerPlayerEntity player) {
+    private static int $displayInv(@CommandSource ServerPlayer player) {
         broadcastDisplayText(player, "display.inventory.broadcast", DisplayHelper.createInvDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826650468L, value = "Show your enderchest.")
     @CommandNode("chat display ender")
-    private static int $displayEnder(@CommandSource ServerPlayerEntity player) {
+    private static int $displayEnder(@CommandSource ServerPlayer player) {
         broadcastDisplayText(player, "display.ender_chest.broadcast", DisplayHelper.createEnderDisplayText(player));
         return CommandHelper.Return.SUCCESS;
     }

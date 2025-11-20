@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandStateService {
@@ -58,7 +58,7 @@ public class CommandStateService {
             .forEach(player -> updateCommandState(player, stateDescriptor));
     }
 
-    public static void withPlayerStateMap(@NotNull ServerPlayerEntity player, @NotNull Consumer<PlayerStates> consumer) {
+    public static void withPlayerStateMap(@NotNull ServerPlayer player, @NotNull Consumer<PlayerStates> consumer) {
         String playerName = PlayerHelper.getPlayerName(player);
 
         PlayerStates playerStates = CommandStateInitializer.data.model()
@@ -67,7 +67,7 @@ public class CommandStateService {
         consumer.accept(playerStates);
     }
 
-    private static void executeCommandStateEventCommands(@NotNull ServerPlayerEntity player, @NotNull StateDescriptor stateDescriptor, boolean isEnterEvent) {
+    private static void executeCommandStateEventCommands(@NotNull ServerPlayer player, @NotNull StateDescriptor stateDescriptor, boolean isEnterEvent) {
         List<String> commands;
         if (isEnterEvent) {
             commands = stateDescriptor.getEvents().getOnEnterThisStateCommands();
@@ -75,11 +75,11 @@ public class CommandStateService {
             commands = stateDescriptor.getEvents().getOnLeaveThisStateCommands();
         }
 
-        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
+        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.createCommandSourceStack());
         CommandExecutor.executeBatch(extendedCommandSource, commands);
     }
 
-    private static void updateCommandState(@NotNull ServerPlayerEntity player, @NotNull StateDescriptor stateDescriptor) {
+    private static void updateCommandState(@NotNull ServerPlayer player, @NotNull StateDescriptor stateDescriptor) {
         String stateId = stateDescriptor.getId();
 
         withPlayerStateMap(player, playerStates -> {
@@ -107,9 +107,9 @@ public class CommandStateService {
         });
     }
 
-    public static boolean checkCurrentStateValue(@NotNull ServerPlayerEntity player, @NotNull StateDescriptor stateDescriptor) {
+    public static boolean checkCurrentStateValue(@NotNull ServerPlayer player, @NotNull StateDescriptor stateDescriptor) {
         /* Execute the predicate commands, to get the return values. */
-        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.getCommandSource());
+        ExtendedCommandSource extendedCommandSource = ExtendedCommandSource.asConsole(player.createCommandSourceStack());
         List<String> predicateCommands = stateDescriptor.getDefinition().getPredicateCommands();
         List<Integer> commandReturnValues = CommandExecutor.executeBatch(extendedCommandSource, predicateCommands);
 

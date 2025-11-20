@@ -42,16 +42,16 @@ import mod.fuji.module.initializer.world.manager.service.structure.DimensionCrea
 import mod.fuji.module.initializer.world.manager.service.structure.DimensionDeletionTicket;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionImporter;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.random.RandomSeed;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.border.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -330,14 +330,14 @@ public class WorldInitializer extends ModuleInitializer {
         .ofModule("world.json", WorldDataModel.class)
         .enableAutoSaveFeature(JobManager.CRON_EVERY_MINUTE);
 
-    private static void ensureDimensionNotExists(@NotNull ServerCommandSource source, @NotNull Identifier identifier) {
+    private static void ensureDimensionNotExists(@NotNull CommandSourceStack source, @NotNull ResourceLocation identifier) {
         if (WorldService.existsDimension(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.exist");
             throw new AbortCommandExecutionException();
         }
     }
 
-    private static void ensureDimensionIsNotVanillaDimension(@NotNull ServerCommandSource source, @NotNull String dimensionId) {
+    private static void ensureDimensionIsNotVanillaDimension(@NotNull CommandSourceStack source, @NotNull String dimensionId) {
         if (WorldHelper.isVanillaDimension(dimensionId)) {
             TextHelper.sendTextByKey(source, "world.dimension.delete.forbidden", dimensionId);
             throw new AbortCommandExecutionException();
@@ -346,8 +346,8 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Document(id = 1751826609063L, value = "Teleport to the target dimension with the same coordinate.")
     @CommandNode("tp")
-    private static int $tp(@CommandSource ServerPlayerEntity player, Dimension dimension) {
-        ServerWorld targetDimension = dimension.getValue();
+    private static int $tp(@CommandSource ServerPlayer player, Dimension dimension) {
+        ServerLevel targetDimension = dimension.getValue();
 
         GlobalPos
             .of(player)
@@ -360,7 +360,7 @@ public class WorldInitializer extends ModuleInitializer {
         List `loaded dimensions` and `unloaded dimensions`.
         """)
     @CommandNode("list")
-    private static int $list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource CommandSourceStack source) {
         TextHelper.sendTextByKey(source, "dimension.loaded_dimensions");
         WorldHelper
             .getWorlds()
@@ -386,7 +386,7 @@ public class WorldInitializer extends ModuleInitializer {
         3. `Load` the runtime dimension into the `server`.
         """)
     @CommandNode("create")
-    private static int $create(@CommandSource ServerCommandSource source
+    private static int $create(@CommandSource CommandSourceStack source
         , FujiIdentifier name
         , DimensionType dimensionType
         , Optional<Long> seed
@@ -395,13 +395,13 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
-        Identifier dimensionIdentifier = name.getValue();
+        ResourceLocation dimensionIdentifier = name.getValue();
         ensureDimensionNotExists(source, dimensionIdentifier);
 
         /* Make the runtime dimension descriptor. */
-        long $seed = seed.orElse(RandomSeed.getSeed());
+        long $seed = seed.orElse(RandomSupport.generateUniqueSeed());
         ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
-        Identifier dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionType.getValue());
+        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionType.getValue());
         String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
         WorldPresetType $worldPresetType = worldPresetType.orElse(null);
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = RuntimeDimensionImporter.importRuntimeDimensionDescriptor(dimensionIdentifier, $worldPresetType, dimensionTypeIdentifier, $chunkGeneratorType, $chunkGeneratorParameter, $seed);
@@ -420,7 +420,7 @@ public class WorldInitializer extends ModuleInitializer {
         <green>NOTE: This command is almost identical to `/world create` command.
         """)
     @CommandNode("import")
-    private static int $import(@CommandSource ServerCommandSource source
+    private static int $import(@CommandSource CommandSourceStack source
         , FujiIdentifier name
         , DimensionType dimensionType
         , Optional<Long> seed
@@ -429,7 +429,7 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Ensure the dimension dir existed. */
-        Identifier dimensionId = name.getValue();
+        ResourceLocation dimensionId = name.getValue();
         Path targetDimensionPath = RuntimeDimensionImporter.getLevelSavePath()
             .resolve("dimensions")
             .resolve(dimensionId.getNamespace())
@@ -456,9 +456,9 @@ public class WorldInitializer extends ModuleInitializer {
         3. <red><b>Delete the `runtime dimension descriptor` in config file.
         """)
     @CommandNode("delete")
-    private static int $delete(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> confirm) {
+    private static int $delete(@CommandSource CommandSourceStack source, Dimension dimension, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
-            ServerWorld $dimension = dimension.getValue();
+            ServerLevel $dimension = dimension.getValue();
             String dimensionId = RegistryHelper.getIdAsString($dimension);
             ensureDimensionIsNotVanillaDimension(source, dimensionId);
 
@@ -474,7 +474,7 @@ public class WorldInitializer extends ModuleInitializer {
         2. `Load` the made `runtime dimension` into the `server`.
         """)
     @CommandNode("load")
-    private static int $load(@CommandSource ServerCommandSource source, UnloadedRuntimeDimensionDescriptor dimension) {
+    private static int $load(@CommandSource CommandSourceStack source, UnloadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
         DimensionCreationTicket ticket = new DimensionCreationTicket(source, runtimeDimensionDescriptor);
         WorldService.submitDimensionCreationTicket(ticket);
@@ -484,9 +484,9 @@ public class WorldInitializer extends ModuleInitializer {
     }
 
     @CommandNode("unload")
-    private static int $unload(@CommandSource ServerCommandSource source, LoadedRuntimeDimensionDescriptor dimension) {
+    private static int $unload(@CommandSource CommandSourceStack source, LoadedRuntimeDimensionDescriptor dimension) {
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = dimension.getValue();
-        Optional<ServerWorld> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
+        Optional<ServerLevel> loadedWorld = runtimeDimensionDescriptor.getLoadedWorld();
         String dimensionId = runtimeDimensionDescriptor.dimension;
         return loadedWorld
             .map($loadedWorld -> {
@@ -502,10 +502,10 @@ public class WorldInitializer extends ModuleInitializer {
 
     @Document(id = 1751826611302L, value = "Delete and create the specified world.")
     @CommandNode("reset")
-    private static int $reset(@CommandSource ServerCommandSource source, Dimension dimension, Optional<Boolean> useTheSameSeed, Optional<Boolean> confirm) {
+    private static int $reset(@CommandSource CommandSourceStack source, Dimension dimension, Optional<Boolean> useTheSameSeed, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             /* Get the original dimension node. */
-            ServerWorld dimensionInstance = dimension.getValue();
+            ServerLevel dimensionInstance = dimension.getValue();
             String dimensionIdentifier = RegistryHelper.getIdAsString(dimensionInstance);
             Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(dimensionIdentifier);
             return runtimeDimensionDescriptor
@@ -515,7 +515,7 @@ public class WorldInitializer extends ModuleInitializer {
 
                     /* Draw the seed. */
                     Boolean $useTheSameSeed = useTheSameSeed.orElse(false);
-                    $runtimeDimensionDescriptor.seed = $useTheSameSeed ? $runtimeDimensionDescriptor.seed : RandomSeed.getSeed();
+                    $runtimeDimensionDescriptor.seed = $useTheSameSeed ? $runtimeDimensionDescriptor.seed : RandomSupport.generateUniqueSeed();
                     world.writeStorage();
 
                     /* Create a new dimension instance. */
@@ -538,7 +538,7 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("save-configs")
     @CommandRequirement(level = 4)
-    private static int $saveConfigs(@CommandSource ServerCommandSource source) {
+    private static int $saveConfigs(@CommandSource CommandSourceStack source) {
         WorldService.saveRuntimeDimensionDescriptors();
         TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
@@ -549,7 +549,7 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("who")
     @CommandRequirement(level = 4)
-    private static int $who(@CommandSource ServerCommandSource source) {
+    private static int $who(@CommandSource CommandSourceStack source) {
         printGroupedPlayersByDimension(source, null);
         return CommandHelper.Return.SUCCESS;
     }
@@ -559,18 +559,18 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("who")
     @CommandRequirement(level = 4)
-    private static int $who(@CommandSource ServerCommandSource source, Dimension dimension) {
+    private static int $who(@CommandSource CommandSourceStack source, Dimension dimension) {
         printGroupedPlayersByDimension(source, dimension);
         return CommandHelper.Return.SUCCESS;
     }
 
-    private static void printGroupedPlayersByDimension(ServerCommandSource source, @Nullable Dimension specifiedDimension) {
+    private static void printGroupedPlayersByDimension(CommandSourceStack source, @Nullable Dimension specifiedDimension) {
         Map<@NotNull String, List<String>> groupedPlayers = WorldHelper
             .getWorlds()
             .stream()
             .collect(Collectors.toMap(
                 RegistryHelper::getIdAsString
-                , world -> world.getPlayers().stream().map(PlayerHelper::getPlayerName).toList()));
+                , world -> world.players().stream().map(PlayerHelper::getPlayerName).toList()));
 
         groupedPlayers
             .entrySet()
@@ -592,24 +592,24 @@ public class WorldInitializer extends ModuleInitializer {
         """)
     @CommandNode("info")
     @CommandRequirement(level = 4)
-    private static int $info(@CommandSource ServerCommandSource source, Dimension dimension) {
-        ServerWorld dimensionInstance = dimension.getValue();
+    private static int $info(@CommandSource CommandSourceStack source, Dimension dimension) {
+        ServerLevel dimensionInstance = dimension.getValue();
 
         /* Make text for basic info. */
         TextHelper.sendTextByKey(source, "dimension.class", dimensionInstance.getClass().getName());
         TextHelper.sendTextByKey(source, "dimension.id", RegistryHelper.getIdAsString(dimensionInstance));
         TextHelper.sendTextByKey(source, "dimension.difficulty", dimensionInstance.getDifficulty());
         TextHelper.sendTextByKey(source, "dimension.seed", dimensionInstance.getSeed());
-        TextHelper.sendTextByKey(source, "dimension.options", dimensionInstance.getDimension());
-        TextHelper.sendTextByKey(source, "dimension.properties", dimensionInstance.getLevelProperties());
-        TextHelper.sendTextByKey(source, "dimension.chunk_generator", dimensionInstance.getChunkManager().getChunkGenerator());
+        TextHelper.sendTextByKey(source, "dimension.options", dimensionInstance.dimensionType());
+        TextHelper.sendTextByKey(source, "dimension.properties", dimensionInstance.getLevelData());
+        TextHelper.sendTextByKey(source, "dimension.chunk_generator", dimensionInstance.getChunkSource().getGenerator());
 
         /* Make text for dimension border. */
         WorldBorder worldBorder = dimensionInstance.getWorldBorder();
         TextHelper.sendTextByKey(source, "dimension.border");
         TextHelper.sendTextByKey(source, "dimension.border.size", worldBorder.getSize());
-        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_target", worldBorder.getSizeLerpTarget());
-        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", worldBorder.getSizeLerpTime());
+        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_target", worldBorder.getLerpTarget());
+        TextHelper.sendTextByKey(source, "dimension.border.size.lerp_time", worldBorder.getLerpTime());
         TextHelper.sendTextByKey(source, "dimension.border.center.x", worldBorder.getCenterX());
         TextHelper.sendTextByKey(source, "dimension.border.center.z", worldBorder.getCenterZ());
         TextHelper.sendTextByKey(source, "dimension.border.damage.per_block", worldBorder.getDamagePerBlock());
@@ -618,20 +618,20 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "dimension.border.warning.time", worldBorder.getWarningTime());
 
         /* Make text for gamerules. */
-        MutableText gameRulesText = TextHelper.getTextByKey(source, "dimension.gamerules").copy();
+        MutableComponent gameRulesText = TextHelper.getTextByKey(source, "dimension.gamerules").copy();
         Map<String, Object> gameRulesMap = new HashMap<>();
         GameRules gameRules = dimensionInstance.getGameRules();
-        gameRules.accept(new GameRules.Visitor() {
+        gameRules.visitGameRuleTypes(new GameRules.GameRuleTypeVisitor() {
             @Override
-            public <T extends GameRules.Rule<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
-                String gameRuleName = key.getName();
-                T gameRuleValue = gameRules.get(key);
+            public <T extends GameRules.Value<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
+                String gameRuleName = key.getId();
+                T gameRuleValue = gameRules.getRule(key);
                 gameRulesMap.put(gameRuleName, gameRuleValue);
             }
         });
-        MutableText gameRulesHoverText = TextHelper.Formatter.formatMapInLine(gameRulesMap);
+        MutableComponent gameRulesHoverText = TextHelper.Formatter.formatMapInLine(gameRulesMap);
         gameRulesText
-            .fillStyle(Style.EMPTY
+            .withStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(gameRulesHoverText)));
         TextHelper.sendMessageByText(source, gameRulesText);
         TextHelper.sendTextByKey(source, "prompt.hover.see_it");

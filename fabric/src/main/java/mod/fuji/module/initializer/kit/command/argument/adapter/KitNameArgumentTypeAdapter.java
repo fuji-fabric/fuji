@@ -11,7 +11,7 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.module.initializer.kit.command.argument.wrapper.KitName;
 import mod.fuji.module.initializer.kit.service.KitService;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ public class KitNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String kitName = StringArgumentType.getString(context,commandArgument.getArgumentName());
         if (!KitService.hasKit(kitName)) {
             TextHelper.sendTextByKey(context.getSource(), "kit.kit.not_found", kitName);
@@ -45,7 +45,7 @@ public class KitNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(KitService::listKitNames));
     }
 }

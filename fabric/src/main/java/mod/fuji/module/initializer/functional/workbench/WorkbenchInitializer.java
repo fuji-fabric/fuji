@@ -7,26 +7,26 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.CraftingScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.network.chat.Component;
 
 public class WorkbenchInitializer extends ModuleInitializer {
 
     @CommandNode("workbench")
     @CommandRequirement(level = 4)
-    private static int $workbench(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((i, inventory, p) -> new CraftingScreenHandler(i, inventory, ScreenHandlerContext.create(PlayerHelper.getServerWorld(p), p.getBlockPos())) {
+    private static int $workbench(@CommandSource @CommandTarget ServerPlayer player) {
+        player.openMenu(new SimpleMenuProvider((i, inventory, p) -> new CraftingMenu(i, inventory, ContainerLevelAccess.create(PlayerHelper.getServerWorld(p), p.blockPosition())) {
             @Override
-            public boolean canUse(PlayerEntity player) {
+            public boolean stillValid(Player player) {
                 return true;
             }
-        }, Text.translatable("container.crafting")));
-        player.incrementStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+        }, Component.translatable("container.crafting")));
+        player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
         return CommandHelper.Return.SUCCESS;
     }
 }

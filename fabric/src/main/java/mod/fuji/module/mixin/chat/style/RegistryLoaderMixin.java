@@ -2,13 +2,13 @@ package mod.fuji.module.mixin.chat.style;
 
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.module.initializer.chat.style.ChatStyleInitializer;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.MutableRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryLoader;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryDataLoader;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,13 +28,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNull;
 #elif MC_VER > MC_1_21
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.core.HolderLookup;
 #endif
 
 @SuppressWarnings({"unchecked"})
 @Cite("https://github.com/Patbox/StyledChat")
-@Mixin(value = RegistryLoader.class)
+@Mixin(value = RegistryDataLoader.class)
 public class RegistryLoaderMixin {
 
     #if MC_VER <= MC_1_20_4
@@ -61,12 +61,12 @@ public class RegistryLoaderMixin {
     @Inject(method = "load"
         , at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private static void registerNewMessageType(@Coerce Object registryLoadable
-        , List<RegistryWrapper.Impl<?>> list
-        , List<RegistryLoader.Entry<?>> entries
-        , CallbackInfoReturnable<DynamicRegistryManager.Immutable> cir
+        , List<HolderLookup.RegistryLookup<?>> list
+        , List<RegistryDataLoader.RegistryData<?>> entries
+        , CallbackInfoReturnable<RegistryAccess.Frozen> cir
         , Map map
-        , List<RegistryLoader.Loader<?>> iterable
-        , RegistryOps.RegistryInfoGetter registryInfoGetter
+        , List<RegistryDataLoader.Loader<?>> iterable
+        , RegistryOps.RegistryInfoLookup registryInfoGetter
     )
     #endif
     {
@@ -74,16 +74,16 @@ public class RegistryLoaderMixin {
             #if MC_VER <= MC_1_20_4
             MutableRegistry<?> registry = loader.getFirst();
             #elif MC_VER > MC_1_20_4
-            MutableRegistry<?> registry = loader.comp_2246();
+            WritableRegistry<?> registry = loader.registry();
             #endif
 
             /* Register out custom message type in the Registry<MessageType> instance. */
-            RegistryKey<? extends Registry<?>> registryKey = registry.getKey();
-            if (registryKey.equals(RegistryKeys.MESSAGE_TYPE)) {
-                Registry<MessageType> messageTypeRegistry = (Registry<MessageType>) registry;
+            ResourceKey<? extends Registry<?>> registryKey = registry.key();
+            if (registryKey.equals(Registries.CHAT_TYPE)) {
+                Registry<ChatType> messageTypeRegistry = (Registry<ChatType>) registry;
 
                 // NOTE: in single-player world, the MESSAGE_TYPE_KEY will be registered twice, causing a `network protocol error` while join the world.
-                if (!messageTypeRegistry.contains(ChatStyleInitializer.MESSAGE_TYPE_KEY)) {
+                if (!messageTypeRegistry.containsKey(ChatStyleInitializer.MESSAGE_TYPE_KEY)) {
                     Registry.register(messageTypeRegistry, ChatStyleInitializer.MESSAGE_TYPE_KEY, ChatStyleInitializer.MESSAGE_TYPE_VALUE);
                 }
             }

@@ -8,7 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.command_attachment.command.argument.wrapper.ExecuteAsType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         return ExecuteAsType.valueOf(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
@@ -37,7 +37,7 @@ public class ExecuteAsTypeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.enums(ExecuteAsType::values));
     }
 }

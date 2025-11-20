@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.ColumnPosArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.math.ColumnPos;
+import net.minecraft.commands.arguments.coordinates.ColumnPosArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ColumnPos;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 public class ColumnPosArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ColumnPosArgumentType.columnPos();
+        return ColumnPosArgument.columnPos();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ColumnPosArgumentType.getColumnPos(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ColumnPosArgument.getColumnPos(context, commandArgument.getArgumentName());
     }
 
     @Override

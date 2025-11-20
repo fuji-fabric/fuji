@@ -13,10 +13,10 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.works.gui.WorkGeneralSettingsGui;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,7 @@ public abstract class Work implements ObjectTypeStringGetter {
     @Document(id = 1751825502471L, value = "The display item of this work.")
     public @Nullable String icon;
 
-    public Work(@NotNull ServerPlayerEntity player, String name) {
+    public Work(@NotNull ServerPlayer player, String name) {
         this.type = getObjectTypeString();
         this.id = RandomUtil.randomUUID();
         this.createTimeMS = System.currentTimeMillis();
@@ -66,8 +66,8 @@ public abstract class Work implements ObjectTypeStringGetter {
         this.x = EntityHelper.getPos(player).x;
         this.y = EntityHelper.getPos(player).y;
         this.z = EntityHelper.getPos(player).z;
-        this.yaw = player.getYaw();
-        this.pitch = player.getPitch();
+        this.yaw = player.getYRot();
+        this.pitch = player.getXRot();
         this.icon = null;
     }
 
@@ -75,22 +75,22 @@ public abstract class Work implements ObjectTypeStringGetter {
 
     public ItemStack getEntityIcon() {
         if (this.icon == null) {
-            return this.getDefaultEntityIcon().getDefaultStack();
+            return this.getDefaultEntityIcon().getDefaultInstance();
         }
 
         return ItemStackHelper.Parser.parseItemStack(this.icon);
     }
 
-    public abstract void openSpecializedSettingsGui(ServerPlayerEntity player, SimpleGui parentGui);
+    public abstract void openSpecializedSettingsGui(ServerPlayer player, SimpleGui parentGui);
 
-    public void openGeneralSettingsGui(@NotNull ServerPlayerEntity player, @NotNull SimpleGui parentGui) {
+    public void openGeneralSettingsGui(@NotNull ServerPlayer player, @NotNull SimpleGui parentGui) {
         Work work = this;
         new WorkGeneralSettingsGui(parentGui, player, work)
             .open();
     }
 
-    public List<Text> ofLore(ServerPlayerEntity player) {
-        List<Text> ret = new ArrayList<>();
+    public List<Component> ofLore(ServerPlayer player) {
+        List<Component> ret = new ArrayList<>();
         ret.add(TextHelper.getTextByKey(player, "works.work.prop.creator", this.creator));
         if (this.introduction != null) {
             ret.add(TextHelper.getTextByKey(player, "works.work.prop.introduction", this.introduction));

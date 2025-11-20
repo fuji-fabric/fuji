@@ -4,16 +4,16 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.module.initializer.world.manager.service.WorldService;
 import java.util.Optional;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.SaveProperties;
-import net.minecraft.world.level.UnmodifiableLevelProperties;
+import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.world.level.storage.DerivedLevelData;
 import org.jetbrains.annotations.NotNull;
 
-public final class RuntimeDimensionProperties extends UnmodifiableLevelProperties {
+public final class RuntimeDimensionProperties extends DerivedLevelData {
 
     private RuntimeDimensionDescriptor runtimeDimensionDescriptor;
 
-    public RuntimeDimensionProperties(@NotNull SaveProperties saveProperties, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
-        super(saveProperties, saveProperties.getMainWorldProperties());
+    public RuntimeDimensionProperties(@NotNull WorldData saveProperties, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        super(saveProperties, saveProperties.overworldData());
         this.runtimeDimensionDescriptor = runtimeDimensionDescriptor;
     }
 
@@ -44,18 +44,18 @@ public final class RuntimeDimensionProperties extends UnmodifiableLevelPropertie
     }
 
     @Override
-    public long getTime() {
+    public long getGameTime() {
         // NOTE: We just mirror the `Time` in `level.dat`.
-        return super.getTime();
+        return super.getGameTime();
     }
 
     @Override
-    public long getTimeOfDay() {
+    public long getDayTime() {
         return this.getEffectiveRuntimeDimensionDescriptor().timeOfDay;
     }
 
     @Override
-    public void setTimeOfDay(long l) {
+    public void setDayTime(long l) {
         this.getEffectiveRuntimeDimensionDescriptor().timeOfDay = l;
     }
 

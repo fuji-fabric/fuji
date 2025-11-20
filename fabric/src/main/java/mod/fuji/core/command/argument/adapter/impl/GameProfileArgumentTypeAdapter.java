@@ -8,21 +8,21 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import java.util.List;
 import lombok.SneakyThrows;
-import net.minecraft.command.argument.GameProfileArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.GameProfileArgument;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class GameProfileArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return GameProfileArgumentType.gameProfile();
+        return GameProfileArgument.gameProfile();
     }
 
     @SneakyThrows(CommandSyntaxException.class)
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new GameProfileCollection(GameProfileArgumentType.getProfileArgument(context, commandArgument.getArgumentName()));
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return new GameProfileCollection(GameProfileArgument.getGameProfiles(context, commandArgument.getArgumentName()));
     }
 
     @Override

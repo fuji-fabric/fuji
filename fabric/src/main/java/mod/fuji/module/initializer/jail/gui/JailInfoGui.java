@@ -11,8 +11,8 @@ import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import mod.fuji.module.initializer.jail.structure.JailRecord;
 import java.util.Comparator;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,17 +20,17 @@ public class JailInfoGui extends PagedGui<JailRecord> {
 
     private final @NotNull JailDescriptor jailDescriptor;
 
-    public JailInfoGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull JailDescriptor jailDescriptor, @NotNull List<JailRecord> entities, int pageIndex) {
+    public JailInfoGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull JailDescriptor jailDescriptor, @NotNull List<JailRecord> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "jail.list.details.gui.title", jailDescriptor.getId()), entities, pageIndex);
         this.jailDescriptor = jailDescriptor;
     }
 
     @Override
-    protected @NotNull PagedGui<JailRecord> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<JailRecord> entities, int pageIndex) {
+    protected @NotNull PagedGui<JailRecord> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<JailRecord> entities, int pageIndex) {
         return new JailInfoGui(parent, player, this.jailDescriptor, entities, pageIndex);
     }
 
-    public static JailInfoGui make(@NotNull SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull JailDescriptor jailDescriptor) {
+    public static JailInfoGui make(@NotNull SimpleGui parent, @NotNull ServerPlayer player, @NotNull JailDescriptor jailDescriptor) {
         List<JailRecord> jailRecords = JailService.getJailRecords(jailDescriptor);
         jailRecords.sort(Comparator
             .comparing(JailRecord::isEnable)
@@ -42,7 +42,7 @@ public class JailInfoGui extends PagedGui<JailRecord> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull JailRecord entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
-        ServerPlayerEntity player = getPlayer();
+        ServerPlayer player = getPlayer();
         builder
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
             .setName(TextHelper.getTextByKey(player, "player.name", entity.getPrisonerName()))

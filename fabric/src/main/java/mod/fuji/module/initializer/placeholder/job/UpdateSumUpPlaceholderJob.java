@@ -30,7 +30,7 @@ public class UpdateSumUpPlaceholderJob extends CronJob {
     @Override
     public void execute(@NotNull JobExecutionContext context) {
         // save all online-player's stats into /stats/ folder
-        PlayerHelper.Lookup.getOnlinePlayers().forEach((p) -> p.getStatHandler().save());
+        PlayerHelper.Lookup.getOnlinePlayers().forEach((p) -> p.getStats().save());
 
         // update
         SumUpPlaceholder.ofServer();

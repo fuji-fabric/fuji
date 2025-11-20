@@ -12,12 +12,12 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.toast_sender.ToastSender;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Optional;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751976160832L, value = """
     This module provides `/send-toast` command.
@@ -38,17 +38,17 @@ public class SendToastInitializer extends ModuleInitializer {
 
     @CommandNode("send-toast")
     @CommandRequirement(level = 4)
-    private static int $sendToast(@CommandSource ServerCommandSource source
-        , ServerPlayerEntity player
-        , Optional<AdvancementFrame> toastType
+    private static int $sendToast(@CommandSource CommandSourceStack source
+        , ServerPlayer player
+        , Optional<AdvancementType> toastType
         , Optional<ItemStackWrapper> icon
         , GreedyString message
     ) {
         ItemStack $icon = icon
             .map(ItemStackWrapper::getItemStack)
-            .orElse(Items.SLIME_BALL.getDefaultStack());
-        AdvancementFrame $toastType = toastType.orElse(AdvancementFrame.CHALLENGE);
-        Text title = TextHelper.getTextByValue(player, message.getValue());
+            .orElse(Items.SLIME_BALL.getDefaultInstance());
+        AdvancementType $toastType = toastType.orElse(AdvancementType.CHALLENGE);
+        Component title = TextHelper.getTextByValue(player, message.getValue());
         ToastSender.sendToast(player, $toastType, $icon, title);
 
         return CommandHelper.Return.SUCCESS;

@@ -10,23 +10,23 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.skin.service.SkinService;
 import mod.fuji.module.initializer.skin.structure.SkinDescriptor;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SkinGui extends PagedGui<SkinDescriptor> {
-    public SkinGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<SkinDescriptor> entities, int pageIndex) {
+    public SkinGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<SkinDescriptor> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "skin.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<SkinDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<SkinDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<SkinDescriptor> entities, int pageIndex) {
         return new SkinGui(parent, player, entities, pageIndex);
     }
 
-    public static SkinGui makeInstance(@NotNull ServerPlayerEntity player) {
+    public static SkinGui makeInstance(@NotNull ServerPlayer player) {
         List<SkinDescriptor> entities = SkinService.getDefaultSkinList();
         return new SkinGui(null, player, entities, 0);
     }

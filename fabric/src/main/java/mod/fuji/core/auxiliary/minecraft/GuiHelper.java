@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,25 +28,25 @@ public class GuiHelper {
 
     public static class Handler {
 
-        public static ScreenHandlerType<GenericContainerScreenHandler> getGenericContainerType(int rows) {
-            if (rows == 1) return ScreenHandlerType.GENERIC_9X1;
-            if (rows == 2) return ScreenHandlerType.GENERIC_9X2;
-            if (rows == 3) return ScreenHandlerType.GENERIC_9X3;
-            if (rows == 4) return ScreenHandlerType.GENERIC_9X4;
-            if (rows == 5) return ScreenHandlerType.GENERIC_9X5;
-            if (rows == 6) return ScreenHandlerType.GENERIC_9X6;
+        public static MenuType<ChestMenu> getGenericContainerType(int rows) {
+            if (rows == 1) return MenuType.GENERIC_9x1;
+            if (rows == 2) return MenuType.GENERIC_9x2;
+            if (rows == 3) return MenuType.GENERIC_9x3;
+            if (rows == 4) return MenuType.GENERIC_9x4;
+            if (rows == 5) return MenuType.GENERIC_9x5;
+            if (rows == 6) return MenuType.GENERIC_9x6;
 
             LogUtil.warn("The rows {} should be in the range [1, 6]. Falling back to GENERIC_9X6.", rows);
-            return ScreenHandlerType.GENERIC_9X6;
+            return MenuType.GENERIC_9x6;
         }
 
-        public static int getGenericContainerRows(ScreenHandlerType<GenericContainerScreenHandler> screenHandlerType) {
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X1) return 1;
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X2) return 2;
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X3) return 3;
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X4) return 4;
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X5) return 5;
-            if (screenHandlerType == ScreenHandlerType.GENERIC_9X6) return 6;
+        public static int getGenericContainerRows(MenuType<ChestMenu> screenHandlerType) {
+            if (screenHandlerType == MenuType.GENERIC_9x1) return 1;
+            if (screenHandlerType == MenuType.GENERIC_9x2) return 2;
+            if (screenHandlerType == MenuType.GENERIC_9x3) return 3;
+            if (screenHandlerType == MenuType.GENERIC_9x4) return 4;
+            if (screenHandlerType == MenuType.GENERIC_9x5) return 5;
+            if (screenHandlerType == MenuType.GENERIC_9x6) return 6;
 
             throw new IllegalArgumentException("Unknown screen handler type: " + screenHandlerType);
         }
@@ -60,8 +60,8 @@ public class GuiHelper {
 
             /* Copy data from slot into builder. */
             builder.setItem(itemStack.getItem());
-            builder.setName(itemStack.getName());
-            List<Text> lore = ItemStackHelper.Lore.getLore(itemStack);
+            builder.setName(itemStack.getHoverName());
+            List<Component> lore = ItemStackHelper.Lore.getLore(itemStack);
             if (!lore.isEmpty()) {
                 builder.setLore(lore);
             }
@@ -87,7 +87,7 @@ public class GuiHelper {
                     if (!itemStack.getItem().equals(Items.PLAYER_HEAD)) return;
 
                     // Fetch the game profile from mojang server.
-                    String onlinePlayerName = itemStack.getName().getString().trim();
+                    String onlinePlayerName = itemStack.getHoverName().getString().trim();
                     @NotNull GameProfileWrapper gameProfileWrapper = GameProfileCacheService.getCachedGameProfile(onlinePlayerName);
 
                     // Apply the game profile.
@@ -135,13 +135,13 @@ public class GuiHelper {
             return slotIndex >= 0 && slotIndex < gui.getSize();
         }
 
-        public static boolean isBannedSlotIndex(@NotNull ScreenHandler screenHandler, int index) {
+        public static boolean isBannedSlotIndex(@NotNull AbstractContainerMenu screenHandler, int index) {
             // NOTE: The index may be -1 or -999 for off-screen action.
             if (index < 0 || index >= screenHandler.slots.size()) return false;
 
             /* If the index is inside the screen, try to get the slot itemstack. */
             Slot slot = screenHandler.getSlot(index);
-            ItemStack stack = slot.getStack();
+            ItemStack stack = slot.getItem();
             return isBannedSlotPlaceholder(stack);
         }
 
@@ -185,22 +185,22 @@ public class GuiHelper {
                 .setSkullOwner(skullOwner);
         }
 
-        public static GuiElementBuilder makePreviousPageButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makePreviousPageButton(ServerPlayer player) {
             return makePlayerHeadButton(Texture.PREVIOUS_PAGE_TEXTURE)
                 .setName(TextHelper.getTextByKey(player, "previous_page"));
         }
 
-        public static GuiElementBuilder makeNextPageButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeNextPageButton(ServerPlayer player) {
             return makePlayerHeadButton(Texture.NEXT_PAGE_TEXTURE)
                 .setName(TextHelper.getTextByKey(player, "next_page"));
         }
 
-        public static GuiElementBuilder makeBackButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeBackButton(ServerPlayer player) {
             return makePlayerHeadButton(Texture.PREVIOUS_PAGE_TEXTURE)
                 .setName(TextHelper.getTextByKey(player, "back"));
         }
 
-        public static GuiElementBuilder makeSearchButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeSearchButton(ServerPlayer player) {
             return new GuiElementBuilder()
                 .setItem(Items.COMPASS)
                 .setName(TextHelper.getTextByKey(player, "search"))
@@ -208,17 +208,17 @@ public class GuiHelper {
                 .glow();
         }
 
-        public static GuiElementBuilder makeAddButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeAddButton(ServerPlayer player) {
             return makePlayerHeadButton(Texture.PLUS_TEXTURE)
                 .setName(TextHelper.getTextByKey(player, "add"));
         }
 
-        public static GuiElementBuilder makeHelpButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeHelpButton(ServerPlayer player) {
             return makeQuestionMarkButton()
                 .setName(TextHelper.getTextByKey(player, "help"));
         }
 
-        public static GuiElementBuilder makeInfoButton(ServerPlayerEntity player) {
+        public static GuiElementBuilder makeInfoButton(ServerPlayer player) {
             return makeLetterIButton()
                 .setName(TextHelper.getTextByKey(player, "info"));
         }

@@ -5,9 +5,9 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @AllArgsConstructor
 public class PlayerTeleportPreEvent extends BaseEvent {
     @NotNull CallbackInfo callbackInfo;
-    @NotNull ServerPlayerEntity player;
-    @NotNull ServerWorld destinationDimension;
+    @NotNull ServerPlayer player;
+    @NotNull ServerLevel destinationDimension;
     double destinationX;
     double destinationY;
     double destinationZ;
     float destinationYaw;
     float destinationPitch;
-    @NotNull Set<PositionFlag> positionFlags;
+    @NotNull Set<Relative> positionFlags;
 }

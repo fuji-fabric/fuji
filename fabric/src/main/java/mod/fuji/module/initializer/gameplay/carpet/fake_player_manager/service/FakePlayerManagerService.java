@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class FakePlayerManagerService {
@@ -22,17 +22,17 @@ public class FakePlayerManagerService {
     public static final Map<String, List<String>> player2fakePlayers = new HashMap<>();
     public static final Map<String, Long> player2expiration = new HashMap<>();
 
-    private static <T> T withMyFakePlayers(@NotNull ServerPlayerEntity player, Function<List<String>, T> function) {
+    private static <T> T withMyFakePlayers(@NotNull ServerPlayer player, Function<List<String>, T> function) {
         String playerName = PlayerHelper.getPlayerName(player);
         List<String> fakePlayers = player2fakePlayers.computeIfAbsent(playerName, k -> new ArrayList<>());
         return function.apply(fakePlayers);
     }
 
-    public static void addMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull String fakePlayerName) {
+    public static void addMyFakePlayer(@NotNull ServerPlayer player, @NotNull String fakePlayerName) {
         withMyFakePlayers(player, fakePlayers -> fakePlayers.add(fakePlayerName));
     }
 
-    public static boolean isMyFakePlayer(@NotNull ServerPlayerEntity player, @NotNull String fakePlayerName) {
+    public static boolean isMyFakePlayer(@NotNull ServerPlayer player, @NotNull String fakePlayerName) {
         return withMyFakePlayers(player, fakePlayers ->
             fakePlayers
                 .stream()
@@ -40,7 +40,7 @@ public class FakePlayerManagerService {
                 .anyMatch(it -> it.equalsIgnoreCase(fakePlayerName)));
     }
 
-    public static void renewMyFakePlayers(@NotNull ServerPlayerEntity player) {
+    public static void renewMyFakePlayers(@NotNull ServerPlayer player) {
         int renewDuration = FakePlayerManagerInitializer.config.model().renew_duration_ms;
         long newExpirationTime = System.currentTimeMillis() + renewDuration;
         String playerName = PlayerHelper.getPlayerName(player);
@@ -49,13 +49,13 @@ public class FakePlayerManagerService {
         TextHelper.sendTextByKey(player, "fake_player_manager.renew.success", ChronosUtil.Formatter.formatDate(newExpirationTime));
     }
 
-    public static boolean canSpawnMoreFakePlayers(@NotNull ServerPlayerEntity player) {
+    public static boolean canSpawnMoreFakePlayers(@NotNull ServerPlayer player) {
         int capsLimit = getFakePlayerCapsLimit();
         int currentCount = getSpawnedFakePlayerCount(player);
         return currentCount < capsLimit;
     }
 
-    private static Integer getSpawnedFakePlayerCount(@NotNull ServerPlayerEntity player) {
+    private static Integer getSpawnedFakePlayerCount(@NotNull ServerPlayer player) {
         return withMyFakePlayers(player, List::size);
     }
 
@@ -74,12 +74,12 @@ public class FakePlayerManagerService {
             .orElse(-1);
     }
 
-    public static boolean canManipulateFakePlayer(@NotNull CommandContext<ServerCommandSource> context, String fakePlayerName) {
+    public static boolean canManipulateFakePlayer(@NotNull CommandContext<CommandSourceStack> context, String fakePlayerName) {
         // NOTE: Disables the `/player <player> shadow` command, to prevent it is used on an online player.
         if (context.getNodes().get(2).getNode().getName().equals("shadow")) return false;
 
         // The console is considered authorized.
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayer();
         if (player == null) return true;
 
         // The op is considered authorized.

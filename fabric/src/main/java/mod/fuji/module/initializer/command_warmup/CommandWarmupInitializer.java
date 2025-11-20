@@ -19,8 +19,8 @@ import mod.fuji.module.initializer.command_warmup.config.transformer.CommandWarm
 import mod.fuji.module.initializer.command_warmup.structure.CommandWarmupNode;
 import mod.fuji.module.initializer.command_warmup.structure.CommandWarmupTicket;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -63,7 +63,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandWarmupConfigModel.class)
         .installTransformer(new CommandWarmupV1SchemaTransformer());
 
-    private static void processCommandWarmup(@NotNull ServerPlayerEntity player, @NotNull String commandString, @NotNull CallbackInfo callbackInfo) {
+    private static void processCommandWarmup(@NotNull ServerPlayer player, @NotNull String commandString, @NotNull CallbackInfo callbackInfo) {
         LogUtil.debug("Process command warmup: player = {}, command = {}", PlayerHelper.getPlayerName(player), commandString);
 
         /* Iterate the node entries. */
@@ -110,7 +110,7 @@ public class CommandWarmupInitializer extends ModuleInitializer {
     private static void consumeCommandExecutionPreEvent(CommandExecutionPreEvent event) {
         CallbackInfo callback = event.getCallback();
         if (callback.isCancelled()) return;
-        ServerCommandSource commandSource = event.getCommandSource();
+        CommandSourceStack commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
         if (config.model().admin_players_can_bypass && CommandHelper.Requirement.isAdmin(commandSource)) return;
 

@@ -17,8 +17,8 @@ import mod.fuji.module.initializer.head.config.model.HeadConfigModel;
 import mod.fuji.module.initializer.head.gui.HeadGui;
 import mod.fuji.module.initializer.head.privoder.HeadProvider;
 import java.nio.file.Path;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Cite("https://github.com/PotatoPresident/HeadIndex")
 @Document(id = 1751826596329L, value = """
@@ -41,20 +41,20 @@ public class HeadInitializer extends ModuleInitializer {
     @Document(id = 1751826598337L, value = "Download the head database from the internet. (You need to delete the existing head database file.)")
     @CommandNode("sync")
     @CommandRequirement(level = 4)
-    private static int $sync(@CommandSource CommandContext<ServerCommandSource> ctx) {
+    private static int $sync(@CommandSource CommandContext<CommandSourceStack> ctx) {
         HeadProvider.syncCategories();
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode
     @Document(id = 1751826599924L, value = "See /head gui")
-    private static int $head(@CommandSource ServerPlayerEntity player) {
+    private static int $head(@CommandSource ServerPlayer player) {
         return $gui(player);
     }
 
     @Document(id = 1751826601972L, value = "Open the head shop GUI.")
     @CommandNode("gui")
-    private static int $gui(@CommandSource ServerPlayerEntity player) {
+    private static int $gui(@CommandSource ServerPlayer player) {
         new HeadGui(player)
             .open();
         return CommandHelper.Return.SUCCESS;

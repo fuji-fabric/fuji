@@ -22,9 +22,9 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.resources.ResourceLocation;
 
 
 @Document(id = 1751825242047L, value = """
@@ -47,7 +47,7 @@ public class TpposInitializer extends ModuleInitializer {
     @Document(id = 1751825250986L, value = "The unified teleport command.")
     @CommandNode("tppos")
     @CommandRequirement(level = 4)
-    private static int $tppos(@CommandSource @CommandTarget ServerPlayerEntity player
+    private static int $tppos(@CommandSource @CommandTarget ServerPlayer player
         , @Document(id = 1751825286136L, value = "the target dimension") Optional<Dimension> dimension
         , @Document(id = 1751825291728L, value = "the target x for fixed-tp") Optional<Double> x
         , @Document(id = 1751825295183L, value = "the target y for fixed-tp") Optional<Double> y
@@ -67,15 +67,15 @@ public class TpposInitializer extends ModuleInitializer {
         , Optional<BiomeId> biome
     ) {
         /* Specify the dimension */
-        ServerWorld world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
+        ServerLevel world = dimension.isPresent() ? dimension.get().getValue() : EntityHelper.getServerWorld(player);
 
         /* Mode: fixed teleport */
         if (x.isPresent() || y.isPresent() || z.isPresent()) {
             double $x = x.orElse(player.getX());
             double $y = y.orElse(player.getY());
             double $z = z.orElse(player.getZ());
-            float $yaw = yaw.orElse(player.getYaw());
-            float $pitch = pitch.orElse(player.getPitch());
+            float $yaw = yaw.orElse(player.getYRot());
+            float $pitch = pitch.orElse(player.getXRot());
 
             GlobalPos globalPos = new GlobalPos(world, $x, $y, $z, $yaw, $pitch);
             globalPos.teleport(player);
@@ -88,7 +88,7 @@ public class TpposInitializer extends ModuleInitializer {
         boolean $circle = circle.orElse(false);
         int $minRange = minRange.orElse(0);
         int $maxRange = maxRange.orElse((int) world.getWorldBorder().getSize() / 2);
-        int $minY = minY.orElse(world.getBottomY());
+        int $minY = minY.orElse(world.getMinY());
         int $maxY = maxY.orElse(WorldHelper.getTopY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
         String worldId = RegistryHelper.getIdAsString(world);
@@ -103,7 +103,7 @@ public class TpposInitializer extends ModuleInitializer {
 
                 /* Enable biome whitelist mode. */
                 result.getOnlyAcceptBiomesMode().setEnable(true);
-                Identifier biomeId = $biome.getValue();
+                ResourceLocation biomeId = $biome.getValue();
                 result.getOnlyAcceptBiomesMode().setAccept(Set.of(RegistryHelper.getIdAsString(biomeId)));
                 return result;
             })
@@ -124,8 +124,8 @@ public class TpposInitializer extends ModuleInitializer {
         "We should be able to make the offline player instance."
         , "The saved dimension of the offline player should not be reset to minecraft:overworld"
     })
-    private static int $tppos(@CommandSource ServerPlayerEntity source, OfflinePlayerName player) {
-        ServerPlayerEntity dummyPlayer = PlayerHelper.Loader.loadDummyPlayer(player.getValue());
+    private static int $tppos(@CommandSource ServerPlayer source, OfflinePlayerName player) {
+        ServerPlayer dummyPlayer = PlayerHelper.Loader.loadDummyPlayer(player.getValue());
         GlobalPos
             .of(dummyPlayer)
             .teleport(source);
@@ -141,8 +141,8 @@ public class TpposInitializer extends ModuleInitializer {
         """)
     @CommandNode("tppos here")
     @CommandRequirement(level = 4)
-    private static int $tppos(@CommandSource ServerPlayerEntity source, PlayerCollection targets) {
-        Collection<ServerPlayerEntity> $targets = targets.getValue();
+    private static int $tppos(@CommandSource ServerPlayer source, PlayerCollection targets) {
+        Collection<ServerPlayer> $targets = targets.getValue();
         GlobalPos globalPos = GlobalPos.of(source);
         $targets.forEach(globalPos::teleport);
         return CommandHelper.Return.SUCCESS;

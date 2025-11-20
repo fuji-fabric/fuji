@@ -9,9 +9,9 @@ import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mod.fuji.core.job.JobManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -27,7 +27,7 @@ public class PlaySoundJob extends FixedIntervalJob {
         super(null, null, jobDataMap, () -> intervalMs, repeatCount, false);
     }
 
-    public static void scheduleJob(PlaySoundJobSetup setup, List<ServerPlayerEntity> mentionedPlayers) {
+    public static void scheduleJob(PlaySoundJobSetup setup, List<ServerPlayer> mentionedPlayers) {
         /* Make the job. */
         int intervalMs = setup.interval_ms;
         int repeatCount = setup.repeat_count;
@@ -42,14 +42,14 @@ public class PlaySoundJob extends FixedIntervalJob {
         JobManager.addJob(mentionPlayersJob);
     }
 
-    public static void scheduleJob(PlaySoundJobSetup setup, ServerPlayerEntity serverPlayer) {
+    public static void scheduleJob(PlaySoundJobSetup setup, ServerPlayer serverPlayer) {
         scheduleJob(setup, new ArrayList<>(Collections.singletonList(serverPlayer)));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void execute(@NotNull JobExecutionContext context) {
-        List<ServerPlayerEntity> players = (List<ServerPlayerEntity>) context.getJobDetail().getJobDataMap().get(List.class.getName());
+        List<ServerPlayer> players = (List<ServerPlayer>) context.getJobDetail().getJobDataMap().get(List.class.getName());
         PlaySoundJobSetup setup = (PlaySoundJobSetup) context.getJobDetail().getJobDataMap().get(PlaySoundJobSetup.class.getName());
 
         players
@@ -58,8 +58,8 @@ public class PlaySoundJob extends FixedIntervalJob {
             .forEach(player -> {
                 // NOTE: The playSound should be called in main thread.
                 ServerHelper.executeSync(() -> {
-                    SoundEvent soundEvent = SoundEvent.of(RegistryHelper.makeIdentifierOrThrow(setup.sound));
-                    SoundCategory soundCategory = SoundCategory.BLOCKS;
+                    SoundEvent soundEvent = SoundEvent.createVariableRangeEvent(RegistryHelper.makeIdentifierOrThrow(setup.sound));
+                    SoundSource soundCategory = SoundSource.BLOCKS;
                     PlayerHelper.playSound(player, soundEvent, soundCategory, setup.volume, setup.pitch);
                 });
             });

@@ -9,13 +9,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.collection.DefaultedList;
 #elif MC_VER > MC_1_20_4
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
 #endif
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,13 +29,13 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     private final @NotNull ItemStack shulkerBoxStack;
     private final @Nullable SimpleGui parentGui;
 
-    public ShulkerBoxDisplayGuiFactory(Text title, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+    public ShulkerBoxDisplayGuiFactory(Component title, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
         super(title);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
     }
 
-    public ShulkerBoxDisplayGuiFactory(ServerPlayerEntity sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+    public ShulkerBoxDisplayGuiFactory(ServerPlayer sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
         super(sourcePlayer);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
@@ -62,7 +62,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         return Stream.empty();
 
         #elif MC_VER > MC_1_20_4
-        ContainerComponent containerComponent = stack.get(DataComponentTypes.CONTAINER);
+        ItemContainerContents containerComponent = stack.get(DataComponents.CONTAINER);
         if (containerComponent == null) {
             return Stream.empty();
         }
@@ -72,8 +72,8 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayerEntity viewingPlayer) {
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X4, viewingPlayer, false);
+    public @NotNull SimpleGui build(ServerPlayer viewingPlayer) {
+        SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x4, viewingPlayer, false);
         gui.setTitle(this.title);
 
         /* Place UI items.  */

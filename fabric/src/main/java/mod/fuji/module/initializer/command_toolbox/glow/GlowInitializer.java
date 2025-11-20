@@ -9,27 +9,27 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class GlowInitializer extends ModuleInitializer {
 
     @Document(id = 1751825116796L, value = "Toggle the glowing state.")
     @CommandNode("glow")
-    private static int $glow(@CommandSource @CommandTarget ServerPlayerEntity player) {
-        boolean flag = !player.isGlowing();
-        player.setGlowing(flag);
+    private static int $glow(@CommandSource @CommandTarget ServerPlayer player) {
+        boolean flag = !player.isCurrentlyGlowing();
+        player.setGlowingTag(flag);
         TextHelper.sendTextByKey(player, flag ? "glow.on" : "glow.off");
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("glow")
     @CommandRequirement(level = 4)
-    private static int $glow(@CommandSource ServerCommandSource source, EntityCollection entities) {
+    private static int $glow(@CommandSource CommandSourceStack source, EntityCollection entities) {
         entities
             .getValue()
-            .forEach(entity -> entity.setGlowing(!entity.isGlowing()));
+            .forEach(entity -> entity.setGlowingTag(!entity.isCurrentlyGlowing()));
         return CommandHelper.Return.SUCCESS;
     }
 

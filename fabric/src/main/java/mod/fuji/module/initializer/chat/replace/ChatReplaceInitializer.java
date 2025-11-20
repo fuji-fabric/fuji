@@ -14,10 +14,10 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.replace.model.ChatReplaceConfigModel;
 import java.util.regex.Pattern;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826656743L, value = """
@@ -48,8 +48,8 @@ public class ChatReplaceInitializer extends ModuleInitializer {
         , "Input `prefix inv item ender suffix inv suffix`"
         , "Input `prefix prefix item`"
     })
-    public static Text replaceChatText(@NotNull PlayerEntity player, @NotNull Text oldText) {
-        MutableText newText = oldText.copy();
+    public static Component replaceChatText(@NotNull Player player, @NotNull Component oldText) {
+        MutableComponent newText = oldText.copy();
 
         for (RegexRewriteNode rule : config.model().getReplace().getRules()) {
             Pattern cachedPattern = rule.getCachedPattern();
@@ -70,12 +70,12 @@ public class ChatReplaceInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void handleOnPlayerChatEvent(PlayerChatMessagePreEvent event) {
         /* Get signed message. */
-        SignedMessage signedMessage = event.getSignedMessage();
+        PlayerChatMessage signedMessage = event.getSignedMessage();
 
         /* Replace the text. */
-        Text oldValue = signedMessage.getContent();
-        Text newValue = ChatReplaceInitializer.replaceChatText(event.getPlayer(), oldValue);
-        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
+        Component oldValue = signedMessage.decoratedContent();
+        Component newValue = ChatReplaceInitializer.replaceChatText(event.getPlayer(), oldValue);
+        PlayerChatMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
         event.setSignedMessage(newSignedMessage);
     }
 

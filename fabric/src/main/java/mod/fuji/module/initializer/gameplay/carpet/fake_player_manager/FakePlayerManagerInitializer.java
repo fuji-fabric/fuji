@@ -11,8 +11,8 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.config.model.FakePlayerManagerConfigModel;
 import mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.service.FakePlayerManagerService;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751827019419L, value = """
     This module provides `fake player management` for `carpet` mod.
@@ -41,14 +41,14 @@ public class FakePlayerManagerInitializer extends ModuleInitializer {
 
     @Document(id = 1751827022331L, value = "Renew the expiration time of `all` fake-player you have `spawned`.")
     @CommandNode("player renew")
-    private static int $renew(@CommandSource ServerPlayerEntity player) {
+    private static int $renew(@CommandSource ServerPlayer player) {
         FakePlayerManagerService.renewMyFakePlayers(player);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751827025708L, value = "List all fake-player and its owner player.")
     @CommandNode("player who")
-    private static int $who(@CommandSource ServerCommandSource source) {
+    private static int $who(@CommandSource CommandSourceStack source) {
         TextHelper.sendTextByKey(source, "fake_player_manager.who.header");
         TextHelper.sendMessageByText(source, TextHelper.Formatter.formatMapMultiLine(FakePlayerManagerService.player2fakePlayers));
         return CommandHelper.Return.SUCCESS;

@@ -2,13 +2,13 @@ package mod.fuji.module.mixin.world.manager.fix_end_gateway_block_entity;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.entity.EndGatewayBlockEntity;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(EndGatewayBlockEntity.class)
+@Mixin(TheEndGatewayBlockEntity.class)
 public abstract class EndGatewayBlockEntityMixin {
 
     // NOTE: In vanilla Minecraft, the EndGatewayBlockEntity only checks the serverWorld.getRegistryKey() == World.END condition.
@@ -20,9 +20,9 @@ public abstract class EndGatewayBlockEntityMixin {
         return World.END;
     }
     #elif MC_VER > MC_1_20_6
-    @WrapOperation(method = "getOrCreateExitPortalPos", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getRegistryKey()Lnet/minecraft/registry/RegistryKey;"))
-    private RegistryKey<World> letExitPortalsInExtraDimensionsWork(net.minecraft.server.world.ServerWorld instance, Operation<RegistryKey<World>> original) {
-        return World.END;
+    @WrapOperation(method = "getPortalPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getRegistryKey()Lnet/minecraft/resources/ResourceKey;"))
+    private ResourceKey<Level> letExitPortalsInExtraDimensionsWork(net.minecraft.server.level.ServerLevel instance, Operation<ResourceKey<Level>> original) {
+        return Level.END;
     }
     #endif
 }

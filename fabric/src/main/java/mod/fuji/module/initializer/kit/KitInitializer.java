@@ -16,8 +16,8 @@ import mod.fuji.module.initializer.kit.gui.KitEditorGui;
 import mod.fuji.module.initializer.kit.gui.KitPreviewGui;
 import mod.fuji.module.initializer.kit.service.KitService;
 import mod.fuji.module.initializer.kit.structure.Kit;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751824812720L, value = """
     This module allows creating a set of item stacks as a `kit` and distributing the kit to players.
@@ -70,7 +70,7 @@ public class KitInitializer extends ModuleInitializer {
 
     @Document(id = 1751824817401L, value = "Open the kit editor GUI.")
     @CommandNode("editor")
-    private static int $editor(@CommandSource ServerPlayerEntity player) {
+    private static int $editor(@CommandSource ServerPlayer player) {
         KitEditorGui.make(player)
             .open();
         return CommandHelper.Return.SUCCESS;
@@ -78,7 +78,7 @@ public class KitInitializer extends ModuleInitializer {
 
     @Document(id = 1751824821391L, value = "Give the kit to the player.")
     @CommandNode("give")
-    private static int $give(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
+    private static int $give(@CommandSource CommandSourceStack source, ServerPlayer player, KitName kit) {
         Kit kitInstance = KitService.readKit(kit.getValue());
         KitService.giveKit(player, kitInstance);
         return CommandHelper.Return.SUCCESS;
@@ -86,7 +86,7 @@ public class KitInitializer extends ModuleInitializer {
 
     @Document(id = 1756372814981L, value = "Open a GUI to pre-view the specified kit.")
     @CommandNode("preview")
-    private static int $preview(@CommandSource ServerCommandSource source, ServerPlayerEntity player, KitName kit) {
+    private static int $preview(@CommandSource CommandSourceStack source, ServerPlayer player, KitName kit) {
         Kit $kit = KitService.readKit(kit.getValue());
         KitPreviewGui
             .make(player, $kit)

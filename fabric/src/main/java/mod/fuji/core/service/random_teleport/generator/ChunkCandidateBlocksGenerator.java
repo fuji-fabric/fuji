@@ -1,15 +1,15 @@
 package mod.fuji.core.service.random_teleport.generator;
 
 import java.util.Iterator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
 public class ChunkCandidateBlocksGenerator {
 
-    public static @NotNull Iterable<BlockPos.Mutable> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {
+    public static @NotNull Iterable<BlockPos.MutableBlockPos> getChunkCandidateBlocks(@NotNull ChunkPos chunkPos) {
         return () -> new Iterator<>() {
-            private final BlockPos.Mutable currentValue = new BlockPos.Mutable();
+            private final BlockPos.MutableBlockPos currentValue = new BlockPos.MutableBlockPos();
             private int i = -1;
 
             @Override
@@ -18,14 +18,14 @@ public class ChunkCandidateBlocksGenerator {
             }
 
             @Override
-            public BlockPos.Mutable next() {
+            public BlockPos.MutableBlockPos next() {
                 i++;
                 return switch (i) {
-                    case 0 -> currentValue.set(chunkPos.getCenterX(), 0, chunkPos.getCenterZ());
-                    case 1 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getStartZ());
-                    case 2 -> currentValue.set(chunkPos.getStartX(), 0, chunkPos.getEndZ());
-                    case 3 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getStartZ());
-                    case 4 -> currentValue.set(chunkPos.getEndX(), 0, chunkPos.getEndZ());
+                    case 0 -> currentValue.set(chunkPos.getMiddleBlockX(), 0, chunkPos.getMiddleBlockZ());
+                    case 1 -> currentValue.set(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
+                    case 2 -> currentValue.set(chunkPos.getMinBlockX(), 0, chunkPos.getMaxBlockZ());
+                    case 3 -> currentValue.set(chunkPos.getMaxBlockX(), 0, chunkPos.getMinBlockZ());
+                    case 4 -> currentValue.set(chunkPos.getMaxBlockX(), 0, chunkPos.getMaxBlockZ());
                     default -> throw new IllegalStateException("Unexpected value: " + i);
                 };
             }

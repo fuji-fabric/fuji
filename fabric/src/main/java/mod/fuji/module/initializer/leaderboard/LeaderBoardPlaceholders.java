@@ -10,7 +10,7 @@ import mod.fuji.module.initializer.leaderboard.structure.LeaderBoardDescriptor;
 import mod.fuji.module.initializer.leaderboard.structure.LeaderBoardTimeWindow;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class LeaderBoardPlaceholders {
 
@@ -32,7 +32,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getLowestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(it.getOwnerCache().getPlayerName()))
+                .map(it -> Component.nullToEmpty(it.getOwnerCache().getPlayerName()))
                 .orElseGet(LeaderBoardService::getNonePlayerText);
         });
     }
@@ -55,7 +55,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getLowestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(String.valueOf(it.getEffectiveScore())))
+                .map(it -> Component.nullToEmpty(String.valueOf(it.getEffectiveScore())))
                 .orElseGet(LeaderBoardService::getNoScoreText);
         });
     }
@@ -78,7 +78,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getHighestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(it.getOwnerCache().getPlayerName()))
+                .map(it -> Component.nullToEmpty(it.getOwnerCache().getPlayerName()))
                 .orElseGet(LeaderBoardService::getNonePlayerText);
         });
     }
@@ -101,7 +101,7 @@ public class LeaderBoardPlaceholders {
             }
             return LeaderBoardService
                 .getHighestN(result.getLeaderBoardDescriptor(), result.getRankN(), result.getTimeWindow())
-                .map(it -> Text.of(String.valueOf(it.getEffectiveScore())))
+                .map(it -> Component.nullToEmpty(String.valueOf(it.getEffectiveScore())))
                 .orElseGet(LeaderBoardService::getNoScoreText);
         });
     }
@@ -111,20 +111,20 @@ public class LeaderBoardPlaceholders {
         /* Verify arity. */
         List<String> stringArgs = PlaceholderHelper.splitArguments(args);
         if (stringArgs.isEmpty()) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[NO-LEADER-BOARD-ID-SPECIFIED]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[NO-LEADER-BOARD-ID-SPECIFIED]"), null, null, null);
         }
         if (stringArgs.size() == 1) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[NO-RANK-N-SPECIFIED]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[NO-RANK-N-SPECIFIED]"), null, null, null);
         }
         if (stringArgs.size() == 2) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[NO-TIME-WINDOW-SPECIFIED]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[NO-TIME-WINDOW-SPECIFIED]"), null, null, null);
         }
 
         /* Parse the leaderboard id. */
         String leaderBoardId = stringArgs.get(0);
         Optional<LeaderBoardDescriptor> leaderBoardDescriptor = LeaderBoardService.findLeaderBoardDescriptor(leaderBoardId);
         if (leaderBoardDescriptor.isEmpty()) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[SPECIFIED-LEADERBOARD-NOT-FOUND]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[SPECIFIED-LEADERBOARD-NOT-FOUND]"), null, null, null);
         }
         LeaderBoardDescriptor $leaderBoardDescriptor = leaderBoardDescriptor.get();
 
@@ -134,7 +134,7 @@ public class LeaderBoardPlaceholders {
         try {
             rankN = Integer.parseInt(rankNString);
         } catch (NumberFormatException e) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[FAILED-TO-PARSE-RANK-N-INTO-INTEGER]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[FAILED-TO-PARSE-RANK-N-INTO-INTEGER]"), null, null, null);
         }
 
         /* Parse the time window. */
@@ -143,7 +143,7 @@ public class LeaderBoardPlaceholders {
         try {
             timeWindow = LeaderBoardTimeWindow.valueOf(StringUtil.toUpperCase(timeWindowString));
         } catch (IllegalArgumentException e) {
-            return new LeaderBoardArgumentsParseResult(Text.literal("[INVALID-TIME-WINDOW]"), null, null, null);
+            return new LeaderBoardArgumentsParseResult(Component.literal("[INVALID-TIME-WINDOW]"), null, null, null);
         }
 
 

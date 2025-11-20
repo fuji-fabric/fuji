@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public class TpaService {
     @Getter
     private static final List<TpaRequest> requests = new ArrayList<>();
 
-    public static int doRequest(ServerPlayerEntity source, ServerPlayerEntity target, boolean tpahere) {
+    public static int doRequest(ServerPlayer source, ServerPlayer target, boolean tpahere) {
         if (target.isRemoved()) {
             TextHelper.sendTextByKey(source, "player.invalid", PlayerHelper.getPlayerName(target));
             return CommandHelper.Return.FAILURE;
@@ -52,7 +52,7 @@ public class TpaService {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static int doResponse(ServerPlayerEntity player, ServerPlayerEntity target, ResponseStatus status) {
+    public static int doResponse(ServerPlayer player, ServerPlayer target, ResponseStatus status) {
         /* Find relative request. */
         Optional<TpaRequest> requestOpt = requests
             .stream()
@@ -69,10 +69,10 @@ public class TpaService {
         /* Send feedback messages. */
         TpaRequest request = requestOpt.get();
         if (status == ResponseStatus.ACCEPT) {
-            ServerPlayerEntity who = request.getTeleportWho();
-            ServerPlayerEntity to = request.getTeleportTo();
+            ServerPlayer who = request.getTeleportWho();
+            ServerPlayer to = request.getTeleportTo();
             PlaySoundJob.scheduleJob(TpaInitializer.config.model().getMentionPlayer(), request.isTpahere() ? to : who);
-            new GlobalPos(PlayerHelper.getServerWorld(to), to.getX(), to.getY(), to.getZ(), to.getYaw(), to.getPitch())
+            new GlobalPos(PlayerHelper.getServerWorld(to), to.getX(), to.getY(), to.getZ(), to.getYRot(), to.getXRot())
                 .teleport(who);
 
             TextHelper.sendText(request.getSender(), TpaMessenger.toSenderText$Accepted(request), TextHelper.Sender.TextLocation.ACTION_BAR);
@@ -91,7 +91,7 @@ public class TpaService {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static int doResponseToAll(ServerPlayerEntity me, ResponseStatus responseStatus) {
+    public static int doResponseToAll(ServerPlayer me, ResponseStatus responseStatus) {
         // Filter the target players.
         ArrayList<TpaRequest> targetPlayers = requests
             .stream()
@@ -106,7 +106,7 @@ public class TpaService {
 
         // Iterate it.
         targetPlayers.forEach(request -> {
-            ServerPlayerEntity responseTarget;
+            ServerPlayer responseTarget;
             if (responseStatus == ResponseStatus.CANCEL) {
                 responseTarget = request.getReceiver();
             } else {

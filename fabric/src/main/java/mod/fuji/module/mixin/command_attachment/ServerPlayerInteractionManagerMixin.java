@@ -5,9 +5,9 @@ import mod.fuji.core.auxiliary.minecraft.UuidHelper;
 import mod.fuji.module.initializer.command_attachment.command.argument.wrapper.InteractType;
 import mod.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerPlayerGameMode;
+import net.minecraft.core.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,17 +15,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerPlayerInteractionManager.class)
+@Mixin(ServerPlayerGameMode.class)
 public class ServerPlayerInteractionManagerMixin {
 
     @Shadow
     @Final
-    protected ServerPlayerEntity player;
+    protected ServerPlayer player;
 
     #if MC_VER <= MC_1_20_4
     @Inject(method = "method_41250", at = @At("HEAD"))
     #elif MC_VER > MC_1_20_4
-    @Inject(method = "onBlockBreakingAction", at = @At("HEAD"))
+    @Inject(method = "debugLogging", at = @At("HEAD"))
     #endif
     void onPlayerLeftClickBlock(BlockPos blockPos, boolean bl, int i, String string, CallbackInfo ci) {
         if (string.equals("actual start of destroying")) {

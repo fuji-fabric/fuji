@@ -13,16 +13,16 @@ import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 
-public class BooleanGameRuleMapAdapter implements JsonSerializer<Reference2BooleanMap<GameRules.Key<GameRules.BooleanRule>>>,
-    JsonDeserializer<Reference2BooleanMap<GameRules.Key<GameRules.BooleanRule>>> {
+public class BooleanGameRuleMapAdapter implements JsonSerializer<Reference2BooleanMap<GameRules.Key<GameRules.BooleanValue>>>,
+    JsonDeserializer<Reference2BooleanMap<GameRules.Key<GameRules.BooleanValue>>> {
 
     @Override
-    public JsonElement serialize(Reference2BooleanMap<GameRules.Key<GameRules.BooleanRule>> src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Reference2BooleanMap<GameRules.Key<GameRules.BooleanValue>> src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject obj = new JsonObject();
-        for (GameRules.Key<GameRules.BooleanRule> key : src.keySet()) {
-            String jsonKey = key.getName();
+        for (GameRules.Key<GameRules.BooleanValue> key : src.keySet()) {
+            String jsonKey = key.getId();
             boolean jsonValue = src.getBoolean(key);
             obj.addProperty(jsonKey, jsonValue);
         }
@@ -31,16 +31,16 @@ public class BooleanGameRuleMapAdapter implements JsonSerializer<Reference2Boole
 
     @SuppressWarnings("unchecked")
     @Override
-    public Reference2BooleanMap<GameRules.Key<GameRules.BooleanRule>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public Reference2BooleanMap<GameRules.Key<GameRules.BooleanValue>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
         throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        Reference2BooleanMap<GameRules.Key<GameRules.BooleanRule>> map = new Reference2BooleanOpenHashMap<>();
+        Reference2BooleanMap<GameRules.Key<GameRules.BooleanValue>> map = new Reference2BooleanOpenHashMap<>();
         for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
             String jsonKey = entry.getKey();
             boolean jsonValue = entry.getValue().getAsBoolean();
 
-            Optional<Map.Entry<GameRules.Key<?>, GameRules.Type<?>>> gameRuleEntryOptional = GameRules.RULE_TYPES
+            Optional<Map.Entry<GameRules.Key<?>, GameRules.Type<?>>> gameRuleEntryOptional = GameRules.GAME_RULE_TYPES
                 .entrySet()
                 .stream()
                 .filter(it -> {
@@ -56,7 +56,7 @@ public class BooleanGameRuleMapAdapter implements JsonSerializer<Reference2Boole
             }
 
             Map.Entry<GameRules.Key<?>, GameRules.Type<?>> gameRuleEntry = gameRuleEntryOptional.get();
-            GameRules.Key<GameRules.BooleanRule> key = (GameRules.Key<GameRules.BooleanRule>) gameRuleEntry.getKey();
+            GameRules.Key<GameRules.BooleanValue> key = (GameRules.Key<GameRules.BooleanValue>) gameRuleEntry.getKey();
             map.put(key, jsonValue);
         }
 

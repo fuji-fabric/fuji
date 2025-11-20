@@ -11,8 +11,8 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDamageEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Optional;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751978330624L, value = """
@@ -46,20 +46,20 @@ public class MultiplierInitializer extends ModuleInitializer {
     public static final MetaDescriptor<Float> MULTIPLIER_META = new MetaDescriptor<>("fuji.multiplier.<multiplier-type>.<id>", Float::valueOf, 1752000356004L);
 
     @TestCase(action = "Summon a fake player using `/player 1 spawn` and throw exp bottle to it.", targets = "Test the compatibility between `luckperms` and `carpet`'s fake player.")
-    public static float transform(@NotNull ServerPlayerEntity player, String type, String key, float f) {
-        Optional<Float> meta = LuckpermsHelper.getMeta(player.getUuid(), MULTIPLIER_META, type, key);
+    public static float transform(@NotNull ServerPlayer player, String type, String key, float f) {
+        Optional<Float> meta = LuckpermsHelper.getMeta(player.getUUID(), MULTIPLIER_META, type, key);
         return meta.map(factor -> f * factor).orElse(f);
     }
 
     @EventConsumer
     private static void multiplyDamageValue(PlayerDamageEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
 
         float damage = event.getDamage();
         damage = MultiplierInitializer.transform(player, "damage", "all", damage);
 
         DamageSource damageSource = event.getDamageSource();
-        damage = MultiplierInitializer.transform(player, "damage", RegistryHelper.getIdAsString(damageSource.getTypeRegistryEntry()), damage);
+        damage = MultiplierInitializer.transform(player, "damage", RegistryHelper.getIdAsString(damageSource.typeHolder()), damage);
 
         event.setDamage(damage);
     }

@@ -7,7 +7,7 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyStringList;
 import mod.fuji.core.service.string_splitter.StringSplitter;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public class GreedyStringListArgumentTypeAdapter extends BaseArgumentTypeAdapter
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String string = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return new GreedyStringList(StringSplitter.split(string));
     }

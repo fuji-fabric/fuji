@@ -6,10 +6,10 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +21,7 @@ public class PlayerInteractEntityPreEventMixin {
 
     @EventProducer(PlayerInteractEntityPreEvent.class)
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
-    void producePlayerInteractEntityPreEvent(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    void producePlayerInteractEntityPreEvent(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         PlayerHelper.Kind.withServerPlayerEntity(player, serverPlayer -> {
             Entity entity = (Entity) (Object) this;
             PlayerInteractEntityPreEvent event = new PlayerInteractEntityPreEvent(serverPlayer, entity, hand, cir);

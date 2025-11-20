@@ -12,27 +12,27 @@ import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
 
-    final ServerPlayerEntity target;
+    final ServerPlayer target;
 
-    public ListPlayerStatesGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity source, @NotNull ServerPlayerEntity target, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    public ListPlayerStatesGui(@Nullable SimpleGui parent, @NotNull ServerPlayer source, @NotNull ServerPlayer target, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         super(parent, source, TextHelper.getTextByKey(source, "command_state.info.gui.title", PlayerHelper.getPlayerName(target)), entities, pageIndex);
         this.target = target;
     }
 
     @Override
-    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity source, Text title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer source, Component title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
         return new ListPlayerStatesGui(parent, source, this.target, entities, pageIndex);
     }
 
-    public static @NotNull ListPlayerStatesGui make(@NotNull ServerPlayerEntity source, @NotNull ServerPlayerEntity target) {
+    public static @NotNull ListPlayerStatesGui make(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
         List<GuiElementInterface> entities = new ArrayList<>();
 
         CommandStateService.withPlayerStateMap(target, playerStates -> {
@@ -40,7 +40,7 @@ public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
 
             stateMap.forEach((stateId, stateCache) -> {
                 GuiElementBuilder builder = new GuiElementBuilder();
-                builder.setName(Text.literal(stateId));
+                builder.setName(Component.literal(stateId));
                 boolean isInState = stateCache.getValue();
                 builder.setItem(isInState ? Items.GREEN_BANNER : Items.RED_BANNER);
                 builder.setLore(List.of(

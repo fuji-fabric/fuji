@@ -11,10 +11,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class AboutGui extends PagedGui<Person> {
 
-    public AboutGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<Person> entities, int pageIndex) {
+    public AboutGui(SimpleGui parent, ServerPlayer player, @NotNull List<Person> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "about"), entities, pageIndex);
         super.streamMessageIntoToast = false;
 
@@ -38,7 +38,7 @@ public class AboutGui extends PagedGui<Person> {
             }));
     }
 
-    public static AboutGui make(@Nullable SimpleGui parent, ServerPlayerEntity player) {
+    public static AboutGui make(@Nullable SimpleGui parent, ServerPlayer player) {
         ModMetadata metadata = FabricLoader.getInstance().getModContainer(Fuji.MOD_ID)
             .orElseThrow(() -> new IllegalStateException("Failed to get the metadata of this mod."))
             .getMetadata();
@@ -58,7 +58,7 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected @NotNull PagedGui<Person> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<Person> entities, int pageIndex) {
+    protected @NotNull PagedGui<Person> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<Person> entities, int pageIndex) {
         return new AboutGui(parent, player, entities, pageIndex);
     }
 
@@ -70,7 +70,7 @@ public class AboutGui extends PagedGui<Person> {
     public GuiElementInterface.ClickCallback makeCallback(Person entity) {
         return (a, b, c, d) -> {
             // construct the text
-            MutableText text = Text.empty();
+            MutableComponent text = Component.empty();
             text.append(TextHelper.getTextByKey(getPlayer(), "contact.visit.name", entity.getName()))
                 .append(TextHelper.TEXT_NEWLINE);
             entity.getContact().asMap().forEach((k, v) -> text
@@ -83,8 +83,8 @@ public class AboutGui extends PagedGui<Person> {
         };
     }
 
-    public List<Text> makeTextListFromContact(ContactInformation contact) {
-        List<Text> ret = new ArrayList<>();
+    public List<Component> makeTextListFromContact(ContactInformation contact) {
+        List<Component> ret = new ArrayList<>();
         contact.asMap().forEach((k, v) -> ret.add(TextHelper.getTextByKey(getPlayer(), "contact.entry", k, v)));
 
         // add visit hint lore

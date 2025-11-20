@@ -13,9 +13,9 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDamageEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.pvp.config.model.PvPDataModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public class PvpInitializer extends ModuleInitializer {
 
     @Document(id = 1751826842506L, value = "Enable the PvP for the player.")
     @CommandNode("pvp on")
-    private static int $on(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $on(@CommandSource @CommandTarget ServerPlayer player) {
         Set<String> whitelist = data.model().whitelist;
         String playerName = PlayerHelper.getPlayerName(player);
 
@@ -46,7 +46,7 @@ public class PvpInitializer extends ModuleInitializer {
 
     @Document(id = 1751826844847L, value = "Disable the PvP for the player.")
     @CommandNode("pvp off")
-    private static int $off(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $off(@CommandSource @CommandTarget ServerPlayer player) {
         Set<String> whitelist = data.model().whitelist;
         String playerName = PlayerHelper.getPlayerName(player);
 
@@ -64,7 +64,7 @@ public class PvpInitializer extends ModuleInitializer {
 
     @Document(id = 1751826847105L, value = "Query the status of PvP for the player.")
     @CommandNode("pvp status")
-    private static int $status(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $status(@CommandSource @CommandTarget ServerPlayer player) {
         Set<String> whitelist = data.model().whitelist;
         String playerName = PlayerHelper.getPlayerName(player);
 
@@ -75,7 +75,7 @@ public class PvpInitializer extends ModuleInitializer {
 
     @Document(id = 1751826854234L, value = "List the players that enable the PvP.")
     @CommandNode("pvp list")
-    private static int $list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource CommandSourceStack source) {
         Set<String> whitelist = data.model().whitelist;
         TextHelper.sendTextByKey(source, "pvp.list", whitelist);
         return CommandHelper.Return.SUCCESS;
@@ -88,8 +88,8 @@ public class PvpInitializer extends ModuleInitializer {
 
     @EventConsumer
     private static void processPvpDamage(PlayerDamageEvent event) {
-        Entity damageSourceEntity = event.getDamageSource().getSource();
-        if (damageSourceEntity instanceof ServerPlayerEntity damageSourcePlayer) {
+        Entity damageSourceEntity = event.getDamageSource().getDirectEntity();
+        if (damageSourceEntity instanceof ServerPlayer damageSourcePlayer) {
             /* Don't flint a TNT to kill yourself. */
             if (damageSourceEntity.equals(event.getPlayer())) return;
 

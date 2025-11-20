@@ -8,7 +8,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class GameProfileWrapper {
         return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(properties));
     }
 
-    public static @NotNull GameProfileWrapper of(@NotNull PlayerEntity player) {
+    public static @NotNull GameProfileWrapper of(@NotNull Player player) {
         return fromVanillaType(player.getGameProfile());
     }
 
@@ -65,9 +65,9 @@ public class GameProfileWrapper {
     }
 
     #if MC_VER >= MC_1_21_9
-    public static @NotNull GameProfile toGameProfile(net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
-        String name = playerConfigEntry.comp_4423();
-        UUID id = playerConfigEntry.comp_4422();
+    public static @NotNull GameProfile toGameProfile(net.minecraft.server.players.NameAndId playerConfigEntry) {
+        String name = playerConfigEntry.name();
+        UUID id = playerConfigEntry.id();
         return new GameProfile(id, name);
     }
     #endif
@@ -86,8 +86,8 @@ public class GameProfileWrapper {
     }
 
     #if MC_VER >= MC_1_21_9
-    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.PlayerConfigEntry playerConfigEntry) {
-        return GameProfileWrapper.of(playerConfigEntry.comp_4422(), playerConfigEntry.comp_4423());
+    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.NameAndId playerConfigEntry) {
+        return GameProfileWrapper.of(playerConfigEntry.id(), playerConfigEntry.name());
     }
     #endif
 
@@ -96,9 +96,9 @@ public class GameProfileWrapper {
         return toGameProfile();
     }
     #elif MC_VER >= MC_1_21_9
-    public Optional<net.minecraft.server.PlayerConfigEntry> toVanillaType() {
+    public Optional<net.minecraft.server.players.NameAndId> toVanillaType() {
         return toGameProfile()
-            .map(net.minecraft.server.PlayerConfigEntry::new);
+            .map(net.minecraft.server.players.NameAndId::new);
     }
     #endif
 }

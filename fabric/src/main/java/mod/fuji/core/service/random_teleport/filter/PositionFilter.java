@@ -3,11 +3,11 @@ package mod.fuji.core.service.random_teleport.filter;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import java.util.Set;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 public class PositionFilter {
@@ -27,8 +27,8 @@ public class PositionFilter {
             && blockPos.getY() <= settings.getMaxY();
     }
 
-    public static boolean isInsideWorldBorder(@NotNull ServerWorld world, @NotNull BlockPos blockPos) {
-        return world.getWorldBorder().contains(blockPos);
+    public static boolean isInsideWorldBorder(@NotNull ServerLevel world, @NotNull BlockPos blockPos) {
+        return world.getWorldBorder().isWithinBounds(blockPos);
     }
 
     public static boolean isSafeBlock(@NotNull RandomTeleportSettings settings, @NotNull BlockState blockState) {

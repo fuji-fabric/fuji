@@ -17,9 +17,9 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.bossbar.BossBarTicket;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.echo.send_bossbar.structure.SendBossbarTicket;
-import net.minecraft.entity.boss.BossBar;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.BossEvent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -39,11 +39,11 @@ public class SendBossbarInitializer extends ModuleInitializer {
 
     @CommandNode("send-bossbar")
     @CommandRequirement(level = 4)
-    private static int $sendBossbar(@CommandSource ServerCommandSource source
-        , ServerPlayerEntity player
+    private static int $sendBossbar(@CommandSource CommandSourceStack source
+        , ServerPlayer player
         , Optional<Integer> totalMs
-        , Optional<BossBar.Color> color
-        , Optional<BossBar.Style> style
+        , Optional<BossEvent.BossBarColor> color
+        , Optional<BossEvent.BossBarOverlay> style
         , Optional<StringList> commandList
         , Optional<Boolean> notifyMeOnComplete
         , Optional<StepType> stepType
@@ -51,8 +51,8 @@ public class SendBossbarInitializer extends ModuleInitializer {
 
         /* Resolve variables. */
         Integer $totalMs = totalMs.orElse(3000);
-        BossBar.Color $color = color.orElse(BossBar.Color.PURPLE);
-        BossBar.Style $style = style.orElse(BossBar.Style.PROGRESS);
+        BossEvent.BossBarColor $color = color.orElse(BossEvent.BossBarColor.PURPLE);
+        BossEvent.BossBarOverlay $style = style.orElse(BossEvent.BossBarOverlay.PROGRESS);
         StringList $commandList = commandList.orElse(new StringList(Collections.emptyList()));
         Boolean $notifyMeOnComplete = notifyMeOnComplete.orElse(false);
         StepType $stepType = stepType.orElse(StepType.FORWARD);

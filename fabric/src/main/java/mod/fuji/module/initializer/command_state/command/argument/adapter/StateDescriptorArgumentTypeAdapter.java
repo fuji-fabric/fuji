@@ -12,7 +12,7 @@ import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import mod.fuji.module.initializer.command_state.structure.StateDescriptor;
 import java.util.List;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class StateDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -32,7 +32,7 @@ public class StateDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String stateId = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return CommandStateService
             .findStateDescriptor(stateId)
@@ -43,7 +43,7 @@ public class StateDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter 
     }
 
     @Override
-    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected @NotNull RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(CommandStateService::listStateIds));
     }

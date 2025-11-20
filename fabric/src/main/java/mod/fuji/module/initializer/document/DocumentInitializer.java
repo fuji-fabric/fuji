@@ -9,7 +9,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.document.builder.MarkdownDocumentBuilder;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1758088953109L, value = """
     This module provides the tools to `build document files`.
@@ -19,7 +19,7 @@ public class DocumentInitializer extends ModuleInitializer {
 
     @CommandNode("document build")
     @CommandRequirement(level = 4)
-    private static int $build(@CommandSource ServerCommandSource source) {
+    private static int $build(@CommandSource CommandSourceStack source) {
         MarkdownDocumentBuilder.buildAll();
         TextHelper.sendTextByKey(source, "document.build", MarkdownDocumentBuilder.DOCUMENT_BUILD_DIR);
 

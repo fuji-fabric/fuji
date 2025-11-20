@@ -2,7 +2,7 @@ package mod.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,12 +10,12 @@ public abstract class ConfirmSignGui extends InputSignGui {
 
     final SlotGuiInterface parent;
 
-    public ConfirmSignGui(@Nullable SlotGuiInterface parent, @NotNull ServerPlayerEntity player) {
+    public ConfirmSignGui(@Nullable SlotGuiInterface parent, @NotNull ServerPlayer player) {
         super(player, TextHelper.getTextByKeyAndReplaceTheKeyword(player, "prompt.input.confirm", "confirm"));
         this.parent = parent;
     }
 
-    public ConfirmSignGui(@NotNull ServerPlayerEntity player) {
+    public ConfirmSignGui(@NotNull ServerPlayer player) {
         this(null, player);
     }
 

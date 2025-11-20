@@ -3,24 +3,24 @@ package mod.fuji.module.initializer.chat.display.gui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.service.display.gui.BaseDisplayGuiFactory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     private final ItemStack itemStack;
 
-    public ItemDisplayGuiFactory(@NotNull ServerPlayerEntity sourcePlayer, @NotNull ItemStack itemStack) {
+    public ItemDisplayGuiFactory(@NotNull ServerPlayer sourcePlayer, @NotNull ItemStack itemStack) {
         super(sourcePlayer);
         this.itemStack = itemStack;
     }
 
     @Override
-    public @NotNull SimpleGui build(@NotNull ServerPlayerEntity viewingPlayer) {
+    public @NotNull SimpleGui build(@NotNull ServerPlayer viewingPlayer) {
         /* Make the GUI. */
-        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_3X3, viewingPlayer, false);
+        SimpleGui gui = new SimpleGui(MenuType.GENERIC_3x3, viewingPlayer, false);
         gui.setTitle(this.title);
 
         /* Place UI items. */

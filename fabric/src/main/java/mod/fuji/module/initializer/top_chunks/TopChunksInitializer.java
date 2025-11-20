@@ -14,9 +14,9 @@ import mod.fuji.module.initializer.top_chunks.gui.TopChunksGui;
 import mod.fuji.module.initializer.top_chunks.service.TopChunksService;
 import mod.fuji.module.initializer.top_chunks.structure.ChunkScore;
 import java.util.PriorityQueue;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 
 
 @Document(id = 1751826535209L, value = """
@@ -41,17 +41,17 @@ public class TopChunksInitializer extends ModuleInitializer {
 
     @Document(id = 1753056668984L, value = "An alias command to `/chunks message`.")
     @CommandNode("chunks")
-    private static int $chunks(@CommandSource ServerCommandSource source) {
+    private static int $chunks(@CommandSource CommandSourceStack source) {
         return $message(source);
     }
 
     @Document(id = 1751826537195L, value = "List all chunks ordered by lag score, and send in `message`.")
     @CommandNode("chunks message")
-    private static int $message(@CommandSource ServerCommandSource source) {
+    private static int $message(@CommandSource CommandSourceStack source) {
         PriorityQueue<ChunkScore> PQ = TopChunksService.computeChunkScores(source);
         var config1 = config.model();
 
-        MutableText reportText = Text.empty();
+        MutableComponent reportText = Component.empty();
         outer:
         for (int j = 0; j < config1.top.rows; j++) {
             for (int i = 0; i < config1.top.columns; i++) {
@@ -68,7 +68,7 @@ public class TopChunksInitializer extends ModuleInitializer {
 
     @Document(id = 1753056643919L, value = "List all chunks ordered by lag score, and send in `GUI`.")
     @CommandNode("chunks gui")
-    private static int $gui(@CommandSource ServerCommandSource source) {
+    private static int $gui(@CommandSource CommandSourceStack source) {
         PriorityQueue<ChunkScore> PQ = TopChunksService.computeChunkScores(source);
         new TopChunksGui(source.getPlayer(), PQ.stream().toList(), 0)
             .open();

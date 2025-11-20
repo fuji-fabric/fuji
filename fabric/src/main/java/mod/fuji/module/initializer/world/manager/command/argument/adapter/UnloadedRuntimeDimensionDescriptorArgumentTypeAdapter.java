@@ -13,20 +13,20 @@ import mod.fuji.module.initializer.world.manager.service.WorldService;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return IdentifierArgumentType.identifier();
+        return ResourceLocationArgument.id();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        Identifier identifier = IdentifierArgumentType.getIdentifier(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        ResourceLocation identifier = ResourceLocationArgument.getId(context, commandArgument.getArgumentName());
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
 
         return runtimeDimensionDescriptor
@@ -55,7 +55,7 @@ public class UnloadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseA
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(() -> WorldService

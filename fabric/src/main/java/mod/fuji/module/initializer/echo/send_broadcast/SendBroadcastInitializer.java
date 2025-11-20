@@ -7,7 +7,7 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751975894810L, value = """
     This module provides the `/send-broadcast` command.
@@ -20,7 +20,7 @@ public class SendBroadcastInitializer extends ModuleInitializer {
     private static int $sendBroadcast(GreedyString rest) {
         String message = rest.getValue();
 
-        Text broadcastText = TextHelper.getTextByValue(null, message);
+        Component broadcastText = TextHelper.getTextByValue(null, message);
         TextHelper.sendBroadcastByText(broadcastText);
         return CommandHelper.Return.SUCCESS;
     }

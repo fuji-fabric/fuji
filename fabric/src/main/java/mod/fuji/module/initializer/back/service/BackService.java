@@ -17,21 +17,21 @@ import mod.fuji.module.initializer.back.structure.LocationEntry;
 import mod.fuji.module.initializer.back.structure.LocationHistory;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BackService {
 
-    public static <R> R withLocationHistory(@NotNull ServerPlayerEntity player, Function<LocationHistory, R> function) {
+    public static <R> R withLocationHistory(@NotNull ServerPlayer player, Function<LocationHistory, R> function) {
         String playerName = PlayerHelper.getPlayerName(player);
         BackInitializer.savedPositionConfig.model().player2history.computeIfAbsent(playerName, k -> new LocationHistory());
         LocationHistory locationHistory = BackInitializer.savedPositionConfig.model().player2history.get(playerName);
         return function.apply(locationHistory);
     }
 
-    public static Integer listBackLocations(ServerCommandSource source, ServerPlayerEntity player) {
+    public static Integer listBackLocations(CommandSourceStack source, ServerPlayer player) {
         return withLocationHistory(player, locationHistory -> {
             // Print header.
             String targetPlayerName = PlayerHelper.getPlayerName(player);
@@ -54,7 +54,7 @@ public class BackService {
         });
     }
 
-    public static int teleportBackLocation(@NotNull ServerPlayerEntity player, int lastNLocation, @Nullable Dimension targetDimension) {
+    public static int teleportBackLocation(@NotNull ServerPlayer player, int lastNLocation, @Nullable Dimension targetDimension) {
         return withLocationHistory(player, locationHistory -> {
             // find location entry.
             LocationEntry latestEntry = locationHistory.findEntry(lastNLocation, targetDimension);
@@ -69,13 +69,13 @@ public class BackService {
         });
     }
 
-    private static int getMaxBackLocationEntriesToSave(@NotNull ServerPlayerEntity player) {
-        Optional<Integer> value = LuckpermsHelper.getMeta(player.getUuid(), BackInitializer.MAX_LOCATION_ENTRIES_TO_SAVE_META);
+    private static int getMaxBackLocationEntriesToSave(@NotNull ServerPlayer player) {
+        Optional<Integer> value = LuckpermsHelper.getMeta(player.getUUID(), BackInitializer.MAX_LOCATION_ENTRIES_TO_SAVE_META);
         return value.orElse(BackInitializer.config.model().max_back_location_entries_to_save);
     }
 
     @SuppressWarnings("RedundantIfStatement")
-    private static boolean shouldSaveCurrentLocation(@NotNull ServerPlayerEntity player) {
+    private static boolean shouldSaveCurrentLocation(@NotNull ServerPlayer player) {
         return withLocationHistory(player, locationHistory -> {
             LocationEntry latestEntry = locationHistory.getLatestEntry();
 
@@ -88,7 +88,7 @@ public class BackService {
             GlobalPos latestLocation = latestEntry.getLocation();
             double ignoreDistance = BackInitializer.config.model().ignore_distance;
             if (latestLocation.sameLevel(PlayerHelper.getServerWorld(player))
-                && EntityHelper.getPos(player).squaredDistanceTo(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
+                && EntityHelper.getPos(player).distanceToSqr(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
             ) {
                 return false;
             }
@@ -97,7 +97,7 @@ public class BackService {
         });
     }
 
-    private static void trySaveCurrentLocation(@NotNull ServerPlayerEntity player) {
+    private static void trySaveCurrentLocation(@NotNull ServerPlayer player) {
         withLocationHistory(player, locationHistory -> {
             if (shouldSaveCurrentLocation(player)) {
                 LocationEntry locationEntry = LocationEntry.makeLocationEntry(player);
@@ -108,7 +108,7 @@ public class BackService {
         });
     }
 
-    public static void pushBackLocation(@NotNull ServerPlayerEntity player, @NotNull LocationHistory locationHistory, @NotNull LocationEntry locationEntry) {
+    public static void pushBackLocation(@NotNull ServerPlayer player, @NotNull LocationHistory locationHistory, @NotNull LocationEntry locationEntry) {
         locationHistory.pushEntry(locationEntry);
         locationHistory.trimEntries(getMaxBackLocationEntriesToSave(player));
     }

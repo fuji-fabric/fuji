@@ -7,7 +7,7 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import mod.fuji.module.initializer.command_permission.structure.WrappedPredicate;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 @Mixin(value = CommandNode.class, remap = false)
 public abstract class CommandNodeMixin {
 
+    // TODO(Ravel): Could not determine a single target
     @Mutable
     @Shadow
     @Final
@@ -29,6 +30,7 @@ public abstract class CommandNodeMixin {
     @Unique
     private Predicate<Object> previousWrappedPredicate;
 
+    // TODO(Ravel): no target class
     @SuppressWarnings({"unchecked", "ConstantValue"})
     @ModifyReturnValue(method = "getRequirement", at = @At("RETURN"))
     Predicate<Object> wrapRequirementPredicateForThisCommandNode(Predicate<Object> original) {
@@ -51,7 +53,7 @@ public abstract class CommandNodeMixin {
 
         if (shouldWrapIt) {
             // NOTE: Wrap the currently captured this.requirement value.
-            final CommandNode<ServerCommandSource> node = (CommandNode<ServerCommandSource>) (Object) this;
+            final CommandNode<CommandSourceStack> node = (CommandNode<CommandSourceStack>) (Object) this;
             requirement = CommandPermissionService.makeWrappedPredicate(node, original);
 
             // NOTE: Store previous wrapped predicate, and invalidate it if someone modifies the this.requirement value.

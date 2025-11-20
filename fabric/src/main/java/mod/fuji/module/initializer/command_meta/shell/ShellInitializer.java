@@ -18,8 +18,8 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_meta.shell.config.ShellConfigModel;
 import java.nio.charset.StandardCharsets;
 import lombok.Cleanup;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class ShellInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ShellConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ShellConfigModel.class);
 
-    private static void checkSecurity(CommandContext<ServerCommandSource> ctx) {
+    private static void checkSecurity(CommandContext<CommandSourceStack> ctx) {
         var config = ShellInitializer.config.model();
 
         if (!config.enable_warning.equals("CONFIRM")) {
@@ -71,7 +71,7 @@ public class ShellInitializer extends ModuleInitializer {
             throw new AbortCommandExecutionException();
         }
 
-        if (ctx.getSource().getName() != null && !config.security.allowed_player_names.contains(ctx.getSource().getName())) {
+        if (ctx.getSource().getTextName() != null && !config.security.allowed_player_names.contains(ctx.getSource().getTextName())) {
             TextHelper.sendTextByKey(ctx.getSource(), "shell.failed.not_in_allowed_list");
             throw new AbortCommandExecutionException();
         }
@@ -81,7 +81,7 @@ public class ShellInitializer extends ModuleInitializer {
     @Document(id = 1751824784016L, value = "Execute a shell command in host os.")
     @CommandNode("shell")
     @CommandRequirement(level = 4)
-    private static int $shell(@CommandSource CommandContext<ServerCommandSource> ctx, GreedyString rest) {
+    private static int $shell(@CommandSource CommandContext<CommandSourceStack> ctx, GreedyString rest) {
         checkSecurity(ctx);
 
         String commandString = rest.getValue();
@@ -103,7 +103,7 @@ public class ShellInitializer extends ModuleInitializer {
 
                 // Send feedback.
                 LogUtil.info(output.toString());
-                TextHelper.sendMessageByText(ctx.getSource(), Text.literal(output.toString()));
+                TextHelper.sendMessageByText(ctx.getSource(), Component.literal(output.toString()));
             } catch (IOException | InterruptedException e) {
                 LogUtil.error("Failed to execute the shell command: {}", commandString, e);
             }

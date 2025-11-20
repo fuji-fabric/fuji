@@ -5,13 +5,13 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.module.initializer.command_permission.structure.WrappedPredicate;
 import java.util.function.Predicate;
 import net.luckperms.api.util.Tristate;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandPermissionService {
     public static boolean verboseModeFlag = false;
 
-    public static void processVerboseModeFeature(String askWhoForPermissionTestResult, ServerCommandSource source, String commandPath, Tristate commandPermissionTestResult) {
+    public static void processVerboseModeFeature(String askWhoForPermissionTestResult, CommandSourceStack source, String commandPath, Tristate commandPermissionTestResult) {
         if (!verboseModeFlag) return;
 
         // Make description.
@@ -25,7 +25,7 @@ public class CommandPermissionService {
             ◉ Ask who for permission test result: {}
             ◉ Permission Test Result: {}
             ◉ Explanation: {}
-            """, source.getName(), commandPath, askWhoForPermissionTestResult, commandPermissionTestResult, explanationForPermissionTestResult);
+            """, source.getTextName(), commandPath, askWhoForPermissionTestResult, commandPermissionTestResult, explanationForPermissionTestResult);
     }
 
     private static @NotNull String makeExplanationForPermissionTestResult(Tristate state) {
@@ -42,11 +42,11 @@ public class CommandPermissionService {
         return explanation;
     }
 
-    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(@NotNull com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode, @NotNull Predicate<Object> originalRequirement) {
+    public static @NotNull WrappedPredicate<Object> makeWrappedPredicate(@NotNull com.mojang.brigadier.tree.CommandNode<CommandSourceStack> commandNode, @NotNull Predicate<Object> originalRequirement) {
         return new WrappedPredicate<>(commandNode, originalRequirement);
     }
 
-    public static boolean canUseThisCommand(ServerCommandSource source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
+    public static boolean canUseThisCommand(CommandSourceStack source, Tristate permissionTestResult, @NotNull Predicate<Object> originalRequirement) {
         /* If the corresponding permission is DEFINED, we use it to override the original requirement. */
         if (permissionTestResult != Tristate.UNDEFINED) {
             return permissionTestResult.asBoolean();
@@ -65,7 +65,7 @@ public class CommandPermissionService {
             .forEach(com.mojang.brigadier.tree.CommandNode::getRequirement);
     }
 
-    public static boolean isCommandNodeWrapped(com.mojang.brigadier.tree.CommandNode<ServerCommandSource> commandNode) {
-        return commandNode.getRequirement() instanceof WrappedPredicate<ServerCommandSource>;
+    public static boolean isCommandNodeWrapped(com.mojang.brigadier.tree.CommandNode<CommandSourceStack> commandNode) {
+        return commandNode.getRequirement() instanceof WrappedPredicate<CommandSourceStack>;
     }
 }

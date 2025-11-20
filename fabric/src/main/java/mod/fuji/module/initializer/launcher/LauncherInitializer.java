@@ -12,11 +12,11 @@ import mod.fuji.core.event.message.entity.LivingEntityDamageEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.HashSet;
 import java.util.Set;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -62,11 +62,11 @@ public class LauncherInitializer extends ModuleInitializer {
     public static Set<Entity> LAUNCHED_ENTITIES = new HashSet<>();
 
     private static void launchEntityFacing(@NotNull Entity player, float angle, double power) {
-        launchEntity(player, player.getYaw(), angle, power);
+        launchEntity(player, player.getYRot(), angle, power);
     }
 
     private static void launchEntityAt(@NotNull Entity player, @NotNull Entity at, float angle, double power) {
-        launchEntity(player, at.getYaw(), angle, power);
+        launchEntity(player, at.getYRot(), angle, power);
     }
 
     public static void launchEntity(@NotNull Entity entity, float perspectiveYaw, float perspectivePitch, double power) {
@@ -86,16 +86,16 @@ public class LauncherInitializer extends ModuleInitializer {
         z /= length;
 
         /* Apply velocity scaled by power. */
-        power = MathHelper.clamp(power, -3.9F, 3.9F);
-        entity.setVelocity(x * power, y * power, z * power);
+        power = Mth.clamp(power, -3.9F, 3.9F);
+        entity.setDeltaMovement(x * power, y * power, z * power);
 
         /* Mark velocity as modified. */
-        entity.velocityModified = true;
+        entity.hurtMarked = true;
     }
 
     @CommandNode("launch facing")
     @CommandRequirement(level = 4)
-    private static int $launch(@CommandSource ServerCommandSource source, EntityCollection target, float angle, double power) {
+    private static int $launch(@CommandSource CommandSourceStack source, EntityCollection target, float angle, double power) {
         target
             .getValue()
             .forEach(entity -> {
@@ -107,7 +107,7 @@ public class LauncherInitializer extends ModuleInitializer {
 
     @CommandNode("launch at")
     @CommandRequirement(level = 4)
-    private static int $launch(@CommandSource ServerCommandSource source, Entity at, EntityCollection target, float angle, double power) {
+    private static int $launch(@CommandSource CommandSourceStack source, Entity at, EntityCollection target, float angle, double power) {
         target
             .getValue()
             .forEach(entity -> {
@@ -127,8 +127,8 @@ public class LauncherInitializer extends ModuleInitializer {
         /* Compute the boolean value. */
         DamageSource damageSource = event.getDamageSource();
         boolean immuneToThisDamageType = damageSource
-            .getTypeRegistryEntry()
-            .getKey()
+            .typeHolder()
+            .unwrapKey()
             .map(key -> key.equals(DamageTypes.FALL))
             .orElse(false);
 

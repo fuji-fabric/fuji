@@ -11,23 +11,23 @@ import mod.fuji.core.structure.MixinApplicationInfo;
 import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
 import java.util.Comparator;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
 
-    public MixinsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
+    public MixinsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "mixin.application"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<MixinApplicationInfo> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
+    protected @NotNull PagedGui<MixinApplicationInfo> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<MixinApplicationInfo> entities, int pageIndex) {
         return new MixinsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    public static MixinsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
+    public static MixinsInspectionGui inspectAll(@NotNull ServerPlayer player) {
         List<MixinApplicationInfo> entities = GlobalMixinConfigPlugin.mixinApplicationInfoMap.values()
             .stream()
             .sorted(Comparator

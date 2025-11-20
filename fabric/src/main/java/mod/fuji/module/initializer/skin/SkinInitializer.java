@@ -22,7 +22,7 @@ import mod.fuji.module.initializer.skin.provider.MineSkinSkinProvider;
 import mod.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import mod.fuji.module.initializer.skin.service.SkinService;
 import mod.fuji.module.initializer.skin.structure.SkinVariant;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751826807167L, value = """
     This module provides the `skin` management for players.
@@ -62,14 +62,14 @@ public class SkinInitializer extends ModuleInitializer {
 
     @Document(id = 1751826809279L, value = "Set skin to a random default skin.")
     @CommandNode("use-random-default-skins")
-    private static int $useRandomDefaultSkins(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $useRandomDefaultSkins(@CommandSource @CommandTarget ServerPlayer player) {
         SkinService.changeSkin(player, SkinService::getRandomDefaultSkin);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1753333877248L, value = "Use the `default skin` with specified `skin name`.")
     @CommandNode("use-default-skin")
-    private static int $useDefaultSkin(@CommandSource @CommandTarget ServerPlayerEntity player, DefaultSkinName defaultSkinName) {
+    private static int $useDefaultSkin(@CommandSource @CommandTarget ServerPlayer player, DefaultSkinName defaultSkinName) {
         String $defaultSkinName = defaultSkinName.getValue();
         return SkinService.findSkinDescriptor($defaultSkinName)
             .map(skinDescriptor -> {
@@ -86,7 +86,7 @@ public class SkinInitializer extends ModuleInitializer {
         Open the `skin` GUI.
         """)
     @CommandNode("gui")
-    private static int $gui(@CommandSource ServerPlayerEntity player) {
+    private static int $gui(@CommandSource ServerPlayer player) {
         SkinGui
             .makeInstance(player)
             .open();
@@ -97,13 +97,13 @@ public class SkinInitializer extends ModuleInitializer {
         Alias to `/skin gui` command.
         """)
     @CommandNode
-    private static int $skin(@CommandSource ServerPlayerEntity player) {
+    private static int $skin(@CommandSource ServerPlayer player) {
         return $gui(player);
     }
 
     @Document(id = 1751826814466L, value = "Set skin to an online skin of the same name.")
     @CommandNode("use-my-mojang-skin")
-    private static int $useMyMojangSkin(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $useMyMojangSkin(@CommandSource @CommandTarget ServerPlayer player) {
         String onlinePlayerName = PlayerHelper.getPlayerName(player);
         SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(onlinePlayerName).orElse(null));
         return CommandHelper.Return.SUCCESS;
@@ -111,14 +111,14 @@ public class SkinInitializer extends ModuleInitializer {
 
     @Document(id = 1753250702541L, value = "Set skin to an online skin of the specified name.")
     @CommandNode("use-mojang-skin")
-    private static int $useMojangSkin(@CommandSource @CommandTarget ServerPlayerEntity player, Word skinName) {
+    private static int $useMojangSkin(@CommandSource @CommandTarget ServerPlayer player, Word skinName) {
         SkinService.changeSkin(player, () -> MojangSkinProvider.fetchSkin(skinName.getValue()).orElse(null));
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826819277L, value = "Set skin to a custom url in Steve model.")
     @CommandNode("use-url-skin steve")
-    private static int $useUrlSkinSteveModel(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString url) {
+    private static int $useUrlSkinSteveModel(@CommandSource @CommandTarget ServerPlayer player, GreedyString url) {
         String $url = url.getValue();
         SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin($url, SkinVariant.CLASSIC).orElse(null));
         return CommandHelper.Return.SUCCESS;
@@ -126,7 +126,7 @@ public class SkinInitializer extends ModuleInitializer {
 
     @Document(id = 1751826827369L, value = "Set skin to a custom url in Alex model.")
     @CommandNode("use-url-skin alex")
-    private static int $useUrlSkinAlexModel(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString url) {
+    private static int $useUrlSkinAlexModel(@CommandSource @CommandTarget ServerPlayer player, GreedyString url) {
         String $url = url.getValue();
         SkinService.changeSkin(player, () -> MineSkinSkinProvider.fetchSkin($url, SkinVariant.SLIM).orElse(null));
         return CommandHelper.Return.SUCCESS;

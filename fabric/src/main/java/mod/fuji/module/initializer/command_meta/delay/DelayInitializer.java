@@ -15,7 +15,7 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -46,7 +46,7 @@ public class DelayInitializer extends ModuleInitializer {
     @Document(id = 1751824706971L, value = "Execute a command in seconds.")
     @CommandNode("delay")
     @CommandRequirement(level = 4)
-    private static int $delay(@CommandSource ServerCommandSource source, double time, GreedyCommandString rest) {
+    private static int $delay(@CommandSource CommandSourceStack source, double time, GreedyCommandString rest) {
         String $rest = rest.getValue();
 
         long scheduleTimeMs = (long) (1000 * time);

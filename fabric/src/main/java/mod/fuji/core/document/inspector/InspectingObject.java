@@ -12,8 +12,8 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -224,21 +224,21 @@ public class InspectingObject {
         return true;
     }
 
-    public @NotNull Text toNameText(@NotNull ServerPlayerEntity player) {
+    public @NotNull Component toNameText(@NotNull ServerPlayer player) {
         @NotNull String objectName = this.getObjectName();
         objectName = TextHelper.Parsers.escapeTags(objectName);
         return TextHelper.getTextByKey(player, "object.name", objectName);
     }
 
-    private void addPossibleValuesForEnumType(@NotNull ServerPlayerEntity player, @NotNull List<Text> lore) {
+    private void addPossibleValuesForEnumType(@NotNull ServerPlayer player, @NotNull List<Component> lore) {
         if (!this.getObjectType().isEnum()) return;
 
         @NotNull String possibleValues = ReflectionUtil.getEnumValuesCompactString(this.getObjectType());
         lore.add(TextHelper.getTextByKey(player, "object.value.possible_values", possibleValues));
     }
 
-    public @NotNull List<Text> toLore(@NotNull ServerPlayerEntity player) {
-        List<Text> lore = new ArrayList<>();
+    public @NotNull List<Component> toLore(@NotNull ServerPlayer player) {
+        List<Component> lore = new ArrayList<>();
 
         /* Add object type text. */
         String objectTypeString = getObjectTypeString();

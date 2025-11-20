@@ -10,9 +10,9 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.inspector.FailedToInspectException;
 import mod.fuji.core.document.inspector.InspectingObject;
 import mod.fuji.core.document.inspector.JavaObjectInspector;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     final @NotNull String fileRelativePath;
     final @NotNull JavaObjectInspector inspector;
 
-    public JavaObjectInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<InspectingObject> entities, int pageIndex, @NotNull String fileRelativePath, @NotNull JavaObjectInspector inspector) {
+    public JavaObjectInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<InspectingObject> entities, int pageIndex, @NotNull String fileRelativePath, @NotNull JavaObjectInspector inspector) {
         super(parent, player, TextHelper.getTextByKey(player, "object.gui.title", inspector.getWalkingPath()), entities, pageIndex);
 
         /* Pass the variables along the inspecting path. */
@@ -39,7 +39,7 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     }
 
     @Override
-    protected @NotNull PagedGui<InspectingObject> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<InspectingObject> entities, int pageIndex) {
+    protected @NotNull PagedGui<InspectingObject> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<InspectingObject> entities, int pageIndex) {
         return new JavaObjectInspectionGui(parent, player, entities, pageIndex, this.fileRelativePath, this.inspector);
     }
 

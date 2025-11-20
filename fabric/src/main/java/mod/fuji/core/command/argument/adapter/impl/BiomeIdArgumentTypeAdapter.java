@@ -8,9 +8,9 @@ import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.BiomeId;
 import java.util.List;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 public class BiomeIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -26,18 +26,18 @@ public class BiomeIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return IdentifierArgumentType.identifier();
+        return ResourceLocationArgument.id();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return new BiomeId(IdentifierArgumentType.getIdentifier(context, commandArgument.getArgumentName()));
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return new BiomeId(ResourceLocationArgument.getId(context, commandArgument.getArgumentName()));
     }
 
     @Override
-    protected @NotNull RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected @NotNull RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
-            .suggests(CommandHelper.Suggestion.identifiers(RegistryKeys.BIOME));
+            .suggests(CommandHelper.Suggestion.identifiers(Registries.BIOME));
     }
 }

@@ -6,8 +6,8 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
-import net.minecraft.command.argument.ItemPredicateArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.item.ItemPredicateArgument;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -15,17 +15,17 @@ import org.jetbrains.annotations.NotNull;
 public class ItemPredicateArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ItemPredicateArgumentType.itemPredicate(CommandHelper.getCommandRegistryAccess());
+        return ItemPredicateArgument.itemPredicate(CommandHelper.getCommandRegistryAccess());
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return ItemPredicateArgumentType.getItemStackPredicate(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ItemPredicateArgument.getItemPredicate(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(ItemPredicateArgumentType.ItemStackPredicateArgument.class);
+        return List.of(ItemPredicateArgument.Result.class);
     }
 
     @Override

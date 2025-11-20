@@ -4,8 +4,8 @@ import mod.fuji.core.event.message.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)

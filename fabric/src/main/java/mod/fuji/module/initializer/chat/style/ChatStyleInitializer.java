@@ -23,15 +23,15 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.style.model.ChatFormatModel;
 import mod.fuji.module.initializer.chat.style.model.ChatStyleConfigModel;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Decoration;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.ChatTypeDecoration;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826676414L, value = """
@@ -102,17 +102,17 @@ public class ChatStyleInitializer extends ModuleInitializer {
     /**
  * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
  **/
-    public static final RegistryKey<MessageType> MESSAGE_TYPE_KEY = RegistryKey.of(RegistryKeys.MESSAGE_TYPE, Identifier.of(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
-    public static final MessageType MESSAGE_TYPE_VALUE = new MessageType(
-        Decoration.ofChat("%s%s"),
-        Decoration.ofChat("%s%s"));
+    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, ResourceLocation.fromNamespaceAndPath(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
+    public static final ChatType MESSAGE_TYPE_VALUE = new ChatType(
+        ChatTypeDecoration.withSender("%s%s"),
+        ChatTypeDecoration.withSender("%s%s"));
 
     private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = ObjectConfigurationHandler.ofModule("chat.json", ChatFormatModel.class);
     private static final NodeParser CHAT_STYLE_PARSER = TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
     private static final String CHAT_STYLE_TYPE = "chat";
 
-    private static @NotNull String stripeStyleTags(@NotNull PlayerEntity player, @NotNull String chatString) {
+    private static @NotNull String stripeStyleTags(@NotNull Player player, @NotNull String chatString) {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, chatString);
     }
 
@@ -121,7 +121,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         For example: `/chat style set prefix + %message% + suffix`
         """)
     @CommandNode("set")
-    private static int $setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player, GreedyString format) {
+    private static int $setPerPlayerFormat(@CommandSource @CommandTarget ServerPlayer player, GreedyString format) {
         /* Save the new format. */
         String playerName = PlayerHelper.getPlayerName(player);
         String newFormat = format.getValue();
@@ -134,14 +134,14 @@ public class ChatStyleInitializer extends ModuleInitializer {
         newFormat = TextHelper.Translator.getLanguageValueByKey(player, "chat.format.set");
         newFormat = newFormat.replace("%s", stripedFormat);
         newFormat = newFormat.replace("%message%", TextHelper.Translator.getLanguageValueByKey(player, "chat.format.show"));
-        Text text = TextHelper.getTextByValue(player, newFormat);
+        Component text = TextHelper.getTextByValue(player, newFormat);
         TextHelper.sendMessageByText(player, text);
         return CommandHelper.Return.SUCCESS;
     }
 
     @Document(id = 1751826681754L, value = "Reset your personal chat content format.")
     @CommandNode("reset")
-    private static int $resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayerEntity player) {
+    private static int $resetPerPlayerFormat(@CommandSource @CommandTarget ServerPlayer player) {
         /* Remove the per-player format. */
         String playerName = PlayerHelper.getPlayerName(player);
         chatFormatData.model().getFormat().getPlayer2format().remove(playerName);
@@ -152,12 +152,12 @@ public class ChatStyleInitializer extends ModuleInitializer {
         return CommandHelper.Return.SUCCESS;
     }
 
-    public static @NotNull Text parseSenderText(@NotNull ServerPlayerEntity player) {
+    public static @NotNull Component parseSenderText(@NotNull ServerPlayer player) {
         String senderString = config.model().style.sender;
         return TextHelper.getTextByValue(player, senderString);
     }
 
-    public static @NotNull Text parseContentText(@NotNull ServerPlayerEntity player, String message) {
+    public static @NotNull Component parseContentText(@NotNull ServerPlayer player, String message) {
         String contentString = config.model().style.content.formatted(message);
         String playerName = PlayerHelper.getPlayerName(player);
         contentString = chatFormatData.model().getFormat().getPlayer2format().getOrDefault(playerName, DEFAULT_CONTENT_FORMAT)
@@ -170,18 +170,18 @@ public class ChatStyleInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.HIGHER)
     private static void handleOnPlayerChatEvent(PlayerChatMessagePreEvent event) {
         /* Get signed message. */
-        SignedMessage signedMessage = event.getSignedMessage();
+        PlayerChatMessage signedMessage = event.getSignedMessage();
 
         /* Make sender text. */
-        ServerPlayerEntity player = event.getPlayer();
-        Text senderText = ChatStyleInitializer.parseSenderText(player);
-        MessageType.Parameters newParameters = MessageType.params(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().getRegistryManager(), senderText);
+        ServerPlayer player = event.getPlayer();
+        Component senderText = ChatStyleInitializer.parseSenderText(player);
+        ChatType.Bound newParameters = ChatType.bind(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().registryAccess(), senderText);
         event.setParameters(newParameters);
 
         /* Make content text. */
-        String contentString = TextHelper.Operators.getString(signedMessage.getContent());
-        Text contentText = ChatStyleInitializer.parseContentText(player, contentString);
-        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(contentText);
+        String contentString = TextHelper.Operators.getString(signedMessage.decoratedContent());
+        Component contentText = ChatStyleInitializer.parseContentText(player, contentString);
+        PlayerChatMessage newSignedMessage = signedMessage.withUnsignedContent(contentText);
         event.setSignedMessage(newSignedMessage);
     }
 

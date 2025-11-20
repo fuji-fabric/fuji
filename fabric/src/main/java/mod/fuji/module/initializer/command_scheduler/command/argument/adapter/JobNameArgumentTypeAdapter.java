@@ -10,7 +10,7 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.command_scheduler.CommandSchedulerInitializer;
 import mod.fuji.module.initializer.command_scheduler.command.argument.wrapper.JobName;
 import mod.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class JobNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         return new JobName(StringArgumentType.getString(context, commandArgument.getArgumentName()));
     }
 
@@ -39,7 +39,7 @@ public class JobNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName).suggests(CommandHelper.Suggestion.iterable(
             () -> CommandSchedulerInitializer.scheduler.model().jobs.stream().map(CommandSchedulerJobDescriptor::getName).toList()
         ));

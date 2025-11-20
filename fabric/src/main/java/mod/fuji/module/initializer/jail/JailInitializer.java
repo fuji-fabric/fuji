@@ -28,10 +28,10 @@ import mod.fuji.module.initializer.jail.job.PatrolJailJob;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.Optional;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1753681022357L, value = """
     This module allows defining a `jail`.
@@ -153,7 +153,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753686048373L, value = "List all defined `jails`.")
     @CommandNode("jail list")
     @CommandRequirement(level = 4)
-    private static int $list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource CommandSourceStack source) {
         TextHelper.sendTextByKey(source, "jail.list", JailService.getJailIds());
         return CommandHelper.Return.SUCCESS;
     }
@@ -161,8 +161,8 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753686063844L, value = "Put the `player` into a specified `jail`.")
     @CommandNode("jail put")
     @CommandRequirement(level = 4)
-    private static int $put(@CommandSource ServerCommandSource source, OfflinePlayerName playerName, JailDescriptor jail, Optional<Duration> duration, GreedyString reason) {
-        String creatorName = source.getName();
+    private static int $put(@CommandSource CommandSourceStack source, OfflinePlayerName playerName, JailDescriptor jail, Optional<Duration> duration, GreedyString reason) {
+        String creatorName = source.getTextName();
         String $playerName = playerName.getValue();
         String $reason = reason.getValue();
         String $duration = duration
@@ -190,7 +190,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753690598413L, value = "Remove a player from the jail it is currently in.")
     @CommandNode("jail un-put")
     @CommandRequirement(level = 4)
-    private static int $unPut(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+    private static int $unPut(@CommandSource CommandSourceStack source, JailedPlayerName playerName) {
         String $playerName = playerName.getValue();
 
         return JailService
@@ -209,7 +209,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753692574518L, value = "Find the `jail` the player is in.")
     @CommandNode("jail where")
     @CommandRequirement(level = 4)
-    private static int $where(@CommandSource ServerCommandSource source, JailedPlayerName playerName) {
+    private static int $where(@CommandSource CommandSourceStack source, JailedPlayerName playerName) {
         String $playerName = playerName.getValue();
         return JailService
             .getActiveJailRecord($playerName)
@@ -234,14 +234,14 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753771412507L, value = "A predicate command to check if the target player is jailed.")
     @CommandNode("is-jailed?")
     @CommandRequirement(level = 4)
-    private static int $isJailed(@CommandSource ServerCommandSource source, String playerName) {
+    private static int $isJailed(@CommandSource CommandSourceStack source, String playerName) {
         return CommandHelper.Return.returnBoolean(source, JailService.getActiveJailRecord(playerName).isPresent());
     }
 
     @Document(id = 1753772112918L, value = "Create a new `jail` descriptor.")
     @CommandNode("jail create")
     @CommandRequirement(level = 4)
-    private static int $create(@CommandSource ServerCommandSource source, String jailId) {
+    private static int $create(@CommandSource CommandSourceStack source, String jailId) {
         return JailService.findJailDescriptor(jailId)
             .map(it -> {
                 TextHelper.sendTextByKey(source,"jail.already_exists", jailId);
@@ -257,7 +257,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753772960860L, value = "Delete an existing `jail` descriptor")
     @CommandNode("jail delete")
     @CommandRequirement(level = 4)
-    private static int $deleteJail(@CommandSource ServerCommandSource source, JailDescriptor jail, Optional<Boolean> confirm) {
+    private static int $deleteJail(@CommandSource CommandSourceStack source, JailDescriptor jail, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             JailService.deleteJailDescriptor(jail);
             TextHelper.sendTextByKey(source, "jail.delete.success", jail.getId());
@@ -268,7 +268,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753774327312L, value = "Teleport to the `position` of an existing `jail`.")
     @CommandNode("jail tp")
     @CommandRequirement(level = 4)
-    private static int $tp(@CommandSource @CommandTarget ServerPlayerEntity player, JailDescriptor jail) {
+    private static int $tp(@CommandSource @CommandTarget ServerPlayer player, JailDescriptor jail) {
         jail.getGlobalPosition().teleport(player);
         TextHelper.sendTextByKey(player, "jail.tp", jail.getId());
         return CommandHelper.Return.SUCCESS;
@@ -277,7 +277,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753774502626L, value = "Set the `position` of the specified `jail` to your current position.")
     @CommandNode("jail set-position")
     @CommandRequirement(level = 4)
-    private static int $setPosition(@CommandSource ServerPlayerEntity player, JailDescriptor jail) {
+    private static int $setPosition(@CommandSource ServerPlayer player, JailDescriptor jail) {
         GlobalPos newValue = GlobalPos.of(player);
         JailService.setJailPosition(jail, newValue);
         TextHelper.sendTextByKey(player,"jail.set_position", jail.getId());
@@ -287,7 +287,7 @@ public class JailInitializer extends ModuleInitializer {
     @Document(id = 1753864337061L, value = "Open the jail GUI.")
     @CommandNode("jail gui")
     @CommandRequirement(level = 4)
-    private static int $gui(@CommandSource ServerPlayerEntity player) {
+    private static int $gui(@CommandSource ServerPlayer player) {
         JailListGui
             .make(player)
             .open();
@@ -324,17 +324,17 @@ public class JailInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void modifyPlayerListName(ModifyPlayerListNameEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
-        Text original = event.getText();
-        Text newValue = JailService.modifyDisplayName(original, player);
+        ServerPlayer player = event.getPlayer();
+        Component original = event.getText();
+        Component newValue = JailService.modifyDisplayName(original, player);
         event.setText(newValue);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void modifyPlayerDisplayName(ModifyPlayerDisplayNameEvent event) {
-        PlayerEntity player = event.getPlayer();
-        Text original = event.getText();
-        Text newValue = JailService.modifyDisplayName(original, player);
+        Player player = event.getPlayer();
+        Component original = event.getText();
+        Component newValue = JailService.modifyDisplayName(original, player);
         event.setText(newValue);
     }
 

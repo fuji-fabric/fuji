@@ -15,7 +15,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.color.sign.config.model.ColorSignConfigModel;
 import mod.fuji.module.initializer.color.sign.structure.SignCache;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,7 +61,7 @@ public class ColorSignInitializer extends ModuleInitializer {
         }
     }
 
-    public static String stripeStyleTags(PlayerEntity player, String string) {
+    public static String stripeStyleTags(Player player, String string) {
         return StyleStriper.stripe(player, "sign", string);
     }
 }

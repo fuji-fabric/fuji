@@ -8,9 +8,9 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 #elif MC_VER > MC_1_20_4
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 #endif
-import net.minecraft.command.argument.TextArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.arguments.ComponentArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -21,18 +21,18 @@ public class TextArgumentTypeAdapter extends BaseArgumentTypeAdapter {
         #if MC_VER <= MC_1_20_4
         return TextArgumentType.text();
         #elif MC_VER > MC_1_20_4
-        return TextArgumentType.text(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
+        return ComponentArgument.textComponent(CommandAnnotationProcessor.COMMAND_REGISTRY_ACCESS);
         #endif
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return TextArgumentType.getTextArgument(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return ComponentArgument.getRawComponent(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(Text.class);
+        return List.of(Component.class);
     }
 
     @Override

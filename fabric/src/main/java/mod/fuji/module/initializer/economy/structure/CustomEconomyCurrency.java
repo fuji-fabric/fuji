@@ -8,9 +8,9 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -24,12 +24,12 @@ public class CustomEconomyCurrency implements EconomyCurrency {
     }
 
     @Override
-    public Text name() {
+    public Component name() {
         return TextHelper.getTextByValue(null, currencyDescriptor.currencyName);
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return RegistryHelper.makeIdentifierOrThrow(currencyDescriptor.currencyId);
     }
 
@@ -46,7 +46,7 @@ public class CustomEconomyCurrency implements EconomyCurrency {
     }
 
     @Override
-    public Text formatValueText(long value, boolean precise) {
+    public Component formatValueText(long value, boolean precise) {
         String formatValueText = this.currencyDescriptor.formatValueText;
         double faceValue = value / CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR;
         formatValueText = String.format(formatValueText, faceValue);

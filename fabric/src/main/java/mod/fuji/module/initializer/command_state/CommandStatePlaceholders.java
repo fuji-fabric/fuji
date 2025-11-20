@@ -7,7 +7,7 @@ import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class CommandStatePlaceholders {
 
@@ -25,12 +25,12 @@ public class CommandStatePlaceholders {
             return CommandStateService
                 .findStateDescriptor(stateId)
                 .map(stateDescriptor -> {
-                    AtomicReference<Text> textRef = new AtomicReference<>();
+                    AtomicReference<Component> textRef = new AtomicReference<>();
 
                     CommandStateService.withPlayerStateMap(player, playerStates -> {
-                        Text text = Optional
+                        Component text = Optional
                             .ofNullable(playerStates.getStateMap().get(stateId))
-                            .map(it -> Text.of(String.valueOf(it.getValue())))
+                            .map(it -> Component.nullToEmpty(String.valueOf(it.getValue())))
                             .orElseGet(() -> TextHelper.getTextByKey(player, "command_state.state.no_value"));
                         textRef.set(text);
                     });

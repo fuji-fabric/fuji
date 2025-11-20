@@ -1,16 +1,16 @@
 accessWidener v2 named
 
 # core
-accessible method net/minecraft/util/UserCache$Entry getProfile ()Lcom/mojang/authlib/GameProfile;
+accessible method net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
 
 # world module
 accessible field net/minecraft/world/dimension/DimensionOptionsRegistryHolder comp_1014 Lnet/minecraft/registry/Registry;
 
 # view module
-accessible field net/minecraft/server/MinecraftServer saveHandler Lnet/minecraft/world/WorldSaveHandler;
+accessible field net/minecraft/server/MinecraftServer playerDataStorage Lnet/minecraft/world/WorldSaveHandler;
 
 # world helper
-accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+accessible field net/minecraft/server/world/ThreadedAnvilChunkStorage visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 
 # InventoryHelper
 accessible field net/minecraft/inventory/SimpleInventory stacks Lnet/minecraft/util/collection/DefaultedList;

@@ -4,9 +4,9 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
-import net.minecraft.command.argument.NumberRangeArgumentType;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.arguments.RangeArgument;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -14,17 +14,17 @@ import org.jetbrains.annotations.NotNull;
 public class IntRangeArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return NumberRangeArgumentType.intRange();
+        return RangeArgument.intRange();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        return NumberRangeArgumentType.IntRangeArgumentType.getRangeArgument(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        return RangeArgument.Ints.getRange(context, commandArgument.getArgumentName());
     }
 
     @Override
     public List<Class<?>> getTypeClasses() {
-        return List.of(NumberRange.IntRange.class);
+        return List.of(MinMaxBounds.Ints.class);
     }
 
     @Override

@@ -12,7 +12,7 @@ import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.HashMap;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -33,14 +33,14 @@ public class ReplyInitializer extends ModuleInitializer {
 
     @Document(id = 1751825375878L, value = "Reply the player who recently /msg or /tell you.")
     @CommandNode("reply")
-    private static int $reply(@CommandSource ServerPlayerEntity player, GreedyString message) {
+    private static int $reply(@CommandSource ServerPlayer player, GreedyString message) {
         String sourcePlayerName = PlayerHelper.getPlayerName(player);
         String targetPlayerName = player2replyTargetPlayer.get(sourcePlayerName);
 
         try {
             CommandHelper
                 .getCommandDispatcher()
-                .execute("msg %s %s".formatted(targetPlayerName, message.getValue()), player.getCommandSource());
+                .execute("msg %s %s".formatted(targetPlayerName, message.getValue()), player.createCommandSourceStack());
             return CommandHelper.Return.SUCCESS;
         } catch (CommandSyntaxException e) {
             TextHelper.sendTextByKey(player, "reply.no_target");
@@ -51,7 +51,7 @@ public class ReplyInitializer extends ModuleInitializer {
     @Document(id = 1756134707146L, value = "Set the reply target player.")
     @CommandNode("reply set-target")
     @CommandRequirement(level = 4)
-    private static int $setReplyTarget(@CommandSource ServerPlayerEntity source, ServerPlayerEntity target) {
+    private static int $setReplyTarget(@CommandSource ServerPlayer source, ServerPlayer target) {
         String sourceName = PlayerHelper.getPlayerName(source);
         String targetName = PlayerHelper.getPlayerName(target);
         setReplyTarget(sourceName, targetName);

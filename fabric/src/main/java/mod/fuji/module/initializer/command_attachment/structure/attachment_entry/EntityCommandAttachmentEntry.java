@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -21,7 +21,7 @@ public class EntityCommandAttachmentEntry extends BaseCommandAttachmentEntry {
     }
 
     @Override
-    public List<Text> asLore(@NotNull ServerPlayerEntity player) {
+    public List<Component> asLore(@NotNull ServerPlayer player) {
         return super.asLore(player);
     }
 }

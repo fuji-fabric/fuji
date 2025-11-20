@@ -19,11 +19,11 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import net.luckperms.api.util.Tristate;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -91,7 +91,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         """)
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
-    public static void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
+    public static void processAntiBuild(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
         PlayerHelper.Kind.withServerPlayerEntity(player,() -> {
             // NOTE: This method will NOT be called for a dispenser block.
             if (isThisActionAllowed(player, antiType, ids, id)) {
@@ -111,11 +111,11 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     }
 
-    public static <T> void processAntiBuild(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> feedbackTrigger) {
+    public static <T> void processAntiBuild(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> feedbackTrigger) {
         processAntiBuild(player, antiType, ids, id, () -> cir.setReturnValue(cancelWithValue), feedbackTrigger);
     }
 
-    private static boolean isThisActionAllowed(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
+    private static boolean isThisActionAllowed(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
         /* Check the override permission for the player. */
         Tristate overridePermission = getOverridePermission(player, antiType, id);
         if (overridePermission != Tristate.UNDEFINED) {
@@ -136,15 +136,15 @@ public class AntiBuildInitializer extends ModuleInitializer {
             && !ids.contains("*");
     }
 
-    private static Tristate getOverridePermission(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull String id) {
+    private static Tristate getOverridePermission(@Nullable Player player, @NotNull String antiType, @NotNull String id) {
         return Optional.ofNullable(player)
-            .map(p -> LuckpermsHelper.getPermission(player.getUuid(), ANTI_BUILD_OVERRIDE_PERMISSION, antiType, id))
+            .map(p -> LuckpermsHelper.getPermission(player.getUUID(), ANTI_BUILD_OVERRIDE_PERMISSION, antiType, id))
             .orElse(Tristate.UNDEFINED);
     }
 
-    private static boolean isAllowedByBypassPermission(@Nullable PlayerEntity player, @NotNull String antiType, @NotNull String id) {
+    private static boolean isAllowedByBypassPermission(@Nullable Player player, @NotNull String antiType, @NotNull String id) {
         return Optional.ofNullable(player)
-            .map(p -> LuckpermsHelper.hasPermission(player.getUuid(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
+            .map(p -> LuckpermsHelper.hasPermission(player.getUUID(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
             .orElse(false);
     }
 
@@ -167,7 +167,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getItemStack());
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
@@ -179,7 +179,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         BlockState blockState = event.getWorld().getBlockState(blockPos);
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
@@ -189,6 +189,6 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getEntity());
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_entity", config.getId(), id, event.getCallbackInfoReturnable(), ActionResult.FAIL, () -> event.getHand() == Hand.MAIN_HAND);
+        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_entity", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> event.getHand() == InteractionHand.MAIN_HAND);
     }
 }

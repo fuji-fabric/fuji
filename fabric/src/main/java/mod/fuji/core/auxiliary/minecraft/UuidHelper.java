@@ -6,12 +6,12 @@ import mod.fuji.core.auxiliary.RandomUtil;
 import mod.fuji.core.structure.GlobalBlockPos;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +27,7 @@ public class UuidHelper {
         return UUID.nameUUIDFromBytes(bytes).toString();
     }
 
-    public static Optional<String> getAttachedUuid(@Nullable NbtCompound root) {
+    public static Optional<String> getAttachedUuid(@Nullable CompoundTag root) {
         if (root == null) return Optional.empty();
         if (!root.contains(FUJI_UUID_NBT_KEY)) return Optional.empty();
 
@@ -35,39 +35,39 @@ public class UuidHelper {
     }
 
     public static Optional<String> getAttachedUuid(@NotNull ItemStack itemStack) {
-        @Nullable NbtCompound customDataNbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
+        @Nullable CompoundTag customDataNbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
         return UuidHelper.getAttachedUuid(customDataNbt);
     }
 
     public static @NotNull String getAttachedUuid(@NotNull Entity entity) {
-        return entity.getUuidAsString();
+        return entity.getStringUUID();
     }
 
     public static String getAttachedUuid(@NotNull GlobalBlockPos globalBlockPos) {
-        ServerWorld dimension = WorldHelper.getWorldOrThrow(globalBlockPos.getDimension());
+        ServerLevel dimension = WorldHelper.getWorldOrThrow(globalBlockPos.getDimension());
         BlockPos blockPos = globalBlockPos.toBlockPos();
         return getAttachedUuid(dimension, blockPos);
     }
 
-    public static @NotNull String getAttachedUuid(@NotNull World world, @NotNull BlockPos blockPos) {
+    public static @NotNull String getAttachedUuid(@NotNull Level world, @NotNull BlockPos blockPos) {
         // NOTE: Some global pos may face the hash collision.
         String string = toString(world, blockPos);
         return convertStringToUUID(string);
     }
 
-    public static @NotNull String toString(@NotNull World world, @NotNull BlockPos blockPos) {
+    public static @NotNull String toString(@NotNull Level world, @NotNull BlockPos blockPos) {
         String dimensionString = RegistryHelper.getIdAsString(world);
         String blockPosString = blockPos.getX() + "#" + blockPos.getY() + "#" + blockPos.getZ();
         return dimensionString + "#" + blockPosString;
     }
 
     public static @NotNull String getOrSetAttachedUuid(@NotNull ItemStack itemStack) {
-        NbtCompound nbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
+        CompoundTag nbt = ItemStackHelper.CustomData.getCustomDataNbt(itemStack);
 
         /* Set the attached UUID first if absent. */
         return getAttachedUuid(nbt)
             .orElseGet(() -> {
-                NbtCompound newValue = attachRandomUuidToNbtCompoundIfAbsent(nbt);
+                CompoundTag newValue = attachRandomUuidToNbtCompoundIfAbsent(nbt);
                 ItemStackHelper.CustomData.setCustomDataNbt(itemStack, newValue);
 
                 return getAttachedUuid(newValue)
@@ -78,10 +78,10 @@ public class UuidHelper {
             });
     }
 
-    private static @NotNull NbtCompound attachRandomUuidToNbtCompoundIfAbsent(@Nullable NbtCompound root) {
+    private static @NotNull CompoundTag attachRandomUuidToNbtCompoundIfAbsent(@Nullable CompoundTag root) {
         /* Ensure the nbt is not null. */
         if (root == null) {
-            root = new NbtCompound();
+            root = new CompoundTag();
         }
 
         /* Attach a new UUID if not existed. */

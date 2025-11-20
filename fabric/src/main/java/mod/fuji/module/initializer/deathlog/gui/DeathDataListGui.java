@@ -14,20 +14,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DeathDataListGui extends PagedGui<String> {
 
-    public DeathDataListGui(ServerPlayerEntity player, @NotNull List<String> entities, int pageIndex) {
+    public DeathDataListGui(ServerPlayer player, @NotNull List<String> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "deathlog.death_data.list.gui.title"), entities, pageIndex);
     }
 
-    public static boolean hasDeathData(ServerPlayerEntity player, NbtCompound root, String deadPlayerName) {
+    public static boolean hasDeathData(ServerPlayer player, CompoundTag root, String deadPlayerName) {
         if (root == null || root.isEmpty()) {
             TextHelper.sendTextByKey(player, "deathlog.death_data.empty", deadPlayerName);
             return false;
@@ -37,7 +37,7 @@ public class DeathDataListGui extends PagedGui<String> {
     }
 
     @Override
-    protected @NotNull PagedGui<String> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<String> entities, int pageIndex) {
+    protected @NotNull PagedGui<String> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<String> entities, int pageIndex) {
         return new DeathDataListGui(player, entities, pageIndex);
     }
 
@@ -45,7 +45,7 @@ public class DeathDataListGui extends PagedGui<String> {
     protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
-            .setName(Text.literal(entity))
+            .setName(Component.literal(entity))
             .setCallback(() -> openDeathNodeListGui(entity));
 
         return builder.build();
@@ -66,9 +66,9 @@ public class DeathDataListGui extends PagedGui<String> {
             }
 
             /* Read death node list. */
-            NbtList deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DeathNode.DEATHS_KEY, new NbtList());
+            ListTag deathNodeList = NbtHelper.Walker.getOrCreateNbtElement(root, DeathNode.DEATHS_KEY, new ListTag());
             List<DeathNode> entries = deathNodeList.stream()
-                .map(it -> DeathNode.fromNbt((NbtCompound) it))
+                .map(it -> DeathNode.fromNbt((CompoundTag) it))
                 .collect(Collectors.toList());
             Collections.reverse(entries);
             new DeathNodeListGui(getBackendGui(), getPlayer(), entity, entries, 0)

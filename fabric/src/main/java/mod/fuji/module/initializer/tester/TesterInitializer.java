@@ -11,9 +11,9 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import lombok.SneakyThrows;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 
 @Document(id = 1751980891153L, value = """
     This module is only used for `development`.
@@ -27,21 +27,21 @@ public class TesterInitializer extends ModuleInitializer {
 
     @SneakyThrows(Throwable.class)
     @CommandNode("run")
-    private static int $run(@CommandSource ServerPlayerEntity player) {
+    private static int $run(@CommandSource ServerPlayer player) {
 
 
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("split")
-    private static int $split(@CommandSource ServerCommandSource source, @CommandTarget ServerPlayerEntity target, String string) {
-        TextHelper.sendBroadcastByText(Text.literal("Run split(): source = %s, target = %s, string = %s".formatted(source.getName(), PlayerHelper.getPlayerName(target), string)));
+    private static int $split(@CommandSource CommandSourceStack source, @CommandTarget ServerPlayer target, String string) {
+        TextHelper.sendBroadcastByText(Component.literal("Run split(): source = %s, target = %s, string = %s".formatted(source.getTextName(), PlayerHelper.getPlayerName(target), string)));
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("non-split")
-    private static int $nonSplit(@CommandSource @CommandTarget ServerPlayerEntity source, String string) {
-        TextHelper.sendBroadcastByText(Text.literal("Run non-split(): source = %s, string = %s".formatted(PlayerHelper.getPlayerName(source), string)));
+    private static int $nonSplit(@CommandSource @CommandTarget ServerPlayer source, String string) {
+        TextHelper.sendBroadcastByText(Component.literal("Run non-split(): source = %s, string = %s".formatted(PlayerHelper.getPlayerName(source), string)));
         return CommandHelper.Return.SUCCESS;
     }
 

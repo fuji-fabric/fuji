@@ -9,17 +9,17 @@ import mod.fuji.module.initializer.command_cooldown.service.NamedCooldownService
 import mod.fuji.module.initializer.command_cooldown.structure.NamedCooldownDescriptor;
 import mod.fuji.module.initializer.command_cooldown.structure.NamedCooldownDataNode;
 import java.util.function.Function;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandCooldownPlaceholders {
 
-    private static Text makeUnknownNamedCooldownText(String cooldownName) {
-        return Text.literal("[Unknown named-cooldown: %s]".formatted(cooldownName));
+    private static Component makeUnknownNamedCooldownText(String cooldownName) {
+        return Component.literal("[Unknown named-cooldown: %s]".formatted(cooldownName));
     }
 
-    private static Text mapNamedCooldownDataNodeIntoText(@Nullable String args, @NotNull Function<NamedCooldownDataNode, Text> mapper) {
+    private static Component mapNamedCooldownDataNodeIntoText(@Nullable String args, @NotNull Function<NamedCooldownDataNode, Component> mapper) {
         NamedCooldownDescriptor cooldownDescriptor = NamedCooldownService.getNamedCooldownDescriptors().get(args);
         if (cooldownDescriptor == null) {
             return makeUnknownNamedCooldownText(args);
@@ -39,7 +39,7 @@ public class CommandCooldownPlaceholders {
             String key = NamedCooldownDataNode.toKey(player);
             int uses = dataNode.getUses().computeIfAbsent(key, k -> 0);
             int availableUses = dataNode.getDescriptor().getMaxUses() - uses;
-            return Text.literal(String.valueOf(availableUses));
+            return Component.literal(String.valueOf(availableUses));
         }));
     }
 
@@ -56,7 +56,7 @@ public class CommandCooldownPlaceholders {
             long remainingDuration = dataNode.getRemainingTime(key, dataNode.getDescriptor().getCooldownDuration());
             remainingDuration = Math.max(0, remainingDuration);
             String formattedRemainingDuration = DurationParser.formatMillSeconds(remainingDuration);
-            return Text.literal(formattedRemainingDuration);
+            return Component.literal(formattedRemainingDuration);
         }));
     }
 
@@ -72,7 +72,7 @@ public class CommandCooldownPlaceholders {
             String key = NamedCooldownDataNode.toKey(player);
             long nextAvailableDate = dataNode.getCooldown().getLastUseTime(key) + dataNode.getDescriptor().getCooldownDuration();
             String formattedLeftTime = ChronosUtil.Formatter.formatDate(nextAvailableDate);
-            return Text.literal(formattedLeftTime);
+            return Component.literal(formattedLeftTime);
         }));
     }
 }

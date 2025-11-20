@@ -9,7 +9,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1751825147630L, value = """
     This is a convenient command, to teleport `others` to `you`.
@@ -25,8 +25,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class TphereInitializer extends ModuleInitializer {
 
     @CommandNode
-    private static int $tphere(@CommandSource ServerPlayerEntity player, PlayerCollection targets) {
-        Collection<ServerPlayerEntity> $targets = targets.getValue();
+    private static int $tphere(@CommandSource ServerPlayer player, PlayerCollection targets) {
+        Collection<ServerPlayer> $targets = targets.getValue();
         GlobalPos globalPos = GlobalPos.of(player);
 
         $targets.forEach(globalPos::teleport);

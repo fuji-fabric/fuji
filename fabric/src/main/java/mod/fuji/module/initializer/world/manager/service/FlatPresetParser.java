@@ -9,29 +9,29 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.block.Block;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
-import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
-import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
 public class FlatPresetParser {
 
-    private static final RegistryKey<Biome> BIOME_KEY = BiomeKeys.PLAINS;
+    private static final ResourceKey<Biome> BIOME_KEY = Biomes.PLAINS;
 
     @Nullable
-    private static FlatChunkGeneratorLayer parseLayerString(RegistryEntryLookup<Block> registryEntryLookup, String string, int i) {
-        Optional<RegistryEntry.Reference<Block>> optional;
+    private static FlatLayerInfo parseLayerString(HolderGetter<Block> registryEntryLookup, String string, int i) {
+        Optional<Holder.Reference<Block>> optional;
         int j;
         String string2;
         List<String> list = Splitter.on('*').limit(2).splitToList(string);
@@ -47,10 +47,10 @@ public class FlatPresetParser {
             string2 = list.get(0);
             j = 1;
         }
-        int k = Math.min(i + j, DimensionType.MAX_HEIGHT);
+        int k = Math.min(i + j, DimensionType.Y_SIZE);
         int l = k - i;
         try {
-            optional = registryEntryLookup.getOptional(RegistryKey.of(RegistryKeys.BLOCK, RegistryHelper.makeIdentifierOrThrow(string2)));
+            optional = registryEntryLookup.get(ResourceKey.create(Registries.BLOCK, RegistryHelper.makeIdentifierOrThrow(string2)));
         } catch (Exception exception) {
             LogUtil.error("Error while parsing flat world string", exception);
             return null;
@@ -59,50 +59,50 @@ public class FlatPresetParser {
             LogUtil.error("Error while parsing flat world string => Unknown block, {}", (Object)string2);
             return null;
         }
-        return new FlatChunkGeneratorLayer(l, optional.get().comp_349());
+        return new FlatLayerInfo(l, optional.get().value());
     }
 
     @SuppressWarnings({"MixedMutabilityReturnType", "StringSplitter"})
-    private static List<FlatChunkGeneratorLayer> parsePresetLayersString(RegistryEntryLookup<Block> registryEntryLookup, String string) {
-        ArrayList<FlatChunkGeneratorLayer> list = Lists.newArrayList();
+    private static List<FlatLayerInfo> parsePresetLayersString(HolderGetter<Block> registryEntryLookup, String string) {
+        ArrayList<FlatLayerInfo> list = Lists.newArrayList();
         String[] strings = string.split(",");
         int i = 0;
         for (String string2 : strings) {
-            FlatChunkGeneratorLayer flatChunkGeneratorLayer = parseLayerString(registryEntryLookup, string2, i);
+            FlatLayerInfo flatChunkGeneratorLayer = parseLayerString(registryEntryLookup, string2, i);
             if (flatChunkGeneratorLayer == null) {
                 return Collections.emptyList();
             }
             #if MC_VER < MC_1_21_6
             list.add(flatChunkGeneratorLayer);
             #elif MC_VER >= MC_1_21_6
-            int j = DimensionType.MAX_HEIGHT - i;
+            int j = DimensionType.Y_SIZE - i;
             if (j <= 0) continue;
-            list.add(flatChunkGeneratorLayer.withMaxThickness(j));
+            list.add(flatChunkGeneratorLayer.heightLimited(j));
             #endif
-            i += flatChunkGeneratorLayer.getThickness();
+            i += flatChunkGeneratorLayer.getHeight();
         }
         return list;
     }
 
     @SuppressWarnings("AssignmentExpression")
-    public static FlatChunkGeneratorConfig parsePresetString(RegistryEntryLookup<Block> registryEntryLookup, RegistryEntryLookup<Biome> registryEntryLookup2, RegistryEntryLookup<StructureSet> registryEntryLookup3, RegistryEntryLookup<PlacedFeature> registryEntryLookup4, String string, FlatChunkGeneratorConfig flatChunkGeneratorConfig) {
-        RegistryEntry.Reference<Biome> reference;
+    public static FlatLevelGeneratorSettings parsePresetString(HolderGetter<Block> registryEntryLookup, HolderGetter<Biome> registryEntryLookup2, HolderGetter<StructureSet> registryEntryLookup3, HolderGetter<PlacedFeature> registryEntryLookup4, String string, FlatLevelGeneratorSettings flatChunkGeneratorConfig) {
+        Holder.Reference<Biome> reference;
         Iterator<String> iterator = Splitter.on(';').split(string).iterator();
         if (!iterator.hasNext()) {
-            return FlatChunkGeneratorConfig.getDefaultConfig(registryEntryLookup2, registryEntryLookup3, registryEntryLookup4);
+            return FlatLevelGeneratorSettings.getDefault(registryEntryLookup2, registryEntryLookup3, registryEntryLookup4);
         }
-        List<FlatChunkGeneratorLayer> list = parsePresetLayersString(registryEntryLookup, iterator.next());
+        List<FlatLayerInfo> list = parsePresetLayersString(registryEntryLookup, iterator.next());
         if (list.isEmpty()) {
-            return FlatChunkGeneratorConfig.getDefaultConfig(registryEntryLookup2, registryEntryLookup3, registryEntryLookup4);
+            return FlatLevelGeneratorSettings.getDefault(registryEntryLookup2, registryEntryLookup3, registryEntryLookup4);
         }
-        RegistryEntry<Biome> registryEntry = reference = registryEntryLookup2.getOrThrow(BIOME_KEY);
+        Holder<Biome> registryEntry = reference = registryEntryLookup2.getOrThrow(BIOME_KEY);
         if (iterator.hasNext()) {
             String string2 = iterator.next();
-            registryEntry = Optional.ofNullable(Identifier.tryParse(string2)).map(identifier -> RegistryKey.of(RegistryKeys.BIOME, identifier)).flatMap(registryEntryLookup2::getOptional).orElseGet(() -> {
+            registryEntry = Optional.ofNullable(ResourceLocation.tryParse(string2)).map(identifier -> ResourceKey.create(Registries.BIOME, identifier)).flatMap(registryEntryLookup2::get).orElseGet(() -> {
                 LogUtil.warn("Invalid biome: {}", (Object)string2);
                 return reference;
             });
         }
-        return flatChunkGeneratorConfig.with(list, flatChunkGeneratorConfig.getStructureOverrides(), registryEntry);
+        return flatChunkGeneratorConfig.withBiomeAndLayers(list, flatChunkGeneratorConfig.structureOverrides(), registryEntry);
     }
 }

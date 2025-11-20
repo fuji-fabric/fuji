@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.block.AbstractSignBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.entity.SignText;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751824965598L, value = """
@@ -54,7 +54,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
 
     private static @NotNull String mapSignTextIntoString(@NotNull SignText signText) {
         return Arrays.stream(signText.getMessages(false))
-            .map(Text::getString)
+            .map(Component::getString)
             .reduce("", String::concat);
     }
 
@@ -68,31 +68,31 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
         return Arrays.stream(split).map(String::trim).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private static boolean canUseInteractiveCommand(@NotNull ServerPlayerEntity player) {
-        return player.isSneaking();
+    private static boolean canUseInteractiveCommand(@NotNull ServerPlayer player) {
+        return player.isShiftKeyDown();
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWER, consumerPriority = EventConsumer.LOWER)
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
 
-        World world = event.getWorld();
+        Level world = event.getWorld();
         BlockPos blockPos = event.getBlockHitResult().getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
-        if (!(blockState.getBlock() instanceof AbstractSignBlock)) return;
+        if (!(blockState.getBlock() instanceof SignBlock)) return;
 
         /* Check if the player can use interactive command now. */
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         if (CommandInteractiveInitializer.canUseInteractiveCommand(player)) return;
 
         /* Extract the sign lines from the sign block. */
         BlockEntity interactingBlockEntity = world.getBlockEntity(blockPos);
         if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
-            SignText facingSignText = signBlockEntity.getText(signBlockEntity.isPlayerFacingFront(player));
+            SignText facingSignText = signBlockEntity.getText(signBlockEntity.isFacingFrontText(player));
             String facingSignLines = CommandInteractiveInitializer.mapSignTextIntoString(facingSignText);
             if (facingSignLines.contains(CommandInteractiveInitializer.COMMAND_STRING_SPLIT_CHARACTER)) {
                 /* Consume this interaction. */
-                event.getCallbackInfoReturnable().setReturnValue(ActionResult.CONSUME);
+                event.getCallbackInfoReturnable().setReturnValue(InteractionResult.CONSUME);
 
                 /* Execute commands as the player. */
                 List<String> commands = CommandInteractiveInitializer.splitCommands(facingSignLines)
@@ -100,7 +100,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
                     .map(str -> TextHelper.Parsers.parsePlaceholderString(player, str))
                     .toList();
                 commands.forEach(commandString -> {
-                    CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(player.getCommandSource(), player), commandString);
+                    CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(player.createCommandSourceStack(), player), commandString);
                 });
             }
         }

@@ -3,8 +3,8 @@ package mod.fuji.core.service.bossbar;
 import mod.fuji.core.service.bossbar.command.argument.wrapper.StepType;
 import lombok.Data;
 import lombok.Setter;
-import net.minecraft.entity.boss.ServerBossBar;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -17,20 +17,20 @@ public abstract class BossBarTicket {
     // the type of ticks should be `float`, instead of `int`.
     final float totalTicks;
     final float stepTicksPerTick;
-    final ServerBossBar bossBar;
+    final ServerBossEvent bossBar;
     final StepType stepType;
 
     @Setter
     boolean aborted;
 
 
-    public BossBarTicket(ServerBossBar bossBar, int totalMs, StepType stepType, @NotNull List<ServerPlayerEntity> players) {
+    public BossBarTicket(ServerBossEvent bossBar, int totalMs, StepType stepType, @NotNull List<ServerPlayer> players) {
         this.bossBar = bossBar;
         this.totalTicks = 20 * ((float) totalMs / 1000);
         this.stepType = stepType;
 
         // compute fields
-        this.bossBar.setPercent(this.computeInitialProgress());
+        this.bossBar.setProgress(this.computeInitialProgress());
         this.stepTicksPerTick = this.computeStepTicksPerTick();
 
         // add players for this bossbar
@@ -40,7 +40,7 @@ public abstract class BossBarTicket {
         this.bossBar.setVisible(false);
     }
 
-    public BossBarTicket(ServerBossBar bossBar, int totalMs, @NotNull List<ServerPlayerEntity> players) {
+    public BossBarTicket(ServerBossEvent bossBar, int totalMs, @NotNull List<ServerPlayer> players) {
         this(bossBar, totalMs, StepType.FORWARD, players);
     }
 
@@ -53,7 +53,7 @@ public abstract class BossBarTicket {
         return this.stepType == StepType.FORWARD ? abs : -abs;
     }
 
-    public @NotNull Collection<ServerPlayerEntity> getPlayers() {
+    public @NotNull Collection<ServerPlayer> getPlayers() {
         return Collections.unmodifiableCollection(this.bossBar.getPlayers());
     }
 
@@ -74,28 +74,28 @@ public abstract class BossBarTicket {
     }
 
     public float progress() {
-        return this.bossBar.getPercent();
+        return this.bossBar.getProgress();
     }
 
     public void progress(float progress) {
-        this.bossBar.setPercent(progress);
+        this.bossBar.setProgress(progress);
     }
 
-    public void addPlayer(@NotNull ServerPlayerEntity player) {
+    public void addPlayer(@NotNull ServerPlayer player) {
         this.bossBar.addPlayer(player);
     }
 
-    public void removePlayer(@NotNull ServerPlayerEntity player) {
+    public void removePlayer(@NotNull ServerPlayer player) {
         this.bossBar.removePlayer(player);
     }
 
     public void clearPlayers() {
         this.bossBar.setVisible(false);
-        this.bossBar.clearPlayers();
+        this.bossBar.removeAllPlayers();
     }
 
     @SuppressWarnings({"EmptyMethod", "unused"})
-    protected void onPlayerDisconnected(ServerPlayerEntity player) {
+    protected void onPlayerDisconnected(ServerPlayer player) {
         // no-op
     }
 

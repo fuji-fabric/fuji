@@ -38,19 +38,19 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
-import net.minecraft.util.Formatting;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,9 +65,9 @@ import org.jetbrains.annotations.Nullable;
 public class TextHelper {
 
     /* Constants. */
-    public static final Text TEXT_NEWLINE = Text.of("\n");
-    public static final Text TEXT_SPACE = Text.of(" ");
-    public static final Text TEXT_EMPTY = Text.literal("");
+    public static final Component TEXT_NEWLINE = Component.nullToEmpty("\n");
+    public static final Component TEXT_SPACE = Component.nullToEmpty(" ");
+    public static final Component TEXT_EMPTY = Component.literal("");
     public static final String PRIMARY_COLOR_STRING = "<#FFA1F5>";
     public static final int PRIMARY_COLOR_INT = 16753141;
 
@@ -184,7 +184,7 @@ public class TextHelper {
                 .replace("§", "&");
         }
 
-        public static Text parseString(NodeParser parser, String input) {
+        public static Component parseString(NodeParser parser, String input) {
             return parser.parseNode(input).toText();
         }
 
@@ -193,13 +193,13 @@ public class TextHelper {
         })
         private static @NotNull PlaceholderContext makePlaceholderContext(@Nullable Object audience) {
             /* Unbox the player from server command source. */
-            if (audience instanceof ServerCommandSource) {
-                audience = ((ServerCommandSource) audience).getPlayer();
+            if (audience instanceof CommandSourceStack) {
+                audience = ((CommandSourceStack) audience).getPlayer();
             }
 
             /* Dispatch the audience type, and provide the bits to make the placeholder context. */
             PlaceholderContext placeholderContext;
-            if (audience instanceof PlayerEntity playerEntity) {
+            if (audience instanceof Player playerEntity) {
                 // NOTE: Prevent the class cast exception in client side.
                 if (!PlayerHelper.Kind.isServerPlayer(playerEntity)) {
                     LogUtil.debug("PlayerEntity {} is a client-side player entity, we can't use it to make the context for placeholder parser. (I will just fallback to the server context).");
@@ -217,7 +217,7 @@ public class TextHelper {
         }
 
         public static @NotNull String parsePlaceholderString(@Nullable Object audience, String value) {
-            Text text = TextHelper.getText(PLACEHOLDER_ONLY_PARSER, audience, false, value);
+            Component text = TextHelper.getText(PLACEHOLDER_ONLY_PARSER, audience, false, value);
             return Operators.getString(text);
         }
     }
@@ -312,7 +312,7 @@ public class TextHelper {
             }
 
             // If audience is non-null, but we have no clue what is the source player, then still use the default language.
-            @Nullable PlayerEntity player = tryExtractPlayerEntity(audience);
+            @Nullable Player player = tryExtractPlayerEntity(audience);
             if (player == null) {
                 return getDefaultLanguageCode();
             }
@@ -324,8 +324,8 @@ public class TextHelper {
         }
 
         @SuppressWarnings({"IfCanBeSwitch", "PatternVariableCanBeUsed"})
-        private static @Nullable PlayerEntity tryExtractPlayerEntity(@NotNull Object audience) {
-            PlayerEntity player = null;
+        private static @Nullable Player tryExtractPlayerEntity(@NotNull Object audience) {
+            Player player = null;
 
             /* Unbox the command source from command context first. */
             if (audience instanceof CommandContext<?> commandContext) {
@@ -333,12 +333,12 @@ public class TextHelper {
             }
 
             /* Try extract the player entity from the audience. */
-            if (audience instanceof ServerPlayerEntity) {
-                player = ((ServerPlayerEntity) audience);
-            } else if (audience instanceof PlayerEntity) {
-                player = (PlayerEntity) audience;
-            } else if (audience instanceof ServerCommandSource) {
-                ServerCommandSource commandSource = (ServerCommandSource) audience;
+            if (audience instanceof ServerPlayer) {
+                player = ((ServerPlayer) audience);
+            } else if (audience instanceof Player) {
+                player = (Player) audience;
+            } else if (audience instanceof CommandSourceStack) {
+                CommandSourceStack commandSource = (CommandSourceStack) audience;
                 if (CommandHelper.Source.isExecutedByPlayer(commandSource)) {
                     player = commandSource.getPlayer();
                 }
@@ -430,48 +430,48 @@ public class TextHelper {
 
     public static class Replacer {
 
-        public static MutableText replaceTextWithNamedArgument(@NotNull Text text, @NotNull String namedArgumentName, @NotNull Function<Matcher, Text> replacementSupplier) {
+        public static MutableComponent replaceTextWithNamedArgument(@NotNull Component text, @NotNull String namedArgumentName, @NotNull Function<Matcher, Component> replacementSupplier) {
             return replaceTextWithRegex(text, "\\$\\{%s}".formatted(namedArgumentName), replacementSupplier);
         }
 
-        public static MutableText replaceTextWithPattern(@NotNull Text text, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> nonMemorizedReplacementSupplier) {
+        public static MutableComponent replaceTextWithPattern(@NotNull Component text, @NotNull Pattern pattern, @NotNull Function<Matcher, Component> nonMemorizedReplacementSupplier) {
             // memorize the supplier
             nonMemorizedReplacementSupplier = makeMemoizeSupplier(nonMemorizedReplacementSupplier);
             return replaceText(text, pattern, nonMemorizedReplacementSupplier);
         }
 
-        public static MutableText replaceTextWithRegex(@NotNull Text text, @NotNull String regex, @NotNull Function<Matcher, Text> nonMemorizedReplacementSupplier) {
+        public static MutableComponent replaceTextWithRegex(@NotNull Component text, @NotNull String regex, @NotNull Function<Matcher, Component> nonMemorizedReplacementSupplier) {
             return replaceTextWithPattern(text, Pattern.compile(regex), nonMemorizedReplacementSupplier);
         }
 
-        private static MutableText replaceText(@NotNull Text text, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
-            MutableText replacedText;
+        private static MutableComponent replaceText(@NotNull Component text, @NotNull Pattern pattern, @NotNull Function<Matcher, Component> replacementSupplier) {
+            MutableComponent replacedText;
 
             /* Process the atom. */
-            String textString = flattenTextContent(text.getContent());
-            @Nullable List<Text> splits = splitAndReplaceText(textString, pattern, replacementSupplier);
+            String textString = flattenTextContent(text.getContents());
+            @Nullable List<Component> splits = splitAndReplaceText(textString, pattern, replacementSupplier);
 
             if (splits == null) {
-                replacedText = text.copyContentOnly();
+                replacedText = text.plainCopy();
             } else {
                 // Use a dummy root to represent the replaced node.
-                MutableText dummyRoot = Text.empty();
+                MutableComponent dummyRoot = Component.empty();
                 replacedText = dummyRoot;
                 splits.forEach(dummyRoot::append);
             }
-            replacedText.fillStyle(text.getStyle());
+            replacedText.withStyle(text.getStyle());
 
             /* Go down. */
-            for (Text sibling : text.getSiblings()) {
-                MutableText replacedSibling = replaceText(sibling, pattern, replacementSupplier);
+            for (Component sibling : text.getSiblings()) {
+                MutableComponent replacedSibling = replaceText(sibling, pattern, replacementSupplier);
                 replacedText.append(replacedSibling);
             }
 
             return replacedText;
         }
 
-        private static @Nullable List<Text> splitAndReplaceText(@NotNull String string, @NotNull Pattern pattern, @NotNull Function<Matcher, Text> replacementSupplier) {
-            List<Text> result = new ArrayList<>();
+        private static @Nullable List<Component> splitAndReplaceText(@NotNull String string, @NotNull Pattern pattern, @NotNull Function<Matcher, Component> replacementSupplier) {
+            List<Component> result = new ArrayList<>();
 
             /* Iterate the matcher. */
             Matcher matcher = pattern.matcher(string);
@@ -481,12 +481,12 @@ public class TextHelper {
 
                 // Append the prefix text if exists.
                 if (matchedStringIndex != startIndex) {
-                    MutableText prefixText = Text.literal(string.substring(startIndex, matchedStringIndex));
+                    MutableComponent prefixText = Component.literal(string.substring(startIndex, matchedStringIndex));
                     result.add(prefixText);
                 }
 
                 // Append the replacement text.
-                Text replacementText = replacementSupplier.apply(matcher);
+                Component replacementText = replacementSupplier.apply(matcher);
                 result.add(replacementText);
 
                 // Update the start index.
@@ -498,7 +498,7 @@ public class TextHelper {
 
             /* Append the suffix string if exists. */
             if (startIndex < string.length()) {
-                MutableText suffixText = Text.literal(string.substring(startIndex));
+                MutableComponent suffixText = Component.literal(string.substring(startIndex));
                 result.add(suffixText);
             }
 
@@ -519,7 +519,7 @@ public class TextHelper {
             };
         }
 
-        private static String flattenTextContent(@NotNull TextContent textContent) {
+        private static String flattenTextContent(@NotNull ComponentContents textContent) {
             StringBuilder stringBuilder = new StringBuilder();
             textContent.visit(string -> {
                 stringBuilder.append(string);
@@ -534,12 +534,12 @@ public class TextHelper {
  **/
     public static class Operators {
 
-        public static String getString(@NotNull Text text) {
+        public static String getString(@NotNull Component text) {
             return text.getString();
         }
 
-        public static @NotNull MutableText condenseTextList(@NotNull List<Text> textList) {
-            MutableText condensedText = Text.empty();
+        public static @NotNull MutableComponent condenseTextList(@NotNull List<Component> textList) {
+            MutableComponent condensedText = Component.empty();
             for (int i = 0; i < textList.size(); i++) {
                 condensedText.append(textList.get(i));
                 if (i != textList.size() - 1) {
@@ -553,14 +553,14 @@ public class TextHelper {
     /**
  * This is the core method to map String into Text.
  **/
-    public static @NotNull Text getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
+    public static @NotNull Component getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         // Retrieve the language value.
         String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
 
         // Check NPE.
         if (languageValue == null) {
             LogUtil.warn("The language value is null: parser = {}, audience = {}, isKey = {}, keyOrValue = {}, args = {}", parser, audience, isKey, keyOrValue, args);
-            return Text.literal("The language value is null, see the console.");
+            return Component.literal("The language value is null, see the console.");
         }
 
         // Format string arguments.
@@ -604,15 +604,15 @@ public class TextHelper {
     }
 
 
-    public static @NotNull Text getTextByKey(@Nullable Object audience, String languageKey, Object... args) {
+    public static @NotNull Component getTextByKey(@Nullable Object audience, String languageKey, Object... args) {
         return getText(Parsers.POWERFUL_PARSER, audience, true, languageKey, args);
     }
 
-    public static @NotNull Text getTextByValue(@Nullable Object audience, String languageValue, Object... args) {
+    public static @NotNull Component getTextByValue(@Nullable Object audience, String languageValue, Object... args) {
         return getText(Parsers.POWERFUL_PARSER, audience, false, languageValue, args);
     }
 
-    public static Text getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, @NotNull String languageKey, @NotNull String keywordName) {
+    public static Component getTextByKeyAndReplaceTheKeyword(@Nullable Object audience, @NotNull String languageKey, @NotNull String keywordName) {
         /* Get the keyword value. */
         String keywordKey = "keyword." + keywordName;
         String keywordValue = Translator.getLanguageValueByKey(audience, keywordKey);
@@ -621,7 +621,7 @@ public class TextHelper {
         return getTextByKey(audience, languageKey, keywordValue);
     }
 
-    private static @NotNull List<Text> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
+    private static @NotNull List<Component> getTextList(@Nullable Object audience, boolean isKey, String keyOrValue) {
         /* Get the language value string first. */
         String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
 
@@ -636,18 +636,18 @@ public class TextHelper {
         return string.split("\n|<newline>");
     }
 
-    public static @NotNull List<Text> getTextListByKey(@Nullable Object audience, String key) {
+    public static @NotNull List<Component> getTextListByKey(@Nullable Object audience, String key) {
         return getTextList(audience, true, key);
     }
 
-    public static @NotNull List<Text> getTextListByValue(@Nullable Object audience, String value) {
+    public static @NotNull List<Component> getTextListByValue(@Nullable Object audience, String value) {
         return getTextList(audience, false, value);
     }
 
-    public static @NotNull List<Text> getTextListByValue(@Nullable Object audience, List<String> lines) {
-        List<Text> textList = new ArrayList<>();
+    public static @NotNull List<Component> getTextListByValue(@Nullable Object audience, List<String> lines) {
+        List<Component> textList = new ArrayList<>();
         lines.forEach(line -> {
-            Text lineText = TextHelper.getTextByValue(audience, line);
+            Component lineText = TextHelper.getTextByValue(audience, line);
             textList.add(lineText);
         });
         return textList;
@@ -656,18 +656,18 @@ public class TextHelper {
     /**
  * The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.
  **/
-    public static void sendMessageByText(@NotNull Object audience, @NotNull Text text) {
+    public static void sendMessageByText(@NotNull Object audience, @NotNull Component text) {
         sendText(audience, text, Sender.TextLocation.MESSAGE);
     }
 
-    public static void sendToastByText(@NotNull ServerPlayerEntity player, @NotNull ItemStack icon, @NotNull Text text) {
-        ToastSender.sendToast(player, AdvancementFrame.TASK, icon, text);
+    public static void sendToastByText(@NotNull ServerPlayer player, @NotNull ItemStack icon, @NotNull Component text) {
+        ToastSender.sendToast(player, AdvancementType.TASK, icon, text);
     }
 
     /**
  * Send the given text to an audience.
  **/
-    public static void sendText(@NotNull Object audience, @NotNull Text text, @NotNull Sender.TextLocation textLocation) {
+    public static void sendText(@NotNull Object audience, @NotNull Component text, @NotNull Sender.TextLocation textLocation) {
         /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandActor commandActor) {
             audience = commandActor.getCommandContext();
@@ -716,7 +716,7 @@ public class TextHelper {
         Sender.TextLocation textLocation = languageInstructionResult.getValue();
 
         /* Parse the language value into text using parsers. */
-        Text text = getTextByValue(audience, languageValue, args);
+        Component text = getTextByValue(audience, languageValue, args);
 
         try {
             sendText(audience, text, textLocation);
@@ -742,19 +742,19 @@ public class TextHelper {
         private static final String SEND_MAIN_TITLE_MARKER = "[send-main-title]";
         private static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
 
-        private static void sendMessageToServerPlayerEntity(@NotNull ServerPlayerEntity serverPlayerEntity, @NotNull Text text) {
-            if (serverPlayerEntity.networkHandler == null) {
+        private static void sendMessageToServerPlayerEntity(@NotNull ServerPlayer serverPlayerEntity, @NotNull Component text) {
+            if (serverPlayerEntity.connection == null) {
                 LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
                 return;
             }
-            serverPlayerEntity.sendMessage(text, false);
+            serverPlayerEntity.displayClientMessage(text, false);
 
             /* Stream the text sent to the `message` into the `toast`, if the player has any opened screen handler. */
             streamMessageToToast(serverPlayerEntity, text);
         }
 
-        private static void streamMessageToToast(@NotNull ServerPlayerEntity serverPlayerEntity, @NotNull Text text) {
-            if (serverPlayerEntity.currentScreenHandler instanceof VirtualScreenHandler virtualScreenHandler) {
+        private static void streamMessageToToast(@NotNull ServerPlayer serverPlayerEntity, @NotNull Component text) {
+            if (serverPlayerEntity.containerMenu instanceof VirtualScreenHandler virtualScreenHandler) {
                 if (virtualScreenHandler.getGui() instanceof PagedGui<?> pagedGui) {
                     /* Filter. */
                     if (!pagedGui.isStreamMessageIntoToast()) return;
@@ -766,7 +766,7 @@ public class TextHelper {
                         () -> {
                         },
                         () -> {
-                            if (pagedGui.isOpen() && serverPlayerEntity.currentScreenHandler != null) {
+                            if (pagedGui.isOpen() && serverPlayerEntity.containerMenu != null) {
                                 ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
                                 TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
                             }
@@ -776,9 +776,9 @@ public class TextHelper {
             }
         }
 
-        private static void sendActionBarToAudience(@NotNull Object audience, @NotNull Text text) {
-            if (audience instanceof PlayerEntity playerEntity) {
-                playerEntity.sendMessage(text, true);
+        private static void sendActionBarToAudience(@NotNull Object audience, @NotNull Component text) {
+            if (audience instanceof Player playerEntity) {
+                playerEntity.displayClientMessage(text, true);
                 return;
             }
 
@@ -786,12 +786,12 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        private static void sendTitleToAudience(@NotNull Object audience, @NotNull Text text, boolean useMainTitle) {
-            if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
+        private static void sendTitleToAudience(@NotNull Object audience, @NotNull Component text, boolean useMainTitle) {
+            if (audience instanceof ServerPlayer serverPlayerEntity) {
                 if (useMainTitle) {
-                    sendTitleToServerPlayerEntity(serverPlayerEntity, text, Text.empty());
+                    sendTitleToServerPlayerEntity(serverPlayerEntity, text, Component.empty());
                 } else {
-                    sendTitleToServerPlayerEntity(serverPlayerEntity, Text.empty(), text);
+                    sendTitleToServerPlayerEntity(serverPlayerEntity, Component.empty(), text);
                 }
                 return;
             }
@@ -800,25 +800,25 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        private static void sendMessageToAudience(@NotNull Object audience, @NotNull Text text) {
-            if (audience instanceof ServerPlayerEntity serverPlayerEntity) {
+        private static void sendMessageToAudience(@NotNull Object audience, @NotNull Component text) {
+            if (audience instanceof ServerPlayer serverPlayerEntity) {
                 sendMessageToServerPlayerEntity(serverPlayerEntity, text);
                 return;
             }
 
-            if (audience instanceof PlayerEntity playerEntity) {
-                playerEntity.sendMessage(text, false);
+            if (audience instanceof Player playerEntity) {
+                playerEntity.displayClientMessage(text, false);
                 return;
             }
 
-            if (audience instanceof ServerCommandSource serverCommandSource) {
+            if (audience instanceof CommandSourceStack serverCommandSource) {
                 if (CommandHelper.Source.isExecutedByPlayer(serverCommandSource)) {
-                    ServerPlayerEntity player = serverCommandSource.getPlayer();
+                    ServerPlayer player = serverCommandSource.getPlayer();
                     assert player != null;
                     sendMessageToServerPlayerEntity(player, text);
                     return;
                 }
-                serverCommandSource.sendMessage(text);
+                serverCommandSource.sendSystemMessage(text);
                 return;
             }
 
@@ -826,17 +826,17 @@ public class TextHelper {
             throw new IllegalStateException();
         }
 
-        private static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, @NotNull Text mainTitle, @NotNull Text subTitle) {
+        private static void sendTitleToServerPlayerEntity(@NotNull ServerPlayer player, @NotNull Component mainTitle, @NotNull Component subTitle) {
             sendTitleToServerPlayerEntity(player, 10, 70, 20, mainTitle, subTitle);
         }
 
-        public static void sendTitleToServerPlayerEntity(@NotNull ServerPlayerEntity player, int fadeInTicks, int stayTicks, int fadeOutTicks, @NotNull Text mainTitle, @NotNull Text subTitle) {
-            player.networkHandler.sendPacket(new TitleFadeS2CPacket(fadeInTicks, stayTicks, fadeOutTicks));
-            player.networkHandler.sendPacket(new TitleS2CPacket(mainTitle));
-            player.networkHandler.sendPacket(new SubtitleS2CPacket(subTitle));
+        public static void sendTitleToServerPlayerEntity(@NotNull ServerPlayer player, int fadeInTicks, int stayTicks, int fadeOutTicks, @NotNull Component mainTitle, @NotNull Component subTitle) {
+            player.connection.send(new ClientboundSetTitlesAnimationPacket(fadeInTicks, stayTicks, fadeOutTicks));
+            player.connection.send(new ClientboundSetTitleTextPacket(mainTitle));
+            player.connection.send(new ClientboundSetSubtitleTextPacket(subTitle));
         }
 
-        private static void sendTextToAudience(@NotNull Object audience, @NotNull Text text, @Nullable Sender.TextLocation textLocation) {
+        private static void sendTextToAudience(@NotNull Object audience, @NotNull Component text, @Nullable Sender.TextLocation textLocation) {
             if (TextLocation.ACTION_BAR == textLocation) {
                 sendActionBarToAudience(audience, text);
             } else if (TextLocation.MAIN_TITLE == textLocation) {
@@ -870,8 +870,8 @@ public class TextHelper {
                 audience = commandContext.getSource();
             }
 
-            if (audience instanceof ServerCommandSource serverCommandSource) {
-                return serverCommandSource.getName();
+            if (audience instanceof CommandSourceStack serverCommandSource) {
+                return serverCommandSource.getTextName();
             }
 
             return audience.toString();
@@ -884,31 +884,31 @@ public class TextHelper {
 
     public static void sendBroadcastByKey(@NotNull String key, Object... args) {
         /* Log the console, using the default language. */
-        Text text = getTextByKey(null, key, args);
+        Component text = getTextByKey(null, key, args);
         LogUtil.info(Operators.getString(text));
 
         /* Send the text using the player's client side language. */
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
+        for (ServerPlayer player : PlayerHelper.Lookup.getOnlinePlayers()) {
             TextHelper.sendTextByKey(player, key, args);
         }
     }
 
-    public static void sendBroadcastByText(@NotNull Text text) {
+    public static void sendBroadcastByText(@NotNull Component text) {
         /* Log the console, using the given text. */
         LogUtil.info(Operators.getString(text));
 
         /* Send the text, using the given text. */
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
+        for (ServerPlayer player : PlayerHelper.Lookup.getOnlinePlayers()) {
             sendMessageByText(player, text);
         }
     }
 
-    public static Text getDocumentText(@Nullable Object audience, @NotNull String docString) {
+    public static Component getDocumentText(@Nullable Object audience, @NotNull String docString) {
         docString = DocumentUtil.compileDocumentString(docString);
         return getText(Parsers.STYLE_ONLY_PARSER, audience, false, docString);
     }
 
-    public static List<Text> getDocumentTextList(@Nullable Object audience, @NotNull String docString) {
+    public static List<Component> getDocumentTextList(@Nullable Object audience, @NotNull String docString) {
         return Arrays
             .stream(splitStringIntoLines(docString))
             .map(line -> getDocumentText(audience, line))
@@ -922,38 +922,38 @@ public class TextHelper {
 
         public static class ClickEvent {
 
-            public static net.minecraft.text.ClickEvent makeSuggestCommandAction(@NotNull String command) {
+            public static net.minecraft.network.chat.ClickEvent makeSuggestCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
                 return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.ClickEvent.SuggestCommand(command);
+                return new net.minecraft.network.chat.ClickEvent.SuggestCommand(command);
                 #endif
             }
 
-            public static net.minecraft.text.ClickEvent makeRunCommandAction(@NotNull String command) {
+            public static net.minecraft.network.chat.ClickEvent makeRunCommandAction(@NotNull String command) {
                 #if MC_VER <= MC_1_21_4
                     return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.RUN_COMMAND, command);
                 #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.ClickEvent.RunCommand(command);
+                return new net.minecraft.network.chat.ClickEvent.RunCommand(command);
                 #endif
             }
 
-            public static net.minecraft.text.ClickEvent makeCopyToClipboardAction(@NotNull String string) {
+            public static net.minecraft.network.chat.ClickEvent makeCopyToClipboardAction(@NotNull String string) {
                 #if MC_VER <= MC_1_21_4
                     return new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.COPY_TO_CLIPBOARD, string);
                 #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.ClickEvent.CopyToClipboard(string);
+                return new net.minecraft.network.chat.ClickEvent.CopyToClipboard(string);
                 #endif
             }
         }
 
         public static class HoverEvent {
 
-            public static net.minecraft.text.HoverEvent makeShowTextAction(@NotNull Text hoverText) {
+            public static net.minecraft.network.chat.HoverEvent makeShowTextAction(@NotNull Component hoverText) {
                 #if MC_VER <= MC_1_21_4
                 return new net.minecraft.text.HoverEvent(net.minecraft.text.HoverEvent.Action.SHOW_TEXT, hoverText);
                 #elif MC_VER >= MC_1_21_5
-                return new net.minecraft.text.HoverEvent.ShowText(hoverText);
+                return new net.minecraft.network.chat.HoverEvent.ShowText(hoverText);
                 #endif
             }
         }
@@ -983,32 +983,32 @@ public class TextHelper {
             "bold"
         );
 
-        public static <K, V> MutableText formatMapMultiLine(Map<K, V> map) {
+        public static <K, V> MutableComponent formatMapMultiLine(Map<K, V> map) {
             return formatMap(map, "", "", "\n");
         }
 
-        public static <K, V> MutableText formatMapInLine(Map<K, V> map) {
+        public static <K, V> MutableComponent formatMapInLine(Map<K, V> map) {
             return formatMap(map, "{", "}", ", ");
         }
 
-        private static <K, V> @NotNull MutableText formatMap(Map<K, V> map, String prefixString, String suffixString, String splitterString) {
-            MutableText builder = Text.empty();
+        private static <K, V> @NotNull MutableComponent formatMap(Map<K, V> map, String prefixString, String suffixString, String splitterString) {
+            MutableComponent builder = Component.empty();
 
             boolean firstElement = true;
-            builder.append(Text.literal(prefixString));
+            builder.append(Component.literal(prefixString));
             for (Map.Entry<K, V> entry : map.entrySet()) {
                 if (!firstElement) {
-                    MutableText splitterText = Text
+                    MutableComponent splitterText = Component
                         .literal(splitterString)
-                        .fillStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY));
                     builder.append(splitterText);
                 }
                 firstElement = false;
 
-                Text entryText = TextHelper.getTextByKey(null, "map.entry", entry.getKey(), entry.getValue());
+                Component entryText = TextHelper.getTextByKey(null, "map.entry", entry.getKey(), entry.getValue());
                 builder.append(entryText);
             }
-            builder.append(Text.literal(suffixString));
+            builder.append(Component.literal(suffixString));
 
             return builder;
         }
@@ -1041,13 +1041,13 @@ public class TextHelper {
     public static class Codec {
 
         @SuppressWarnings("unused")
-        public static String toJson(@NotNull Text text) {
+        public static String toJson(@NotNull Component text) {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.toJson(text);
             #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
             return Text.Serialization.toJsonString(text);
             #elif MC_VER > MC_1_20_4
-            return net.minecraft.text.TextCodecs.CODEC
+            return net.minecraft.network.chat.ComponentSerialization.CODEC
                 .encodeStart(JsonOps.INSTANCE, text)
                 .getOrThrow()
                 .toString();
@@ -1055,13 +1055,13 @@ public class TextHelper {
         }
 
         @SuppressWarnings("unused")
-        public static Text fromJson(@NotNull String textJson) {
+        public static Component fromJson(@NotNull String textJson) {
             #if MC_VER <= MC_1_20_2
             return Text.Serializer.fromJson(textJson);
             #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_20_4
             return Text.Serialization.fromJson(textJson);
             #elif MC_VER > MC_1_20_4
-            return net.minecraft.text.TextCodecs.CODEC
+            return net.minecraft.network.chat.ComponentSerialization.CODEC
                 .decode(JsonOps.INSTANCE, JsonUtil.readJsonString(textJson))
                 .getOrThrow()
                 .getFirst();

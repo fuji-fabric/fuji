@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerLifecycleEventMixin {
 
     @EventProducer(ServerStartingEvent.class)
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"))
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initServer()Z"))
     private void produceServerStartingEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStartingEvent event = new ServerStartingEvent(server);
@@ -27,7 +27,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStartedEvent.class)
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;createMetadata()Lnet/minecraft/server/ServerMetadata;"))
+    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;buildServerStatus()Lnet/minecraft/network/protocol/status/ServerStatus;"))
     private void produceServerStartedEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStartedEvent event = new ServerStartedEvent(server);
@@ -35,7 +35,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStoppingEvent.class)
-    @Inject(method = "shutdown", at = @At("HEAD"))
+    @Inject(method = "stopServer", at = @At("HEAD"))
     private void produceServerStoppingEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStoppingEvent event = new ServerStoppingEvent(server);
@@ -43,7 +43,7 @@ public class ServerLifecycleEventMixin {
     }
 
     @EventProducer(ServerStoppedEvent.class)
-    @Inject(method = "shutdown", at = @At("TAIL"))
+    @Inject(method = "stopServer", at = @At("TAIL"))
     private void produceServerStoppedEvent(CallbackInfo info) {
         MinecraftServer server = (MinecraftServer) (Object) this;
         ServerStoppedEvent event = new ServerStoppedEvent(server);

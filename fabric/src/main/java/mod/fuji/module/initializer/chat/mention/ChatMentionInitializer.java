@@ -15,9 +15,9 @@ import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.mention.config.model.ChatMentionConfigModel;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import net.minecraft.network.message.SignedMessage;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -37,7 +37,7 @@ import java.util.List;
 public class ChatMentionInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatMentionConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatMentionConfigModel.class);
 
-    private static List<ServerPlayerEntity> resolveMentionedOnlinePlayers(@NotNull String chatString) {
+    private static List<ServerPlayer> resolveMentionedOnlinePlayers(@NotNull String chatString) {
         /* Resolve mentioned online players. */
         return PlayerHelper.Lookup.getOnlinePlayerNames()
             .stream()
@@ -50,7 +50,7 @@ public class ChatMentionInitializer extends ModuleInitializer {
             .toList();
     }
 
-    private static void submitMentionPlayersJob(@NotNull List<ServerPlayerEntity> mentionedPlayers) {
+    private static void submitMentionPlayersJob(@NotNull List<ServerPlayer> mentionedPlayers) {
         /* Submit the mention player job. */
         if (!mentionedPlayers.isEmpty()) {
             LogUtil.debug("Submit new mention job: mentionedPlayers = {}", mentionedPlayers.stream().map(PlayerHelper::getPlayerName).toList());
@@ -58,17 +58,17 @@ public class ChatMentionInitializer extends ModuleInitializer {
         }
     }
 
-    public static @NotNull Text replaceMentionText(@NotNull Text text) {
+    public static @NotNull Component replaceMentionText(@NotNull Component text) {
         /* Resolve mentioned player names. */
         String chatString = TextHelper.Operators.getString(text);
-        List<ServerPlayerEntity> mentionedPlayers = resolveMentionedOnlinePlayers(chatString);
+        List<ServerPlayer> mentionedPlayers = resolveMentionedOnlinePlayers(chatString);
         submitMentionPlayersJob(mentionedPlayers);
 
         /* Replace the mentioned player texts. */
-        for (ServerPlayerEntity mentionedPlayer : mentionedPlayers) {
+        for (ServerPlayer mentionedPlayer : mentionedPlayers) {
             String playerName = PlayerHelper.getPlayerName(mentionedPlayer);
             String replacementString = config.model().getMentionFormat().formatted(playerName);
-            Text replacementText = TextHelper.getTextByValue(mentionedPlayer, replacementString);
+            Component replacementText = TextHelper.getTextByValue(mentionedPlayer, replacementString);
 
             // Update the oldText variable.
             text = TextHelper.Replacer.replaceTextWithRegex(text, Pattern.quote(playerName), (matcher) -> replacementText);
@@ -80,12 +80,12 @@ public class ChatMentionInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.LOWER)
     private static void handleOnPlayerChatEvent(PlayerChatMessagePreEvent event) {
         /* Get signed message. */
-        SignedMessage signedMessage = event.getSignedMessage();
+        PlayerChatMessage signedMessage = event.getSignedMessage();
 
         /* Replace the text. */
-        Text oldValue = signedMessage.getContent();
-        Text newValue = ChatMentionInitializer.replaceMentionText(oldValue);
-        SignedMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
+        Component oldValue = signedMessage.decoratedContent();
+        Component newValue = ChatMentionInitializer.replaceMentionText(oldValue);
+        PlayerChatMessage newSignedMessage = signedMessage.withUnsignedContent(newValue);
         event.setSignedMessage(newSignedMessage);
     }
 

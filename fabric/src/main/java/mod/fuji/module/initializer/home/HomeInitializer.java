@@ -20,7 +20,7 @@ import mod.fuji.module.initializer.home.command.argument.wrapper.HomeName;
 import mod.fuji.module.initializer.home.config.model.HomeDataModel;
 import mod.fuji.module.initializer.home.gui.ListHomesGui;
 import mod.fuji.module.initializer.home.service.HomeService;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import java.util.Optional;
 
 @Document(id = 1751827004970L, value = """
@@ -39,7 +39,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home")
     @Document(id = 1758555773741L, value = "Teleport to any of your homes.")
-    private static int $root(@CommandSource ServerPlayerEntity player) {
+    private static int $root(@CommandSource ServerPlayer player) {
         return HomeService.withHomeMap(player).entrySet()
             .stream()
             .findAny()
@@ -54,7 +54,7 @@ public class HomeInitializer extends ModuleInitializer {
     }
 
     @CommandNode("home tp")
-    private static int $tp(@CommandSource ServerPlayerEntity player, HomeName home) {
+    private static int $tp(@CommandSource ServerPlayer player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
         BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
@@ -65,7 +65,7 @@ public class HomeInitializer extends ModuleInitializer {
     }
 
     @CommandNode("home unset")
-    private static int $unset(@CommandSource ServerPlayerEntity player, HomeName home) {
+    private static int $unset(@CommandSource ServerPlayer player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
         String playerName = PlayerHelper.getPlayerName(player);
         String homeName = home.getValue();
@@ -76,7 +76,7 @@ public class HomeInitializer extends ModuleInitializer {
     }
 
     @CommandNode("home set")
-    private static int $set(@CommandSource ServerPlayerEntity player, HomeName home, Optional<Boolean> override) {
+    private static int $set(@CommandSource ServerPlayer player, HomeName home, Optional<Boolean> override) {
         BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
 
         String homeName = home.getValue();
@@ -87,7 +87,7 @@ public class HomeInitializer extends ModuleInitializer {
             }
         }
 
-        Optional<Integer> maxHomes = LuckpermsHelper.getMeta(player.getUuid(), MAX_HOME_AMOUNT_META);
+        Optional<Integer> maxHomes = LuckpermsHelper.getMeta(player.getUUID(), MAX_HOME_AMOUNT_META);
         if (maxHomes.isPresent() && homes.size() >= maxHomes.get()) {
             TextHelper.sendTextByKey(player, "home.set.fail.limit");
             return CommandHelper.Return.FAILURE;
@@ -99,7 +99,7 @@ public class HomeInitializer extends ModuleInitializer {
     }
 
     @CommandNode("home rename")
-    private static int $rename(@CommandSource ServerPlayerEntity player, HomeName oldName, String newName) {
+    private static int $rename(@CommandSource ServerPlayer player, HomeName oldName, String newName) {
         HomeService.ensureHomeNameExisting(player, oldName);
         String playerName = PlayerHelper.getPlayerName(player);
 
@@ -118,20 +118,20 @@ public class HomeInitializer extends ModuleInitializer {
     }
 
     @CommandNode("home list")
-    private static int $list(@CommandSource ServerPlayerEntity player) {
+    private static int $list(@CommandSource ServerPlayer player) {
         TextHelper.sendTextByKey(player, "home.list", HomeService.withHomeMap(player).keySet());
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("home gui")
-    private static int $gui(@CommandSource ServerPlayerEntity player) {
+    private static int $gui(@CommandSource ServerPlayer player) {
         OfflinePlayerName target = new OfflinePlayerName(PlayerHelper.getPlayerName(player));
         return $gui(player, target);
     }
 
     @CommandNode("home gui")
     @CommandRequirement(level = 4)
-    private static int $gui(@CommandSource ServerPlayerEntity player, OfflinePlayerName target) {
+    private static int $gui(@CommandSource ServerPlayer player, OfflinePlayerName target) {
         ListHomesGui
             .make(player, target.getValue())
             .open();

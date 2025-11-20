@@ -10,24 +10,24 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.module.ModulePathResolver;
 import java.util.Collection;
 import java.util.List;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
 
-    public EventsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
+    public EventsInspectionGui(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "event.inspection.gui.title"), entities, pageIndex);
     }
 
     @Override
-    protected @NotNull PagedGui<BaseEventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseEventConsumer<?>> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<BaseEventConsumer<?>> entities, int pageIndex) {
         return new EventsInspectionGui(parent, player, entities, pageIndex);
     }
 
-    public static EventsInspectionGui inspectAll(@NotNull ServerPlayerEntity player) {
+    public static EventsInspectionGui inspectAll(@NotNull ServerPlayer player) {
         List<BaseEventConsumer<?>> entities = EventManager.getEvents().values()
             .stream()
             .flatMap(Collection::stream)

@@ -8,8 +8,8 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.module.initializer.ModuleInitializer;
-import net.minecraft.entity.player.HungerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class FeedInitializer extends ModuleInitializer {
@@ -17,10 +17,10 @@ public class FeedInitializer extends ModuleInitializer {
     @Document(id = 1751825164823L, value = "Set food level, saturation level and exhaustion to healthy state.")
     @CommandNode("feed")
     @CommandRequirement(level = 4)
-    private static int $feed(@CommandSource @CommandTarget ServerPlayerEntity source) {
-        HungerManager foodData = source.getHungerManager();
+    private static int $feed(@CommandSource @CommandTarget ServerPlayer source) {
+        FoodData foodData = source.getFoodData();
         foodData.setFoodLevel(20);
-        foodData.setSaturationLevel(5);
+        foodData.setSaturation(5);
 
         TextHelper.sendTextByKey(source, "feed");
         return CommandHelper.Return.SUCCESS;

@@ -5,7 +5,7 @@ import com.mojang.authlib.properties.Property;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.module.initializer.skin.service.SkinService;
-import net.minecraft.server.network.ServerLoginNetworkHandler;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.CompletableFuture;
 
-@Mixin(ServerLoginNetworkHandler.class)
+@Mixin(ServerLoginPacketListenerImpl.class)
 public abstract class ServerLoginNetworkHandlerMixin {
 
     @Shadow
-    private GameProfile profile;
+    private GameProfile authenticatedProfile;
 
     @Unique
     CompletableFuture<Property> skinFuture;
@@ -28,14 +28,14 @@ public abstract class ServerLoginNetworkHandlerMixin {
     #if MC_VER <= MC_1_20_1
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;checkCanJoin(Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/text/Text;"), cancellable = true)
     #elif MC_VER > MC_1_20_1
-    @Inject(method = "tickVerify", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "verifyLoginAndFinishConnectionSetup", at = @At("HEAD"), cancellable = true)
     #endif
     public void postponeTheLoginUntilTheSkinFetchingIsComplete(@NotNull CallbackInfo ci) {
         // NOTE: A fake-player will not trigger this mixin function. Actually, a fake-player will not even trigger the login process.
 
         /* Initialize the skin future. */
         if (this.skinFuture == null) {
-            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getEffectiveSkin(profile));
+            this.skinFuture = CompletableFuture.supplyAsync(() -> SkinService.getEffectiveSkin(authenticatedProfile));
         }
 
         /* Postpone player login until the skin fetching is complete. */
@@ -48,18 +48,18 @@ public abstract class ServerLoginNetworkHandlerMixin {
     @Inject(method = "acceptPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;send(Lnet/minecraft/network/packet/Packet;)V", ordinal = 0))
     void applyTheFetchedSkin(CallbackInfo ci)
     #elif MC_VER > MC_1_20_1
-    @Inject(method = "sendSuccessPacket", at = @At("HEAD"))
+    @Inject(method = "finishLoginAndWaitForClient", at = @At("HEAD"))
     void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci)
     #endif
     {
         if (this.skinFuture == null) {
-            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", AuthlibHelper.getName(profile));
+            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", AuthlibHelper.getName(authenticatedProfile));
             return;
         }
 
         /* apply the skin if fetched skin is not empty */
         Property valueIfAbsent = SkinService.getPreferredDefaultSkin();
-        AuthlibHelper.modifyGameProfile(profile, skinFuture.getNow(valueIfAbsent));
+        AuthlibHelper.modifyGameProfile(authenticatedProfile, skinFuture.getNow(valueIfAbsent));
     }
 
 }

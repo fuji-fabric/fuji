@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class NamedCooldownService {
@@ -61,7 +61,7 @@ public class NamedCooldownService {
             .getNodes();
     }
 
-    public static int testNamedCooldown(@NotNull NamedCooldownDescriptor descriptor, @NotNull ServerPlayerEntity player, @NotNull List<String> onSuccessCommands, @NotNull List<String> onFailureCommands) {
+    public static int testNamedCooldown(@NotNull NamedCooldownDescriptor descriptor, @NotNull ServerPlayer player, @NotNull List<String> onSuccessCommands, @NotNull List<String> onFailureCommands) {
         String key = NamedCooldownDataNode.toKey(player);
 
         return withNamedCooldownDataNode(descriptor, dataNode -> {
@@ -70,7 +70,7 @@ public class NamedCooldownService {
             int uses = dataNode.getUses().computeIfAbsent(key, k -> 0);
             int availableUses = descriptor.getMaxUses() - uses;
             if (remainingDuration > 0 || availableUses <= 0) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), onFailureCommands);
+                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.createCommandSourceStack()), onFailureCommands);
                 return CommandHelper.Return.FAILURE;
             }
 
@@ -78,7 +78,7 @@ public class NamedCooldownService {
             dataNode.getUses().compute(key, (k, v) -> v == null ? 1 : v + 1);
             CommandCooldownInitializer.config.writeStorage();
 
-            CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.getCommandSource()), onSuccessCommands);
+            CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(player.createCommandSourceStack()), onSuccessCommands);
             return CommandHelper.Return.SUCCESS;
         });
     }

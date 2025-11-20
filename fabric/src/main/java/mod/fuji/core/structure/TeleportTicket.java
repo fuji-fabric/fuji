@@ -4,10 +4,10 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.bossbar.structure.Interruptible;
 import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import lombok.Getter;
-import net.minecraft.entity.boss.BossBar;
-import net.minecraft.entity.boss.ServerBossBar;
-import net.minecraft.network.packet.s2c.play.PositionFlag;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.BossEvent;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.world.entity.Relative;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
@@ -17,18 +17,18 @@ import java.util.Set;
 public class TeleportTicket extends InterruptibleTicket {
 
     private final GlobalPos destination;
-    private final Set<PositionFlag> flags;
+    private final Set<Relative> flags;
 
-    private TeleportTicket(@NotNull ServerPlayerEntity player
+    private TeleportTicket(@NotNull ServerPlayer player
         , GlobalPos source
         , GlobalPos destination
         , float progress
         , int totalMs
         , Interruptible interruptible
-        , Set<PositionFlag> flags
+        , Set<Relative> flags
     ) {
         super(
-            new ServerBossBar(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossBar.Color.BLUE, net.minecraft.entity.boss.BossBar.Style.PROGRESS)
+            new ServerBossEvent(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossEvent.BossBarColor.BLUE, net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS)
             , totalMs
             , player
             , source
@@ -38,15 +38,15 @@ public class TeleportTicket extends InterruptibleTicket {
         this.flags = flags;
 
         // set progress
-        this.getBossBar().setPercent(progress);
+        this.getBossBar().setProgress(progress);
     }
 
-    public static @NotNull TeleportTicket make(@NotNull ServerPlayerEntity player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, Set<PositionFlag> flags) {
+    public static @NotNull TeleportTicket make(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, Set<Relative> flags) {
         return new TeleportTicket(player, source, destination, 0f, totalMs, interruptible, flags);
     }
 
-    public static @NotNull TeleportTicket makeVipTicket(@NotNull ServerPlayerEntity player, GlobalPos source, GlobalPos destination) {
-        return new TeleportTicket(player, source, destination, 1f, 2048, Interruptible.makeUninterruptible(), EnumSet.noneOf(PositionFlag.class));
+    public static @NotNull TeleportTicket makeVipTicket(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination) {
+        return new TeleportTicket(player, source, destination, 1f, 2048, Interruptible.makeUninterruptible(), EnumSet.noneOf(Relative.class));
     }
 
     @Override

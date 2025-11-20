@@ -20,9 +20,9 @@ import mod.fuji.core.service.paged_text.PagedBookText;
 import mod.fuji.core.service.paged_text.PagedMessageText;
 import mod.fuji.core.service.paged_text.PagedText;
 import lombok.SneakyThrows;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,7 +61,7 @@ public class SendCustomInitializer extends ModuleInitializer {
     public static final Path CUSTOM_TEXT_DIR_PATH = ReflectionUtil.computeModuleConfigPath(SendCustomInitializer.class)
         .resolve("custom-text");
 
-    private static String withCustomText(ServerPlayerEntity player, CustomTextName name) {
+    private static String withCustomText(ServerPlayer player, CustomTextName name) {
         String value = name.getValue();
         Path resolve = CUSTOM_TEXT_DIR_PATH.resolve(value);
         try {
@@ -74,7 +74,7 @@ public class SendCustomInitializer extends ModuleInitializer {
 
     @Document(id = 1751826990344L, value = "Send the `custom text` as a `message`.")
     @CommandNode("as-message")
-    private static int $asMessage(@CommandSource ServerCommandSource source, ServerPlayerEntity player, CustomTextName name) {
+    private static int $asMessage(@CommandSource CommandSourceStack source, ServerPlayer player, CustomTextName name) {
         String string = withCustomText(player, name);
 
         PagedMessageText pagedMessageText = new PagedMessageText(player, string);
@@ -84,8 +84,8 @@ public class SendCustomInitializer extends ModuleInitializer {
 
     @Document(id = 1751826992414L, value = "Send the `custom text` as a `book`.")
     @CommandNode("as-book")
-    private static int $asBook(@CommandSource ServerCommandSource source
-        , ServerPlayerEntity player
+    private static int $asBook(@CommandSource CommandSourceStack source
+        , ServerPlayer player
         , CustomTextName customTextName
         , Optional<Boolean> openBook
         , Optional<Boolean> giveBook
@@ -112,7 +112,7 @@ public class SendCustomInitializer extends ModuleInitializer {
 
         if (giveBook.orElse(true)) {
             ItemStack copy = gui.getBook().copy();
-            player.giveItemStack(copy);
+            player.addItem(copy);
         }
 
         if (openBook.orElse(true)) {

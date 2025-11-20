@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.TreeMap;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -58,7 +58,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     }
 
     @Keep
-    private static int bundleCommandGenericCommandMethod(@NotNull CommandContext<ServerCommandSource> commandContext, @NotNull BundleCommandDescriptor descriptor, @NotNull List<Object> variableValues) {
+    private static int bundleCommandGenericCommandMethod(@NotNull CommandContext<CommandSourceStack> commandContext, @NotNull BundleCommandDescriptor descriptor, @NotNull List<Object> variableValues) {
         LogUtil.debug("Execute bundle-command: definition = {}, variableValues = {}", descriptor.entry, variableValues);
 
         /* Define the variables. */
@@ -92,7 +92,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         }).toList();
 
         /* Resolve the placeholders. */
-        ServerCommandSource source = commandContext.getSource();
+        CommandSourceStack source = commandContext.getSource();
         commands = commands.stream()
             .map(command -> TextHelper.Parsers.parsePlaceholderString(source, command)).toList();
 
@@ -106,7 +106,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     }
 
     @Override
-    protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<ServerCommandSource> ctx) {
+    protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<CommandSourceStack> ctx) {
         List<Object> parameterValues = new ArrayList<>();
 
         CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
@@ -133,7 +133,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected @NotNull Command<ServerCommandSource> makeCommandAction() {
+    protected @NotNull Command<CommandSourceStack> makeCommandAction() {
         return withBaseCommandAction((commandContext) -> {
             BundleCommandDescriptor descriptor = this;
             List<Object> parameterValues = makeMethodParameterValues(commandContext);

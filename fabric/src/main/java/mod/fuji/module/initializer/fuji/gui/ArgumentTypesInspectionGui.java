@@ -10,26 +10,26 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter> {
 
-    public ArgumentTypesInspectionGui(SimpleGui parent, ServerPlayerEntity player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    public ArgumentTypesInspectionGui(SimpleGui parent, ServerPlayer player, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         super(parent, player, TextHelper.getTextByKey(player, "command.argument.type.gui.title"), entities, pageIndex);
     }
 
-    public static ArgumentTypesInspectionGui inspectAll(SimpleGui parent, ServerPlayerEntity player) {
+    public static ArgumentTypesInspectionGui inspectAll(SimpleGui parent, ServerPlayer player) {
         List<BaseArgumentTypeAdapter> adapters = BaseArgumentTypeAdapter.Registry.REGISTERED_COMMAND_ARGUMENT_TYPE_ADAPTERS;
         return new ArgumentTypesInspectionGui(parent, player, adapters, 0);
     }
 
     @Override
-    protected @NotNull PagedGui<BaseArgumentTypeAdapter> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
+    protected @NotNull PagedGui<BaseArgumentTypeAdapter> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<BaseArgumentTypeAdapter> entities, int pageIndex) {
         return new ArgumentTypesInspectionGui(parent, player, entities, pageIndex);
     }
 
@@ -50,7 +50,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
         A `non-vanilla` Minecraft argument type is registered by a `module`.
         Examples include: `home name`, `warp name`, `jail name`...
         """)
-    private List<Text> toDocumentTexts(@NotNull BaseArgumentTypeAdapter entity) {
+    private List<Component> toDocumentTexts(@NotNull BaseArgumentTypeAdapter entity) {
         String docString;
         if (entity.isVanillaMinecraftArgumentType()) {
             docString = DocumentUtil.getDocString(getPlayer(), 1754726496693L);
@@ -63,7 +63,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
-        List<Text> lore = new ArrayList<>();
+        List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getSourceModule()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.is_vanilla", entity.isVanillaMinecraftArgumentType()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.class", entity.getTypeClasses().stream().map(Class::getSimpleName).toList()));
@@ -73,7 +73,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
 
 
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
-            .setName(Text.literal(entity.getClass().getSimpleName()))
+            .setName(Component.literal(entity.getClass().getSimpleName()))
             .setItem(toItem(entity))
             .setLore(lore);
 

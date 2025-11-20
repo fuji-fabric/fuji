@@ -8,8 +8,8 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.module.initializer.command_toolbox.warp.service.WarpService;
 import mod.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,23 +17,23 @@ import java.util.List;
 
 public class WarpGui extends PagedGui<WarpDescriptor> {
 
-    public WarpGui(ServerPlayerEntity player, @NotNull List<WarpDescriptor> entities, int pageIndex) {
+    public WarpGui(ServerPlayer player, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         super(null, player, TextHelper.getTextByKey(player, "warp.gui.title"), entities, pageIndex);
     }
 
-    public static @NotNull WarpGui makeDefault(@NotNull ServerPlayerEntity player) {
+    public static @NotNull WarpGui makeDefault(@NotNull ServerPlayer player) {
         List<WarpDescriptor> list = WarpService.listWarps();
         return new WarpGui(player, list, 0);
     }
 
     @Override
-    protected @NotNull PagedGui<WarpDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayerEntity player, Text title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
+    protected @NotNull PagedGui<WarpDescriptor> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<WarpDescriptor> entities, int pageIndex) {
         return new WarpGui(player, entities, pageIndex);
     }
 
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpDescriptor entity) {
-        List<Text> lore = entity
+        List<Component> lore = entity
             .getLore()
             .stream()
             .map(line -> TextHelper.getTextByValue(getPlayer(), line))

@@ -13,16 +13,16 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.level.GameRules;
 
-public class IntegerGameRuleMapAdapter implements JsonSerializer<Reference2IntMap<GameRules.Key<GameRules.IntRule>>>,
-    JsonDeserializer<Reference2IntMap<GameRules.Key<GameRules.IntRule>>> {
+public class IntegerGameRuleMapAdapter implements JsonSerializer<Reference2IntMap<GameRules.Key<GameRules.IntegerValue>>>,
+    JsonDeserializer<Reference2IntMap<GameRules.Key<GameRules.IntegerValue>>> {
 
     @Override
-    public JsonElement serialize(Reference2IntMap<GameRules.Key<GameRules.IntRule>> src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Reference2IntMap<GameRules.Key<GameRules.IntegerValue>> src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject obj = new JsonObject();
-        for (GameRules.Key<GameRules.IntRule> key : src.keySet()) {
-            String jsonKey = key.getName();
+        for (GameRules.Key<GameRules.IntegerValue> key : src.keySet()) {
+            String jsonKey = key.getId();
             int jsonValue = src.getInt(key);
             obj.addProperty(jsonKey, jsonValue);
         }
@@ -31,17 +31,17 @@ public class IntegerGameRuleMapAdapter implements JsonSerializer<Reference2IntMa
 
     @SuppressWarnings("unchecked")
     @Override
-    public Reference2IntMap<GameRules.Key<GameRules.IntRule>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+    public Reference2IntMap<GameRules.Key<GameRules.IntegerValue>> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
         throws JsonParseException {
         JsonObject obj = json.getAsJsonObject();
 
-        Reference2IntMap<GameRules.Key<GameRules.IntRule>> map = new Reference2IntOpenHashMap<>();
+        Reference2IntMap<GameRules.Key<GameRules.IntegerValue>> map = new Reference2IntOpenHashMap<>();
 
         for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
             String jsonKey = entry.getKey();
             int jsonValue = entry.getValue().getAsInt();
 
-            Optional<Map.Entry<GameRules.Key<?>, GameRules.Type<?>>> gameRuleEntryOptional = GameRules.RULE_TYPES
+            Optional<Map.Entry<GameRules.Key<?>, GameRules.Type<?>>> gameRuleEntryOptional = GameRules.GAME_RULE_TYPES
                 .entrySet()
                 .stream()
                 .filter(it -> {
@@ -56,7 +56,7 @@ public class IntegerGameRuleMapAdapter implements JsonSerializer<Reference2IntMa
             }
 
             Map.Entry<GameRules.Key<?>, GameRules.Type<?>> gameRuleEntry = gameRuleEntryOptional.get();
-            GameRules.Key<GameRules.IntRule> key = (GameRules.Key<GameRules.IntRule>) gameRuleEntry.getKey();
+            GameRules.Key<GameRules.IntegerValue> key = (GameRules.Key<GameRules.IntegerValue>) gameRuleEntry.getKey();
             map.put(key, jsonValue);
         }
 

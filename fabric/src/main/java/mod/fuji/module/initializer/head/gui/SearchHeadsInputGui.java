@@ -5,7 +5,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.InputSignGui;
 import mod.fuji.module.initializer.head.privoder.HeadProvider;
 import mod.fuji.module.initializer.head.structure.Head;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class SearchHeadsInputGui extends InputSignGui {
             || StringUtil.containsIgnoreCase(head.getTagsOrEmpty(), keywords))
             .collect(Collectors.toList());
 
-        Text title = TextHelper.getTextByKey(player, "gui.search.title", keywords);
+        Component title = TextHelper.getTextByKey(player, "gui.search.title", keywords);
         new CategoryHeadsGui(this.parentGui, player, title, entities, 0)
             .open();
     }

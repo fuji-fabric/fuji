@@ -8,7 +8,7 @@ import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import lombok.Data;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -167,7 +167,7 @@ public class CommandArgument {
         if (!this.isRequiredArgument()){
             throw new IllegalArgumentException("The argument used as the command target must be a required argument.");
         }
-        if (!parameter.getType().equals(ServerPlayerEntity.class)) {
+        if (!parameter.getType().equals(ServerPlayer.class)) {
             throw new IllegalArgumentException("The @CommandTarget annotation can only be annotated on the ServerPlayerEntity parameter type: class = %s, method = %s".formatted(parameter.getDeclaringExecutable().getName(), parameter.getDeclaringExecutable().getDeclaringClass().getName()));
         }
 

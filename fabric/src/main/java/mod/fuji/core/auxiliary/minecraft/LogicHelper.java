@@ -1,10 +1,10 @@
 package mod.fuji.core.auxiliary.minecraft;
 
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public class LogicHelper {
 
-    public static void withCancelCheck(ServerPlayerEntity player, boolean shouldCancel, Runnable runnable) {
+    public static void withCancelCheck(ServerPlayer player, boolean shouldCancel, Runnable runnable) {
         if (shouldCancel) {
             TextHelper.sendTextByKey(player, "operation.cancelled");
             return;

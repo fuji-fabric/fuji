@@ -17,8 +17,8 @@ import mod.fuji.core.service.random_teleport.RandomTeleporter;
 import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.rtp.config.model.RtpConfigModel;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class RtpInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<RtpConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, RtpConfigModel.class);
 
-    private static Optional<RandomTeleportSettings> getRandomTeleportSettings(@NotNull ServerWorld world) {
+    private static Optional<RandomTeleportSettings> getRandomTeleportSettings(@NotNull ServerLevel world) {
         List<RandomTeleportSettings> list = config.model().getDimensions().getSettings();
         String dimension = RegistryHelper.getIdAsString(world);
         return list.stream()
@@ -70,8 +70,8 @@ public class RtpInitializer extends ModuleInitializer {
 
     @Document(id = 1751826340406L, value = "Random rtp in specified dimension.")
     @CommandNode("rtp")
-    private static int $rtp(@CommandSource @CommandTarget ServerPlayerEntity player, Optional<Dimension> dimension) {
-        ServerWorld serverWorld = dimension
+    private static int $rtp(@CommandSource @CommandTarget ServerPlayer player, Optional<Dimension> dimension) {
+        ServerLevel serverWorld = dimension
             .map(Dimension::getValue)
             .orElseGet(() -> EntityHelper.getServerWorld(player));
 

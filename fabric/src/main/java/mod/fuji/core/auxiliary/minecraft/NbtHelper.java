@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.ListTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,7 @@ public class NbtHelper {
             return new IllegalStateException("The field in nbt path %s is not type of NbtCompound.".formatted(nbtPath));
         }
 
-        private static <T extends NbtElement> void setNbtPath(@NotNull NbtCompound root, @NotNull String nbtPath, @NotNull T newValue) {
+        private static <T extends Tag> void setNbtPath(@NotNull CompoundTag root, @NotNull String nbtPath, @NotNull T newValue) {
             /* Split the nodes into keys. */
             String[] keys = splitNbtPath(nbtPath);
             ensureKeysIsNotEmpty(nbtPath, keys);
@@ -45,7 +45,7 @@ public class NbtHelper {
 
                 // Build the parent node on the fly.
                 if (!root.contains(node)) {
-                    root.put(node, new NbtCompound());
+                    root.put(node, new CompoundTag());
                 }
 
                 // Walk along it.
@@ -62,7 +62,7 @@ public class NbtHelper {
             root.put(theLastKey, newValue);
         }
 
-        private static @Nullable NbtElement readNbtPath(@NotNull NbtCompound root, @NotNull String nbtPath) {
+        private static @Nullable Tag readNbtPath(@NotNull CompoundTag root, @NotNull String nbtPath) {
             /* Split the path into keys. */
             String[] keys = splitNbtPath(nbtPath);
             ensureKeysIsNotEmpty(nbtPath, keys);
@@ -88,13 +88,13 @@ public class NbtHelper {
 
             /* Get the value. */
             String theLastKey = keys[keys.length - 1];
-            @Nullable NbtElement nbtElement = root.get(theLastKey);
+            @Nullable Tag nbtElement = root.get(theLastKey);
             return nbtElement;
         }
 
         @SuppressWarnings("unchecked")
-        public static <T extends NbtElement> T getOrCreateNbtElement(@NotNull NbtCompound root, @NotNull String nbtPath, @NotNull T defaultValue) {
-            NbtElement nbtElement = readNbtPath(root, nbtPath);
+        public static <T extends Tag> T getOrCreateNbtElement(@NotNull CompoundTag root, @NotNull String nbtPath, @NotNull T defaultValue) {
+            Tag nbtElement = readNbtPath(root, nbtPath);
             if (nbtElement == null) {
                 setNbtPath(root, nbtPath, defaultValue);
                 return defaultValue;
@@ -111,7 +111,7 @@ public class NbtHelper {
  **/
     public static class Storage {
 
-        private static void writeNbtFile(@NotNull NbtCompound root, @NotNull Path filePath) throws IOException {
+        private static void writeNbtFile(@NotNull CompoundTag root, @NotNull Path filePath) throws IOException {
             #if MC_VER <= MC_1_20_2
             NbtIo.write(root, filePath.toFile());
             #elif MC_VER > MC_1_20_2
@@ -119,7 +119,7 @@ public class NbtHelper {
             #endif
         }
 
-        private static @Nullable NbtCompound readNbtFile(@NotNull Path filePath) throws IOException {
+        private static @Nullable CompoundTag readNbtFile(@NotNull Path filePath) throws IOException {
             #if MC_VER <= MC_1_20_2
             return NbtIo.read(filePath.toFile());
             #elif MC_VER > MC_1_20_2
@@ -127,14 +127,14 @@ public class NbtHelper {
             #endif
         }
 
-        public static <T> T withNbtFile(@NotNull Path filePath, @NotNull Function<NbtCompound, T> function) throws IOException {
+        public static <T> T withNbtFile(@NotNull Path filePath, @NotNull Function<CompoundTag, T> function) throws IOException {
             /* Write a default file if no file exists. */
             if (Files.notExists(filePath)) {
-                writeNbtFile(new NbtCompound(), filePath);
+                writeNbtFile(new CompoundTag(), filePath);
             }
 
             /* Read the file. */
-            NbtCompound nbt = readNbtFile(filePath);
+            CompoundTag nbt = readNbtFile(filePath);
             if (nbt == null) {
                 LogUtil.error("Failed to read the nbt file in {}", filePath);
                 throw new AbortCommandExecutionException();
@@ -150,7 +150,7 @@ public class NbtHelper {
             return value;
         }
 
-        public static void withNbtFile(@NotNull Path filePath, @NotNull Consumer<NbtCompound> function) throws IOException {
+        public static void withNbtFile(@NotNull Path filePath, @NotNull Consumer<CompoundTag> function) throws IOException {
             withNbtFile(filePath, (root) -> {
                 function.accept(root);
                 return null;
@@ -160,7 +160,7 @@ public class NbtHelper {
 
     public static class Primitives {
 
-        public static Optional<String> getString(@NotNull NbtCompound root, @NotNull String key) {
+        public static Optional<String> getString(@NotNull CompoundTag root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
             return Optional.ofNullable(root.getString(key));
             #elif MC_VER >= MC_1_21_5
@@ -168,7 +168,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static Optional<NbtCompound> getCompound(@NotNull NbtCompound root, @NotNull String key) {
+        public static Optional<CompoundTag> getCompound(@NotNull CompoundTag root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
             return Optional.ofNullable(root.getCompound(key));
             #elif MC_VER >= MC_1_21_5
@@ -176,7 +176,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static Optional<NbtCompound> getCompound(@NotNull NbtList list, int index) {
+        public static Optional<CompoundTag> getCompound(@NotNull ListTag list, int index) {
             #if MC_VER <= MC_1_21_4
             return Optional.ofNullable(list.getCompound(index));
             #elif MC_VER >= MC_1_21_5
@@ -184,7 +184,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static Optional<Integer> getInt(@NotNull NbtCompound root, @NotNull String key) {
+        public static Optional<Integer> getInt(@NotNull CompoundTag root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
             return Optional.of(root.getInt(key));
             #elif MC_VER >= MC_1_21_5
@@ -192,7 +192,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static Optional<Float> getFloat(@NotNull NbtCompound root, @NotNull String key) {
+        public static Optional<Float> getFloat(@NotNull CompoundTag root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
             return Optional.of(root.getFloat(key));
             #elif MC_VER >= MC_1_21_5
@@ -200,7 +200,7 @@ public class NbtHelper {
             #endif
         }
 
-        public static Optional<Double> getDouble(@NotNull NbtCompound root, @NotNull String key) {
+        public static Optional<Double> getDouble(@NotNull CompoundTag root, @NotNull String key) {
             #if MC_VER <= MC_1_21_4
             return Optional.of(root.getDouble(key));
             #elif MC_VER >= MC_1_21_5

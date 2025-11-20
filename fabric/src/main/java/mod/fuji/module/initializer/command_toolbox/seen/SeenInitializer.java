@@ -16,7 +16,7 @@ import mod.fuji.core.event.message.player.PlayerLeftEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_toolbox.seen.config.model.SeenDataModel;
 import lombok.Getter;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 public class SeenInitializer extends ModuleInitializer {
 
@@ -26,7 +26,7 @@ public class SeenInitializer extends ModuleInitializer {
     @Document(id = 1751825128305L, value = "Query the last online time of a player.")
     @CommandNode("seen")
     @CommandRequirement(level = 4)
-    private static int $seen(@CommandSource ServerCommandSource source, OfflinePlayerName playerName) {
+    private static int $seen(@CommandSource CommandSourceStack source, OfflinePlayerName playerName) {
         String target = playerName.getValue();
 
         if (data.model().player2seen.containsKey(target)) {

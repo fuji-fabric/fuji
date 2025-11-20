@@ -15,7 +15,7 @@ import mod.fuji.module.initializer.command_spy.config.model.CommandSpyConfigMode
 import mod.fuji.module.initializer.command_spy.config.transformer.CommandSpySchemaV1Transformer;
 import mod.fuji.module.initializer.command_spy.structure.CommandSpyRule;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826800901L, value = """
@@ -32,8 +32,8 @@ public class CommandSpyInitializer extends ModuleInitializer {
         .ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, CommandSpyConfigModel.class)
         .installTransformer(new CommandSpySchemaV1Transformer());
 
-    private static void processCommandSpy(@NotNull ServerCommandSource commandSource, @NotNull String commandString) {
-        LogUtil.debug("Process Command Spy: command source = {}, command string = {}", commandSource.getName(), commandString);
+    private static void processCommandSpy(@NotNull CommandSourceStack commandSource, @NotNull String commandString) {
+        LogUtil.debug("Process Command Spy: command source = {}, command string = {}", commandSource.getTextName(), commandString);
 
         /* Find first matched rule. */
         Optional<CommandSpyRule> matchedRule = config.model()
@@ -63,18 +63,18 @@ public class CommandSpyInitializer extends ModuleInitializer {
             });
     }
 
-    private static void logToConsole(@NotNull ServerCommandSource commandSource, @NotNull String commandString, @NotNull CommandSpyRule.IfMatched ifMatched) {
+    private static void logToConsole(@NotNull CommandSourceStack commandSource, @NotNull String commandString, @NotNull CommandSpyRule.IfMatched ifMatched) {
         if (ifMatched.isLogToConsole()) {
-            LogUtil.info("{} issued the server command: /{}", commandSource.getName(), commandString);
+            LogUtil.info("{} issued the server command: /{}", commandSource.getTextName(), commandString);
         }
     }
 
-    private static void notifyPlayersWithLevelPermission(@NotNull ServerCommandSource commandSource, @NotNull String commandString, int notifyPlayersWithLevelPermission) {
+    private static void notifyPlayersWithLevelPermission(@NotNull CommandSourceStack commandSource, @NotNull String commandString, int notifyPlayersWithLevelPermission) {
         PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
-            .filter(player -> player.hasPermissionLevel(notifyPlayersWithLevelPermission))
+            .filter(player -> player.hasPermissions(notifyPlayersWithLevelPermission))
             .forEach(player -> {
-                TextHelper.sendTextByKey(player, "command_spy.notify", commandSource.getName(), commandString);
+                TextHelper.sendTextByKey(player, "command_spy.notify", commandSource.getTextName(), commandString);
             });
     }
 

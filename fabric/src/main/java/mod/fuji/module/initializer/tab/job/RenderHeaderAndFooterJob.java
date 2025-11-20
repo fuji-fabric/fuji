@@ -10,9 +10,9 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.job.abst.CronJob;
 import mod.fuji.core.job.JobManager;
 import mod.fuji.module.initializer.tab.TabListInitializer;
-import net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobExecutionContext;
 
@@ -28,22 +28,22 @@ public class RenderHeaderAndFooterJob extends CronJob {
     private static void updateTabList() {
         String headerFormat = RandomUtil.drawList(TabListInitializer.config.model().getStyle().getHeader());
         String footerFormat = RandomUtil.drawList(TabListInitializer.config.model().getStyle().getFooter());
-        for (ServerPlayerEntity player : PlayerHelper.Lookup.getOnlinePlayers()) {
-            @NotNull Text header;
+        for (ServerPlayer player : PlayerHelper.Lookup.getOnlinePlayers()) {
+            @NotNull Component header;
             if (TabListInitializer.config.model().getStyle().isEnableHeader()) {
                 header = TextHelper.getTextByValue(player, headerFormat);
             } else {
-                header = Text.empty();
+                header = Component.empty();
             }
 
-            @NotNull Text footer;
+            @NotNull Component footer;
             if (TabListInitializer.config.model().getStyle().isEnableFooter()) {
                 footer = TextHelper.getTextByValue(player, footerFormat);
             } else {
-                footer = Text.empty();
+                footer = Component.empty();
             }
 
-            player.networkHandler.sendPacket(new PlayerListHeaderS2CPacket(header, footer));
+            player.connection.send(new ClientboundTabListPacket(header, footer));
         }
 
     }

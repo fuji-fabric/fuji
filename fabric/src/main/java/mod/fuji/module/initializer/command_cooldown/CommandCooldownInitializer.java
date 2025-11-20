@@ -26,8 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826375815L, value = """
@@ -119,7 +119,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826400837L, value = "Create a named-cooldown.")
     @CommandNode("create")
-    private static int $create(@CommandSource ServerCommandSource source, String name, long cooldownDuration, Optional<Integer> maxUses, Optional<Boolean> persistent, Optional<Boolean> global) {
+    private static int $create(@CommandSource CommandSourceStack source, String name, long cooldownDuration, Optional<Integer> maxUses, Optional<Boolean> persistent, Optional<Boolean> global) {
         return NamedCooldownService
             .findNamedCooldownDescriptor(name)
             .map(it -> {
@@ -139,7 +139,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826416666L, value = "Delete a named-cooldown.")
     @CommandNode("delete")
-    private static int $delete(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown, Optional<Boolean> confirm) {
+    private static int $delete(@CommandSource CommandSourceStack source, NamedCooldownDescriptor namedCooldown, Optional<Boolean> confirm) {
         return CommandHelper.Pattern.withCommandConfirmed(source, confirm, () -> {
             NamedCooldownService.deleteNamedCooldownDescriptor(namedCooldown);
             TextHelper.sendTextByKey(source, "command_cooldown.deleted", namedCooldown.getName());
@@ -149,7 +149,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1756539191422L, value = "List all `unnamed-cooldown` and `named-cooldown`.")
     @CommandNode("list")
-    private static int $list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource CommandSourceStack source) {
         TextHelper.sendTextByKey(source, "command_cooldown.list.unnamed_cooldown", UnnamedCooldownService.listUnnamedCooldowns().keySet());
         TextHelper.sendMessageByText(source, TextHelper.Formatter.formatMapMultiLine(UnnamedCooldownService.listUnnamedCooldowns()));
         TextHelper.sendMessageByText(source, TextHelper.TEXT_EMPTY);
@@ -160,9 +160,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826379596L, value = "Test a named-cooldown with `arbitrary command instance`, and execute `success case command` or `failure case command`.")
     @CommandNode("test")
-    private static int $test(@CommandSource ServerCommandSource source
+    private static int $test(@CommandSource CommandSourceStack source
         , NamedCooldownDescriptor namedCooldown
-        , ServerPlayerEntity player
+        , ServerPlayer player
         , Optional<StringList> onFailed
         , GreedyCommandString onSuccess
     ) {
@@ -175,7 +175,7 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1752917170907L, value = "Test a named-cooldown with `pre-defined command instance`, and execute `success case command` or `failure case command`.")
     @CommandNode("try-use")
-    private static int $tryUse(@CommandSource ServerCommandSource source, NamedCooldownDescriptor namedCooldown, ServerPlayerEntity player
+    private static int $tryUse(@CommandSource CommandSourceStack source, NamedCooldownDescriptor namedCooldown, ServerPlayer player
     ) {
         List<String> onSuccessCommands = namedCooldown.getTryUse().getOnSuccessCommands();
         List<String> onFailureCommands = namedCooldown.getTryUse().getOnFailureCommands();
@@ -184,9 +184,9 @@ public class CommandCooldownInitializer extends ModuleInitializer {
 
     @Document(id = 1751826420385L, value = "Reset `the last use time` of a named-cooldown for a player.")
     @CommandNode("reset")
-    private static int $reset(@CommandSource ServerCommandSource source
+    private static int $reset(@CommandSource CommandSourceStack source
         , NamedCooldownDescriptor namedCooldown
-        , ServerPlayerEntity player) {
+        , ServerPlayer player) {
         String key = NamedCooldownDataNode.toKey(player);
 
         NamedCooldownService.resetNamedCooldownDuration(namedCooldown, key);
@@ -208,11 +208,11 @@ public class CommandCooldownInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWER)
     private static void consumeCommandExecutionPreEvent(CommandExecutionPreEvent event) {
         if (event.getCallback().isCancelled()) return;
-        ServerCommandSource commandSource = event.getCommandSource();
+        CommandSourceStack commandSource = event.getCommandSource();
         if (CommandHelper.Source.isExecutedByConsole(commandSource)) return;
         if (config.model().isAdminPlayersCanBypass() && CommandHelper.Requirement.isAdmin(commandSource)) return;
 
-        @NotNull ServerPlayerEntity player = Objects.requireNonNull(commandSource.getPlayer());
+        @NotNull ServerPlayer player = Objects.requireNonNull(commandSource.getPlayer());
 
         /* Compute the cooldown for specified command. */
         String commandString = event.getCommandString();

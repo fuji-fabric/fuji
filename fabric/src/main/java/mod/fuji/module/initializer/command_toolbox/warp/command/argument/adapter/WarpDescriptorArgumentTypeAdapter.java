@@ -11,7 +11,7 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.module.initializer.command_toolbox.warp.service.WarpService;
 import mod.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ public class WarpDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     @Override
-    public Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
+    public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String warpId = StringArgumentType.getString(context, commandArgument.getArgumentName());
         return WarpService
             .findWarp(warpId)
@@ -46,7 +46,7 @@ public class WarpDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super
             .makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(WarpService::listWarpIds));

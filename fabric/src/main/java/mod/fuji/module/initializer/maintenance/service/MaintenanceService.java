@@ -13,8 +13,8 @@ import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.module.initializer.maintenance.MaintenanceModuleInitializer;
 import mod.fuji.module.initializer.maintenance.config.model.MaintenanceConfigModel;
 import java.util.List;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class MaintenanceService {
@@ -24,25 +24,25 @@ public class MaintenanceService {
     }
 
     @SuppressWarnings({"RedundantIfStatement", "BooleanMethodIsAlwaysInverted"})
-    public static boolean canJoinNow(@NotNull ServerPlayerEntity player) {
+    public static boolean canJoinNow(@NotNull ServerPlayer player) {
         if (!getMaintenanceModeStatus()) return true;
         if (CommandHelper.Requirement.isOperator(player)) return true;
-        if (CommandHelper.Requirement.isAdmin(player.getCommandSource())) return true;
-        if (LuckpermsHelper.hasPermission(player.getUuid(), MaintenanceModuleInitializer.MAINTENANCE_BYPASS_PERMISSION)) return true;
+        if (CommandHelper.Requirement.isAdmin(player.createCommandSourceStack())) return true;
+        if (LuckpermsHelper.hasPermission(player.getUUID(), MaintenanceModuleInitializer.MAINTENANCE_BYPASS_PERMISSION)) return true;
 
         return false;
     }
 
     @EventConsumer
     public static void processMaintenanceModeOnPlayerJoined(PlayerJoinedEvent event) {
-        ServerPlayerEntity player = event.getPlayer();
+        ServerPlayer player = event.getPlayer();
         if (!canJoinNow(player)) {
             kickPlayer(player);
         }
     }
 
-    public static void kickPlayer(@NotNull ServerPlayerEntity player) {
-        Text reasonText = TextHelper.getTextByKey(player, "maintenance.disconnect");
+    public static void kickPlayer(@NotNull ServerPlayer player) {
+        Component reasonText = TextHelper.getTextByKey(player, "maintenance.disconnect");
         PlayerHelper.disconnectPlayer(player, reasonText);
     }
 
@@ -68,7 +68,7 @@ public class MaintenanceService {
         CommandExecutor.executeBatch(extendedCommandSource, commands);
     }
 
-    public static Text getEffectiveMaintenanceMessageText() {
+    public static Component getEffectiveMaintenanceMessageText() {
         String message = RandomUtil.drawList(MaintenanceModuleInitializer.config.model().getMaintenanceMessages());
         return TextHelper.getTextByValue(null, message);
     }

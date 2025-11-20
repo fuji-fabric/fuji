@@ -9,20 +9,20 @@ import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
 import mod.fuji.module.initializer.economy.service.EconomyService;
 import java.util.List;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return IdentifierArgumentType.identifier();
+        return ResourceLocationArgument.id();
     }
 
     @Override
-    protected Object makeArgumentValue(@NotNull CommandContext<ServerCommandSource> context, @NotNull CommandArgument commandArgument) {
-        Identifier identifier = IdentifierArgumentType.getIdentifier(context, commandArgument.getArgumentName());
+    protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
+        ResourceLocation identifier = ResourceLocationArgument.getId(context, commandArgument.getArgumentName());
         return new CurrencyId(identifier);
     }
 
@@ -38,7 +38,7 @@ public class CurrencyIdArgumentTypeAdapter extends BaseArgumentTypeAdapter {
 
     @Override
     @NotNull
-    protected RequiredArgumentBuilder<ServerCommandSource, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
+    protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(CommandHelper.Suggestion.iterable(EconomyService::getServerCurrencyIds));
     }

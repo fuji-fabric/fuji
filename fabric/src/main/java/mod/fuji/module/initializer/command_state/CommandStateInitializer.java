@@ -16,8 +16,8 @@ import mod.fuji.module.initializer.command_state.gui.ListPlayerStatesGui;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import mod.fuji.module.initializer.command_state.structure.StateDescriptor;
 import java.util.List;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 @Document(id = 1756692824395L, value = """
     This module allows defining a `state` using `predicate commands`.
@@ -63,7 +63,7 @@ public class CommandStateInitializer extends ModuleInitializer {
 
     @CommandNode("command-state list")
     @Document(id = 1756695958335L, value = "List all defined `states`.")
-    private static int $list(@CommandSource ServerCommandSource source) {
+    private static int $list(@CommandSource CommandSourceStack source) {
         List<String> ids = CommandStateService.listStateIds();
         TextHelper.sendTextByKey(source, "command_state.list", ids);
         return CommandHelper.Return.SUCCESS;
@@ -71,21 +71,21 @@ public class CommandStateInitializer extends ModuleInitializer {
 
     @CommandNode("command-state update")
     @Document(id = 1756695727818L, value = "Update the specified `state` for online players.")
-    private static int $update(@CommandSource ServerCommandSource source, StateDescriptor state) {
+    private static int $update(@CommandSource CommandSourceStack source, StateDescriptor state) {
         CommandStateService.updateCommandState(state);
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("command-state update-all")
     @Document(id = 1756695744117L, value = "Update all defined `states` for online players.")
-    private static int $updateAll(@CommandSource ServerCommandSource source) {
+    private static int $updateAll(@CommandSource CommandSourceStack source) {
         CommandStateService.updateAllCommandStates();
         return CommandHelper.Return.SUCCESS;
     }
 
     @CommandNode("command-state info")
     @Document(id = 1756695758012L, value = "Display the value of all `states` of the specified player.")
-    private static int $info(@CommandSource ServerPlayerEntity source, ServerPlayerEntity player) {
+    private static int $info(@CommandSource ServerPlayer source, ServerPlayer player) {
         ListPlayerStatesGui
             .make(source, player)
             .open();
@@ -94,7 +94,7 @@ public class CommandStateInitializer extends ModuleInitializer {
 
     @CommandNode("is-in-state?")
     @Document(id = 1756695870856L, value = "Returns whether the specified `state` value for the player is currently `true`.")
-    private static int $isInState(@CommandSource ServerCommandSource source, ServerPlayerEntity player, StateDescriptor state) {
+    private static int $isInState(@CommandSource CommandSourceStack source, ServerPlayer player, StateDescriptor state) {
         boolean inState = CommandStateService.checkCurrentStateValue(player, state);
         return CommandHelper.Return.returnBoolean(source, inState);
     }
