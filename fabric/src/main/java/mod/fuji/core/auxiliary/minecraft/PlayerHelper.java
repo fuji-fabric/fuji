@@ -161,7 +161,7 @@ public class PlayerHelper {
             Optional<net.minecraft.world.level.storage.ValueInput> playerData = getPlayerManager().load($player, net.minecraft.util.ProblemReporter.DISCARDING);
             applyPlayerData($player, playerData.orElse(null));
             #elif MC_VER >= MC_1_21_9
-            Optional<CompoundTag> playerData = getPlayerManager().loadPlayerData($player.nameAndId());
+            Optional<net.minecraft.nbt.CompoundTag> playerData = getPlayerManager().loadPlayerData($player.nameAndId());
             applyPlayerData($player, playerData.orElse(null));
             #endif
 
