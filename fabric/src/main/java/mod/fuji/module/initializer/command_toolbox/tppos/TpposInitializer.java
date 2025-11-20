@@ -88,8 +88,8 @@ public class TpposInitializer extends ModuleInitializer {
         boolean $circle = circle.orElse(false);
         int $minRange = minRange.orElse(0);
         int $maxRange = maxRange.orElse((int) world.getWorldBorder().getSize() / 2);
-        int $minY = minY.orElse(WorldHelper.getMinY(world));
-        int $maxY = maxY.orElse(WorldHelper.getMaxY(world));
+        int $minY = minY.orElse(WorldHelper.HeightView.getMinBuildingY(world));
+        int $maxY = maxY.orElse(WorldHelper.HeightView.getMaxBuildingY(world));
         int $maxTryTimes = maxTryTimes.orElse(8);
         String worldId = RegistryHelper.getIdAsString(world);
         int $asyncChunkLoadingTimeoutTicks = asyncChunkLoadingTimeoutTicks.orElse(20 * 10);

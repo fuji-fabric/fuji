@@ -36,38 +36,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class WorldHelper {
 
-    public static int getMaxY(@NotNull ChunkAccess chunk) {
-        #if MC_VER <= MC_1_21
-        return chunk.getMaxBuildHeight();
-        #elif MC_VER > MC_1_21
-        return chunk.getMaxY();
-        #endif
-    }
-
-    public static int getMinY(@NotNull ChunkAccess chunk) {
-        #if MC_VER <= MC_1_21
-        return chunk.getMinBuildHeight();
-        #elif MC_VER > MC_1_21
-        return chunk.getMinY();
-        #endif
-    }
-
-    public static int getMaxY(@NotNull Level world) {
-        #if MC_VER <= MC_1_21
-        return world.getMaxBuildHeight();
-        #elif MC_VER > MC_1_21
-        return world.getMaxY();
-        #endif
-    }
-
-    public static int getMinY(@NotNull Level world) {
-        #if MC_VER <= MC_1_21
-        return world.getMinBuildHeight();
-        #elif MC_VER > MC_1_21
-        return world.getMinY();
-        #endif
-    }
-
     public static Vec3 toBottomCenterPos(BlockPos pos) {
         return Vec3.atLowerCornerWithOffset(pos, 0.5, 0.0, 0.5);
     }
@@ -157,18 +125,6 @@ public class WorldHelper {
     public static @NotNull List<Entity> getEntities(@NotNull ServerLevel world) {
         ArrayList<Entity> snapshot = Lists.newArrayList(world.getAllEntities());
         return snapshot;
-    }
-
-    public static int getMaxBlockY(@NotNull ChunkAccess chunk) {
-        int i = chunk.getHighestFilledSectionIndex();
-        if (i == -1) {
-            return getMaxY(chunk);
-        }
-
-        // Returns the max Y in the chunk where the highest block is in.
-        // NOTE: The returned Y is an upper bound, you can simply iterate it, it's cache friendly.
-        int blockCoord = SectionPos.sectionToBlockCoord(chunk.getSectionYFromSectionIndex(i));
-        return blockCoord + 15;
     }
 
     public static @NotNull String getBiomeId(@NotNull ServerLevel world, @NotNull BlockPos blockPos) {
@@ -315,6 +271,52 @@ public class WorldHelper {
         }
     }
 
+    public static class HeightView {
+
+        public static int getMaxBuildingY(@NotNull ChunkAccess chunk) {
+            #if MC_VER <= MC_1_21
+            return chunk.getMaxBuildHeight();
+            #elif MC_VER > MC_1_21
+            return chunk.getMaxY();
+            #endif
+        }
+
+        public static int getMinBuildingY(@NotNull ChunkAccess chunk) {
+            #if MC_VER <= MC_1_21
+            return chunk.getMinBuildHeight();
+            #elif MC_VER > MC_1_21
+            return chunk.getMinY();
+            #endif
+        }
+
+        public static int getMaxBuildingY(@NotNull Level world) {
+            #if MC_VER <= MC_1_21
+            return world.getMaxBuildHeight();
+            #elif MC_VER > MC_1_21
+            return world.getMaxY();
+            #endif
+        }
+
+        public static int getMinBuildingY(@NotNull Level world) {
+            #if MC_VER <= MC_1_21
+            return world.getMinBuildHeight();
+            #elif MC_VER > MC_1_21
+            return world.getMinY();
+            #endif
+        }
+
+        public static int getMaxBlockY(@NotNull ChunkAccess chunk) {
+            int i = chunk.getHighestFilledSectionIndex();
+            if (i == -1) {
+                return getMaxBuildingY(chunk);
+            }
+
+            // Returns the max Y in the chunk where the highest block is in.
+            // NOTE: The returned Y is an upper bound, you can simply iterate it, it's cache friendly.
+            int blockCoord = SectionPos.sectionToBlockCoord(chunk.getSectionYFromSectionIndex(i));
+            return blockCoord + 15;
+        }
+    }
 
 
 }
