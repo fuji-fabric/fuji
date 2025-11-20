@@ -1,5 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import java.util.stream.Stream;
 import mod.fuji.Fuji;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -96,7 +97,7 @@ public class RegistryHelper {
     public static <T> Registry<T> getRegistry(@NotNull ResourceKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
-                .get(registryKey);
+                .registryOrThrow(registryKey);
             #elif MC_VER > MC_1_21
                 .lookupOrThrow(registryKey);
             #endif
@@ -108,7 +109,7 @@ public class RegistryHelper {
     public static <T> HolderGetter<T> getRegistryEntryLookup(@NotNull ResourceKey<? extends Registry<? extends T>> registryKey) {
         return getCombinedRegistryManager()
             #if MC_VER <= MC_1_21
-                .getWrapperOrThrow(registryKey);
+                .lookupOrThrow(registryKey);
             #elif MC_VER > MC_1_21
                 .lookupOrThrow(registryKey);
             #endif
@@ -120,9 +121,25 @@ public class RegistryHelper {
 
     public static <T> Optional<Holder<T>> getRegistryEntry(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull ResourceLocation identifier) {
         Registry<T> registry = getRegistry(registrySpecifier);
-        T object = registry.getValue(identifier);
+        T object = getValue(registry, identifier);
         Holder<T> entry = registry.wrapAsHolder(object);
         return Optional.ofNullable(entry);
+    }
+
+    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull ResourceKey<T> resourceKey) {
+        #if MC_VER <= MC_1_21
+        return registry.get(resourceKey);
+        #elif MC_VER > MC_1_21
+        return registry.getValue(resourceKey);
+        #endif
+    }
+
+    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull ResourceLocation identifier) {
+        #if MC_VER <= MC_1_21
+        return registry.get(identifier);
+        #elif MC_VER > MC_1_21
+        return registry.getValue(identifier);
+        #endif
     }
 
     public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String identifier) {
@@ -141,11 +158,17 @@ public class RegistryHelper {
         }
     }
 
+    public static <T> Stream<Holder.Reference<T>> listElements(@NotNull Registry<T> registry) {
+        #if MC_VER <= MC_1_21
+        return registry.holders();
+        #elif MC_VER > MC_1_21
+        return registry.listElements();
+        #endif
+    }
+
     @SuppressWarnings("unused")
     public static <T> Optional<ResourceKey<T>> findRegistryKey(@NotNull ResourceKey<? extends Registry<? extends T>> registrySpecifier, @NotNull T registryValue) {
-        return RegistryHelper
-            .getRegistry(registrySpecifier)
-            .listElements()
+        return listElements(RegistryHelper.getRegistry(registrySpecifier))
             .filter(registryEntry -> registryValue.equals(registryEntry.value))
             .findFirst()
             .flatMap(registryEntry -> {

@@ -36,23 +36,35 @@ import org.jetbrains.annotations.Nullable;
 
 public class WorldHelper {
 
-    public static int getTopY(@NotNull ChunkAccess chunk) {
+    public static int getMaxY(@NotNull ChunkAccess chunk) {
         #if MC_VER <= MC_1_21
-        return chunk.getTopY();
+        return chunk.getMaxBuildHeight();
         #elif MC_VER > MC_1_21
         return chunk.getMaxY();
         #endif
     }
 
-    public static int getBottomYInclusive(@NotNull ChunkAccess chunk) {
+    public static int getMinY(@NotNull ChunkAccess chunk) {
+        #if MC_VER <= MC_1_21
+        return chunk.getMinBuildHeight();
+        #elif MC_VER > MC_1_21
         return chunk.getMinY();
+        #endif
     }
 
-    public static int getTopY(@NotNull Level world) {
+    public static int getMaxY(@NotNull Level world) {
         #if MC_VER <= MC_1_21
-        return world.getTopY();
+        return world.getMaxBuildHeight();
         #elif MC_VER > MC_1_21
         return world.getMaxY();
+        #endif
+    }
+
+    public static int getMinY(@NotNull Level world) {
+        #if MC_VER <= MC_1_21
+        return world.getMinBuildHeight();
+        #elif MC_VER > MC_1_21
+        return world.getMinY();
         #endif
     }
 
@@ -161,7 +173,7 @@ public class WorldHelper {
     public static int getMaxBlockY(@NotNull ChunkAccess chunk) {
         int i = chunk.getHighestFilledSectionIndex();
         if (i == -1) {
-            return getTopY(chunk);
+            return getMaxY(chunk);
         }
 
         // Returns the max Y in the chunk where the highest block is in.

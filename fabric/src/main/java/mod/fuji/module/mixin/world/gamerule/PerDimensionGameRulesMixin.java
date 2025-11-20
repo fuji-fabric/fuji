@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 #if MC_VER < MC_1_21_3
-@Mixin(World.class)
+@Mixin(Level.class)
 #elif MC_VER >= MC_1_21_3
 @Mixin(ServerLevel.class)
 #endif

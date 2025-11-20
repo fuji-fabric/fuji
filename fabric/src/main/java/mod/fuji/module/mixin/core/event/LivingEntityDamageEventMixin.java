@@ -17,7 +17,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class LivingEntityDamageEventMixin {
 
     @EventProducer(LivingEntityDamageEvent.class)
+    #if MC_VER <= MC_1_21
+    @ModifyVariable(method = "hurt", at = @At(value = "HEAD"), argsOnly = true)
+    #elif MC_VER > MC_1_21
     @ModifyVariable(method = "hurtServer", at = @At(value = "HEAD"), argsOnly = true)
+    #endif
     float produceLivingEntityDamageEvent(float damage, @Local(argsOnly = true) DamageSource damageSource) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         LivingEntityDamageEvent event = new LivingEntityDamageEvent(entity, damageSource, damage);

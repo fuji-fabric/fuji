@@ -35,7 +35,7 @@ public abstract class PositionYSearcher {
 
     public static @NotNull Optional<Integer> search(@NotNull ChunkAccess chunk, int blockPosX, int blockPosZ, @NotNull Direction direction) {
         /* Initialize Y range. */
-        final int minY = WorldHelper.getBottomYInclusive(chunk);
+        final int minY = WorldHelper.getMinY(chunk);
         final int maxY = WorldHelper.getMaxBlockY(chunk);
         if (minY >= maxY) {
             return Optional.empty();

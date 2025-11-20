@@ -50,13 +50,13 @@ public class RegistryLoaderMixin {
         , List<Pair<MutableRegistry<?>, Object>> iterable
     )
     #elif MC_VER > MC_1_20_4 && MC_VER <= MC_1_21
-    @Inject(method = "load(Lnet/minecraft/registry/RegistryLoader$RegistryLoadable;Lnet/minecraft/registry/DynamicRegistryManager;Ljava/util/List;)Lnet/minecraft/registry/DynamicRegistryManager$Immutable;"
+    @Inject(method = "load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Lnet/minecraft/core/RegistryAccess;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;"
         , at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0, shift = At.Shift.AFTER))
     private static void registerNewMessageType(@Coerce Object registryLoadable
-        , DynamicRegistryManager dynamicRegistryManager
-        , List<RegistryLoader.Entry<?>> entries
-        , CallbackInfoReturnable<DynamicRegistryManager.Immutable> cir
-        , @Local(ordinal = 1) @NotNull List<RegistryLoader.Loader<?>> iterable)
+        , RegistryAccess dynamicRegistryManager
+        , List<RegistryDataLoader.RegistryData<?>> entries
+        , CallbackInfoReturnable<RegistryAccess.Frozen> cir
+        , @Local(ordinal = 1) @NotNull List<RegistryDataLoader.Loader<?>> iterable)
     #elif MC_VER > MC_1_21
     @Inject(method = "load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Ljava/util/List;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;"
         , at = @At(value = "INVOKE", target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)

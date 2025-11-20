@@ -92,7 +92,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             if (!this.isMetaRegistry) return;
 
             /* try to get the registry from static registries */
-            Object o = BuiltInRegistries.REGISTRY.getValue(entity.getIdentifier());
+            Object o = RegistryHelper.getValue(BuiltInRegistries.REGISTRY, entity.getIdentifier());
             if (o instanceof Registry<?> r) {
                 List<IdentifierDescriptor> ids = r.registryKeySet()
                     .stream()

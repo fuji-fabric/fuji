@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.MappedRegistry;
@@ -39,8 +40,16 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
      *
      */
     @Override
-    public Stream<Holder.Reference<T>> listElements() {
-        return this.source.listElements().filter((e) -> this.filter.test(e.value));
+    public @NotNull Stream<Holder.Reference<T>>
+    #if MC_VER <= MC_1_21
+    holders
+    #elif MC_VER > MC_1_21
+    listElements
+    #endif
+    () {
+        return RegistryHelper
+            .listElements(this.source)
+            .filter((e) -> this.filter.test(e.value));
     }
 
 
@@ -82,14 +91,26 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
 
     @Nullable
     @Override
-    public T getValue(@Nullable ResourceKey<T> key) {
-        return this.source.getValue(key);
+    public T
+    #if MC_VER <= MC_1_21
+    get
+    #elif MC_VER > MC_1_21
+    getValue
+    #endif
+    (@Nullable ResourceKey<T> key) {
+        return RegistryHelper.getValue(this.source, key);
     }
 
     @Nullable
     @Override
-    public T getValue(@Nullable ResourceLocation id) {
-        return this.source.getValue(id);
+    public T
+    #if MC_VER <= MC_1_21
+    get
+    #elif MC_VER > MC_1_21
+    getValue
+    #endif
+    (@Nullable ResourceLocation id) {
+        return RegistryHelper.getValue(this.source, id);
     }
 
     #if MC_VER <= MC_1_20_4

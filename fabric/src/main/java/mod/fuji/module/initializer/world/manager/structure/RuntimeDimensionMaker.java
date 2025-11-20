@@ -111,7 +111,7 @@ public class RuntimeDimensionMaker {
         Registry<WorldPreset> worldPresetRegistry = RegistryHelper.getRegistry(Registries.WORLD_PRESET);
         assert runtimeDimensionDescriptor.worldPresetType != null;
         ResourceKey<WorldPreset> worldPresetKey = runtimeDimensionDescriptor.worldPresetType.toWorldPresetKey();
-        WorldPreset worldPreset = worldPresetRegistry.getValue(worldPresetKey);
+        WorldPreset worldPreset = RegistryHelper.getValue(worldPresetRegistry, worldPresetKey);
         if (worldPreset == null) {
             throw new RuntimeException("Failed to make DimensionOptions for dimension %s, the WorldPreset didn't existed in the registry.".formatted(runtimeDimensionDescriptor.dimension));
         }
@@ -148,7 +148,7 @@ public class RuntimeDimensionMaker {
     private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         Registry<LevelStem> dimensionRegistry = RegistryHelper.getRegistry(Registries.LEVEL_STEM);
         ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
-        @Nullable LevelStem existedDimensionOptions = dimensionRegistry.getValue(dimensionTypeIdentifier);
+        @Nullable LevelStem existedDimensionOptions = RegistryHelper.getValue(dimensionRegistry, dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
             LogUtil.warn("Failed to make chunk generator for {}, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionDescriptor.getDimension(), dimensionTypeIdentifier);
             return makeFlatChunkGenerator(dimensionDescriptor);

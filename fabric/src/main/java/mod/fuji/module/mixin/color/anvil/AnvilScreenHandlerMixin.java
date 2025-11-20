@@ -30,7 +30,7 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     private String itemName;
 
     #if MC_VER <= MC_1_21
-    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> screenHandlerType, int i, PlayerInventory playerInventory, ScreenHandlerContext screenHandlerContext) {
+    public AnvilScreenHandlerMixin(@Nullable MenuType<?> screenHandlerType, int i, Inventory playerInventory, ContainerLevelAccess screenHandlerContext) {
         super(screenHandlerType, i, playerInventory, screenHandlerContext);
     }
     #elif MC_VER > MC_1_21

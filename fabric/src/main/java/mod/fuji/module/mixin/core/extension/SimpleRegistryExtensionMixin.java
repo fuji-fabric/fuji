@@ -116,7 +116,11 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
         return this.frozen;
     }
 
+    #if MC_VER <= MC_1_21
+    @ModifyReturnValue(method = "holders", at = @At("RETURN"))
+    #elif MC_VER > MC_1_21
     @ModifyReturnValue(method = "listElements", at = @At("RETURN"))
+    #endif
     public Stream<Reference<T>> fixEntryStream(@NotNull Stream<Holder.Reference<T>> original) {
         return original.filter(Objects::nonNull);
     }
