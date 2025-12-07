@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.chat.trigger.structure;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -14,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 public class ChatTrigger {
 
-    String regex;
+    @SerializedName(value = "chat_string_regex", alternate = "regex")
+    String chatStringRegex;
     List<String> commands;
 
     public static ChatTrigger make(@NotNull String regex, @NotNull List<String> commands) {
         ChatTrigger chatTrigger = new ChatTrigger();
-        chatTrigger.regex = regex;
+        chatTrigger.chatStringRegex = regex;
         chatTrigger.commands = commands;
         return chatTrigger;
     }
@@ -30,7 +32,7 @@ public class ChatTrigger {
 
     public Pattern getCachedPattern() {
         if (this.pattern == null) {
-            this.pattern = Pattern.compile(this.regex);
+            this.pattern = Pattern.compile(this.chatStringRegex);
         }
 
         return this.pattern;

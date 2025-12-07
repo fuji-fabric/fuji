@@ -13,7 +13,7 @@ public class CommandStateConfigModel {
     List<StateDescriptor> stateDescriptors = new ArrayList<>() {
         {
             StateDescriptor isInOverworldState = new StateDescriptor(
-                true,
+                false,
                 "is-in-overworld",
                 new StateDescriptor.Definition(List.of("is-in-world? %player:name% minecraft:overworld")),
                 3,
@@ -23,7 +23,7 @@ public class CommandStateConfigModel {
 
 
             StateDescriptor hasIronAndGoldState = new StateDescriptor(
-                true,
+                false,
                 "has-iron-and-gold",
                 new StateDescriptor.Definition(List.of(
                     "has-item? %player:name% minecraft:iron_ingot 16",
@@ -36,7 +36,7 @@ public class CommandStateConfigModel {
 
 
             StateDescriptor canUseFlyCommandState = new StateDescriptor(
-                true,
+                false,
                 "can-use-fly-command",
                 new StateDescriptor.Definition(List.of(
                     "has-perm? %player:name% fuji.permission.fly"
