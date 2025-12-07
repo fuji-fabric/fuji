@@ -43,7 +43,17 @@ def loadProperties() {
 		mcVers[i] = mcVers[i].replaceAll("\\.properties", "") // As we are getting the file names, we should remove the ".properties" at the end to get the versions
 	}
 
-	mcVers.sort() // Sort so it always goes from oldest to newest
+    mcVers.sort { a, b ->
+        def pa = a.tokenize('.').collect { it as int }
+        def pb = b.tokenize('.').collect { it as int }
+
+        for (int i = 0; i < Math.max(pa.size(), pb.size()); i++) {
+            int ai = (i < pa.size()) ? pa[i] : 0
+            int bi = (i < pb.size()) ? pb[i] : 0
+            if (ai != bi) return ai <=> bi
+        }
+        return 0
+    }
 
 	int mcIndex = -1
 	println "Avalible MC versions: ${mcVers}"
