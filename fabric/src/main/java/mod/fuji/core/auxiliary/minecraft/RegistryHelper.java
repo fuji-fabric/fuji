@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import mod.fuji.Fuji;
+import mod.fuji.core.structure.IdentifierWrapper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -11,8 +12,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegistryHelper {
 
-    public static @NotNull String getIdAsString(@NotNull ResourceLocation identifier) {
-        return identifier.toString();
+    public static @NotNull String getIdAsString(@NotNull IdentifierWrapper identifier) {
+        return identifier.getNativeType().toString();
     }
 
     public static @NotNull String getIdAsString(@NotNull Item item) {
@@ -52,7 +53,11 @@ public class RegistryHelper {
     }
 
     public static @NotNull String getIdAsString(@NotNull ResourceKey<?> registryKey) {
+        #if MC_VER < MC_1_21_11
         return registryKey.location().toString();
+        #elif MC_VER >= MC_1_21_11
+        return registryKey.identifier().toString();
+        #endif
     }
 
     public static <T> @NotNull String getIdAsString(@NotNull Holder<T> registryEntry) {
@@ -110,11 +115,11 @@ public class RegistryHelper {
         return getCombinedRegistryManager().lookupOrThrow(registryKey);
     }
 
-    public static <T> ResourceKey<T> ofRegistryKey(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull ResourceLocation identifier) {
-        return ResourceKey.create(registrySpecifier, identifier);
+    public static <T> ResourceKey<T> ofRegistryKey(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierWrapper identifier) {
+        return ResourceKey.create(registrySpecifier, identifier.getNativeType());
     }
 
-    public static <T> Optional<Holder<T>> getRegistryEntry(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull ResourceLocation identifier) {
+    public static <T> Optional<Holder<T>> getRegistryEntry(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierWrapper identifier) {
         Registry<T> registry = getRegistry(registrySpecifier);
         T object = getValue(registry, identifier);
         Holder<T> entry = registry.wrapAsHolder(object);
@@ -129,28 +134,37 @@ public class RegistryHelper {
         #endif
     }
 
-    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull ResourceLocation identifier) {
+    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull IdentifierWrapper identifier) {
+        Identifier nativeType = identifier.getNativeType();
         #if MC_VER <= MC_1_21
-        return registry.get(identifier);
+        return registry.get(nativeType);
         #elif MC_VER > MC_1_21
-        return registry.getValue(identifier);
+        return registry.getValue(nativeType);
         #endif
     }
 
-    public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String identifier) {
+    public static @NotNull IdentifierWrapper makeIdentifierOrThrow(@NotNull String identifier) {
         #if MC_VER <= MC_1_20_6
-        return new ResourceLocation(identifier);
-        #elif MC_VER > MC_1_20_6
-        return ResourceLocation.parse(identifier);
+        return IdentifierWrapper.of(new ResourceLocation(identifier));
+        #elif MC_VER > MC_1_20_6 && MC_VER < MC_1_21_11
+        return IdentifierWrapper.of(ResourceLocation.parse(identifier));
+        #elif MC_VER >= MC_1_21_11
+        return IdentifierWrapper.of(net.minecraft.resources.Identifier.parse(identifier));
         #endif
     }
 
-    public static @NotNull ResourceLocation makeIdentifierOrThrow(@NotNull String namespace, @NotNull String path) {
+    public static @NotNull IdentifierWrapper makeIdentifierOrThrow(@NotNull String namespace, @NotNull String path) {
+        #if MC_VER < MC_1_21_11
         ResourceLocation identifier = ResourceLocation.tryBuild(namespace, path);
-        return Objects.requireNonNull(identifier);
+        #elif MC_VER >= MC_1_21_11
+        net.minecraft.resources.Identifier identifier = net.minecraft.resources.Identifier.tryBuild(namespace, path);
+        #endif
+
+        var nativeType = Objects.requireNonNull(identifier);
+        return IdentifierWrapper.of(nativeType);
     }
 
-    public static Optional<ResourceLocation> makeIdentifier(@NotNull String identifier) {
+    public static Optional<IdentifierWrapper> makeIdentifier(@NotNull String identifier) {
         try {
             return Optional.of(makeIdentifierOrThrow(identifier));
         } catch (Exception e) {
@@ -183,8 +197,9 @@ public class RegistryHelper {
             });
     }
 
-    public static void ensureIdentifierNamespaceIsFuji(@NotNull ResourceLocation identifier) {
-        if (!identifier.getNamespace().equals(Fuji.MOD_ID)) {
+    public static void ensureIdentifierNamespaceIsFuji(@NotNull IdentifierWrapper identifier) {
+        Identifier nativeType = identifier.getNativeType();
+        if (!nativeType.getNamespace().equals(Fuji.MOD_ID)) {
             throw new IllegalArgumentException("The namespace of the identifier must be \"fuji\": " + identifier);
         }
     }
