@@ -49,7 +49,4 @@ accessible method net/minecraft/server/network/ServerGamePacketListenerImpl broa
 accessible field net/minecraft/core/Holder$Reference value Ljava/lang/Object;
 accessible field net/minecraft/server/MinecraftServer levels Ljava/util/Map;
 accessible field net/minecraft/server/MinecraftServer storageSource Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;
-accessible field net/minecraft/world/level/GameRules$IntegerValue value I
-accessible field net/minecraft/world/level/GameRules GAME_RULE_TYPES Ljava/util/Map;
-accessible field net/minecraft/world/level/GameRules rules Ljava/util/Map;
 accessible method net/minecraft/world/level/border/WorldBorder$Settings <init> (DDDDIIDJD)V

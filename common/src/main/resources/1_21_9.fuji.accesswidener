@@ -22,3 +22,8 @@ accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 
 # rtp
 accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMainThread (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
+
+# world module
+accessible field net/minecraft/world/level/GameRules$IntegerValue value I
+accessible field net/minecraft/world/level/GameRules GAME_RULE_TYPES Ljava/util/Map;
+accessible field net/minecraft/world/level/GameRules rules Ljava/util/Map;

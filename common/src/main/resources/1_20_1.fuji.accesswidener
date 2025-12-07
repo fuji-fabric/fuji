@@ -6,6 +6,9 @@ accessible field net/minecraft/server/players/GameProfileCache profilesByName Lj
 accessible method net/minecraft/server/players/GameProfileCache$GameProfileInfo getProfile ()Lcom/mojang/authlib/GameProfile;
 
 # world module
+accessible field net/minecraft/world/level/GameRules$IntegerValue value I
+accessible field net/minecraft/world/level/GameRules GAME_RULE_TYPES Ljava/util/Map;
+accessible field net/minecraft/world/level/GameRules rules Ljava/util/Map;
 accessible field net/minecraft/world/level/levelgen/WorldDimensions dimensions Lnet/minecraft/core/Registry;
 
 # view module
