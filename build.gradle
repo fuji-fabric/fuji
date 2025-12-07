@@ -190,6 +190,9 @@ javaProjects.each { projectName ->
                 /* Specify the behaviour for implicit compilation. */
                 // See: https://docs.oracle.com/javase/6/docs/technotes/tools/solaris/javac.html#processing
                 options.compilerArgs << "-implicit:none"
+
+                /* Display all errors. */
+                options.compilerArgs << "-Xmaxerrs" << "8192"
             }
         }
 
