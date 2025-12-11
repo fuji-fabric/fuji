@@ -51,7 +51,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.border.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -620,17 +619,7 @@ public class WorldInitializer extends ModuleInitializer {
 
         /* Make text for gamerules. */
         MutableComponent gameRulesText = TextHelper.getTextByKey(source, "dimension.gamerules").copy();
-        Map<String, Object> gameRulesMap = new HashMap<>();
-        GameRules gameRules = dimensionInstance.getGameRules();
-        gameRules.visitGameRuleTypes(new GameRules.GameRuleTypeVisitor() {
-            @Override
-            public <T extends GameRules.Value<T>> void visit(GameRules.Key<T> key, GameRules.Type<T> type) {
-                String gameRuleName = key.getId();
-                T gameRuleValue = gameRules.getRule(key);
-                gameRulesMap.put(gameRuleName, gameRuleValue);
-            }
-        });
-        MutableComponent gameRulesHoverText = TextHelper.Formatter.formatMapInLine(gameRulesMap);
+        MutableComponent gameRulesHoverText = getGameRulesHoverText(dimensionInstance);
         gameRulesText
             .withStyle(Style.EMPTY
                 .withHoverEvent(TextHelper.Events.HoverEvent.makeShowTextAction(gameRulesHoverText)));
@@ -638,6 +627,36 @@ public class WorldInitializer extends ModuleInitializer {
         TextHelper.sendTextByKey(source, "prompt.hover.see_it");
 
         return CommandHelper.Return.SUCCESS;
+    }
+
+    private static @NotNull MutableComponent getGameRulesHoverText(@NotNull ServerLevel dimensionInstance) {
+        Map<String, Object> gameRulesMap = new HashMap<>();
+        fillGameRulesMap(dimensionInstance, gameRulesMap);
+        return TextHelper.Formatter.formatMapInLine(gameRulesMap);
+    }
+
+    private static void fillGameRulesMap(ServerLevel dimensionInstance, Map<String, Object> gameRulesMap) {
+        #if MC_VER < MC_1_21_11
+        var gameRules = dimensionInstance.getGameRules();
+        gameRules.visitGameRuleTypes(new net.minecraft.world.level.GameRules.GameRuleTypeVisitor() {
+            @Override
+            public <T extends net.minecraft.world.level.GameRules.Value<T>> void visit(net.minecraft.world.level.GameRules.Key<T> key, net.minecraft.world.level.GameRules.Type<T> type) {
+                String gameRuleName = key.getId();
+                T gameRuleValue = gameRules.getRule(key);
+                gameRulesMap.put(gameRuleName, gameRuleValue);
+            }
+        });
+        #elif MC_VER >= MC_1_21_11
+        var gameRules = dimensionInstance.getGameRules();
+        gameRules.visitGameRuleTypes(new net.minecraft.world.level.gamerules.GameRuleTypeVisitor() {
+            @Override
+            public <T> void visit(net.minecraft.world.level.gamerules.GameRule<T> gameRule) {
+                String gameRuleName = gameRule.id();
+                T gameRuleValue = gameRules.get(gameRule);
+                gameRulesMap.put(gameRuleName, gameRuleValue);
+            }
+        });
+        #endif
     }
 
     @Override

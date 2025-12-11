@@ -7,11 +7,11 @@ import java.util.Optional;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.level.storage.LevelStorageSource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -65,12 +65,21 @@ public class RuntimeDimension extends ServerLevel {
             }
 
             // NOTE: Ignore the step logics for `Time` in `level.dat`, simply mirror it. (Or the scheduled functions will be broken).
-            if (runtimeDimensionProperties.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
+            if (shouldDoDayLightCycle(runtimeDimensionProperties)) {
                 runtimeDimensionProperties.setDayTime(runtimeDimensionProperties.getDayTime() + 1L);
             }
 
         }, super::tickTime);
     }
+
+    private static boolean shouldDoDayLightCycle(@NotNull RuntimeDimensionProperties runtimeDimensionProperties) {
+        #if MC_VER < MC_1_21_11
+        return runtimeDimensionProperties.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_DAYLIGHT);
+        #elif MC_VER >= MC_1_21_11
+        return runtimeDimensionProperties.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME);
+        #endif
+    }
+
 
 }
 
