@@ -471,14 +471,13 @@ public class CommandHelper {
 
 
         public static boolean hasLevelPermission(@NotNull ServerPlayer source, int levelPermission) {
-            #if MC_VER < MC_1_21_11
-            return source.hasPermission(levelPermission);
-            #elif MC_VER >= MC_1_21_11
-            return source.permissions().hasPermission(mapLevelPermission(levelPermission));
-            #endif
+            CommandSourceStack commandSource = Source.getCommandSource(source);
+            return hasLevelPermission(commandSource, levelPermission);
         }
 
         public static boolean hasLevelPermission(@NotNull CommandSourceStack source, int levelPermission) {
+            if (levelPermission >= 4) return false;
+
             #if MC_VER < MC_1_21_11
             return source.hasPermission(levelPermission);
             #elif MC_VER >= MC_1_21_11
