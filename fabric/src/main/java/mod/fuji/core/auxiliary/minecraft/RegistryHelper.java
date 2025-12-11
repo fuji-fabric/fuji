@@ -11,7 +11,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -140,7 +139,7 @@ public class RegistryHelper {
     }
 
     public static <T> T getValue(@NotNull Registry<T> registry, @NotNull IdentifierIR identifier) {
-        Identifier nativeType = identifier.getNativeValue();
+        var nativeType = identifier.getNativeValue();
         #if MC_VER <= MC_1_21
         return registry.get(nativeType);
         #elif MC_VER > MC_1_21
@@ -174,7 +173,7 @@ public class RegistryHelper {
     }
 
     public static void ensureIdentifierNamespaceIsFuji(@NotNull IdentifierIR identifier) {
-        Identifier nativeType = identifier.getNativeValue();
+        var nativeType = identifier.getNativeValue();
         if (!nativeType.getNamespace().equals(Fuji.MOD_ID)) {
             throw new IllegalArgumentException("The namespace of the identifier must be \"fuji\": " + identifier);
         }
