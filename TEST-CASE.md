@@ -50,7 +50,6 @@
 - Action: **Test the basic use-case of command advice.**
 - Target: Issue `/heal` command, you should see the heart particle.
 - Target: Issue `/say Hello World` command, you should see the replaced version.
-- Target: Issue `/msg @s Ping` command, you should see the replaced version.
 
 [Test Case]
 - Module: command_alias

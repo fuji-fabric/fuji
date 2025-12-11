@@ -149,5 +149,4 @@ whitelist
 works
 world
 world.border
-world.gamerule
 world_downloader

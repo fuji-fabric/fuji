@@ -86,8 +86,7 @@ public class CommandAdviceInitializer extends ModuleInitializer {
 
     @TestCase(action = "Test the basic use-case of command advice.", targets = {
         "Issue `/heal` command, you should see the heart particle.",
-        "Issue `/say Hello World` command, you should see the replaced version.",
-        "Issue `/msg @s Ping` command, you should see the replaced version."
+        "Issue `/say Hello World` command, you should see the replaced version."
     })
     @TestCase(action = "Test the advanced use-case of command advice.", targets = {
         "Issue `/repair` with `iron_ingot x 8`, `gold_ingot x 16` and `damaged diamond sword`.",

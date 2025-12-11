@@ -262,10 +262,6 @@ public class MainControlConfigModel {
                 public boolean enable = true;
             }
 
-            public GameRule gamerule = new GameRule();
-            public static class GameRule {
-                public boolean enable = true;
-            }
         }
 
         public static class MOTD {
