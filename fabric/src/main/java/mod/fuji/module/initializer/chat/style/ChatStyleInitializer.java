@@ -1,14 +1,11 @@
 package mod.fuji.module.initializer.chat.style;
 
 import eu.pb4.placeholders.api.parsers.NodeParser;
-
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.StringUtil;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
-import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
+import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandSource;
@@ -16,23 +13,24 @@ import mod.fuji.core.command.annotation.CommandTarget;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessagePreEvent;
 import mod.fuji.core.service.style_striper.StyleStriper;
-import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.style.model.ChatFormatModel;
 import mod.fuji.module.initializer.chat.style.model.ChatStyleConfigModel;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.PlayerChatMessage;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ChatTypeDecoration;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826676414L, value = """
@@ -101,9 +99,10 @@ public class ChatStyleInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatStyleConfigModel.class);
 
     /**
- * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
- **/
-    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString())));
+     * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
+     **/
+    private static final IdentifierIR MESSAGE_TYPE_ID = IdentifierIR.makeIdentifierOrThrow(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString()));
+    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, MESSAGE_TYPE_ID.getNativeValue());
     public static final ChatType MESSAGE_TYPE_VALUE = new ChatType(
         ChatTypeDecoration.withSender("%s%s"),
         ChatTypeDecoration.withSender("%s%s"));

@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.vehicle.MinecartHopper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -206,7 +205,13 @@ public class ProductionWork extends Work implements Schedulable {
             }
         }
         for (Entity entity : WorldHelper.getEntities(world)) {
-            if (entity instanceof MinecartHopper) {
+            if (entity instanceof
+                #if MC_VER < MC_1_21_11
+                net.minecraft.world.entity.vehicle.MinecartHopper
+                #elif MC_VER >= MC_1_21_11
+                net.minecraft.world.entity.vehicle.minecart.MinecartHopper
+                #endif
+            ) {
                 if (insideSampleDistance(player.blockPosition(), entity.blockPosition())) {
                     WorksBinding.bind(entity.getId(), this);
                     minecartHopperCount++;

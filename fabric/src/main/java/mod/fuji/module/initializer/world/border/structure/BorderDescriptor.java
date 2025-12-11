@@ -4,6 +4,7 @@ import mod.fuji.core.document.annotation.Document;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.world.level.border.WorldBorder;
+import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1752567811335L, value = """
     Used to describe the `border` of a `dimension`.
@@ -35,16 +36,26 @@ public class BorderDescriptor {
     }
 
     private transient WorldBorder vanillaWorldBorder;
-
-    public WorldBorder asVanillaWorldBorder() {
+    public @NotNull WorldBorder asVanillaWorldBorder() {
         if (this.vanillaWorldBorder == null) {
-            WorldBorder worldBorder = new WorldBorder();
-            WorldBorder.Settings properties = new WorldBorder.Settings(this.border.centerX, this.border.centerZ, this.border.damagePerBlock, this.border.safeZone, this.border.warningBlocks, this.border.warningTime, this.border.size, this.border.sizeLerpTime, this.border.sizeLerpTarget);
-            worldBorder.applySettings(properties);
+            WorldBorder worldBorder = makeVanillaWorldBorder();
             this.vanillaWorldBorder = worldBorder;
         }
 
         return this.vanillaWorldBorder;
+    }
+
+    private @NotNull WorldBorder makeVanillaWorldBorder() {
+        WorldBorder.Settings properties = new WorldBorder.Settings(this.border.centerX, this.border.centerZ, this.border.damagePerBlock, this.border.safeZone, this.border.warningBlocks, this.border.warningTime, this.border.size, this.border.sizeLerpTime, this.border.sizeLerpTarget);
+
+        #if MC_VER < MC_1_21_11
+        WorldBorder worldBorder = new WorldBorder();
+        worldBorder.applySettings(properties);
+        #elif MC_VER >= MC_1_21_11
+        WorldBorder worldBorder = new WorldBorder(properties);
+        #endif
+
+        return worldBorder;
     }
 
 }

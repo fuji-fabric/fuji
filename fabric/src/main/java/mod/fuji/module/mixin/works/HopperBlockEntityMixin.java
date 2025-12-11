@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.entity.vehicle.MinecartHopper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
@@ -60,7 +59,12 @@ public abstract class HopperBlockEntityMixin extends RandomizableContainerBlockE
         Set<Work> boundWorks;
         if (destinationContainer instanceof HopperBlockEntity hb) {
             boundWorks = WorksBinding.BLOCK_POS_2_WORKS.get(hb.getBlockPos());
-        } else if (destinationContainer instanceof MinecartHopper mh) {
+        } else if (destinationContainer instanceof
+            #if MC_VER < MC_1_21_11
+            net.minecraft.world.entity.vehicle.MinecartHopper
+            #elif MC_VER >= MC_1_21_11
+            net.minecraft.world.entity.vehicle.minecart.MinecartHopper
+            #endif mh) {
             boundWorks = WorksBinding.ENTITY_2_WORKS.get(mh.getId());
         } else {
             LogUtil.warn("Unknown container type: {} (It should be HopperBlockEntity or HopperMinecartEntity)", destinationContainer);

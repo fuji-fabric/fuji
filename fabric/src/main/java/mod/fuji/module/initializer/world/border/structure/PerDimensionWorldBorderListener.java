@@ -26,11 +26,12 @@ public class PerDimensionWorldBorderListener implements BorderChangeListener {
     @Override
     public void
     #if MC_VER < MC_1_21_9
-    onBorderSizeLerping
-    #elif MC_VER >= MC_1_21_9
-    onLerpSize
-    #endif
-    (@NotNull WorldBorder worldBorder, double d, double e, long l) {
+    onBorderSizeLerping(@NotNull WorldBorder worldBorder, double d, double e, long l)
+    #elif MC_VER >= MC_1_21_9 && MC_VER < MC_1_21_11
+    onLerpSize(@NotNull WorldBorder worldBorder, double d, double e, long l)
+    #elif MC_VER >= MC_1_21_11
+    onLerpSize(WorldBorder worldBorder, double d, double e, long l, long m)
+    #endif {
         WorldBorderInitializer.sendPerDimensionPacketToAllDimensions(dimension -> new ClientboundSetBorderLerpSizePacket(dimension.getWorldBorder()));
     }
 
