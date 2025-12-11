@@ -1,21 +1,21 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import com.mojang.authlib.GameProfile;
-import java.util.function.Consumer;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
-import mod.fuji.core.document.annotation.TestCase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.world.entity.player.Player;
+import java.util.function.Consumer;
+import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.document.annotation.TestCase;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.players.PlayerList;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,15 +29,21 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerHelper {
 
     /**
- * It's possible to generate invalid player name using <code>/player abc++ spawn</code> command.
- **/
+     * It's possible to generate invalid player name using <code>/player abc++ spawn</code> command.
+     **/
     public static String getPlayerName(@NotNull Player player) {
         @NotNull GameProfile gameProfile = player.getGameProfile();
         return AuthlibHelper.getName(gameProfile);
     }
 
     public static void playSound(@NotNull ServerPlayer player, @NotNull SoundEvent soundEvent, @NotNull SoundSource soundCategory, float volume, float pitch) {
+        #if MC_VER < MC_1_21_11
         player.playNotifySound(soundEvent, soundCategory, volume, pitch);
+        #elif MC_VER >= MC_1_21_11
+        PlayerHelper
+            .getServerWorld(player)
+            .playSound(player, player.getX(), player.getY(), player.getZ(), soundEvent, soundCategory, volume, pitch);
+        #endif
     }
 
     public static int getPing(@NotNull ServerPlayer player) {
@@ -214,18 +220,17 @@ public class PlayerHelper {
     public static class Kind {
 
         /**
- * The carpet mod sub-classing the ServerPlayerEntity.
- **/
+         * The carpet mod sub-classing the ServerPlayerEntity.
+         **/
         public static boolean isRealPlayer(@NotNull ServerPlayer player) {
             return player.getClass() == ServerPlayer.class;
         }
 
         /**
- *             If a method is called both from client and client integrated server.
-            Then it will be called twice, one for ClientPlayerEntity, one for ServerPlayerEntity.
-            This happens when you install this mod in the client side, and plays in the single-player world.
-
- **/
+         * If a method is called both from client and client integrated server.
+         * Then it will be called twice, one for ClientPlayerEntity, one for ServerPlayerEntity.
+         * This happens when you install this mod in the client side, and plays in the single-player world.
+         **/
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public static boolean isServerPlayer(@NotNull Player player) {
             return player instanceof ServerPlayer;
@@ -233,11 +238,10 @@ public class PlayerHelper {
 
 
         /**
- *             If your mod is installed on the client-side, and run the single-player world.
-            Then some functions will be called twice.
-            One for ClientPlayerEntity, one for ServerPlayerEntity.
-
- **/
+         * If your mod is installed on the client-side, and run the single-player world.
+         * Then some functions will be called twice.
+         * One for ClientPlayerEntity, one for ServerPlayerEntity.
+         **/
         public static void withServerPlayerEntity(@Nullable Player player, @NotNull Consumer<ServerPlayer> consumer) {
             if (player == null) return;
             if (!isServerPlayer(player)) return;
