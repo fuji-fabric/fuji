@@ -1,9 +1,12 @@
 package mod.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
+import java.util.concurrent.Executor;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
+import mod.fuji.core.structure.BuiltinDimensionTypesIR;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptions;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
@@ -19,15 +22,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
@@ -37,6 +37,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RuntimeDimensionMaker {
+
+    private static Executor getServerBackgroundExecutor() {
+        #if MC_VER < MC_1_21_11
+        return net.minecraft.Util.backgroundExecutor();
+        #elif MC_VER >= MC_1_21_11
+        return net.minecraft.util.Util.backgroundExecutor();
+        #endif
+    }
 
     public static Pair<ServerLevel, LevelStem> makeRuntimeDimension(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         MinecraftServer server = ServerHelper.getServer();
@@ -52,11 +60,11 @@ public class RuntimeDimensionMaker {
         ((ExtendedDimensionOptions) (Object) dimensionOptions).fuji$setSaveDimensionOptions(false);
 
         /* Make the dimension instance. */
-        ResourceLocation dimensionIdentifier = RegistryHelper.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
-        ResourceKey<Level> worldRegistryKey = ResourceKey.create(Registries.DIMENSION, dimensionIdentifier);
+        IdentifierIR dimensionIdentifier = IdentifierIR.makeIdentifierOrThrow(runtimeDimensionDescriptor.dimension);
+        ResourceKey<Level> worldRegistryKey = ResourceKey.create(Registries.DIMENSION, dimensionIdentifier.getNativeValue());
 
         ServerLevel dimension = new RuntimeDimension(server,
-            Util.backgroundExecutor(),
+            getServerBackgroundExecutor(),
             server.storageSource,
             worldProperties,
             worldRegistryKey,
@@ -88,13 +96,18 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull RandomSequences makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         long seed = runtimeDimensionDescriptor.seed;
+
+        #if MC_VER < MC_1_21_11
         return new RandomSequences(seed);
+        #elif MC_VER >= MC_1_21_11
+        return new RandomSequences();
+        #endif
     }
 
     @SuppressWarnings("deprecation")
     private static void postRuntimeDimensionMake(ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         // If the dimension type is THE_END, then start the dragon fight.
-        if (BuiltinDimensionTypes.END_EFFECTS.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
+        if (BuiltinDimensionTypesIR.END.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
             dimension.setDragonFight(new EndDragonFight(dimension, dimension.getSeed(), EndDragonFight.Data.DEFAULT));
         }
     }
@@ -147,7 +160,7 @@ public class RuntimeDimensionMaker {
 
     private static @NotNull ChunkGenerator makeNoiseChunkGenerator(RuntimeDimensionDescriptor dimensionDescriptor) {
         Registry<LevelStem> dimensionRegistry = RegistryHelper.getRegistry(Registries.LEVEL_STEM);
-        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
+        IdentifierIR dimensionTypeIdentifier = IdentifierIR.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
         @Nullable LevelStem existedDimensionOptions = RegistryHelper.getValue(dimensionRegistry, dimensionTypeIdentifier);
         if (existedDimensionOptions == null) {
             LogUtil.warn("Failed to make chunk generator for {}, there is no existed DimensionOptions for dimension type {}. Falling back to the `FlatChunkGenerator`.", dimensionDescriptor.getDimension(), dimensionTypeIdentifier);
@@ -160,7 +173,7 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull Holder<DimensionType> makeDimensionTypeEntry(RuntimeDimensionDescriptor dimensionDescriptor) {
-        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
+        IdentifierIR dimensionTypeIdentifier = IdentifierIR.makeIdentifierOrThrow(dimensionDescriptor.dimension_type);
         Optional<Holder<DimensionType>> dimensionTypeEntryOptional = RegistryHelper.getRegistryEntry(Registries.DIMENSION_TYPE, dimensionTypeIdentifier);
         if (dimensionTypeEntryOptional.isEmpty()) {
             throw new RuntimeException("Failed to make RegistryEntry<DimensionType> for dimension %s: The Optional<RegistryEntry<DimensionType>> null.".formatted(dimensionTypeIdentifier));

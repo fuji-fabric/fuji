@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import mod.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
+import mod.fuji.core.structure.BuiltinDimensionTypesIR;
 import mod.fuji.core.structure.GlobalPos;
 import java.util.Collection;
 import java.util.Optional;
@@ -52,15 +53,15 @@ public class WorldHelper {
     }
 
     public static Item toGuiItem(String dimension) {
-        if (dimension.equals(BuiltinDimensionTypes.OVERWORLD_EFFECTS.toString())) {
+        if (dimension.equals(BuiltinDimensionTypesIR.OVERWORLD.toString())) {
             return Items.GRASS_BLOCK;
         }
 
-        if (dimension.equals(BuiltinDimensionTypes.END_EFFECTS.toString())) {
+        if (dimension.equals(BuiltinDimensionTypesIR.END.toString())) {
             return Items.END_STONE;
         }
 
-        if (dimension.equals(BuiltinDimensionTypes.NETHER_EFFECTS.toString())) {
+        if (dimension.equals(BuiltinDimensionTypesIR.NETHER.toString())) {
             return Items.NETHERRACK;
         }
 
