@@ -6,6 +6,7 @@ import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.LogicHelper;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.document.annotation.TestCase;
@@ -233,7 +234,9 @@ public class ProductionWork extends Work implements Schedulable {
     private void startSample(@NotNull ServerPlayer player) {
         this.sample.sampleStartTimeMS = System.currentTimeMillis();
         this.sample.sampleEndTimeMS = this.sample.sampleStartTimeMS + WorksInitializer.config.model().sample_time_ms;
-        this.sample.sampleDimension = EntityHelper.getServerWorld(player).dimension().location().toString();
+        this.sample.sampleDimension = RegistryHelper
+            .getIdentifier(EntityHelper.getServerWorld(player).dimension())
+            .toString();
         this.sample.sampleX = player.getX();
         this.sample.sampleY = player.getY();
         this.sample.sampleZ = player.getZ();

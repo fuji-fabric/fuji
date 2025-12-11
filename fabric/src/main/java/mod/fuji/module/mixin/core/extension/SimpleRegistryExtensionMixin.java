@@ -2,6 +2,7 @@ package mod.fuji.module.mixin.core.extension;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.extension.SimpleRegistryExtension;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
@@ -82,7 +83,8 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
 
         try {
             this.byKey.remove(registryEntry.key());
-            this.byLocation.remove(registryEntry.key().location());
+            var location = RegistryHelper.getIdentifier(registryEntry.key()).getNativeValue();
+            this.byLocation.remove(location);
             this.byValue.remove(entry);
             this.byId.set(rawId, null);
             #if MC_VER > MC_1_20_4

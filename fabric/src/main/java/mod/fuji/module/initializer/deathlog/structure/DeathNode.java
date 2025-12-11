@@ -6,6 +6,7 @@ import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
 import mod.fuji.core.auxiliary.minecraft.NbtHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.module.initializer.deathlog.DeathLogInitializer;
 import java.io.IOException;
@@ -104,7 +105,9 @@ public class DeathNode {
     private static void writeRemarkNode(@NotNull CompoundTag parent, @NotNull ServerPlayer player) {
         String time = ChronosUtil.Formatter.getFormattedCurrentDate();
         String reason = player.getCombatTracker().getDeathMessage().getString();
-        String dimension = PlayerHelper.getServerWorld(player).dimension().location().toString();
+        String dimension = RegistryHelper
+            .getIdentifier(PlayerHelper.getServerWorld(player).dimension())
+            .toString();
         Vec3 position = EntityHelper.getPos(player);
 
         CompoundTag remarkTag = new CompoundTag();

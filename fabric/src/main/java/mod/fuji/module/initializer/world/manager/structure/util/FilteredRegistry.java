@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -64,7 +64,13 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
 
     @Nullable
     @Override
-    public ResourceLocation getKey(T value) {
+    public
+    #if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif
+    getKey(T value) {
         return filter.test(value) ? this.source.getKey(value) : null;
     }
 
@@ -109,8 +115,13 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
     #elif MC_VER > MC_1_21
     getValue
     #endif
-    (@Nullable ResourceLocation id) {
-        return RegistryHelper.getValue(this.source, id);
+    (@Nullable
+    #if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif id) {
+        return RegistryHelper.getValue(this.source, IdentifierIR.of(id));
     }
 
     #if MC_VER <= MC_1_20_4
@@ -126,7 +137,12 @@ public class FilteredRegistry<T> extends MappedRegistry<T> {
     }
 
     @Override
-    public Set<ResourceLocation> keySet() {
+    public Set<
+    #if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif> keySet() {
         return this.source.keySet();
     }
 

@@ -6,16 +6,15 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.fuji.structure.IdentifierDescriptor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,20 +34,20 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
 
     public static RegistriesInspectionGui inspectAll(ServerPlayer player) {
         /* Get the identifiers of meta registries. */
-        List<ResourceLocation> staticRegistries = BuiltInRegistries.REGISTRY.registryKeySet()
+        List<IdentifierIR> staticRegistries = BuiltInRegistries.REGISTRY.registryKeySet()
             .stream()
-            .map(ResourceKey::location)
+            .map(RegistryHelper::getIdentifier)
             .toList();
-        List<ResourceLocation> dynamicRegistries = RegistryDataLoader.WORLDGEN_REGISTRIES
+        List<IdentifierIR> dynamicRegistries = RegistryDataLoader.WORLDGEN_REGISTRIES
             .stream()
-            .map(it -> it.key().location())
+            .map(it -> RegistryHelper.getIdentifier(it.key()))
             .toList();
 
         /* Map it to descriptor. */
         List<IdentifierDescriptor> ids = new ArrayList<>();
         staticRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, false)));
         dynamicRegistries.forEach(id -> ids.add(new IdentifierDescriptor(id, true)));
-        ids.sort(Comparator.comparing(IdentifierDescriptor::getIdentifier));
+        ids.sort(Comparator.comparing(it -> it.getIdentifier().getNativeValue()));
 
         return new RegistriesInspectionGui(null, player, true, ids, 0);
     }
@@ -96,7 +95,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             if (o instanceof Registry<?> r) {
                 List<IdentifierDescriptor> ids = r.registryKeySet()
                     .stream()
-                    .map(ResourceKey::location)
+                    .map(RegistryHelper::getIdentifier)
                     .sorted()
                     .map(identifier -> new IdentifierDescriptor(identifier, false))
                     .toList();
@@ -117,6 +116,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
                     .keySet()
                     .stream()
                     .sorted()
+                    .map(IdentifierIR::of)
                     .map(identifier -> new IdentifierDescriptor(identifier, true))
                     .toList();
                 new RegistriesInspectionGui(getBackendGui(), getPlayer(), false, ids, 0).open();

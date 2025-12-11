@@ -74,7 +74,7 @@ public class RuntimeDimensionLoader {
 
             /* Remove the entry from registry. */
             MappedRegistry<LevelStem> dimensionsRegistry = (MappedRegistry<LevelStem>) RegistryHelper.getRegistry(Registries.LEVEL_STEM);
-            SimpleRegistryExtension.remove(dimensionsRegistry, dimensionKey.location());
+            SimpleRegistryExtension.remove(dimensionsRegistry, RegistryHelper.getIdentifier(dimensionKey));
         }
     }
 }

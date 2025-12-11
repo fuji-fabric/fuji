@@ -3,11 +3,13 @@ package mod.fuji.core.structure;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor(staticName = "of")
 @Getter
+@EqualsAndHashCode
 public class IdentifierIR {
 
     @Getter

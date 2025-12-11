@@ -52,11 +52,17 @@ public class RegistryHelper {
     }
 
     public static @NotNull String getIdAsString(@NotNull ResourceKey<?> registryKey) {
+        return getIdentifier(registryKey).toString();
+    }
+
+    public static @NotNull IdentifierIR getIdentifier(@NotNull ResourceKey<?> registryKey) {
         #if MC_VER < MC_1_21_11
-        return registryKey.location().toString();
+        var nativeValue = registryKey.location();
         #elif MC_VER >= MC_1_21_11
-        return registryKey.identifier().toString();
+        var nativeValue = registryKey.identifier();
         #endif
+
+        return IdentifierIR.of(nativeValue);
     }
 
     public static <T> @NotNull String getIdAsString(@NotNull Holder<T> registryEntry) {
