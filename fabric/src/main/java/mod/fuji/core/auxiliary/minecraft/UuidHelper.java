@@ -92,4 +92,12 @@ public class UuidHelper {
 
         return root;
     }
+
+    public static @NotNull UUID getNilUUID() {
+        #if MC_VER < MC_1_21_11
+        return net.minecraft.NIL_UUID;
+        #elif MC_VER >= MC_1_21_11
+        return net.minecraft.util.Util.NIL_UUID;
+        #endif
+    }
 }
