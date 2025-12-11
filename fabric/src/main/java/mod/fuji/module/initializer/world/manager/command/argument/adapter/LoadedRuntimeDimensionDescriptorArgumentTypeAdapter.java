@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
+import mod.fuji.core.command.argument.representation.IdentifierArgumentTypeIR;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.LoadedRuntimeDimensionDescriptor;
@@ -13,21 +14,20 @@ import mod.fuji.module.initializer.world.manager.service.WorldService;
 import mod.fuji.module.initializer.world.manager.structure.RuntimeDimensionDescriptor;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class LoadedRuntimeDimensionDescriptorArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     protected ArgumentType<?> makeArgumentType() {
-        return ResourceLocationArgument.id();
+        return IdentifierArgumentTypeIR.makeArgumentType();
     }
 
     @Override
     protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
-        ResourceLocation identifier = ResourceLocationArgument.getId(context, commandArgument.getArgumentName());
+        var identifier = IdentifierArgumentTypeIR.makeArgumentValue(context, commandArgument);
         Optional<RuntimeDimensionDescriptor> runtimeDimensionDescriptor = WorldService.getRuntimeDimensionDescriptor(identifier.toString());
+
         return runtimeDimensionDescriptor
             .map($runtimeDimensionDescriptor -> {
                 if ($runtimeDimensionDescriptor.isDimensionLoaded()) {
