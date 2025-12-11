@@ -1,47 +1,48 @@
 package mod.fuji.core.service.toast_sender;
 
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import mod.fuji.core.structure.AdvancementFrameTypeWrapper;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.CriterionProgress;
-import net.minecraft.advancements.critereon.ImpossibleTrigger;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class ToastSender {
     private static final String IMPOSSIBLE = "impossible";
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
-    private static final ResourceLocation SEND_TOAST_IDENTIFIER = RegistryHelper.makeIdentifierOrThrow("custom", "custom");
+    private static final IdentifierIR SEND_TOAST_IDENTIFIER = IdentifierIR.makeIdentifierOrThrow("custom", "custom");
 
     public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementFrameTypeWrapper advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
         /* Make an advancement display. */
+        var dummyResourceId = IdentifierIR
+            .makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+            .getNativeValue();
         DisplayInfo advancementDisplay = new DisplayInfo(
             icon
             , title
             , Component.empty()
             ,
                 #if MC_VER <= MC_1_20_2
-                RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
+                dummyResourceId
                 #elif MC_VER > MC_1_20_2 && MC_VER <= MC_1_21_4
-                java.util.Optional.of(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER))
+                java.util.Optional.of(dummyResourceId)
                 #elif MC_VER > MC_1_21_4 && MC_VER < MC_1_21_9
-                java.util.Optional.of(new net.minecraft.core.ClientAsset(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                java.util.Optional.of(new net.minecraft.core.ClientAsset(dummyResourceId))
                 #elif MC_VER >= MC_1_21_9
-                java.util.Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(RegistryHelper.makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)))
+                java.util.Optional.of(new net.minecraft.core.ClientAsset.ResourceTexture(dummyResourceId))
                 #endif
 
             , advancementFrame.getType() // Type of display frame.
@@ -57,7 +58,7 @@ public class ToastSender {
             .rewards(AdvancementRewards.EMPTY)
             .requirements(makeAdvancementRequirements())
             .addCriterion(IMPOSSIBLE, makeAdvancementCriterion())
-            .build(SEND_TOAST_IDENTIFIER);
+            .build(SEND_TOAST_IDENTIFIER.getNativeValue());
 
         /* Send packets. */
         player.connection.send(makeGrantPacket(advancementEntry, SEND_TOAST_IDENTIFIER));
@@ -68,14 +69,18 @@ public class ToastSender {
     private static
     #if MC_VER <= MC_1_20_1
     Criterion
-    #elif MC_VER > MC_1_20_1
-    Criterion<ImpossibleTrigger.TriggerInstance>
+    #elif MC_VER > MC_1_20_1 && MC_VER < MC_1_21_11
+    Criterion<net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance>
+    #elif MC_VER >= MC_1_21_11
+    Criterion<net.minecraft.advancements.criterion.ImpossibleTrigger.TriggerInstance>
     #endif
     makeAdvancementCriterion() {
         #if MC_VER <= MC_1_20_1
-        Criterion advancementCriterion = new Criterion(new ImpossibleTrigger.TriggerInstance());
-        #elif MC_VER > MC_1_20_1
-        Criterion<ImpossibleTrigger.TriggerInstance> advancementCriterion = new ImpossibleTrigger().createCriterion(new ImpossibleTrigger.TriggerInstance());
+        Criterion advancementCriterion = new Criterion(new net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance());
+        #elif MC_VER > MC_1_20_1 && MC_VER < MC_1_21_11
+        Criterion<net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance> advancementCriterion = new net.minecraft.advancements.critereon.ImpossibleTrigger().createCriterion(new net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance());
+        #elif MC_VER >= MC_1_21_11
+        Criterion<net.minecraft.advancements.criterion.ImpossibleTrigger.TriggerInstance> advancementCriterion = new net.minecraft.advancements.criterion.ImpossibleTrigger().createCriterion(new net.minecraft.advancements.criterion.ImpossibleTrigger.TriggerInstance());
         #endif
 
         return advancementCriterion;
@@ -104,7 +109,7 @@ public class ToastSender {
 
         #if MC_VER <= MC_1_20_1
         Map<String, Criterion> maps = new java.util.HashMap<>();
-        maps.put(IMPOSSIBLE, new Criterion(new ImpossibleTrigger.TriggerInstance()));
+        maps.put(IMPOSSIBLE, new Criterion(new net.minecraft.advancements.critereon.ImpossibleTrigger.TriggerInstance()));
         advancementProgress.update(maps, makeAdvancementRequirements());
         #elif MC_VER > MC_1_20_1
         advancementProgress.update(makeAdvancementRequirements());
@@ -120,7 +125,7 @@ public class ToastSender {
         #elif MC_VER > MC_1_20_1
         net.minecraft.advancements.AdvancementHolder advancementEntry
         #endif
-        , ResourceLocation identifier) {
+        , IdentifierIR identifier) {
 
         /* Make advancement progress. */
         AdvancementProgress advancementProgress = makeAdvancementProgress();
@@ -140,8 +145,12 @@ public class ToastSender {
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of(advancementEntry);
         #endif
 
-        Set<ResourceLocation> toRemove = Set.of();
-        Map<ResourceLocation, AdvancementProgress> toSetProgress = Map.of(identifier, advancementProgress);
+        var toRemove = Set.<#if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif>of();
+        var toSetProgress = Map.of(identifier.getNativeValue(), advancementProgress);
         return makeAdvancementUpdatePacket(toEarn, toRemove, toSetProgress);
     }
 
@@ -150,8 +159,16 @@ public class ToastSender {
         Collection<Advancement> toEarn
         #elif MC_VER > MC_1_20_1
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn
-        #endif
-        , Set<ResourceLocation> toRemove, Map<ResourceLocation, AdvancementProgress> toSetProgress)
+        #endif, Set<
+    #if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif> toRemove, Map<#if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif, AdvancementProgress> toSetProgress)
     {
         #if MC_VER <= MC_1_21_4
         return new ClientboundUpdateAdvancementsPacket(false, toEarn, toRemove, toSetProgress);
@@ -161,15 +178,18 @@ public class ToastSender {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static @NotNull ClientboundUpdateAdvancementsPacket makeRevokePacket(ResourceLocation identifier) {
+    private static @NotNull ClientboundUpdateAdvancementsPacket makeRevokePacket(IdentifierIR identifier) {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of();
         #elif MC_VER > MC_1_20_1
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of();
         #endif
-
-        Set<ResourceLocation> toRemove = Set.of(identifier);
-        Map<ResourceLocation, AdvancementProgress> toSetProgress = Map.of();
+        var toRemove = Set.of(identifier.getNativeValue());
+        Map<#if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif, AdvancementProgress> toSetProgress = Map.of();
         return makeAdvancementUpdatePacket(toEarn, toRemove, toSetProgress);
     }
 
