@@ -1,7 +1,6 @@
 package mod.fuji.core.job.impl;
 
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.job.abst.FixedIntervalJob;
@@ -9,6 +8,7 @@ import java.util.Objects;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mod.fuji.core.job.JobManager;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
@@ -58,7 +58,8 @@ public class PlaySoundJob extends FixedIntervalJob {
             .forEach(player -> {
                 // NOTE: The playSound should be called in main thread.
                 ServerHelper.executeSync(() -> {
-                    SoundEvent soundEvent = SoundEvent.createVariableRangeEvent(RegistryHelper.makeIdentifierOrThrow(setup.sound));
+                    var soundId = IdentifierIR.makeIdentifierOrThrow(setup.sound).getNativeValue();
+                    SoundEvent soundEvent = SoundEvent.createVariableRangeEvent(soundId);
                     SoundSource soundCategory = SoundSource.BLOCKS;
                     PlayerHelper.playSound(player, soundEvent, soundCategory, setup.volume, setup.pitch);
                 });

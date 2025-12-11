@@ -3,19 +3,18 @@ package mod.fuji.module.initializer.world.manager.service;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -50,7 +49,9 @@ public class FlatPresetParser {
         int k = Math.min(i + j, DimensionType.Y_SIZE);
         int l = k - i;
         try {
-            optional = registryEntryLookup.get(ResourceKey.create(Registries.BLOCK, RegistryHelper.makeIdentifierOrThrow(string2)));
+            optional = registryEntryLookup.get(ResourceKey.create(
+                Registries.BLOCK, IdentifierIR.makeIdentifierOrThrow(string2).getNativeValue()
+            ));
         } catch (Exception exception) {
             LogUtil.error("Error while parsing flat world string", exception);
             return null;
@@ -98,7 +99,9 @@ public class FlatPresetParser {
         Holder<Biome> registryEntry = reference = registryEntryLookup2.getOrThrow(BIOME_KEY);
         if (iterator.hasNext()) {
             String string2 = iterator.next();
-            registryEntry = Optional.ofNullable(ResourceLocation.tryParse(string2)).map(identifier -> ResourceKey.create(Registries.BIOME, identifier)).flatMap(registryEntryLookup2::get).orElseGet(() -> {
+            registryEntry = IdentifierIR.makeIdentifier(string2)
+                .map(identifier -> ResourceKey.create(Registries.BIOME, identifier.getNativeValue()))
+                .flatMap(registryEntryLookup2::get).orElseGet(() -> {
                 LogUtil.warn("Invalid biome: {}", (Object)string2);
                 return reference;
             });

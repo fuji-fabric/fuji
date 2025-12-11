@@ -28,7 +28,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -55,7 +54,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
@@ -135,7 +133,6 @@ public class DependencyTest {
         allowedReferences.add(Registries.class.getName());
         allowedReferences.add(ResourceKey.class.getName());
         allowedReferences.add(Holder.class.getName());
-        allowedReferences.add(ResourceLocation.class.getName());
         allowedReferences.add(MappedRegistry.class.getName());
 
         allowedReferences.add("net.minecraft.nbt.");
@@ -213,7 +210,6 @@ public class DependencyTest {
         allowedReferences.add("net.minecraft.command.argument.");
         allowedReferences.add("net.minecraft.scoreboard.ScoreboardDisplaySlot");
         allowedReferences.add("net.minecraft.scoreboard.ScoreboardObjective");
-        allowedReferences.add(MinMaxBounds.class.getName());
         allowedReferences.add("net.minecraft.inventory.SlotRange");
         allowedReferences.add(ColumnPos.class.getName());
         allowedReferences.add(PlayerTeam.class.getName());

@@ -1,5 +1,6 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderHandler;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
@@ -8,7 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import mod.fuji.Fuji;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
-import net.minecraft.resources.ResourceLocation;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -37,6 +38,21 @@ public class PlaceholderHelper {
         return PlaceholderResult.invalid(INVALID_ARGS_ERROR_REASON).text();
     }
 
+    private static void registerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull PlaceholderHandler placeholderHandler) {
+        String placeholderName = descriptor.getString();
+        IdentifierIR identifier = IdentifierIR.makeIdentifierOrThrow(Fuji.MOD_ID, placeholderName);
+        Placeholders.register(identifier.getNativeValue(), placeholderHandler);
+    }
+
+    public static void registerGenericPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<PlaceholderContext, String, Component> function) {
+        PlaceholderHandler placeholderHandler = (ctx, args) -> {
+            Component resultText = function.apply(ctx, args);
+            return PlaceholderResult.value(resultText);
+        };
+
+        registerPlaceholder(descriptor, placeholderHandler);
+    }
+
     @SuppressWarnings("resource")
     public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<MinecraftServer, String, Component> function) {
         PlaceholderHandler placeholderHandler = (ctx, args) -> {
@@ -48,9 +64,7 @@ public class PlaceholderHelper {
             return PlaceholderResult.value(resultText);
         };
 
-        String placeholderName = descriptor.getString();
-        ResourceLocation identifier = RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, placeholderName);
-        Placeholders.register(identifier, placeholderHandler);
+        registerPlaceholder(descriptor, placeholderHandler);
     }
 
     public static void registerPlayerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull BiFunction<ServerPlayer, String, Component> function) {
@@ -62,9 +76,7 @@ public class PlaceholderHelper {
             return PlaceholderResult.value(resultText);
         };
 
-        String placeholderName = descriptor.getString();
-        ResourceLocation identifier = RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, placeholderName);
-        Placeholders.register(identifier, placeholderHandler);
+        registerPlaceholder(descriptor, placeholderHandler);
     }
 
     public static void registerServerPlaceholder(@NotNull PlaceholderDescriptor descriptor, @NotNull Function<MinecraftServer, Component> function) {

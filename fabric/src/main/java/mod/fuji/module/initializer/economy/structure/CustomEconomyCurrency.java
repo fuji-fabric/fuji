@@ -3,14 +3,13 @@ package mod.fuji.module.initializer.economy.structure;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -29,8 +28,13 @@ public class CustomEconomyCurrency implements EconomyCurrency {
     }
 
     @Override
-    public ResourceLocation id() {
-        return RegistryHelper.makeIdentifierOrThrow(currencyDescriptor.currencyId);
+    public
+    #if MC_VER < MC_1_21_11
+    net.minecraft.resources.ResourceLocation
+    #elif MC_VER >= MC_1_21_11
+    net.minecraft.resources.Identifier
+    #endif id() {
+        return IdentifierIR.makeIdentifierOrThrow(currencyDescriptor.currencyId).getNativeValue();
     }
 
     @Override

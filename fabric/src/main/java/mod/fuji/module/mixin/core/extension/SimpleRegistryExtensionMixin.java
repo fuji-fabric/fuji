@@ -5,6 +5,7 @@ import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.extension.SimpleRegistryExtension;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -12,7 +13,6 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +32,12 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
 
     @Shadow
     @Final
-    private Map<ResourceLocation, Holder.Reference<T>> byLocation;
+    private Map<#if MC_VER < MC_1_21_11
+        net.minecraft.resources.ResourceLocation
+        #elif MC_VER >= MC_1_21_11
+        net.minecraft.resources.Identifier
+        #endif
+        , Reference<T>> byLocation;
 
     @Shadow
     @Final
@@ -91,7 +96,7 @@ public abstract class SimpleRegistryExtensionMixin<T> implements SimpleRegistryE
     }
 
     @Override
-    public boolean fuji$remove(ResourceLocation key) {
+    public boolean fuji$remove(IdentifierIR key) {
         var entry = this.byLocation.get(key);
         return entry != null && entry.isBound() && this.fuji$remove(entry.value());
     }

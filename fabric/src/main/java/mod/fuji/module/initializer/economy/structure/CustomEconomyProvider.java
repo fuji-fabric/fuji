@@ -5,32 +5,30 @@ import eu.pb4.common.economy.api.CommonEconomy;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
-import mod.fuji.Fuji;
-import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
-import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.module.initializer.economy.EconomyInitializer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.network.chat.Style;
+import mod.fuji.Fuji;
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.structure.IdentifierIR;
+import mod.fuji.module.initializer.economy.EconomyInitializer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- *     Each mod should register its own economy provider, to provide new types of currencies.
-    One economy provider, can provide many many types of currencies.
-    For each player, one economy account, holds one economy currency type.
-
-
+ * Each mod should register its own economy provider, to provide new types of currencies.
+ * One economy provider, can provide more than one types of currencies.
+ * For each player, one economy account, holds one economy currency type.
  **/
 public class CustomEconomyProvider implements EconomyProvider {
 
@@ -38,7 +36,7 @@ public class CustomEconomyProvider implements EconomyProvider {
     public static CustomEconomyProvider INSTANCE = new CustomEconomyProvider();
 
     public static final double SUPPORTED_PRECISE_FACTOR = 100.0;
-    public static Map<ResourceLocation, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
+    public static Map<IdentifierIR, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
 
     public static void initializeCustomEconomyProvider() {
         // no-op
@@ -50,7 +48,7 @@ public class CustomEconomyProvider implements EconomyProvider {
         registerDefinedFujiCurrencies();
     }
 
-    public static CustomEconomyCurrency getCustomEconomyCurrency(ResourceLocation currencyId) {
+    public static CustomEconomyCurrency getCustomEconomyCurrency(IdentifierIR currencyId) {
         return CURRENCY_ID_2_CURRENCY.get(currencyId);
     }
 
@@ -68,7 +66,7 @@ public class CustomEconomyProvider implements EconomyProvider {
 
     private static void registerDefinedFujiCurrencies() {
         EconomyInitializer.config.model().currencies.forEach(descriptor -> {
-            ResourceLocation currencyId = RegistryHelper.makeIdentifierOrThrow(descriptor.currencyId);
+            IdentifierIR currencyId = IdentifierIR.makeIdentifierOrThrow(descriptor.currencyId);
             RegistryHelper.ensureIdentifierNamespaceIsFuji(currencyId);
 
             CustomEconomyCurrency customEconomyCurrency = new CustomEconomyCurrency(descriptor);
@@ -112,12 +110,13 @@ public class CustomEconomyProvider implements EconomyProvider {
     public @Nullable EconomyCurrency getCurrency(MinecraftServer server, String pathOfCurrencyId) {
         // NOTE: The getCurrency() method only use the `path` component of `identifier` for `currency`.
 
-        Optional<Map.Entry<ResourceLocation, CustomEconomyCurrency>> currencyOpt =
+        Optional<Map.Entry<IdentifierIR, CustomEconomyCurrency>> currencyOpt =
             CURRENCY_ID_2_CURRENCY
                 .entrySet()
                 .stream()
                 .filter((entry) -> {
-                    String path = entry.getKey().getPath();
+                    IdentifierIR key = entry.getKey();
+                    String path = key.getPath();
                     return path.equals(pathOfCurrencyId);
                 })
                 .findFirst();

@@ -17,6 +17,7 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.service.paged_text.PagedMessageText;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.economy.command.argument.wrapper.CurrencyId;
 import mod.fuji.module.initializer.economy.config.model.EconomyConfigModel;
@@ -32,7 +33,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 @Document(id = 1751826915564L, value = """
     This module enables the `economy gameplay`.
@@ -147,7 +147,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy account")
     @CommandRequirement(level = 4)
     private static int $account(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId) {
-        ResourceLocation $currencyId = currencyId.getValue();
+        IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         printEconomyAccountInfo(source, economyAccount);
 
@@ -197,7 +197,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy give")
     @CommandRequirement(level = 4)
     private static int $give(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        ResourceLocation $currencyId = currencyId.getValue();
+        IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
@@ -210,7 +210,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy take")
     @CommandRequirement(level = 4)
     private static int $take(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        ResourceLocation $currencyId = currencyId.getValue();
+        IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
@@ -232,7 +232,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("has-currency?")
     @CommandRequirement(level = 4)
     private static int $hasCurrency(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        ResourceLocation $currencyId = currencyId.getValue();
+        IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
@@ -245,7 +245,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy set")
     @CommandRequirement(level = 4)
     private static int $set(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        ResourceLocation $currencyId = currencyId.getValue();
+        IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
 
         long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);

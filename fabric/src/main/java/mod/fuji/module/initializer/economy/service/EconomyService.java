@@ -12,6 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.argument.wrapper.impl.OfflineGameProfile;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.economy.EconomyInitializer;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyAccountNode;
 import mod.fuji.module.initializer.economy.config.structure.CustomEconomyCurrencyNode;
@@ -26,7 +27,6 @@ import java.util.function.Function;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class EconomyService {
@@ -36,14 +36,15 @@ public class EconomyService {
         return CommonEconomy.getCurrencies(server);
     }
 
-    public static @NotNull Collection<ResourceLocation> getServerCurrencyIds() {
+    public static @NotNull Collection<IdentifierIR> getServerCurrencyIds() {
         return getServerCurrencies()
             .stream()
             .map(EconomyCurrency::id)
+            .map(IdentifierIR::of)
             .toList();
     }
 
-    public static boolean isCurrencyInstalledOnThisServer(@NotNull ResourceLocation currencyId) {
+    public static boolean isCurrencyInstalledOnThisServer(@NotNull IdentifierIR currencyId) {
         return getServerCurrencyIds()
             .stream()
             .anyMatch(it -> it.equals(currencyId));
@@ -58,17 +59,17 @@ public class EconomyService {
         return CommonEconomy.getAccounts(server, gameProfile);
     }
 
-    public static @NotNull Optional<EconomyAccount> getUserAccount(@NotNull GameProfile gameProfile, @NotNull ResourceLocation currencyId) {
+    public static @NotNull Optional<EconomyAccount> getUserAccount(@NotNull GameProfile gameProfile, @NotNull IdentifierIR currencyId) {
         return getUserAccounts(gameProfile)
                 .stream()
                 .filter(account -> {
-                    ResourceLocation id = account.currency().id();
+                    IdentifierIR id = IdentifierIR.of(account.currency().id());
                     return id.equals(currencyId);
                 })
                 .findFirst();
     }
 
-    private static @NotNull <T> T withCustomEconomyCurrencyNode(@NotNull ResourceLocation currencyId, @NotNull Function<CustomEconomyCurrencyNode, T> function) {
+    private static @NotNull <T> T withCustomEconomyCurrencyNode(@NotNull IdentifierIR currencyId, @NotNull Function<CustomEconomyCurrencyNode, T> function) {
         Optional<CustomEconomyCurrencyNode> customEconomyCurrencyNode = EconomyInitializer.data.model()
             .currencies
             .stream()
@@ -90,7 +91,7 @@ public class EconomyService {
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    public static @NotNull CustomEconomyAccountNode getCustomAccountNode(@NotNull GameProfile gameProfile, @NotNull ResourceLocation currencyId) {
+    public static @NotNull CustomEconomyAccountNode getCustomAccountNode(@NotNull GameProfile gameProfile, @NotNull IdentifierIR currencyId) {
         return withCustomEconomyCurrencyNode(currencyId, customEconomyCurrencyNode -> {
             /* Find the account of the game profile for the currency. */
             Optional<CustomEconomyAccountNode> customEconomyAccountNode = customEconomyCurrencyNode
@@ -114,7 +115,7 @@ public class EconomyService {
         });
     }
 
-    public static void transferCurrency(@NotNull ServerPlayer source, @NotNull OfflineGameProfile player, @NotNull ResourceLocation currencyId, double amount) {
+    public static void transferCurrency(@NotNull ServerPlayer source, @NotNull OfflineGameProfile player, @NotNull IdentifierIR currencyId, double amount) {
         long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
         deltaValue = Math.max(0, deltaValue);
 
@@ -148,7 +149,7 @@ public class EconomyService {
         return EconomyInitializer.config.model().getBalanceTopPageSize();
     }
 
-    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(@NotNull ServerPlayer player, @NotNull ResourceLocation currencyId) {
+    public static @NotNull List<GameProfileAndEconomyAccount> makeBalanceTopEntities(@NotNull ServerPlayer player, @NotNull IdentifierIR currencyId) {
         return PlayerHelper.Cache
             .getOfflineGameProfiles()
             .stream()
@@ -161,7 +162,7 @@ public class EconomyService {
             .toList();
     }
 
-    public static @NotNull EconomyAccount tryGetEconomyAccount(@NotNull CommandSourceStack source, @NotNull GameProfile gameProfile, @NotNull ResourceLocation currencyId) {
+    public static @NotNull EconomyAccount tryGetEconomyAccount(@NotNull CommandSourceStack source, @NotNull GameProfile gameProfile, @NotNull IdentifierIR currencyId) {
         Optional<EconomyAccount> economyAccount = getUserAccount(gameProfile, currencyId);
         if (economyAccount.isEmpty()) {
             TextHelper.sendTextByKey(source, "economy.account.not_found", AuthlibHelper.getName(gameProfile), currencyId);

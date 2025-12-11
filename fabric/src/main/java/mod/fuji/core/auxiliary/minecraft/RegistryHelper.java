@@ -1,10 +1,9 @@
 package mod.fuji.core.auxiliary.minecraft;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import mod.fuji.Fuji;
-import mod.fuji.core.structure.IdentifierWrapper;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -24,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegistryHelper {
 
-    public static @NotNull String getIdAsString(@NotNull IdentifierWrapper identifier) {
-        return identifier.getNativeType().toString();
+    public static @NotNull String getIdAsString(@NotNull IdentifierIR identifier) {
+        return identifier.getNativeValue().toString();
     }
 
     public static @NotNull String getIdAsString(@NotNull Item item) {
@@ -115,11 +114,11 @@ public class RegistryHelper {
         return getCombinedRegistryManager().lookupOrThrow(registryKey);
     }
 
-    public static <T> ResourceKey<T> ofRegistryKey(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierWrapper identifier) {
-        return ResourceKey.create(registrySpecifier, identifier.getNativeType());
+    public static <T> ResourceKey<T> ofRegistryKey(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierIR identifier) {
+        return ResourceKey.create(registrySpecifier, identifier.getNativeValue());
     }
 
-    public static <T> Optional<Holder<T>> getRegistryEntry(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierWrapper identifier) {
+    public static <T> Optional<Holder<T>> getRegistryEntry(@NotNull ResourceKey<? extends Registry<T>> registrySpecifier, @NotNull IdentifierIR identifier) {
         Registry<T> registry = getRegistry(registrySpecifier);
         T object = getValue(registry, identifier);
         Holder<T> entry = registry.wrapAsHolder(object);
@@ -134,42 +133,13 @@ public class RegistryHelper {
         #endif
     }
 
-    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull IdentifierWrapper identifier) {
-        Identifier nativeType = identifier.getNativeType();
+    public static <T> T getValue(@NotNull Registry<T> registry, @NotNull IdentifierIR identifier) {
+        Identifier nativeType = identifier.getNativeValue();
         #if MC_VER <= MC_1_21
         return registry.get(nativeType);
         #elif MC_VER > MC_1_21
         return registry.getValue(nativeType);
         #endif
-    }
-
-    public static @NotNull IdentifierWrapper makeIdentifierOrThrow(@NotNull String identifier) {
-        #if MC_VER <= MC_1_20_6
-        return IdentifierWrapper.of(new ResourceLocation(identifier));
-        #elif MC_VER > MC_1_20_6 && MC_VER < MC_1_21_11
-        return IdentifierWrapper.of(ResourceLocation.parse(identifier));
-        #elif MC_VER >= MC_1_21_11
-        return IdentifierWrapper.of(net.minecraft.resources.Identifier.parse(identifier));
-        #endif
-    }
-
-    public static @NotNull IdentifierWrapper makeIdentifierOrThrow(@NotNull String namespace, @NotNull String path) {
-        #if MC_VER < MC_1_21_11
-        ResourceLocation identifier = ResourceLocation.tryBuild(namespace, path);
-        #elif MC_VER >= MC_1_21_11
-        net.minecraft.resources.Identifier identifier = net.minecraft.resources.Identifier.tryBuild(namespace, path);
-        #endif
-
-        var nativeType = Objects.requireNonNull(identifier);
-        return IdentifierWrapper.of(nativeType);
-    }
-
-    public static Optional<IdentifierWrapper> makeIdentifier(@NotNull String identifier) {
-        try {
-            return Optional.of(makeIdentifierOrThrow(identifier));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
     }
 
     public static <T> Stream<Holder.Reference<T>> listElements(@NotNull Registry<T> registry) {
@@ -197,8 +167,8 @@ public class RegistryHelper {
             });
     }
 
-    public static void ensureIdentifierNamespaceIsFuji(@NotNull IdentifierWrapper identifier) {
-        Identifier nativeType = identifier.getNativeType();
+    public static void ensureIdentifierNamespaceIsFuji(@NotNull IdentifierIR identifier) {
+        Identifier nativeType = identifier.getNativeValue();
         if (!nativeType.getNamespace().equals(Fuji.MOD_ID)) {
             throw new IllegalArgumentException("The namespace of the identifier must be \"fuji\": " + identifier);
         }

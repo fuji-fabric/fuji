@@ -1,10 +1,9 @@
 package mod.fuji.module.initializer.economy.config.structure;
 
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.document.annotation.Document;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minecraft.resources.ResourceLocation;
+import mod.fuji.core.structure.IdentifierIR;
 import org.jetbrains.annotations.NotNull;
 
 @Data
@@ -39,7 +38,7 @@ public class CustomEconomyCurrencyDescriptor {
         return descriptor;
     }
 
-    public ResourceLocation toIdentifier() {
-        return RegistryHelper.makeIdentifierOrThrow(this.currencyId);
+    public IdentifierIR toIdentifier() {
+        return IdentifierIR.makeIdentifierOrThrow(this.currencyId);
     }
 }

@@ -3,13 +3,12 @@ package mod.fuji.module.initializer.economy;
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.economy.api.EconomyAccount;
 import mod.fuji.core.auxiliary.minecraft.PlaceholderHelper;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.economy.service.EconomyService;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public class EconomyPlaceholders {
 
@@ -30,7 +29,7 @@ public class EconomyPlaceholders {
         PlaceholderDescriptor descriptor = new PlaceholderDescriptor("balance", 1753668968954L);
         PlaceholderHelper.registerPlayerPlaceholder(descriptor, (player, args) -> {
             GameProfile gameProfile = player.getGameProfile();
-            Optional<ResourceLocation> currencyId = RegistryHelper.makeIdentifier(args);
+            Optional<IdentifierIR> currencyId = IdentifierIR.makeIdentifier(args);
             return currencyId
                 .map($currencyId -> {
                     Optional<EconomyAccount> economyAccount = EconomyService.getUserAccount(gameProfile, $currencyId);

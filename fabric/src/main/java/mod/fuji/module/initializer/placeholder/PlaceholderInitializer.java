@@ -1,8 +1,6 @@
 package mod.fuji.module.initializer.placeholder;
 
-import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
@@ -23,6 +21,7 @@ import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.document.descriptor.MetaDescriptor;
 import mod.fuji.core.document.descriptor.PlaceholderDescriptor;
 import mod.fuji.core.event.message.player.PlayerLeftEvent;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.module.initializer.placeholder.gui.PlaceholderGui;
@@ -34,7 +33,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -71,7 +69,11 @@ public class PlaceholderInitializer extends ModuleInitializer {
     @Document(id = 1751826515140L, value = "List all placeholders registered in server.")
     @CommandNode("list")
     private static int $list(@CommandSource ServerPlayer player) {
-        List<ResourceLocation> list = Placeholders.getPlaceholders().keySet().asList();
+        List<IdentifierIR> list =
+            Placeholders.getPlaceholders().keySet().asList()
+                .stream()
+                .map(IdentifierIR::of)
+                .toList();
         new PlaceholderGui(player, list, 0).open();
         return CommandHelper.Return.SUCCESS;
     }
@@ -235,7 +237,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             // For example: `/xaero-waypoint:{WayPointName}:{SingleCharacter}:{x}:{y}:{z}:11:false:0:Internal-{overworld/the_nether/the_end}-waypoints`
             String waypointName = TextHelper.Translator.getLanguageValueByKey(player, "placeholder.position.waypoint.name");
             String waypointSingularCharacterName = String.valueOf(waypointName.charAt(0));
-            String nameOfDimension = RegistryHelper.makeIdentifierOrThrow(RegistryHelper.getIdAsString(world)).getPath();
+            String nameOfDimension = IdentifierIR.makeIdentifierOrThrow(RegistryHelper.getIdAsString(world)).getPath();
             String xaeroCommand = "xaero-waypoint:%s:%s:%d:%d:%d:11:false:0:Internal-%s-waypoints".formatted(waypointName, waypointSingularCharacterName, blockX, blockY, blockZ, nameOfDimension);
             hoverText.append(TextHelper.TEXT_NEWLINE);
             hoverText.append(TextHelper.getTextByKey(player, "placeholder.prompt.xaero_waypoint_add"));
@@ -425,8 +427,12 @@ public class PlaceholderInitializer extends ModuleInitializer {
         });
     }
 
+    @DocStringProvider(id = 1765471377282L, value = """
+        Returns the rotating string of specified string, when evaluated.
+        """)
     private void registerRotatePlaceholder() {
-        Placeholders.register(RegistryHelper.makeIdentifierOrThrow(Fuji.MOD_ID, "rotate"), (ctx, args) -> {
+        PlaceholderDescriptor descriptor = new PlaceholderDescriptor("rotate", 1765471377282L);
+        PlaceholderHelper.registerGenericPlaceholder(descriptor, (ctx, args) -> {
             String namespace = "default";
             if (ctx.player() != null) {
                 namespace = PlayerHelper.getPlayerName(ctx.player());
@@ -439,7 +445,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             String frame = rotateMap.get(args);
             rotateMap.put(args, StringUtils.rotate(frame, -1));
 
-            return PlaceholderResult.value(Component.literal(frame));
+            return Component.literal(frame);
         });
     }
 

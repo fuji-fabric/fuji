@@ -1,11 +1,11 @@
 package mod.fuji.core.command.argument.wrapper.impl;
 
 import mod.fuji.core.command.argument.wrapper.abst.SingularValue;
-import net.minecraft.resources.ResourceLocation;
+import mod.fuji.core.structure.IdentifierIR;
 
-public class FujiIdentifier extends SingularValue<ResourceLocation> {
+public class FujiIdentifier extends SingularValue<IdentifierIR> {
 
-    public FujiIdentifier(ResourceLocation value) {
+    public FujiIdentifier(IdentifierIR value) {
         super(value);
     }
 

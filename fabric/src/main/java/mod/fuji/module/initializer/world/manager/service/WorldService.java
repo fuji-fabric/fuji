@@ -13,6 +13,7 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import mod.fuji.core.service.bossbar.BossBarManager;
 import mod.fuji.core.structure.GlobalPos;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.core.structure.TeleportTicket;
 import mod.fuji.module.initializer.world.manager.WorldInitializer;
@@ -31,7 +32,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +57,7 @@ public class WorldService {
     private static void saveChunksBeforeUnloadingTheDimension(ServerLevel world) {
         ServerHelper.executeSync(() -> {
             world.noSave = false;
+
             #if MC_VER <= MC_1_21_4
             world.getChunkSource().removeTicketsOnClosing();
             #elif MC_VER > MC_1_21_4
@@ -159,7 +160,7 @@ public class WorldService {
         IOUtil.deleteFilesAndPreserveDirs(worldDirectory);
     }
 
-    public static boolean existsDimension(ResourceLocation dimensionId) {
+    public static boolean existsDimension(IdentifierIR dimensionId) {
         boolean dimensionExistedInRuntime = WorldHelper
             .getWorlds()
             .stream()

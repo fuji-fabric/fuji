@@ -5,12 +5,12 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.CrudPagedGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.structure.GlobalPos;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.works.WorksInitializer;
 import mod.fuji.module.initializer.works.structure.work.abst.Work;
 import java.util.List;
@@ -106,7 +106,8 @@ public class ListWorksGui extends CrudPagedGui<Work> {
 
     @Override
     protected void onLeftClickEntity(Work entity) {
-        ResourceKey<Level> worldKey = ResourceKey.create(Registries.DIMENSION, RegistryHelper.makeIdentifierOrThrow(entity.level));
+        var worldId = IdentifierIR.makeIdentifierOrThrow(entity.level).getNativeValue();
+        ResourceKey<Level> worldKey = ResourceKey.create(Registries.DIMENSION, worldId);
         ServerPlayer player = getPlayer();
         ServerLevel dimension = ServerHelper.getServer().getLevel(worldKey);
 

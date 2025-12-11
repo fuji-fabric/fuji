@@ -1,10 +1,10 @@
 package mod.fuji.core.command.argument.wrapper.impl;
 
 import mod.fuji.core.command.argument.wrapper.abst.SingularValue;
-import net.minecraft.resources.ResourceLocation;
+import mod.fuji.core.structure.IdentifierIR;
 
-public class BiomeId extends SingularValue<ResourceLocation> {
-    public BiomeId(ResourceLocation value) {
+public class BiomeId extends SingularValue<IdentifierIR> {
+    public BiomeId(IdentifierIR value) {
         super(value);
     }
 }

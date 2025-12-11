@@ -30,6 +30,7 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.job.JobManager;
 import mod.fuji.core.structure.GlobalPos;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.world.manager.auxiliary.WorldBorderHelper;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
@@ -48,7 +49,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
@@ -331,7 +331,7 @@ public class WorldInitializer extends ModuleInitializer {
         .ofModule("world.json", WorldDataModel.class)
         .enableAutoSaveFeature(JobManager.CRON_EVERY_MINUTE);
 
-    private static void ensureDimensionNotExists(@NotNull CommandSourceStack source, @NotNull ResourceLocation identifier) {
+    private static void ensureDimensionNotExists(@NotNull CommandSourceStack source, @NotNull IdentifierIR identifier) {
         if (WorldService.existsDimension(identifier)) {
             TextHelper.sendTextByKey(source, "world.dimension.exist");
             throw new AbortCommandExecutionException();
@@ -396,13 +396,13 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Make identifier for the new dimension. */
-        ResourceLocation dimensionIdentifier = name.getValue();
+        IdentifierIR dimensionIdentifier = name.getValue();
         ensureDimensionNotExists(source, dimensionIdentifier);
 
         /* Make the runtime dimension descriptor. */
         long $seed = seed.orElse(RandomSupport.generateUniqueSeed());
         ChunkGeneratorType $chunkGeneratorType = chunkGeneratorType.orElse(ChunkGeneratorType.NOISE);
-        ResourceLocation dimensionTypeIdentifier = RegistryHelper.makeIdentifierOrThrow(dimensionType.getValue());
+        IdentifierIR dimensionTypeIdentifier = IdentifierIR.makeIdentifierOrThrow(dimensionType.getValue());
         String $chunkGeneratorParameter = chunkGeneratorParameters.orElse("");
         WorldPresetType $worldPresetType = worldPresetType.orElse(null);
         RuntimeDimensionDescriptor runtimeDimensionDescriptor = RuntimeDimensionImporter.importRuntimeDimensionDescriptor(dimensionIdentifier, $worldPresetType, dimensionTypeIdentifier, $chunkGeneratorType, $chunkGeneratorParameter, $seed);
@@ -430,7 +430,7 @@ public class WorldInitializer extends ModuleInitializer {
         , Optional<WorldPresetType> worldPresetType) {
 
         /* Ensure the dimension dir existed. */
-        ResourceLocation dimensionId = name.getValue();
+        IdentifierIR dimensionId = name.getValue();
         Path targetDimensionPath = RuntimeDimensionImporter.getLevelSavePath()
             .resolve("dimensions")
             .resolve(dimensionId.getNamespace())

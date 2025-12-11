@@ -18,13 +18,13 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.service.random_teleport.RandomTeleporter;
 import mod.fuji.core.service.random_teleport.structure.RandomTeleportSettings;
 import mod.fuji.core.structure.GlobalPos;
+import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
 
 
 @Document(id = 1751825242047L, value = """
@@ -103,7 +103,7 @@ public class TpposInitializer extends ModuleInitializer {
 
                 /* Enable biome whitelist mode. */
                 result.getOnlyAcceptBiomesMode().setEnable(true);
-                ResourceLocation biomeId = $biome.getValue();
+                IdentifierIR biomeId = $biome.getValue();
                 result.getOnlyAcceptBiomesMode().setAccept(Set.of(RegistryHelper.getIdAsString(biomeId)));
                 return result;
             })

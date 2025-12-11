@@ -4,12 +4,12 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import java.util.List;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.Fuji;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.FujiIdentifier;
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class FujiIdentifierArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -33,11 +33,11 @@ public class FujiIdentifierArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     protected Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
         String idString = StringArgumentType.getString(context, commandArgument.getArgumentName());
 
-        ResourceLocation id;
+        IdentifierIR id;
         if(idString.contains(":")) {
-            id = RegistryHelper.makeIdentifierOrThrow(idString);
+            id = IdentifierIR.makeIdentifierOrThrow(idString);
         } else {
-            id = RegistryHelper.makeIdentifierOrThrow("fuji:" + idString);
+            id = IdentifierIR.makeIdentifierOrThrow(Fuji.MOD_ID + ":" + idString);
         }
 
         return new FujiIdentifier(id);

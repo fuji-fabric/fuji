@@ -1,13 +1,13 @@
 package mod.fuji.core.extension;
 
+import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.core.MappedRegistry;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public interface SimpleRegistryExtension<T> {
 
     @SuppressWarnings("unchecked")
-    static <T> boolean remove(@NotNull MappedRegistry<T> registry, ResourceLocation key) {
+    static <T> boolean remove(@NotNull MappedRegistry<T> registry, IdentifierIR key) {
         return ((SimpleRegistryExtension<T>) registry).fuji$remove(key);
     }
 
@@ -18,7 +18,7 @@ public interface SimpleRegistryExtension<T> {
 
     boolean fuji$remove(T value);
 
-    boolean fuji$remove(ResourceLocation key);
+    boolean fuji$remove(IdentifierIR key);
 
     void fuji$setFrozen(boolean value);
 
