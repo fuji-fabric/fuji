@@ -174,8 +174,6 @@
     "world.border.BorderMixin",
     "world.border.PlayerManagerMixin",
     "world.border.ServerWorldMixin",
-    "world.gamerule.PerDimensionGameRulesMixin",
-    "world.gamerule.ServerPlayerEntityMixin",
     "world.manager.fix_end_gateway_block_entity.EndGatewayBlockEntityMixin",
     "world.manager.persist.DimensionOptionsMixin",
     "world.manager.persist.WorldGenSettingsMixin",

@@ -9,3 +9,4 @@
 
 # 📑 Changelog
 
+- [world.gamerule] remove: this module is `removed`, due to the heavy maintain burden. (Please use https://modrinth.com/mod/worldgamerules)

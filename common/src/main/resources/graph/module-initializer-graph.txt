@@ -144,6 +144,5 @@ mod.fuji.module.initializer.warning.WarningInitializer
 mod.fuji.module.initializer.whitelist.WhitelistInitializer
 mod.fuji.module.initializer.works.WorksInitializer
 mod.fuji.module.initializer.world.border.WorldBorderInitializer
-mod.fuji.module.initializer.world.gamerule.WorldGameRuleInitializer
 mod.fuji.module.initializer.world.manager.WorldInitializer
 mod.fuji.module.initializer.world_downloader.WorldDownloaderInitializer
