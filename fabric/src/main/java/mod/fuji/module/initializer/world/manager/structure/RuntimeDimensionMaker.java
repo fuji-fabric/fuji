@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
 import java.util.concurrent.Executor;
+import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -95,7 +96,7 @@ public class RuntimeDimensionMaker {
     }
 
     private static @NotNull RandomSequences makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
-        long seed = runtimeDimensionDescriptor.seed;
+        @Unused long seed = runtimeDimensionDescriptor.seed;
 
         #if MC_VER < MC_1_21_11
         return new RandomSequences(seed);

@@ -436,15 +436,78 @@ public class CommandHelper {
          * However, it can be configured via `op-permission-level=4` option.
          **/
         public static boolean isAdmin(@NotNull CommandSourceStack source) {
-            return source.hasPermission(4);
+            return hasLevelPermission(source, 4);
         }
 
-        public static int getPermissionLevel(@NotNull GameProfile gameProfile) {
+        #if MC_VER >= MC_1_21_11
+        private static final net.minecraft.server.permissions.Permission LEVEL_PERMISSION_0 = new net.minecraft.server.permissions.Permission.HasCommandLevel(net.minecraft.server.permissions.PermissionLevel.ALL);
+        private static final net.minecraft.server.permissions.Permission LEVEL_PERMISSION_1 = new net.minecraft.server.permissions.Permission.HasCommandLevel(net.minecraft.server.permissions.PermissionLevel.MODERATORS);
+        private static final net.minecraft.server.permissions.Permission LEVEL_PERMISSION_2 = new net.minecraft.server.permissions.Permission.HasCommandLevel(net.minecraft.server.permissions.PermissionLevel.GAMEMASTERS);
+        private static final net.minecraft.server.permissions.Permission LEVEL_PERMISSION_3 = new net.minecraft.server.permissions.Permission.HasCommandLevel(net.minecraft.server.permissions.PermissionLevel.ADMINS);
+        private static final net.minecraft.server.permissions.Permission LEVEL_PERMISSION_4 = new net.minecraft.server.permissions.Permission.HasCommandLevel(net.minecraft.server.permissions.PermissionLevel.OWNERS);
+
+        @SuppressWarnings("IfStatementWithIdenticalBranches")
+        private static net.minecraft.server.permissions.Permission mapLevelPermission(int levelPermission) {
+            if (levelPermission <= 0) return LEVEL_PERMISSION_0;
+            if (levelPermission == 1) return LEVEL_PERMISSION_1;
+            if (levelPermission == 2) return LEVEL_PERMISSION_2;
+            if (levelPermission == 3) return LEVEL_PERMISSION_3;
+            if (levelPermission == 4) return LEVEL_PERMISSION_4;
+            // The max allowed level permission is 4.
+            return LEVEL_PERMISSION_4;
+        }
+
+        @SuppressWarnings({"ControlFlowStatementWithoutBraces", "deprecation"})
+        public static net.minecraft.server.permissions.LevelBasedPermissionSet mapLevelPermissionSet(int levelPermission) {
+            if (levelPermission <= 0) return net.minecraft.server.permissions.LevelBasedPermissionSet.ALL;
+            if (levelPermission == 1) return net.minecraft.server.permissions.LevelBasedPermissionSet.MODERATOR;
+            if (levelPermission == 2) return net.minecraft.server.permissions.LevelBasedPermissionSet.GAMEMASTER;
+            if (levelPermission == 3) return net.minecraft.server.permissions.LevelBasedPermissionSet.ADMIN;
+            if (levelPermission == 4) return net.minecraft.server.permissions.LevelBasedPermissionSet.OWNER;
+            return net.minecraft.server.permissions.LevelBasedPermissionSet.OWNER;
+        }
+
+        #endif
+
+
+        public static boolean hasLevelPermission(@NotNull ServerPlayer source, int levelPermission) {
+            #if MC_VER < MC_1_21_11
+            return source.hasPermission(levelPermission);
+            #elif MC_VER >= MC_1_21_11
+            return source.permissions().hasPermission(mapLevelPermission(levelPermission));
+            #endif
+        }
+
+        public static boolean hasLevelPermission(@NotNull CommandSourceStack source, int levelPermission) {
+            #if MC_VER < MC_1_21_11
+            return source.hasPermission(levelPermission);
+            #elif MC_VER >= MC_1_21_11
+            return source.permissions().hasPermission(mapLevelPermission(levelPermission));
+            #endif
+        }
+
+        public static int getLevelPermission(@NotNull GameProfile gameProfile) {
             var vanillaType = GameProfileWrapper
                 .fromVanillaType(gameProfile)
                 .toVanillaType()
                 .orElseThrow();
+
+            #if MC_VER < MC_1_21_11
             return ServerHelper.getServer().getProfilePermissions(vanillaType);
+            #elif MC_VER >= MC_1_21_11
+            return ServerHelper.getServer()
+                .getProfilePermissions(vanillaType)
+                .level()
+                .id();
+            #endif
+        }
+
+        public static @NotNull CommandSourceStack withPermissionLevel(@NotNull CommandSourceStack source, int levelPermission) {
+            #if MC_VER < MC_1_21_11
+            return source.withPermission(levelPermission);
+            #elif MC_VER >= MC_1_21_11
+            return source.withMaximumPermission(mapLevelPermissionSet(levelPermission));
+            #endif
         }
     }
 

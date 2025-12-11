@@ -32,6 +32,7 @@ public enum BuiltinDimensionTypesIR {
         #endif
     );
 
+    @SuppressWarnings("ImmutableEnumChecker")
     final ResourceKey<@NotNull DimensionType> nativeValue;
 
     @Override

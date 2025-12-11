@@ -244,7 +244,7 @@ public class CommandAssistant {
         "Issue: `/IF   send-message %player:name% 1 THEN send-broadcast 2  ELSE  send-chat %player:name% 3`"
     })
     public static void assist(@NotNull CommandContext<CommandSourceStack> rootCommandContext, @NotNull SuggestionsBuilder builder) {
-        if (canUseCommandAssistant(rootCommandContext)) {
+        if (!canUseCommandAssistant(rootCommandContext)) {
             return;
         }
 
@@ -272,7 +272,9 @@ public class CommandAssistant {
     }
 
     private static boolean canUseCommandAssistant(@NotNull CommandContext<CommandSourceStack> rootCommandContext) {
-        return !rootCommandContext.getSource().hasPermission(Configs.MAIN_CONTROL_CONFIG.model().core.command.assistant.requirement.level_permission);
+        CommandSourceStack source = rootCommandContext.getSource();
+        int levelPermission = Configs.MAIN_CONTROL_CONFIG.model().core.command.assistant.requirement.level_permission;
+        return CommandHelper.Requirement.hasLevelPermission(source, levelPermission);
     }
 
     @SuppressWarnings("unused")

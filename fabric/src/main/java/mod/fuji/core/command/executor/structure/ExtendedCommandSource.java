@@ -53,7 +53,9 @@ public class ExtendedCommandSource {
     }
 
     public static ExtendedCommandSource asFakeOp(@NotNull CommandSourceStack initiatingSource, ServerPlayer executingPlayer) {
-        return new ExtendedCommandSource(initiatingSource, CommandHelper.Source.getCommandSource(executingPlayer).withPermission(4), true);
+        CommandSourceStack executingAsFakeOpSource = CommandHelper.Requirement
+            .withPermissionLevel(CommandHelper.Source.getCommandSource(executingPlayer), 4);
+        return new ExtendedCommandSource(initiatingSource, executingAsFakeOpSource, true);
     }
 
     public boolean sameSource() {

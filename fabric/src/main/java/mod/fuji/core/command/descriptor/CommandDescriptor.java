@@ -513,7 +513,7 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
                 }
 
                 /* Check the level permission. */
-                if (commandContext.hasPermission(requirement.getLevel())) {
+                if (CommandHelper.Requirement.hasLevelPermission(commandContext, requirement.getLevel())) {
                     return true;
                 }
 

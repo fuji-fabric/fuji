@@ -72,10 +72,8 @@ public class CommandSpyInitializer extends ModuleInitializer {
     private static void notifyPlayersWithLevelPermission(@NotNull CommandSourceStack commandSource, @NotNull String commandString, int notifyPlayersWithLevelPermission) {
         PlayerHelper.Lookup.getOnlinePlayers()
             .stream()
-            .filter(player -> player.hasPermissions(notifyPlayersWithLevelPermission))
-            .forEach(player -> {
-                TextHelper.sendTextByKey(player, "command_spy.notify", commandSource.getTextName(), commandString);
-            });
+            .filter(player -> CommandHelper.Requirement.hasLevelPermission(player, notifyPlayersWithLevelPermission))
+            .forEach(player -> TextHelper.sendTextByKey(player, "command_spy.notify", commandSource.getTextName(), commandString));
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)

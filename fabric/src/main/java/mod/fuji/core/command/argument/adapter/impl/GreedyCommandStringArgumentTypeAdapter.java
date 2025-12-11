@@ -130,7 +130,8 @@ public class GreedyCommandStringArgumentTypeAdapter extends BaseArgumentTypeAdap
 
         /* Define the command string and its offset. */
         // List the command suggestions in the admin view.
-        CommandSourceStack commandSource = CommandHelper.Source.getCommandSource(player).withPermission(4);
+        CommandSourceStack commandSource = CommandHelper.Requirement
+            .withPermissionLevel(CommandHelper.Source.getCommandSource(player), 4);
 
         // Initialize the command string.
         @NotNull String commandString = remainingString;

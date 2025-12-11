@@ -80,7 +80,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-level?")
     private static int $hasLevel(@CommandSource CommandSourceStack source, OfflineGameProfile player, int levelPermission) {
         GameProfile gameProfile = player.getValue();
-        boolean value = CommandHelper.Requirement.getPermissionLevel(gameProfile) >= levelPermission;
+        boolean value = CommandHelper.Requirement.getLevelPermission(gameProfile) >= levelPermission;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

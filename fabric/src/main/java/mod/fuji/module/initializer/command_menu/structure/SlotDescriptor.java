@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.document.annotation.DocStringProvider;
 import mod.fuji.core.document.annotation.Document;
@@ -19,7 +20,6 @@ import lombok.NoArgsConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class SlotDescriptor {
 
     @SuppressWarnings("RedundantIfStatement")
     public boolean canViewThisSlot(ServerPlayer player) {
-        if (!player.hasPermissions(this.viewRequirement.level)) return false;
+        if (!CommandHelper.Requirement.hasLevelPermission(player, this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
             && !this.viewRequirement.string.isEmpty()
             && !LuckpermsHelper.hasPermission(player.getUUID(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
