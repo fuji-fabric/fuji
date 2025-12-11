@@ -2,27 +2,32 @@ package mod.fuji.core.structure;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.DimensionType;
+import org.jetbrains.annotations.NotNull;
 
 @Getter
 @AllArgsConstructor
 public enum BuiltinDimensionTypesIR {
 
     OVERWORLD(
-        IdentifierIR.of(BuiltinDimensionTypes.OVERWORLD_EFFECTS)
+        net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD
     ),
     NETHER(
-        IdentifierIR.of(BuiltinDimensionTypes.NETHER_EFFECTS)
+        net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER
     ),
     END(
-        IdentifierIR.of(BuiltinDimensionTypes.END_EFFECTS)
+        net.minecraft.world.level.dimension.BuiltinDimensionTypes.END
     );
 
     @SuppressWarnings("ImmutableEnumChecker")
-    final IdentifierIR nativeValue;
+    final ResourceKey<@NotNull DimensionType> nativeValue;
 
     @Override
     public String toString() {
-        return this.getNativeValue().toString();
+        IdentifierIR identifier = RegistryHelper.getIdentifier(this.getNativeValue());
+        return identifier.toString();
     }
+
 }
