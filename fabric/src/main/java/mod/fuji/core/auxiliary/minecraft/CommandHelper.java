@@ -476,7 +476,7 @@ public class CommandHelper {
         }
 
         public static boolean hasLevelPermission(@NotNull CommandSourceStack source, int levelPermission) {
-            if (levelPermission >= 4) return false;
+            if (levelPermission > 4) return false;
 
             #if MC_VER < MC_1_21_11
             return source.hasPermission(levelPermission);
