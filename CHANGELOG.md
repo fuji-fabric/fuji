@@ -6,7 +6,8 @@
 >
 
 
-
 # 📑 Changelog
 
-- [world.gamerule] remove: this module is `removed`, due to the heavy maintain burden. (Please use https://modrinth.com/mod/worldgamerules)
+- **[world.gamerule] BREAKING:** This module has been **removed** in this version to reduce maintenance overhead.  
+  Use the standalone mod instead: https://modrinth.com/mod/worldgamerules
+- chore: Added support for **MC 1.21.11**
