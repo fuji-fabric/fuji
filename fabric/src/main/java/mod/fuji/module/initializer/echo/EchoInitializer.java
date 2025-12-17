@@ -5,7 +5,7 @@ import mod.fuji.module.initializer.ModuleInitializer;
 
 @Document(id = 1758491504173L, value = """
     This module provides a collection of `echo commands`.
-    They can be used to send `feedback texts`.
+    An `echo command` will display a `text` in a particular `place` in the client.
     """)
 public class EchoInitializer extends ModuleInitializer {
 
