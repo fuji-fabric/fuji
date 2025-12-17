@@ -1,122 +1,132 @@
 package mod.fuji.module.initializer.core;
 
+import java.util.List;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.config.Configs;
+import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.module.ModuleLoadDeterminer;
-import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
-
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 @ColorBox(id = 1751870436910L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ How to use fuji?
+    ◉ How to use this mod?
+    All modules are disabled by default.
+    Enable only the modules you need.
 
-    All `modules` are `disabled` by default.
-    You can only enable the `interested modules`.
-    Modify the `config/fuji/config.json` file to `enable` a module.
-    After that, `re-start` the server, to apply the `module enable status`.
+    Steps:
+    1. Edit `config/fuji/config.json` file.
+    2. Set the desired modules to `enabled`.
+    3. Re-start the server to apply the changes.
     """)
+
 @ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ Does fuji support the `hot reload`?
+    ◉ Does this mod support hot reload?
+    Yes. It supports hot reloading for files belonging to `enabled` modules.
+    Use the command `/fuji reload` to do that.
 
-    Yes, fuji does support to `hot reload` the `files` from a `enabled module`.
-    To do that, just issue `/fuji reload`.
+    Limitations:
+    - Modules cannot be `enabled` or `disabled` while the server is running.
 
-    However, you can't `enable` or `disable` a module when the server `is running`.
-    This is a design decision.
-    Fuji will `never load` a `disabled module` at all, for these considerations:
-    1. For flexible, you can `disable any module` you don't like.
-    2. If any other mods conflicts with `a module`, you can just `disable that module`.
-    3. You only enable the `interested modules`, and there is no performance paying for `disabled module`.
+    Design rationale:
+    1. Disabled modules are never loaded.
+    2. You can freely disable unwanted modules.
+    3. Module-level conflicts can be resolved by disabling only the affected module.
+    4. Disabled modules incur no performance cost.
     """)
-@ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Adjust the `lore` text font size.
-    If the `lore` text is too large in your UI.
-    You can configure it in `Esc` - `Options` - `Video Settings` - `GUI Scale`
 
-    ◉ Install the `client-side` mod to improve the displaying of `tooltip`.
-    If adjusting the `GUI Scale` option doesn't work well for you.
-    You can install the `ToolTipFix` mod to enhance the `tooltip` displaying.
+@ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIP, value = """
+    ◉ Adjust lore text font size
+    If lore text appears too large:
+    - Open `Esc` → `Options` → `Video Settings` → `GUI Scale`.
+
+    ◉ Improve tooltip rendering
+    If `GUI scaling` is insufficient, install the client-side mod `ToolTipFix`:
     - https://modrinth.com/mod/tooltipfix
     - https://www.curseforge.com/minecraft/mc-mods/tooltipfix
     """)
-@ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Use a `modern` text editor.
-    The most of `config files` are written in `json language`, and contains lots of lines.
-    A `modern` text editor can `highlight` the structure of the file, and check the `syntax errors` for you.
-    So that you can `read` and `edit` the config files easier.
 
-    Here are recommended text editors:
+@ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIP, value = """
+    ◉ Use a modern text editor
+    Most configuration files are written in JSON and may be large.
+    A modern text editor provides `syntax highlighting` and `error checking`.
+    It makes configuration easier and safer.
+
+    Recommended text editors:
     1. Visual Studio Code: https://code.visualstudio.com/
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
+
 @ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Setup a `test server` in your `local machine`.
-    You may have a `remote machine` (Typically named `production server`) that is `running` and `hosting` your `Minecraft network`.
-    However, it's strongly recommended to setup a `test server` in your `local machine`.
-    The `test server` should be a `mirror` of that `production server`.
-    It should contains the `mods` files and the `config files`.
+    ◉ Set up a local test server
+    If you run a remote production server, it is strongly recommended to
+    maintain a local test server.
 
-    You can modify and test new things in your `test server`.
-    After everything is configured and working properly, you just upload the `mods` and `config files` into your `remote machine`.
+    The test server should mirror the production environment:
+    1. Same mods
+    2. Same configuration files
+
+    Workflow:
+    1. Test changes locally.
+    2. Verify everything works as expected.
+    3. Upload the updated mods and configurations to the production server.
     """)
+
 @ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Open `this` GUI
-    Issue: `/fuji`
+    ◉ Open the interactive document GUI
+    Command: `/fuji`
 
-    ◉ List all `fuji commands`
-    Issue: `/fuji inspect fuji-commands`
+    ◉ List all Fuji commands
+    Command: `/fuji inspect fuji-commands`
 
-    ◉ List all `fuji permissions` and `fuji metas`
-    Issue: `/fuji inspect permissions-and-metas`
+    ◉ List all Fuji permissions and metas
+    Command: `/fuji inspect permissions-and-metas`
 
-    ◉ List all `fuji placeholders`
-    Issue: `/fuji inspect placeholders`
+    ◉ List all Fuji placeholders
+    Command: `/fuji inspect placeholders`
 
-    ◉ List all `fuji configurations`
-    Issue: `/fuji inspect configurations`
+    ◉ List all Fuji configurations
+    Command: `/fuji inspect configurations`
 
-    ◉ List all `fuji jobs`
-    Issue: `/fuji inspect jobs`
+    ◉ List all Fuji jobs
+    Command: `/fuji inspect jobs`
 
-    ◉ List all `fuji languages`
-    Issue: `/fuji inspect languages`
+    ◉ List all Fuji languages
+    Command: `/fuji inspect languages`
 
-    ◉ List all `fuji argument types`
-    Issue: `/fuji inspect argument-types`
+    ◉ List all Fuji argument types
+    Command: `/fuji inspect argument-types`
 
-    ◉ List all `fuji events`
-    Issue: `/fuji inspect events`
+    ◉ List all Fuji events
+    Command: `/fuji inspect events`
     """)
 public class CoreInitializer extends ModuleInitializer {
 
     public static void printUserGuide() {
         // NOTE: The generator is https://rebane2001.com/discord-colored-text-generator/
         String userGuide = """
-            [2;35m[1;35m
-            [Fuji User Guide][0m[2;35m
-            This is the user guide for new users.
-            To disable this user guide, you can set `print_user_guide_in_console` in `config/fuji/config.json` to `false`.
+             [2;35m[1;35m
+             [Fuji User Guide][0m[2;35m
+             This is the user guide for new users.
+             To disable this user guide, you can set `print_user_guide_in_console` in `config/fuji/config.json` to `false`.
 
-            Here are some important points:
-            - Fuji is designed to be fully-modular. [2;34mAll modules are disabled by default.[0m[2;35m
-            - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and [2;34mre-start[0m[2;35m the server to apply the modification.
-                - To use `/tpa` command, enable the `tpa` module.
-                - To use placeholders provided by fuji, enable the `placeholder` module.
-                - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
-            - To see the overview document, read the `fuji manual` pdf file in [2;34mhttps://github.com/fuji-fabric/fuji/raw/dev/docs/release/fuji.pdf[0m[2;35m
-            - To discover new things, use `/fuji inspect` command.
-            - Anything unclear, open an issue in [2;34mhttps://github.com/fuji-fabric/fuji/issues[0m[2;35m[0m[2;35m
-            - Now, issue `[2;34m/fuji[0m[2;35m` to get started!
+             Here are some important points:
+             - Fuji is designed to be fully-modular. [2;34mAll modules are disabled by default.[0m[2;35m
+             - To enable a module: modify the `[2;34mconfig/fuji/config.json[0m[2;35m` file, and [2;34mre-start[0m[2;35m the server to apply the modification.
+                 - To use `/tpa` command, enable the `tpa` module.
+                 - To use placeholders provided by fuji, enable the `placeholder` module.
+                 - To use echo commands like `/send-message`, `/send-broadcast` etc, enable the `echo` module.
+             - To see the overview document, read the `fuji manual` pdf file in [2;34mhttps://github.com/fuji-fabric/fuji/raw/dev/docs/release/fuji.pdf[0m[2;35m
+             - To discover new things, use `/fuji inspect` command.
+             - Anything unclear, open an issue in [2;34mhttps://github.com/fuji-fabric/fuji/issues[0m[2;35m[0m[2;35m
+             - Now, issue `[2;34m/fuji[0m[2;35m` to get started!
 
-            \033[0m
-           """;
+             \033[0m
+            """;
         LogUtil.info(userGuide);
     }
 
