@@ -63,9 +63,7 @@ import org.jetbrains.annotations.NotNull;
 
 @ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Set up a local test server
-    If you run a remote production server, it is strongly recommended to
-    maintain a local test server.
-
+    If you run a remote production server, it is strongly recommended to maintain a local test server.
     The test server should mirror the production environment:
     1. Same mods
     2. Same configuration files
