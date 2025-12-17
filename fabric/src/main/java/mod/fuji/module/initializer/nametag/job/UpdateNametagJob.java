@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.nametag.job;
 
 import mod.fuji.core.annotation.Unused;
+import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
@@ -21,7 +22,7 @@ public class UpdateNametagJob extends CronJob {
 
     @Override
     public void execute(JobExecutionContext context) {
-        NametagService.refreshNametagEntities();
+        ServerHelper.executeSync(NametagService::refreshNametagEntities);
     }
 
     @EventConsumer
