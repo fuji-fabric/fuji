@@ -3,7 +3,7 @@ package mod.fuji.core.service.cache.service;
 import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.core.service.cache.CacheManager;
@@ -24,29 +24,29 @@ public class GameProfileCacheService {
 
     public static void setGameProfileCache(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
-        GameProfileWrapper cachedGameProfile = getCachedGameProfile(player);
+        GameProfileIR cachedGameProfile = getCachedGameProfile(player);
         LogUtil.debug("Set game profile cache for player {}. (cache = {})", playerName, cachedGameProfile);
     }
 
-    public static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull String onlinePlayerName) {
+    public static @NotNull GameProfileIR getCachedGameProfile(@NotNull String onlinePlayerName) {
         return getCachedGameProfile(onlinePlayerName, Duration.ofDays(7), () -> supplyOnlineGameProfile(onlinePlayerName));
     }
 
-    public static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull ServerPlayer player) {
+    public static @NotNull GameProfileIR getCachedGameProfile(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return getCachedGameProfile(playerName, Duration.ofMillis(0), () -> supplyOfflineGameProfile(player));
     }
 
-    private static @NotNull GameProfileWrapper getCachedGameProfile(@NotNull String onlinePlayerName, @NotNull Duration expirationDuration, @NotNull Supplier<GameProfileWrapper> supplier) {
+    private static @NotNull GameProfileIR getCachedGameProfile(@NotNull String onlinePlayerName, @NotNull Duration expirationDuration, @NotNull Supplier<GameProfileIR> supplier) {
         return CacheManager
-            .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileWrapper.class, expirationDuration, supplier);
+            .getCachedValueOrCompute(GAME_PROFILE_CACHE_KEY, onlinePlayerName, GameProfileIR.class, expirationDuration, supplier);
     }
 
-    private static @NotNull GameProfileWrapper supplyOfflineGameProfile(@NotNull ServerPlayer serverPlayerEntity) {
-        return GameProfileWrapper.fromVanillaType(serverPlayerEntity.getGameProfile());
+    private static @NotNull GameProfileIR supplyOfflineGameProfile(@NotNull ServerPlayer serverPlayerEntity) {
+        return GameProfileIR.fromVanillaType(serverPlayerEntity.getGameProfile());
     }
 
-    private static @NotNull GameProfileWrapper supplyOnlineGameProfile(@NotNull String onlinePlayerName) {
+    private static @NotNull GameProfileIR supplyOnlineGameProfile(@NotNull String onlinePlayerName) {
         return MojangProfileFetcher
             .fetchOnlinePlayerUUID(onlinePlayerName)
             .map(uuid -> {
@@ -54,10 +54,10 @@ public class GameProfileCacheService {
 
                 return MojangProfileFetcher
                     .fetchOnlineGameProfile(onlinePlayerName)
-                    .map(GameProfileWrapper::fromVanillaType)
-                    .orElseGet(() -> GameProfileWrapper.fromVanillaType(gameProfile));
+                    .map(GameProfileIR::fromVanillaType)
+                    .orElseGet(() -> GameProfileIR.fromVanillaType(gameProfile));
             })
-            .orElseGet(() -> GameProfileWrapper.of(null, onlinePlayerName));
+            .orElseGet(() -> GameProfileIR.of(null, onlinePlayerName));
     }
 
 }

@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -108,24 +108,24 @@ public class MotdInitializer extends ModuleInitializer {
         int deltaOnline = RandomUtil.getRandomNumber(configSection.getOnlinePlayers().getDeltaMin(), configSection.getOnlinePlayers().getDeltaMax());
         int online = original.online() + deltaOnline;
 
-        List<GameProfileWrapper> sample;
+        List<GameProfileIR> sample;
         if (configSection.getHoverText().isEnable()) {
             sample = configSection
                     .getHoverText()
                     .getLines()
                     .stream()
                     .map(line -> TextHelper.Parsers.parsePlaceholderString(null, line))
-                    .map(line -> GameProfileWrapper.of(UUID.randomUUID(), line))
+                    .map(line -> GameProfileIR.of(UUID.randomUUID(), line))
                     .toList();
         } else {
             sample = original.sample()
                 .stream()
-                .map(GameProfileWrapper::fromVanillaType)
+                .map(GameProfileIR::fromVanillaType)
                 .toList();
         }
 
         var $sample = sample.stream()
-            .map(GameProfileWrapper::toVanillaType)
+            .map(GameProfileIR::toVanillaType)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();

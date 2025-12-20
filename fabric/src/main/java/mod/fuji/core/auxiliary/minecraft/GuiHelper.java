@@ -6,7 +6,7 @@ import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.Map;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,18 +88,18 @@ public class GuiHelper {
 
                     // Fetch the game profile from mojang server.
                     String onlinePlayerName = itemStack.getHoverName().getString().trim();
-                    @NotNull GameProfileWrapper gameProfileWrapper = GameProfileCacheService.getCachedGameProfile(onlinePlayerName);
+                    @NotNull GameProfileIR gameProfileIR = GameProfileCacheService.getCachedGameProfile(onlinePlayerName);
 
                     // Apply the game profile.
                     GuiElementBuilder builder = fromSlot(previousSlot);
 
-                    String texturesValue = gameProfileWrapper.getProperties().toVanillaType().get("textures")
+                    String texturesValue = gameProfileIR.getProperties().toVanillaType().get("textures")
                         .stream()
                         .findFirst()
                         .map(AuthlibHelper::getPropertyValue)
                         .orElse(Texture.LUCKY_BLOCK_TEXTURE);
 
-                    builder.setSkullOwner(texturesValue, null, gameProfileWrapper.getId());
+                    builder.setSkullOwner(texturesValue, null, gameProfileIR.getId());
 
                     for (int j = 0; j < logicalSize; j++) {
                         @Nullable GuiElementInterface currentSlot = gui.getSlot(j);

@@ -30,7 +30,7 @@ import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.world.entity.player.Player;
@@ -419,7 +419,7 @@ public class CommandHelper {
         }
 
         public static boolean isOperator(@NotNull Player player) {
-            var profile = GameProfileWrapper
+            var profile = GameProfileIR
                 .of(player)
                 .toVanillaType()
                 .orElseThrow();
@@ -486,7 +486,7 @@ public class CommandHelper {
         }
 
         public static int getLevelPermission(@NotNull GameProfile gameProfile) {
-            var vanillaType = GameProfileWrapper
+            var vanillaType = GameProfileIR
                 .fromVanillaType(gameProfile)
                 .toVanillaType()
                 .orElseThrow();

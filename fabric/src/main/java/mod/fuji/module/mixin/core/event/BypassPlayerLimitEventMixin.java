@@ -4,7 +4,7 @@ package mod.fuji.module.mixin.core.event;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import mod.fuji.annotation.PhasedMixinTemplate;
 import mod.fuji.auxiliary.WeaverUtil;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.server.BypassPlayerLimitEvent;
@@ -31,7 +31,7 @@ public class BypassPlayerLimitEventMixin {
     boolean produceBypassPlayerLimitEvent(boolean original, net.minecraft.server.players.NameAndId vanillaType)
     #endif
     {
-        return GameProfileWrapper
+        return GameProfileIR
             .fromVanillaType(vanillaType)
             .toGameProfile()
             .map(gameProfile -> {

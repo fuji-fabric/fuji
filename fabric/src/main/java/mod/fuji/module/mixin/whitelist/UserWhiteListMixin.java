@@ -3,7 +3,7 @@ package mod.fuji.module.mixin.whitelist;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import net.minecraft.server.players.UserWhiteList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +29,7 @@ public class UserWhiteListMixin {
     @ModifyReturnValue(method = "getKeyForUser(Lnet/minecraft/server/players/NameAndId;)Ljava/lang/String;", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.players.NameAndId vanillaType)
     #endif {
-        return GameProfileWrapper
+        return GameProfileIR
             .fromVanillaType(vanillaType)
             .toGameProfile()
             .map(AuthlibHelper::getName)

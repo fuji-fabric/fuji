@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
-import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
+import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
 import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
@@ -262,8 +262,8 @@ public class PlayerHelper {
                     /* Make the list from user cache. */
                     return $userCache.profilesByName.values()
                         .stream()
-                        .map(GameProfileWrapper::fromVanillaType)
-                        .map(GameProfileWrapper::toGameProfile)
+                        .map(GameProfileIR::fromVanillaType)
+                        .map(GameProfileIR::toGameProfile)
                         // Filter out invalid game profile cache entry.
                         .filter(Optional::isPresent)
                         .map(Optional::get)

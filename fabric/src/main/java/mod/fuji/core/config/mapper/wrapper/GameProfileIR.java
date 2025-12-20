@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameProfileWrapper {
+public class GameProfileIR {
 
     /**
      * The UUID of the <code>user account</code>.
@@ -31,15 +31,15 @@ public class GameProfileWrapper {
 
     @NotNull PropertyMapWrapper properties;
 
-    public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name) {
-        return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(AuthlibHelper.makePropertyMap()));
+    public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name) {
+        return new GameProfileIR(id, name, PropertyMapWrapper.fromVanillaType(AuthlibHelper.makePropertyMap()));
     }
 
-    public static @NotNull GameProfileWrapper of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
-        return new GameProfileWrapper(id, name, PropertyMapWrapper.fromVanillaType(properties));
+    public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
+        return new GameProfileIR(id, name, PropertyMapWrapper.fromVanillaType(properties));
     }
 
-    public static @NotNull GameProfileWrapper of(@NotNull Player player) {
+    public static @NotNull GameProfileIR of(@NotNull Player player) {
         return fromVanillaType(player.getGameProfile());
     }
 
@@ -78,21 +78,21 @@ public class GameProfileWrapper {
     }
 
 
-    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull GameProfile gameProfile) {
+    public static @NotNull GameProfileIR fromVanillaType(@NotNull GameProfile gameProfile) {
         UUID id = AuthlibHelper.getId(gameProfile);
         String name = AuthlibHelper.getName(gameProfile);
         PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
-        return GameProfileWrapper.of(id, name, properties);
+        return GameProfileIR.of(id, name, properties);
     }
 
     #if MC_VER >= MC_1_21_9
-    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.NameAndId playerConfigEntry) {
-        return GameProfileWrapper.of(playerConfigEntry.id(), playerConfigEntry.name());
+    public static @NotNull GameProfileIR fromVanillaType(@NotNull net.minecraft.server.players.NameAndId playerConfigEntry) {
+        return GameProfileIR.of(playerConfigEntry.id(), playerConfigEntry.name());
     }
 
-    public static @NotNull GameProfileWrapper fromVanillaType(@NotNull net.minecraft.server.players.CachedUserNameToIdResolver.GameProfileInfo gameProfileInfo) {
+    public static @NotNull GameProfileIR fromVanillaType(@NotNull net.minecraft.server.players.CachedUserNameToIdResolver.GameProfileInfo gameProfileInfo) {
         var compound = gameProfileInfo.nameAndId();
-        return GameProfileWrapper.of(compound.id(), compound.name());
+        return GameProfileIR.of(compound.id(), compound.name());
     }
     #endif
 
