@@ -64,7 +64,7 @@ public class GameProfileIR {
     #if MC_VER <= MC_1_21_6
     public static @NotNull GameProfileIR from(@NotNull net.minecraft.server.players.GameProfileCache.GameProfileInfo gameProfileInfo) {
         var compound = gameProfileInfo.getProfile();
-        return GameProfileIR.of(compound.getId(), compound.getName());
+        return GameProfileIR.from(compound.getId(), compound.getName());
     }
     #endif
 
