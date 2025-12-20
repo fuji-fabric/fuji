@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum AdvancementFrameTypeWrapper {
+public enum AdvancementFrameTypeIR {
     TASK(
         #if MC_VER <= MC_1_20_2
         net.minecraft.advancements.FrameType.TASK

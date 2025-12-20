@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import mod.fuji.core.structure.AdvancementFrameTypeWrapper;
+import mod.fuji.core.structure.AdvancementFrameTypeIR;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -660,7 +660,7 @@ public class TextHelper {
     }
 
     public static void sendToastByText(@NotNull ServerPlayer player, @NotNull ItemStack icon, @NotNull Component text) {
-        ToastSender.sendToast(player, AdvancementFrameTypeWrapper.TASK, icon, text);
+        ToastSender.sendToast(player, AdvancementFrameTypeIR.TASK, icon, text);
     }
 
     /**

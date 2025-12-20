@@ -53,7 +53,7 @@ public class GsonMapper {
         // Register type adapters.
         .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
-        .registerTypeAdapter(PropertyMapIR.class, new PropertyMapIR.PropertyMapWrapperAdapter())
+        .registerTypeAdapter(PropertyMapIR.class, new PropertyMapIR.PropertyMapIRAdapter())
         // Let's create it.
         .create();
 

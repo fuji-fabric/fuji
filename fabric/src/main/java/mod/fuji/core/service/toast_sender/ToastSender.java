@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import mod.fuji.core.structure.AdvancementFrameTypeWrapper;
+import mod.fuji.core.structure.AdvancementFrameTypeIR;
 import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Criterion;
@@ -25,7 +25,7 @@ public class ToastSender {
     private static final String DUMMY_RESOURCE_IMAGE_IDENTIFIER = "minecraft:textures/gui/advancements/backgrounds/end.png";
     private static final IdentifierIR SEND_TOAST_IDENTIFIER = IdentifierIR.makeIdentifierOrThrow("custom", "custom");
 
-    public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementFrameTypeWrapper advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
+    public static void sendToast(@NotNull ServerPlayer player, @NotNull AdvancementFrameTypeIR advancementFrame, @NotNull ItemStack icon, @NotNull Component title) {
         /* Make an advancement display. */
         var dummyResourceId = IdentifierIR
             .makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)

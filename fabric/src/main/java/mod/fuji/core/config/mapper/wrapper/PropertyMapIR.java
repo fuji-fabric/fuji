@@ -55,7 +55,7 @@ public class PropertyMapIR {
     /**
  * Implement the gson type adapter for wrapper type.
  **/
-    public static class PropertyMapWrapperAdapter implements JsonSerializer<PropertyMapIR>, JsonDeserializer<PropertyMapIR> {
+    public static class PropertyMapIRAdapter implements JsonSerializer<PropertyMapIR>, JsonDeserializer<PropertyMapIR> {
 
         private static final String NAME_KEY = "name";
         private static final String VALUE_KEY = "value";
