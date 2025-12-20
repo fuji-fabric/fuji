@@ -34,12 +34,15 @@ public abstract class PlayerTeleportPreEventMixin {
 
     #elif MC_VER > MC_1_21
 
+    /** This injector doesn't cover the teleportation initialized by portal entities.
+     * If some other mods call the teleport(TeleportTransition teleportTransition) method directly, then this injector will not cover it.
+     * It's better to ignore these kinds of teleportation.
+     **/
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FFZ)Z", at = @At("HEAD"), cancellable = true)
     private void $producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, Set<net.minecraft.world.entity.Relative> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsWrapper.of(set), cir);
     }
     #endif
-
 
 
     @EventProducer(PlayerTeleportPreEvent.class)
