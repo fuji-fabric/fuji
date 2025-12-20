@@ -24,12 +24,12 @@ public abstract class PlayerTeleportPreEventMixin {
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDFF)V", at = @At("HEAD"), cancellable = true)
     private void $producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, float g, float h, CallbackInfo ci)
     {
-        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsWrapper.empty(), ci);
+        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsIR.empty(), ci);
     }
 
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FF)Z", at = @At("HEAD"), cancellable = true)
     private void $producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, Set<net.minecraft.world.entity.RelativeMovement> set, float g, float h, CallbackInfoReturnable<Boolean> cir) {
-        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsWrapper.of(set), cir);
+        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsIR.of(set), cir);
     }
 
     #elif MC_VER > MC_1_21
