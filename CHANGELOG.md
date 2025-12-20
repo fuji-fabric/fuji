@@ -9,3 +9,5 @@
 # 📑 Changelog
 
 - [core] fix: improved the compatibility of injectors to support `neoforge` platform + `connector` mod. (#536)
+- [core] fix: the `player head` textures broken since `MC 1.21.9`.
+  - affected modules: `head` module and `skin` module.

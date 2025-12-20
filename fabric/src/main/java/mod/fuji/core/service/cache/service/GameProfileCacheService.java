@@ -1,6 +1,5 @@
 package mod.fuji.core.service.cache.service;
 
-import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.config.mapper.representation.GameProfileIR;
@@ -47,12 +46,10 @@ public class GameProfileCacheService {
         return MojangProfileFetcher
             .fetchOnlinePlayerUUID(onlinePlayerName)
             .map(uuid -> {
-                GameProfile gameProfile = new GameProfile(uuid, onlinePlayerName);
-
                 return MojangProfileFetcher
                     .fetchOnlineGameProfile(onlinePlayerName)
                     .map(GameProfileIR::from)
-                    .orElseGet(() -> GameProfileIR.from(gameProfile));
+                    .orElseGet(() -> GameProfileIR.from(uuid, onlinePlayerName));
             })
             .orElseGet(() -> GameProfileIR.from(null, onlinePlayerName));
     }

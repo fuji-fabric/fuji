@@ -31,16 +31,13 @@ public class GameProfileIR {
 
     @NotNull PropertyMapIR properties;
 
-    public static @NotNull GameProfileIR from(@Nullable UUID id, @NotNull String name) {
-        return new GameProfileIR(id, name, PropertyMapIR.fromNative(AuthlibHelper.makePropertyMap()));
-    }
-
     public static @NotNull GameProfileIR from(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
         return new GameProfileIR(id, name, PropertyMapIR.fromNative(properties));
     }
 
-    public static @NotNull GameProfileIR from(@NotNull Player player) {
-        return from(player.getGameProfile());
+    public static @NotNull GameProfileIR from(@Nullable UUID id, @NotNull String name) {
+        PropertyMap properties = AuthlibHelper.makePropertyMap();
+        return from(id, name, properties);
     }
 
     public static @NotNull GameProfileIR from(@NotNull GameProfile gameProfile) {
@@ -48,6 +45,10 @@ public class GameProfileIR {
         String name = AuthlibHelper.getGameProfileName(gameProfile);
         PropertyMap properties = AuthlibHelper.getGameProfileProperties(gameProfile);
         return GameProfileIR.from(id, name, properties);
+    }
+
+    public static @NotNull GameProfileIR from(@NotNull Player player) {
+        return from(player.getGameProfile());
     }
 
     #if MC_VER >= MC_1_21_9

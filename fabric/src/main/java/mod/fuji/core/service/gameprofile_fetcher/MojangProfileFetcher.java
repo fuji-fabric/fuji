@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import mod.fuji.core.config.mapper.representation.GameProfileIR;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -18,9 +19,15 @@ public class MojangProfileFetcher {
     private static final String API_SERVER = "https://api.mojang.com/users/profiles/minecraft/";
     private static final Pattern UUID_CONVERTER_PATTERN = Pattern.compile("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)");
 
+    @SuppressWarnings("CodeBlock2Expr")
     public static Optional<GameProfile> fetchOnlineGameProfile(@NotNull String playerName) {
         return fetchOnlinePlayerUUID(playerName)
-            .map(uuid -> new GameProfile(uuid, playerName))
+            .map(uuid -> {
+                return GameProfileIR
+                    .from(uuid, playerName)
+                    .toGameProfile()
+                    .orElseThrow();
+            })
             .map(gameProfile -> {
                 MojangSkinProvider
                     .fetchSkin(playerName)
