@@ -4,12 +4,13 @@ import com.google.common.net.InetAddresses;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import java.util.Optional;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
+import mod.fuji.core.config.mapper.representation.GameProfileIR;
 import mod.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import mod.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
@@ -77,11 +78,18 @@ public class TempBanInitializer extends ModuleInitializer {
         PlayerList playerManager = server.getPlayerList();
         Date expire = DurationParser.parseIntoExpirationDate(expiry.getValue()).orElseThrow();
 
-        for (GameProfile gameProfile : collection.getValue().stream().map(GameProfileIR::toGameProfile).toList()) {
-            // Add.
-            GameProfileIR gameProfileIR = GameProfileIR.fromVanillaType(gameProfile);
+        for (GameProfile gameProfile : collection.getValue()
+            .stream()
+            .map(GameProfileIR::from)
+            .map(GameProfileIR::toGameProfile)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .toList()) {
 
-            UserBanListEntry bannedPlayerEntry = new UserBanListEntry(gameProfileIR.toVanillaType().orElseThrow(), null, source.getTextName(), expire, reason.getValue());
+            // Add.
+            GameProfileIR gameProfileIR = GameProfileIR.from(gameProfile);
+
+            UserBanListEntry bannedPlayerEntry = new UserBanListEntry(gameProfileIR.toUserProfile().orElseThrow(), null, source.getTextName(), expire, reason.getValue());
             playerManager.getBans().add(bannedPlayerEntry);
             source.sendSuccess(() -> Component.translatable("commands.ban.success", Component.literal(AuthlibHelper.getGameProfileName(gameProfile)), bannedPlayerEntry.getReason()), true);
 

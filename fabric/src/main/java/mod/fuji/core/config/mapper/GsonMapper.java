@@ -29,7 +29,7 @@ import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.config.annotation.NotNullEnumType;
 import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
-import mod.fuji.core.config.mapper.wrapper.PropertyMapIR;
+import mod.fuji.core.config.mapper.representation.PropertyMapIR;
 import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
 import org.jetbrains.annotations.NotNull;
 

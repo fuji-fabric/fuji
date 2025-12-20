@@ -12,7 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.module.initializer.skin.SkinInitializer;
-import mod.fuji.core.config.mapper.wrapper.PropertyIR;
+import mod.fuji.core.config.mapper.representation.PropertyIR;
 import mod.fuji.module.initializer.skin.structure.SkinDataNode;
 import mod.fuji.module.initializer.skin.structure.SkinDescriptor;
 import mod.fuji.module.initializer.skin.structure.SkinStorage;

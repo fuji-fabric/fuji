@@ -1,4 +1,4 @@
-package mod.fuji.core.config.mapper.wrapper;
+package mod.fuji.core.config.mapper.representation;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

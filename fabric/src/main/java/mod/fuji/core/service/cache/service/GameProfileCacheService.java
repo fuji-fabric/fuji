@@ -3,7 +3,7 @@ package mod.fuji.core.service.cache.service;
 import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
+import mod.fuji.core.config.mapper.representation.GameProfileIR;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.core.service.cache.CacheManager;
@@ -43,7 +43,7 @@ public class GameProfileCacheService {
     }
 
     private static @NotNull GameProfileIR supplyOfflineGameProfile(@NotNull ServerPlayer serverPlayerEntity) {
-        return GameProfileIR.fromVanillaType(serverPlayerEntity.getGameProfile());
+        return GameProfileIR.from(serverPlayerEntity.getGameProfile());
     }
 
     private static @NotNull GameProfileIR supplyOnlineGameProfile(@NotNull String onlinePlayerName) {
@@ -54,10 +54,10 @@ public class GameProfileCacheService {
 
                 return MojangProfileFetcher
                     .fetchOnlineGameProfile(onlinePlayerName)
-                    .map(GameProfileIR::fromVanillaType)
-                    .orElseGet(() -> GameProfileIR.fromVanillaType(gameProfile));
+                    .map(GameProfileIR::from)
+                    .orElseGet(() -> GameProfileIR.from(gameProfile));
             })
-            .orElseGet(() -> GameProfileIR.of(null, onlinePlayerName));
+            .orElseGet(() -> GameProfileIR.from(null, onlinePlayerName));
     }
 
 }

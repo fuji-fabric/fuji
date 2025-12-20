@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
+import mod.fuji.core.config.mapper.representation.GameProfileIR;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -115,17 +115,17 @@ public class MotdInitializer extends ModuleInitializer {
                     .getLines()
                     .stream()
                     .map(line -> TextHelper.Parsers.parsePlaceholderString(null, line))
-                    .map(line -> GameProfileIR.of(UUID.randomUUID(), line))
+                    .map(line -> GameProfileIR.from(UUID.randomUUID(), line))
                     .toList();
         } else {
             sample = original.sample()
                 .stream()
-                .map(GameProfileIR::fromVanillaType)
+                .map(GameProfileIR::from)
                 .toList();
         }
 
         var $sample = sample.stream()
-            .map(GameProfileIR::toVanillaType)
+            .map(GameProfileIR::toUserProfile)
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();

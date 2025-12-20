@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.skin.structure;
 
-import mod.fuji.core.config.mapper.wrapper.PropertyIR;
+import mod.fuji.core.config.mapper.representation.PropertyIR;
 import mod.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -30,7 +30,7 @@ import mod.fuji.core.command.extension.CommandNodeExtension;
 import mod.fuji.core.command.processor.CommandAnnotationProcessor;
 import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
-import mod.fuji.core.config.mapper.wrapper.GameProfileIR;
+import mod.fuji.core.config.mapper.representation.GameProfileIR;
 import mod.fuji.core.document.annotation.TestCase;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.world.entity.player.Player;
@@ -420,8 +420,8 @@ public class CommandHelper {
 
         public static boolean isOperator(@NotNull Player player) {
             var profile = GameProfileIR
-                .of(player)
-                .toVanillaType()
+                .from(player)
+                .toUserProfile()
                 .orElseThrow();
             return PlayerHelper.getPlayerManager().isOp(profile);
         }
@@ -486,16 +486,16 @@ public class CommandHelper {
         }
 
         public static int getLevelPermission(@NotNull GameProfile gameProfile) {
-            var vanillaType = GameProfileIR
-                .fromVanillaType(gameProfile)
-                .toVanillaType()
+            var profile = GameProfileIR
+                .from(gameProfile)
+                .toUserProfile()
                 .orElseThrow();
 
             #if MC_VER < MC_1_21_11
-            return ServerHelper.getServer().getProfilePermissions(vanillaType);
+            return ServerHelper.getServer().getProfilePermissions(profile);
             #elif MC_VER >= MC_1_21_11
             return ServerHelper.getServer()
-                .getProfilePermissions(vanillaType)
+                .getProfilePermissions(profile)
                 .level()
                 .id();
             #endif
