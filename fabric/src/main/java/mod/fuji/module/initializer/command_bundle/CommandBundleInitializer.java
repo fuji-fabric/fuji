@@ -189,7 +189,7 @@ public class CommandBundleInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHER, consumerPriority = EventConsumer.HIGHER)
     private static void registerAllBundleCommands(@Unused CommandRegistrationEvent event) {
-        ServerHelper.Lifecycle.withServerInstantiated(CommandBundleService::registerAllBundleCommands);
+        ServerHelper.Lifecycle.ifServerInstantiated(CommandBundleService::registerAllBundleCommands);
     }
 
     @TestCase(action = "Issue `/reload`, `/fuji reload`, `/fuji inspect fuji-commands` and `/command-bundle list`", targets = "The bundle commands should be able to register and un-register on the fly.")

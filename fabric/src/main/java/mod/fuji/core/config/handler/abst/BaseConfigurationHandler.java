@@ -2,6 +2,7 @@ package mod.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
 import java.util.Comparator;
+import java.util.Objects;
 import mod.fuji.core.annotation.CallerSensitive;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.IOUtil;
@@ -131,6 +132,7 @@ public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter 
             /* Map *.json file into JsonObject instance. */
             @Cleanup Reader jsonReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath.toFile()), StandardCharsets.UTF_8));
             JsonObject jsonObject = GsonMapper.fromJson(jsonReader, JsonObject.class);
+            Objects.requireNonNull(jsonObject, "Failed to read a valid Json Object from file %s.".formatted(this.filePath));
 
             /* Validate the JsonObject instance. */
             validateModel(jsonObject, getDefaultModelAsJsonTree());

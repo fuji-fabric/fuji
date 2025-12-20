@@ -37,7 +37,7 @@ public class ServerHelper {
             return server != null;
         }
 
-        public static void withServerInstantiated(Runnable runnable) {
+        public static void ifServerInstantiated(Runnable runnable) {
             if (isServerInstantiated()) {
                 runnable.run();
             }

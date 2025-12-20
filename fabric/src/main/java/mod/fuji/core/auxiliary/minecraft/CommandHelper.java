@@ -230,7 +230,7 @@ public class CommandHelper {
         public static void updateCommandTree(@NotNull Commands commandManager) {
             // NOTE: No need to update if the command manager is not initialized.
             ServerHelper.Lifecycle
-                .withServerInstantiated(() -> {
+                .ifServerInstantiated(() -> {
                     PlayerHelper.Lookup
                         .getOnlinePlayers()
                         .forEach(commandManager::sendCommands);
