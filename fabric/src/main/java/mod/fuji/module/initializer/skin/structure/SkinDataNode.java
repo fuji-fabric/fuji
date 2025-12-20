@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.skin.structure;
 
-import mod.fuji.core.config.mapper.wrapper.PropertyWrapper;
+import mod.fuji.core.config.mapper.wrapper.PropertyIR;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SkinDataNode {
     String playerName;
-    PropertyWrapper skinProperty;
+    PropertyIR skinProperty;
 }

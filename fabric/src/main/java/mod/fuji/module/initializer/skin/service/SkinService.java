@@ -12,7 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.config.mapper.GsonMapper;
 import mod.fuji.module.initializer.skin.SkinInitializer;
-import mod.fuji.core.config.mapper.wrapper.PropertyWrapper;
+import mod.fuji.core.config.mapper.wrapper.PropertyIR;
 import mod.fuji.module.initializer.skin.structure.SkinDataNode;
 import mod.fuji.module.initializer.skin.structure.SkinDescriptor;
 import mod.fuji.module.initializer.skin.structure.SkinStorage;
@@ -129,7 +129,7 @@ public class SkinService {
 
             /* Update the skin data. */
             SkinStorage.withSkinData(target, node -> {
-                node.setSkinProperty(PropertyWrapper.fromVanillaType(skinProperty));
+                node.setSkinProperty(PropertyIR.fromVanillaType(skinProperty));
                 return null;
             });
 

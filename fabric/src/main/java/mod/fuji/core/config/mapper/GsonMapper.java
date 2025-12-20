@@ -29,7 +29,7 @@ import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.config.annotation.NotNullEnumType;
 import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
-import mod.fuji.core.config.mapper.wrapper.PropertyMapWrapper;
+import mod.fuji.core.config.mapper.wrapper.PropertyMapIR;
 import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +53,7 @@ public class GsonMapper {
         // Register type adapters.
         .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
-        .registerTypeAdapter(PropertyMapWrapper.class, new PropertyMapWrapper.PropertyMapWrapperAdapter())
+        .registerTypeAdapter(PropertyMapIR.class, new PropertyMapIR.PropertyMapWrapperAdapter())
         // Let's create it.
         .create();
 

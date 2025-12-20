@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.skin.structure;
 
-import mod.fuji.core.config.mapper.wrapper.PropertyWrapper;
+import mod.fuji.core.config.mapper.wrapper.PropertyIR;
 import mod.fuji.core.document.annotation.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +19,6 @@ public class SkinDescriptor {
     @Document(id = 1753249413432L, value = """
         The `properties` of this `skin`.
         """)
-    PropertyWrapper skinProperty;
+    PropertyIR skinProperty;
 
 }

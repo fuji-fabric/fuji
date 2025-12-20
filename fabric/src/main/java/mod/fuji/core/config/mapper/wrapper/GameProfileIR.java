@@ -29,14 +29,14 @@ public class GameProfileIR {
      */
     @NotNull String name;
 
-    @NotNull PropertyMapWrapper properties;
+    @NotNull PropertyMapIR properties;
 
     public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name) {
-        return new GameProfileIR(id, name, PropertyMapWrapper.fromVanillaType(AuthlibHelper.makePropertyMap()));
+        return new GameProfileIR(id, name, PropertyMapIR.fromVanillaType(AuthlibHelper.makePropertyMap()));
     }
 
     public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
-        return new GameProfileIR(id, name, PropertyMapWrapper.fromVanillaType(properties));
+        return new GameProfileIR(id, name, PropertyMapIR.fromVanillaType(properties));
     }
 
     public static @NotNull GameProfileIR of(@NotNull Player player) {

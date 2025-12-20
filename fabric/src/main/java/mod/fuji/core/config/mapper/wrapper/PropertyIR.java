@@ -10,16 +10,16 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropertyWrapper {
+public class PropertyIR {
     String name;
     String value;
     String signature;
 
-    public static @NotNull PropertyWrapper fromVanillaType(@NotNull Property property) {
+    public static @NotNull PropertyIR fromVanillaType(@NotNull Property property) {
         String name = AuthlibHelper.getPropertyName(property);
         String value = AuthlibHelper.getPropertyValue(property);
         String signature = AuthlibHelper.getPropertySignature(property);
-        return new PropertyWrapper(name, value, signature);
+        return new PropertyIR(name, value, signature);
     }
 
     public @NotNull Property toVanillaType() {

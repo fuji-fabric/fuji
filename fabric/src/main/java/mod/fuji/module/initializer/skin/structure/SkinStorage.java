@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.config.mapper.wrapper.PropertyWrapper;
+import mod.fuji.core.config.mapper.wrapper.PropertyIR;
 import mod.fuji.module.initializer.skin.SkinInitializer;
 import mod.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import mod.fuji.module.initializer.skin.service.SkinService;
@@ -22,17 +22,17 @@ public class SkinStorage {
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
             LogUtil.info("Create the new skin data for player {}. (Skin = specified default skin)", playerName);
-            return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType(SkinService.getPreferredDefaultSkin()));
+            return new SkinDataNode(playerName, PropertyIR.fromVanillaType(SkinService.getPreferredDefaultSkin()));
         } else {
             Optional<Property> mojangSkinProperty = MojangSkinProvider.fetchSkin(playerName);
             return mojangSkinProperty
                 .map($mojangSkinProperty -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Mojang online skin)", playerName);
-                    return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType($mojangSkinProperty));
+                    return new SkinDataNode(playerName, PropertyIR.fromVanillaType($mojangSkinProperty));
                 })
                 .orElseGet(() -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Failed to fetch Mojang online skin, fallback to the default skin.)", playerName);
-                    return new SkinDataNode(playerName, PropertyWrapper.fromVanillaType(SkinService.getPreferredDefaultSkin()));
+                    return new SkinDataNode(playerName, PropertyIR.fromVanillaType(SkinService.getPreferredDefaultSkin()));
                 });
         }
     }

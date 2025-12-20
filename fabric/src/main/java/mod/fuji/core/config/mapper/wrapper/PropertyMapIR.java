@@ -23,20 +23,20 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropertyMapWrapper {
+public class PropertyMapIR {
 
-     Multimap<String, PropertyWrapper> properties;
+     Multimap<String, PropertyIR> properties;
 
-     public static @NotNull PropertyMapWrapper fromVanillaType(@NotNull PropertyMap vanilla) {
-        Multimap<String, PropertyWrapper> map = HashMultimap.create();
+     public static @NotNull PropertyMapIR fromVanillaType(@NotNull PropertyMap vanilla) {
+        Multimap<String, PropertyIR> map = HashMultimap.create();
 
         for (String key : vanilla.keySet().stream().toList()) {
             for (Property property : vanilla.get(key)) {
-                map.put(key, PropertyWrapper.fromVanillaType(property));
+                map.put(key, PropertyIR.fromVanillaType(property));
             }
         }
 
-        return new PropertyMapWrapper(map);
+        return new PropertyMapIR(map);
     }
 
     public @NotNull PropertyMap toVanillaType() {
@@ -55,18 +55,18 @@ public class PropertyMapWrapper {
     /**
  * Implement the gson type adapter for wrapper type.
  **/
-    public static class PropertyMapWrapperAdapter implements JsonSerializer<PropertyMapWrapper>, JsonDeserializer<PropertyMapWrapper> {
+    public static class PropertyMapWrapperAdapter implements JsonSerializer<PropertyMapIR>, JsonDeserializer<PropertyMapIR> {
 
         private static final String NAME_KEY = "name";
         private static final String VALUE_KEY = "value";
         private static final String SIGNATURE_KEY = "signature";
 
         @Override
-        public JsonElement serialize(@NotNull PropertyMapWrapper src, Type typeOfSrc, JsonSerializationContext context) {
+        public JsonElement serialize(@NotNull PropertyMapIR src, Type typeOfSrc, JsonSerializationContext context) {
             final JsonArray result = new JsonArray();
 
             if (src.getProperties() != null) {
-                for (PropertyWrapper wrapper : src.getProperties().values()) {
+                for (PropertyIR wrapper : src.getProperties().values()) {
                     JsonObject object = new JsonObject();
                     object.addProperty(NAME_KEY, wrapper.getName());
                     object.addProperty(VALUE_KEY, wrapper.getValue());
@@ -83,8 +83,8 @@ public class PropertyMapWrapper {
         }
 
         @Override
-        public PropertyMapWrapper deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            final Multimap<String, PropertyWrapper> map = HashMultimap.create();
+        public PropertyMapIR deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            final Multimap<String, PropertyIR> map = HashMultimap.create();
 
             if (json.isJsonObject()) {
                 JsonObject object = json.getAsJsonObject();
@@ -103,13 +103,13 @@ public class PropertyMapWrapper {
                 }
             }
 
-            return new PropertyMapWrapper(map);
+            return new PropertyMapIR(map);
         }
 
-        private static @NotNull PropertyWrapper parseProperty(String name, JsonObject obj) {
+        private static @NotNull PropertyIR parseProperty(String name, JsonObject obj) {
             String value = obj.getAsJsonPrimitive(VALUE_KEY).getAsString();
             String signature = obj.has(SIGNATURE_KEY) ? obj.getAsJsonPrimitive(SIGNATURE_KEY).getAsString() : null;
-            return new PropertyWrapper(name, value, signature);
+            return new PropertyIR(name, value, signature);
         }
     }
 }
