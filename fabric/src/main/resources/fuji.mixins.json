@@ -22,6 +22,7 @@
     "command_toolbox.hat.LivingEntityMixin",
     "command_toolbox.hat.PlayerScreenHandlerMixin",
     "command_toolbox.reply.MsgCommandMixin",
+    "core.authlib.GameProfileMixin",
     "core.authlib.PropertyMapMixin",
     "core.command.CommandContextBuilderMixin",
     "core.command.CommandDispatcherMixin",

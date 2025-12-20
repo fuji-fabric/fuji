@@ -28,11 +28,11 @@ public class PropertyMapIR {
 
     Multimap<String, PropertyIR> properties;
 
-    public static @NotNull PropertyMapIR fromNative(@NotNull PropertyMap vanilla) {
+    public static @NotNull PropertyMapIR fromNative(@NotNull PropertyMap nativeValue) {
         Multimap<String, PropertyIR> map = HashMultimap.create();
 
-        for (String key : vanilla.keySet().stream().toList()) {
-            for (Property property : vanilla.get(key)) {
+        for (String key : nativeValue.keySet().stream().toList()) {
+            for (Property property : nativeValue.get(key)) {
                 map.put(key, PropertyIR.fromNative(property));
             }
         }

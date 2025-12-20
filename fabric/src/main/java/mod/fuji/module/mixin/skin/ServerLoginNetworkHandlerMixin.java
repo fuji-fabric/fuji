@@ -71,7 +71,11 @@ public abstract class ServerLoginNetworkHandlerMixin {
     void applyTheFetchedSkin(@NotNull GameProfile gameProfile, CallbackInfo ci)
     #endif
     {
-        GameProfile currentGameProfile = getCurrentGameProfile();
+        @Nullable GameProfile currentGameProfile = getCurrentGameProfile();
+        if (currentGameProfile == null) {
+            return;
+        }
+
         if (this.skinFuture == null) {
             LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", AuthlibHelper.getGameProfileName(currentGameProfile));
             return;

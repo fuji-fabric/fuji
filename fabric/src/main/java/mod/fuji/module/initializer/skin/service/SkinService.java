@@ -34,7 +34,9 @@ import org.jetbrains.annotations.Nullable;
 public class SkinService {
 
     public static @NotNull Property getEffectiveSkin(GameProfile gameProfile) {
-        return SkinStorage.withSkinData(gameProfile, SkinDataNode::getSkinProperty).toNative();
+        return SkinStorage
+            .withSkinData(gameProfile, SkinDataNode::getSkinProperty)
+            .toNative();
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
