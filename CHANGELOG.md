@@ -6,6 +6,7 @@
 >
 
 
+
 # 📑 Changelog
 
 - **[core] Fix:** Players were sharing a single empty `PropertyMap` instance since MC **1.21.9**.
