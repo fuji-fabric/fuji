@@ -4,7 +4,7 @@ import mod.fuji.core.event.message.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import mod.fuji.core.structure.RelativeFlagsWrapper;
+import mod.fuji.core.structure.RelativeFlagsIR;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
@@ -22,5 +22,5 @@ public class PlayerTeleportPreEvent extends BaseEvent {
     double destinationZ;
     float destinationYaw;
     float destinationPitch;
-    RelativeFlagsWrapper relativeFlagsWrapper;
+    RelativeFlagsIR relativeFlagsIR;
 }

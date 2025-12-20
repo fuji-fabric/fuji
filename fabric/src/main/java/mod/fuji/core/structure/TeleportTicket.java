@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class TeleportTicket extends InterruptibleTicket {
 
     private final GlobalPos destination;
-    private final RelativeFlagsWrapper flags;
+    private final RelativeFlagsIR flags;
 
     private TeleportTicket(@NotNull ServerPlayer player
         , GlobalPos source
@@ -21,7 +21,7 @@ public class TeleportTicket extends InterruptibleTicket {
         , float progress
         , int totalMs
         , Interruptible interruptible
-        , RelativeFlagsWrapper flags
+        , RelativeFlagsIR flags
     ) {
         super(
             new ServerBossEvent(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossEvent.BossBarColor.BLUE, net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS)
@@ -37,12 +37,12 @@ public class TeleportTicket extends InterruptibleTicket {
         this.getBossBar().setProgress(progress);
     }
 
-    public static @NotNull TeleportTicket make(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, RelativeFlagsWrapper flags) {
+    public static @NotNull TeleportTicket make(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination, int totalMs, Interruptible interruptible, RelativeFlagsIR flags) {
         return new TeleportTicket(player, source, destination, 0f, totalMs, interruptible, flags);
     }
 
     public static @NotNull TeleportTicket makeVipTicket(@NotNull ServerPlayer player, GlobalPos source, GlobalPos destination) {
-        var absolute = RelativeFlagsWrapper.empty();
+        var absolute = RelativeFlagsIR.empty();
         return new TeleportTicket(player, source, destination, 1f, 2048, Interruptible.makeUninterruptible(), absolute);
     }
 

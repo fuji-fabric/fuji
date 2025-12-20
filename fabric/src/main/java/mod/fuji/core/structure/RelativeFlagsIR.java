@@ -4,7 +4,7 @@ import java.util.Set;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class RelativeFlagsWrapper {
+public class RelativeFlagsIR {
 
    #if MC_VER <= MC_1_21
    Set<net.minecraft.world.entity.RelativeMovement>
@@ -12,8 +12,8 @@ public class RelativeFlagsWrapper {
    Set<net.minecraft.world.entity.Relative>
    #endif flags;
 
-   public static RelativeFlagsWrapper empty() {
-       return RelativeFlagsWrapper.of(Set.of());
+   public static RelativeFlagsIR empty() {
+       return RelativeFlagsIR.of(Set.of());
    }
 
 }

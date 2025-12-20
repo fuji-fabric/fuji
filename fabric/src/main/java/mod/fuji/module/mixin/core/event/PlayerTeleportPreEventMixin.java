@@ -6,7 +6,7 @@ import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import java.util.Set;
-import mod.fuji.core.structure.RelativeFlagsWrapper;
+import mod.fuji.core.structure.RelativeFlagsIR;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,14 +40,14 @@ public abstract class PlayerTeleportPreEventMixin {
      **/
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FFZ)Z", at = @At("HEAD"), cancellable = true)
     private void $producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, Set<net.minecraft.world.entity.Relative> set, float g, float h, boolean bl, CallbackInfoReturnable<Boolean> cir) {
-        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsWrapper.of(set), cir);
+        producePlayerPreTeleportEvent(serverWorld, d, e, f, g, h, RelativeFlagsIR.of(set), cir);
     }
     #endif
 
 
     @EventProducer(PlayerTeleportPreEvent.class)
     @Unique
-    private void producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, float g, float h, RelativeFlagsWrapper flags, CallbackInfo ci) {
+    private void producePlayerPreTeleportEvent(ServerLevel serverWorld, double d, double e, double f, float g, float h, RelativeFlagsIR flags, CallbackInfo ci) {
         final ServerPlayer player = (ServerPlayer) (Object) this;
         PlayerTeleportPreEvent event = new PlayerTeleportPreEvent(ci, player, serverWorld, d, e, f, g, h, flags);
         EventManager.dispatchEvent(PlayerTeleportPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);

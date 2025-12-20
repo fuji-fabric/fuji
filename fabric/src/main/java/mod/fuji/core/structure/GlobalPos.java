@@ -19,8 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import java.util.Set;
-import java.util.EnumSet;
 
 @Data
 @NoArgsConstructor
@@ -97,7 +95,7 @@ public class GlobalPos {
         return x * x + y * y + z * z;
     }
 
-    public void teleport(@NotNull ServerPlayer player, RelativeFlagsWrapper flagsWrapper) {
+    public void teleport(@NotNull ServerPlayer player, RelativeFlagsIR flagsWrapper) {
         /* Get the dimension instance from server. */
         Optional<ServerLevel> dimension = WorldHelper.getWorld(this.level);
         dimension.ifPresentOrElse($dimension -> {
@@ -111,6 +109,6 @@ public class GlobalPos {
     }
 
     public void teleport(@NotNull ServerPlayer player) {
-        teleport(player, RelativeFlagsWrapper.empty());
+        teleport(player, RelativeFlagsIR.empty());
     }
 }
