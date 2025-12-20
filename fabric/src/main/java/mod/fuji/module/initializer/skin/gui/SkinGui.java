@@ -34,7 +34,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     @Override
     protected @NotNull GuiElementInterface toGuiElement(@NotNull SkinDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
-        Property skinProperty = entity.getSkinProperty().toVanillaType();
+        Property skinProperty = entity.getSkinProperty().toNative();
         String value = AuthlibHelper.getPropertyValue(skinProperty);
         builder
             .setItem(Items.PLAYER_HEAD)
@@ -45,7 +45,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
             .setSkullOwner(value)
             .setCallback(() -> {
                 closeWithoutOpenParentGui();
-                SkinService.changeSkin(getPlayer(), () -> entity.getSkinProperty().toVanillaType());
+                SkinService.changeSkin(getPlayer(), () -> entity.getSkinProperty().toNative());
             });
 
         return builder.build();

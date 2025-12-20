@@ -22,17 +22,17 @@ public class SkinStorage {
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
             LogUtil.info("Create the new skin data for player {}. (Skin = specified default skin)", playerName);
-            return new SkinDataNode(playerName, PropertyIR.fromVanillaType(SkinService.getPreferredDefaultSkin()));
+            return new SkinDataNode(playerName, PropertyIR.fromNative(SkinService.getPreferredDefaultSkin()));
         } else {
             Optional<Property> mojangSkinProperty = MojangSkinProvider.fetchSkin(playerName);
             return mojangSkinProperty
                 .map($mojangSkinProperty -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Mojang online skin)", playerName);
-                    return new SkinDataNode(playerName, PropertyIR.fromVanillaType($mojangSkinProperty));
+                    return new SkinDataNode(playerName, PropertyIR.fromNative($mojangSkinProperty));
                 })
                 .orElseGet(() -> {
                     LogUtil.info("Create the new skin data for player {}. (Skin = Failed to fetch Mojang online skin, fallback to the default skin.)", playerName);
-                    return new SkinDataNode(playerName, PropertyIR.fromVanillaType(SkinService.getPreferredDefaultSkin()));
+                    return new SkinDataNode(playerName, PropertyIR.fromNative(SkinService.getPreferredDefaultSkin()));
                 });
         }
     }

@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class SkinService {
 
     public static @NotNull Property getEffectiveSkin(GameProfile gameProfile) {
-        return SkinStorage.withSkinData(gameProfile, SkinDataNode::getSkinProperty).toVanillaType();
+        return SkinStorage.withSkinData(gameProfile, SkinDataNode::getSkinProperty).toNative();
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
@@ -74,14 +74,14 @@ public class SkinService {
 
         /* Get a random default skin. */
         return preferredDefaultSkin
-            .map(skinDescriptor -> skinDescriptor.getSkinProperty().toVanillaType()).orElseGet(SkinService::getRandomDefaultSkin);
+            .map(skinDescriptor -> skinDescriptor.getSkinProperty().toNative()).orElseGet(SkinService::getRandomDefaultSkin);
     }
 
     public static Property getRandomDefaultSkin() {
         return RandomUtil
             .drawList(getDefaultSkinList())
             .getSkinProperty()
-            .toVanillaType();
+            .toNative();
     }
 
     private static boolean isSkinPropertyEqual(@NotNull Property x, @NotNull GameProfile y) {
@@ -129,7 +129,7 @@ public class SkinService {
 
             /* Update the skin data. */
             SkinStorage.withSkinData(target, node -> {
-                node.setSkinProperty(PropertyIR.fromVanillaType(skinProperty));
+                node.setSkinProperty(PropertyIR.fromNative(skinProperty));
                 return null;
             });
 

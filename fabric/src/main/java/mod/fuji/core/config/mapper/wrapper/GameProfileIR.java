@@ -32,11 +32,11 @@ public class GameProfileIR {
     @NotNull PropertyMapIR properties;
 
     public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name) {
-        return new GameProfileIR(id, name, PropertyMapIR.fromVanillaType(AuthlibHelper.makePropertyMap()));
+        return new GameProfileIR(id, name, PropertyMapIR.fromNative(AuthlibHelper.makePropertyMap()));
     }
 
     public static @NotNull GameProfileIR of(@Nullable UUID id, @NotNull String name, @NotNull PropertyMap properties) {
-        return new GameProfileIR(id, name, PropertyMapIR.fromVanillaType(properties));
+        return new GameProfileIR(id, name, PropertyMapIR.fromNative(properties));
     }
 
     public static @NotNull GameProfileIR of(@NotNull Player player) {
@@ -48,7 +48,7 @@ public class GameProfileIR {
             return Optional.empty();
         }
 
-        GameProfile gameProfile = makeGameProfile(this.id, this.name, this.properties.toVanillaType());
+        GameProfile gameProfile = makeGameProfile(this.id, this.name, this.properties.toNative());
         return Optional.of(gameProfile);
     }
 

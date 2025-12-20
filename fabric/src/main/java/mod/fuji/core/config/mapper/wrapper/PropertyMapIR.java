@@ -12,39 +12,40 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import java.lang.reflect.Type;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropertyMapIR {
 
-     Multimap<String, PropertyIR> properties;
+    Multimap<String, PropertyIR> properties;
 
-     public static @NotNull PropertyMapIR fromVanillaType(@NotNull PropertyMap vanilla) {
+    public static @NotNull PropertyMapIR fromNative(@NotNull PropertyMap vanilla) {
         Multimap<String, PropertyIR> map = HashMultimap.create();
 
         for (String key : vanilla.keySet().stream().toList()) {
             for (Property property : vanilla.get(key)) {
-                map.put(key, PropertyIR.fromVanillaType(property));
+                map.put(key, PropertyIR.fromNative(property));
             }
         }
 
         return new PropertyMapIR(map);
     }
 
-    public @NotNull PropertyMap toVanillaType() {
+    public @NotNull PropertyMap toNative() {
         Multimap<String, Property> map = HashMultimap.create();
 
         if (properties != null) {
             for (var entry : properties.entries()) {
-                map.put(entry.getKey(), entry.getValue().toVanillaType());
+                map.put(entry.getKey(), entry.getValue().toNative());
             }
         }
 
@@ -53,8 +54,8 @@ public class PropertyMapIR {
 
 
     /**
- * Implement the gson type adapter for wrapper type.
- **/
+     * Implement the gson type adapter for wrapper type.
+     **/
     public static class PropertyMapIRAdapter implements JsonSerializer<PropertyMapIR>, JsonDeserializer<PropertyMapIR> {
 
         private static final String NAME_KEY = "name";
@@ -65,17 +66,18 @@ public class PropertyMapIR {
         public JsonElement serialize(@NotNull PropertyMapIR src, Type typeOfSrc, JsonSerializationContext context) {
             final JsonArray result = new JsonArray();
 
+            /* Serialize the properties if exists. */
             if (src.getProperties() != null) {
-                for (PropertyIR wrapper : src.getProperties().values()) {
-                    JsonObject object = new JsonObject();
-                    object.addProperty(NAME_KEY, wrapper.getName());
-                    object.addProperty(VALUE_KEY, wrapper.getValue());
+                for (PropertyIR propertyIR : src.getProperties().values()) {
+                    JsonObject propertyJsonObject = new JsonObject();
 
-                    if (wrapper.getSignature() != null) {
-                        object.addProperty(SIGNATURE_KEY, wrapper.getSignature());
+                    propertyJsonObject.addProperty(NAME_KEY, propertyIR.getName());
+                    propertyJsonObject.addProperty(VALUE_KEY, propertyIR.getValue());
+                    if (propertyIR.getSignature() != null) {
+                        propertyJsonObject.addProperty(SIGNATURE_KEY, propertyIR.getSignature());
                     }
 
-                    result.add(object);
+                    result.add(propertyJsonObject);
                 }
             }
 
@@ -106,9 +108,9 @@ public class PropertyMapIR {
             return new PropertyMapIR(map);
         }
 
-        private static @NotNull PropertyIR parseProperty(String name, JsonObject obj) {
+        private static @NotNull PropertyIR parseProperty(@NotNull String name, @NotNull JsonObject obj) {
             String value = obj.getAsJsonPrimitive(VALUE_KEY).getAsString();
-            String signature = obj.has(SIGNATURE_KEY) ? obj.getAsJsonPrimitive(SIGNATURE_KEY).getAsString() : null;
+            @Nullable String signature = obj.has(SIGNATURE_KEY) ? obj.getAsJsonPrimitive(SIGNATURE_KEY).getAsString() : null;
             return new PropertyIR(name, value, signature);
         }
     }

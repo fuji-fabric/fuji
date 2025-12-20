@@ -93,7 +93,7 @@ public class GuiHelper {
                     // Apply the game profile.
                     GuiElementBuilder builder = fromSlot(previousSlot);
 
-                    String texturesValue = gameProfileIR.getProperties().toVanillaType().get("textures")
+                    String texturesValue = gameProfileIR.getProperties().toNative().get("textures")
                         .stream()
                         .findFirst()
                         .map(AuthlibHelper::getPropertyValue)

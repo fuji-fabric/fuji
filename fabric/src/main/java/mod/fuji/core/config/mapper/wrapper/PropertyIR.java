@@ -15,15 +15,15 @@ public class PropertyIR {
     String value;
     String signature;
 
-    public static @NotNull PropertyIR fromVanillaType(@NotNull Property property) {
+    public static @NotNull PropertyIR fromNative(@NotNull Property property) {
         String name = AuthlibHelper.getPropertyName(property);
         String value = AuthlibHelper.getPropertyValue(property);
         String signature = AuthlibHelper.getPropertySignature(property);
         return new PropertyIR(name, value, signature);
     }
 
-    public @NotNull Property toVanillaType() {
-        return new Property(name, value, signature);
+    public @NotNull Property toNative() {
+        return new Property(this.name, this.value, this.signature);
     }
 
 }

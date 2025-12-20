@@ -73,7 +73,7 @@ public class SkinInitializer extends ModuleInitializer {
         String $defaultSkinName = defaultSkinName.getValue();
         return SkinService.findSkinDescriptor($defaultSkinName)
             .map(skinDescriptor -> {
-                SkinService.changeSkin(player, () -> skinDescriptor.getSkinProperty().toVanillaType());
+                SkinService.changeSkin(player, () -> skinDescriptor.getSkinProperty().toNative());
                 return CommandHelper.Return.SUCCESS;
             })
             .orElseGet(() -> {
