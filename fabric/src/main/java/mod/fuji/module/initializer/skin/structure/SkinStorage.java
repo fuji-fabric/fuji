@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class SkinStorage {
 
     private static SkinDataNode getDefaultSkinDataNode(@NotNull GameProfile gameProfile) {
-        String playerName = AuthlibHelper.getName(gameProfile);
+        String playerName = AuthlibHelper.getGameProfileName(gameProfile);
         LogUtil.info("There is not skin data for player {}. Creating new data now.", playerName);
 
         if (SkinInitializer.config.model().getDefaultSkin().isApplyDefaultSkinIfNoData()) {
@@ -40,7 +40,7 @@ public class SkinStorage {
     public static <T> T withSkinData(@NotNull GameProfile profile, @NotNull Function<SkinDataNode, T> function) {
         Optional<SkinDataNode> first = getSkinDataNodeList()
             .stream()
-            .filter(it -> it.getPlayerName().equals(AuthlibHelper.getName(profile)))
+            .filter(it -> it.getPlayerName().equals(AuthlibHelper.getGameProfileName(profile)))
             .findFirst();
 
         SkinDataNode $skinDataNode = first.orElseGet(() -> {

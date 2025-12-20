@@ -23,7 +23,7 @@ public class QueueInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST)
     private static void consumeBypassPlayerLimitEvent(BypassPlayerLimitEvent event) {
-        @NotNull UUID id = AuthlibHelper.getId(event.getGameProfile());
+        @NotNull UUID id = AuthlibHelper.getGameProfileId(event.getGameProfile());
         @NotNull Tristate permissionResult = LuckpermsHelper.getPermission(id, BYPASS_PLAYER_LIMIT_PERMISSION);
         if (!permissionResult.equals(Tristate.UNDEFINED)) {
             event.setCanBypass(permissionResult.asBoolean());

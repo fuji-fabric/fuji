@@ -33,7 +33,7 @@ public class PlayerHelper {
      **/
     public static String getPlayerName(@NotNull Player player) {
         @NotNull GameProfile gameProfile = player.getGameProfile();
-        return AuthlibHelper.getName(gameProfile);
+        return AuthlibHelper.getGameProfileName(gameProfile);
     }
 
     public static void playSound(@NotNull ServerPlayer player, @NotNull SoundEvent soundEvent, @NotNull SoundSource soundCategory, float volume, float pitch) {
@@ -290,7 +290,7 @@ public class PlayerHelper {
         public static @NotNull List<String> getOfflinePlayerNames() {
             return getOfflineGameProfiles()
                 .stream()
-                .map(AuthlibHelper::getName)
+                .map(AuthlibHelper::getGameProfileName)
                 .toList();
         }
 
@@ -298,7 +298,7 @@ public class PlayerHelper {
             // NOTE: Only find the game profile from existing cache, don't compute the value from Mojang server.
             return getOfflineGameProfiles()
                 .stream()
-                .filter(it -> AuthlibHelper.getName(it).equals(playerName))
+                .filter(it -> AuthlibHelper.getGameProfileName(it).equals(playerName))
                 .findFirst();
         }
     }

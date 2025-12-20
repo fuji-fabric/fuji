@@ -41,7 +41,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
         List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.getString(entity.economyAccount.formattedBalance())));
 
-        String name = AuthlibHelper.getName(entity.gameProfile);
+        String name = AuthlibHelper.getGameProfileName(entity.gameProfile);
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
             .setName(Component.literal(name))

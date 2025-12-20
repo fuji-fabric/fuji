@@ -37,7 +37,7 @@ public class OfflinePlayerNameArgumentTypeAdapter extends BaseArgumentTypeAdapte
 
         return PlayerHelper.Cache
             .getOfflineGameProfileByName(offlinePlayerName)
-            .map($gameProfile -> new OfflinePlayerName(AuthlibHelper.getName($gameProfile)))
+            .map($gameProfile -> new OfflinePlayerName(AuthlibHelper.getGameProfileName($gameProfile)))
             .orElseThrow(() -> {
                 TextHelper.sendTextByKey(context.getSource(), "player.unknown_player");
                 return new AbortCommandExecutionException();

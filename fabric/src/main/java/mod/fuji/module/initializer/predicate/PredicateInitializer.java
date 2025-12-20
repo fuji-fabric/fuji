@@ -72,7 +72,7 @@ public class PredicateInitializer extends ModuleInitializer {
     @CommandNode("has-perm?")
     private static int $hasPerm(@CommandSource CommandSourceStack source, OfflineGameProfile player, GreedyString stringPermission) {
         GameProfile gameProfile = player.getValue();
-        boolean value = LuckpermsHelper.hasPermission(AuthlibHelper.getId(gameProfile), new PermissionDescriptor(true, stringPermission.getValue(), DocString.DUMMY_DOC_STRING_ID));
+        boolean value = LuckpermsHelper.hasPermission(AuthlibHelper.getGameProfileId(gameProfile), new PermissionDescriptor(true, stringPermission.getValue(), DocString.DUMMY_DOC_STRING_ID));
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

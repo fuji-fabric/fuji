@@ -88,7 +88,7 @@ public class CustomEconomyProvider implements EconomyProvider {
                 .findFirst();
 
         if (first.isEmpty()) {
-            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", AuthlibHelper.getName(gameProfile), pathOfCurrencyId);
+            LogUtil.error("getAccount(): gameProfile = {}, pathOfCurrencyId = {}", AuthlibHelper.getGameProfileName(gameProfile), pathOfCurrencyId);
             throw new IllegalArgumentException("Failed to get account for specified account ID.");
         }
 

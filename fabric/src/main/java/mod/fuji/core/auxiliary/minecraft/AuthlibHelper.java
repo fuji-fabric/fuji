@@ -35,16 +35,7 @@ public class AuthlibHelper {
         #endif
     }
 
-    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
-        String name = AuthlibHelper.getName(gameProfile);
-        LogUtil.debug("Modify the skin property for player {}. (skin = {})", name, skin);
-
-        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
-        properties.removeAll("textures");
-        properties.put("textures", skin);
-    }
-
-    public static @NotNull String getName(@NotNull GameProfile gameProfile) {
+    public static @NotNull String getGameProfileName(@NotNull GameProfile gameProfile) {
         #if MC_VER < MC_1_21_9
         return gameProfile.getName();
         #elif MC_VER >= MC_1_21_9
@@ -52,7 +43,7 @@ public class AuthlibHelper {
         #endif
     }
 
-    public static @NotNull UUID getId(@NotNull GameProfile gameProfile) {
+    public static @NotNull UUID getGameProfileId(@NotNull GameProfile gameProfile) {
         #if MC_VER < MC_1_21_9
         return gameProfile.getId();
         #elif MC_VER >= MC_1_21_9
@@ -60,7 +51,7 @@ public class AuthlibHelper {
         #endif
     }
 
-    public static @NotNull PropertyMap getProperties(@NotNull GameProfile gameProfile) {
+    public static @NotNull PropertyMap getGameProfileProperties(@NotNull GameProfile gameProfile) {
         #if MC_VER < MC_1_21_9
         return gameProfile.getProperties();
         #elif MC_VER >= MC_1_21_9
@@ -80,6 +71,15 @@ public class AuthlibHelper {
         #elif MC_VER >= MC_1_21_9
         return new PropertyMap(properties);
         #endif
+    }
+
+    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
+        String name = AuthlibHelper.getGameProfileName(gameProfile);
+        LogUtil.debug("Modify the skin property for player {}. (skin = {})", name, skin);
+
+        PropertyMap properties = AuthlibHelper.getGameProfileProperties(gameProfile);
+        properties.removeAll("textures");
+        properties.put("textures", skin);
     }
 
 }

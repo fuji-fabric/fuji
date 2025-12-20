@@ -73,7 +73,7 @@ public abstract class ServerLoginNetworkHandlerMixin {
     {
         GameProfile currentGameProfile = getCurrentGameProfile();
         if (this.skinFuture == null) {
-            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", AuthlibHelper.getName(currentGameProfile));
+            LogUtil.warn("Failed to modify the skin property for player {}. (It seems like the tickVerify() method is modified by other mods.)", AuthlibHelper.getGameProfileName(currentGameProfile));
             return;
         }
 

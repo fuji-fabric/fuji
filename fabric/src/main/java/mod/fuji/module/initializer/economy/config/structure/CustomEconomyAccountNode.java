@@ -18,7 +18,7 @@ public class CustomEconomyAccountNode {
 
     public static CustomEconomyAccountNode make(GameProfile gameProfile, long balance) {
         CustomEconomyAccountNode customEconomyAccountNode = new CustomEconomyAccountNode();
-        customEconomyAccountNode.ownerName = AuthlibHelper.getName(gameProfile);
+        customEconomyAccountNode.ownerName = AuthlibHelper.getGameProfileName(gameProfile);
         customEconomyAccountNode.balance = balance;
         return customEconomyAccountNode;
     }

@@ -36,7 +36,7 @@ public class MojangProfileFetcher {
                 try {
                     return PlayerHelper.Cache
                         .getOfflineGameProfileByName(playerName)
-                        .map(AuthlibHelper::getId)
+                        .map(AuthlibHelper::getGameProfileId)
                         .or(() -> fetchOnlinePlayerUUID$Fallback(playerName));
                 } catch (Exception e) {
                     return fetchOnlinePlayerUUID$Fallback(playerName);

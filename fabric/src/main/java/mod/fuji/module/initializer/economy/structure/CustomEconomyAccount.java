@@ -36,7 +36,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     @Override
     public UUID owner() {
         if (this.gameProfile != null) {
-            return AuthlibHelper.getId(this.gameProfile);
+            return AuthlibHelper.getGameProfileId(this.gameProfile);
         }
 
         // NOTE: This is a server/console account.

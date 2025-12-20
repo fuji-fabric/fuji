@@ -79,9 +79,9 @@ public class GameProfileIR {
 
 
     public static @NotNull GameProfileIR fromVanillaType(@NotNull GameProfile gameProfile) {
-        UUID id = AuthlibHelper.getId(gameProfile);
-        String name = AuthlibHelper.getName(gameProfile);
-        PropertyMap properties = AuthlibHelper.getProperties(gameProfile);
+        UUID id = AuthlibHelper.getGameProfileId(gameProfile);
+        String name = AuthlibHelper.getGameProfileName(gameProfile);
+        PropertyMap properties = AuthlibHelper.getGameProfileProperties(gameProfile);
         return GameProfileIR.of(id, name, properties);
     }
 

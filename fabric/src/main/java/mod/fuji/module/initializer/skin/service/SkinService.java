@@ -90,7 +90,7 @@ public class SkinService {
             JsonObject xJsonObject = makeComparableJsonObjectFromSkinProperty(x);
 
             /* Make the y json object. */
-            Optional<Property> py = AuthlibHelper.getProperties(y)
+            Optional<Property> py = AuthlibHelper.getGameProfileProperties(y)
                 .get("textures")
                 .stream()
                 .findFirst();
@@ -122,7 +122,7 @@ public class SkinService {
             .<Pair<GameProfile, Property>>supplyAsync(() -> {
             /* Resolve the skin property from the supplier. */
             @Nullable Property skinProperty = skinSupplier.get();
-            LogUtil.debug("Resolved skin property from skin supplier: target = {}, skin = {}", AuthlibHelper.getName(target), skinProperty);
+            LogUtil.debug("Resolved skin property from skin supplier: target = {}, skin = {}", AuthlibHelper.getGameProfileName(target), skinProperty);
             if (skinProperty == null) {
                 throw new IllegalStateException("Failed to resolve skin property from skin supplier.");
             }
@@ -143,7 +143,7 @@ public class SkinService {
             /* Check whether the new skin is identical to the old one. */
                 GameProfile gameProfile = pair.left();
             @Nullable ServerPlayer player = PlayerHelper.Lookup
-                .getOnlinePlayerByUuid(AuthlibHelper.getId(gameProfile))
+                .getOnlinePlayerByUuid(AuthlibHelper.getGameProfileId(gameProfile))
                 .orElse(null);
             if (player == null) {
                 return Boolean.FALSE;

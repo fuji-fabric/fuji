@@ -83,10 +83,10 @@ public class TempBanInitializer extends ModuleInitializer {
 
             UserBanListEntry bannedPlayerEntry = new UserBanListEntry(gameProfileIR.toVanillaType().orElseThrow(), null, source.getTextName(), expire, reason.getValue());
             playerManager.getBans().add(bannedPlayerEntry);
-            source.sendSuccess(() -> Component.translatable("commands.ban.success", Component.literal(AuthlibHelper.getName(gameProfile)), bannedPlayerEntry.getReason()), true);
+            source.sendSuccess(() -> Component.translatable("commands.ban.success", Component.literal(AuthlibHelper.getGameProfileName(gameProfile)), bannedPlayerEntry.getReason()), true);
 
             // Kick.
-            ServerPlayer serverPlayerEntity = playerManager.getPlayer(AuthlibHelper.getId(gameProfile));
+            ServerPlayer serverPlayerEntity = playerManager.getPlayer(AuthlibHelper.getGameProfileId(gameProfile));
             if (serverPlayerEntity != null) {
                 serverPlayerEntity.connection.disconnect(Component.translatable("multiplayer.disconnect.banned"));
             }

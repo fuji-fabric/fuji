@@ -97,7 +97,7 @@ public class EconomyService {
             Optional<CustomEconomyAccountNode> customEconomyAccountNode = customEconomyCurrencyNode
                 .accounts
                 .stream()
-                .filter(it -> it.ownerName.equals(AuthlibHelper.getName(gameProfile)))
+                .filter(it -> it.ownerName.equals(AuthlibHelper.getGameProfileName(gameProfile)))
                 .findFirst();
 
             /* Make a new account node. */
@@ -165,7 +165,7 @@ public class EconomyService {
     public static @NotNull EconomyAccount tryGetEconomyAccount(@NotNull CommandSourceStack source, @NotNull GameProfile gameProfile, @NotNull IdentifierIR currencyId) {
         Optional<EconomyAccount> economyAccount = getUserAccount(gameProfile, currencyId);
         if (economyAccount.isEmpty()) {
-            TextHelper.sendTextByKey(source, "economy.account.not_found", AuthlibHelper.getName(gameProfile), currencyId);
+            TextHelper.sendTextByKey(source, "economy.account.not_found", AuthlibHelper.getGameProfileName(gameProfile), currencyId);
             throw new AbortCommandExecutionException();
         }
 

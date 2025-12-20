@@ -32,7 +32,7 @@ public class UserWhiteListMixin {
         return GameProfileIR
             .fromVanillaType(vanillaType)
             .toGameProfile()
-            .map(AuthlibHelper::getName)
+            .map(AuthlibHelper::getGameProfileName)
             .orElse(original);
     }
 }
