@@ -2,7 +2,6 @@ package mod.fuji.module.mixin.whitelist;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.authlib.GameProfile;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.config.mapper.wrapper.GameProfileWrapper;
 import net.minecraft.server.players.UserWhiteList;
@@ -24,10 +23,10 @@ public class UserWhiteListMixin {
      * This @Inject makes the whitelist.json only look-up for the player's name, not the uuid.
      **/
     #if MC_VER < MC_1_21_9
-    @ModifyReturnValue(method = "getKeyForUser*", at = @At("RETURN"))
+    @ModifyReturnValue(method = "getKeyForUser(Lcom/mojang/authlib/GameProfile;)Ljava/lang/String;", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) GameProfile vanillaType)
     #elif MC_VER >= MC_1_21_9
-    @ModifyReturnValue(method = "getKeyForUser*", at = @At("RETURN"))
+    @ModifyReturnValue(method = "getKeyForUser(Lnet/minecraft/server/players/NameAndId;)Ljava/lang/String;", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.players.NameAndId vanillaType)
     #endif
     {
