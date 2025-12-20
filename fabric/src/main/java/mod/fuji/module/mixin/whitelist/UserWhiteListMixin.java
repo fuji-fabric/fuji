@@ -24,7 +24,7 @@ public class UserWhiteListMixin {
      **/
     #if MC_VER < MC_1_21_9
     @ModifyReturnValue(method = "getKeyForUser(Lcom/mojang/authlib/GameProfile;)Ljava/lang/String;", at = @At("RETURN"))
-    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) GameProfile vanillaType)
+    String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) com.mojang.authlib.GameProfile vanillaType)
     #elif MC_VER >= MC_1_21_9
     @ModifyReturnValue(method = "getKeyForUser(Lnet/minecraft/server/players/NameAndId;)Ljava/lang/String;", at = @At("RETURN"))
     String ignoreUUIDAndOnlyComparePlayerName(String original, @Local(argsOnly = true) net.minecraft.server.players.NameAndId vanillaType)
