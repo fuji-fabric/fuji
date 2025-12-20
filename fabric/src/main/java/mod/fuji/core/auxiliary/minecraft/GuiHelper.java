@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.Map;
+import java.util.function.Function;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.mapper.representation.GameProfileIR;
@@ -54,7 +55,7 @@ public class GuiHelper {
 
     public static class PlayerSkull {
 
-        private static GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
+        private static @NotNull GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
             GuiElementBuilder builder = new GuiElementBuilder();
             ItemStack itemStack = slot.getItemStack();
 
@@ -71,46 +72,46 @@ public class GuiHelper {
         }
 
         public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui) {
-            fillPlayerHeadTextures(gui, () -> {});
+            fillPlayerHeadTextures(gui, (itemStack) -> itemStack.getHoverName().getString().trim(), () -> {});
         }
 
-        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Runnable onCompleteCallback) {
+        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Function<ItemStack, String> playerNameMapper, @NotNull Runnable onCompleteCallback) {
             final int logicalSize = gui.getWidth() * (gui.getHeight() - 1);
             for (int i = 0; i < logicalSize; i++) {
-                GuiElementInterface previousSlot = gui.getSlot(i);
-                if (previousSlot == null) return;
+                GuiElementInterface targetSlot = gui.getSlot(i);
+                if (targetSlot == null) return;
 
                 /* Run async method to fetch game profile. */
                 int finalI = i;
                 AsyncUtil.runAsyncAndHandleExceptions(() -> {
-                    ItemStack itemStack = previousSlot.getItemStack();
+                    /* Ignore non-player-skull item stack. */
+                    ItemStack itemStack = targetSlot.getItemStack();
                     if (!itemStack.getItem().equals(Items.PLAYER_HEAD)) return;
 
-                    // Fetch the game profile from mojang server.
-                    String onlinePlayerName = itemStack.getHoverName().getString().trim();
-                    @NotNull GameProfileIR gameProfileIR = GameProfileCacheService.getCachedGameProfile(onlinePlayerName);
+                    /* Get cached game profile. */
+                    String playerName = playerNameMapper.apply(itemStack);
+                    @NotNull GameProfileIR gameProfileIR = GameProfileCacheService.getCachedGameProfile(playerName);
 
-                    // Apply the game profile.
-                    GuiElementBuilder builder = fromSlot(previousSlot);
-
-                    String texturesValue = gameProfileIR.getProperties().toNative().get("textures")
+                    /* Make the gui element builder. */
+                    GuiElementBuilder builder = fromSlot(targetSlot);
+                    String texturesValue = gameProfileIR.getProperties().toNative().get(AuthlibHelper.TEXTURES_PROPERTY_KEY)
                         .stream()
                         .findFirst()
                         .map(AuthlibHelper::getPropertyValue)
                         .orElse(Texture.LUCKY_BLOCK_TEXTURE);
-
                     builder.setSkullOwner(texturesValue, null, gameProfileIR.getId());
 
+                    /* Update the target slot. */
                     for (int j = 0; j < logicalSize; j++) {
                         @Nullable GuiElementInterface currentSlot = gui.getSlot(j);
                         if (currentSlot == null) continue;
-                        if (currentSlot.getItemStack() == previousSlot.getItemStack()) {
+                        if (currentSlot.getItemStack() == targetSlot.getItemStack()) {
                             gui.setSlot(finalI, builder);
                             break;
                         }
                     }
 
-                    // Call draw to re-draw it.
+                    /* Call the post hook. */
                     onCompleteCallback.run();
                 });
             }

@@ -8,6 +8,7 @@ import mod.fuji.core.auxiliary.HttpUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import java.io.IOException;
 import java.util.Optional;
+import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class MojangSkinProvider {
@@ -32,7 +33,7 @@ public class MojangSkinProvider {
                         .get(0).getAsJsonObject();
                     String value = textureJsonObject.get("value").getAsString();
                     String signature = textureJsonObject.get("signature").getAsString();
-                    return Optional.of(new Property("textures", value, signature));
+                    return Optional.of(new Property(AuthlibHelper.TEXTURES_PROPERTY_KEY, value, signature));
                 });
         } catch (Exception e) {
             LogUtil.debug("Failed to fetch online skin from Mojang server: playerName = {}", onlinePlayerName);

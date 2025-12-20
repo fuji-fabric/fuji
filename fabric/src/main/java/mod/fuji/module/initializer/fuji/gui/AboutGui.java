@@ -63,7 +63,10 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @SuppressWarnings("HttpUrlsUsage")
-    private boolean isUrl(String string) {
+    private boolean isUrl(@Nullable String string) {
+        if (string == null) {
+            return false;
+        }
         return string.contains("http://") || string.contains("https://");
     }
 

@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class AuthlibHelper {
 
+    public static final String TEXTURES_PROPERTY_KEY = "textures";
+
     public static String getPropertyName(@NotNull Property property) {
         #if MC_VER <= MC_1_20_1
         return property.getName();
@@ -73,13 +75,13 @@ public class AuthlibHelper {
         #endif
     }
 
-    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property skin) {
+    public static void modifyGameProfile(@NotNull GameProfile gameProfile, @NotNull Property textureProperty) {
         String name = AuthlibHelper.getGameProfileName(gameProfile);
-        LogUtil.debug("Modify the skin property for player {}. (skin = {})", name, skin);
+        LogUtil.debug("Modify game profile: name = {}, texture property = {}", name, textureProperty);
 
         PropertyMap properties = AuthlibHelper.getGameProfileProperties(gameProfile);
-        properties.removeAll("textures");
-        properties.put("textures", skin);
+        properties.removeAll(TEXTURES_PROPERTY_KEY);
+        properties.put(TEXTURES_PROPERTY_KEY, textureProperty);
     }
 
 }

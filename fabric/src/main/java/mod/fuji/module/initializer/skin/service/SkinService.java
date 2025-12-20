@@ -91,7 +91,7 @@ public class SkinService {
 
             /* Make the y json object. */
             Optional<Property> py = AuthlibHelper.getGameProfileProperties(y)
-                .get("textures")
+                .get(AuthlibHelper.TEXTURES_PROPERTY_KEY)
                 .stream()
                 .findFirst();
             if (py.isEmpty()) {

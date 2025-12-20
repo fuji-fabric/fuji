@@ -19,20 +19,17 @@ public class GameProfileCacheService {
 
     @EventConsumer
     private static void updateGameProfileCache(PlayerJoinedEvent event) {
-        setGameProfileCache(event.getPlayer());
-    }
-
-    public static void setGameProfileCache(@NotNull ServerPlayer player) {
+        @NotNull ServerPlayer player = event.getPlayer();
         String playerName = PlayerHelper.getPlayerName(player);
         GameProfileIR cachedGameProfile = getCachedGameProfile(player);
-        LogUtil.debug("Set game profile cache for player {}. (cache = {})", playerName, cachedGameProfile);
+        LogUtil.debug("Update game profile cache: player = {}, value = {}", playerName, cachedGameProfile);
     }
 
     public static @NotNull GameProfileIR getCachedGameProfile(@NotNull String onlinePlayerName) {
         return getCachedGameProfile(onlinePlayerName, Duration.ofDays(7), () -> supplyOnlineGameProfile(onlinePlayerName));
     }
 
-    public static @NotNull GameProfileIR getCachedGameProfile(@NotNull ServerPlayer player) {
+    private static @NotNull GameProfileIR getCachedGameProfile(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
         return getCachedGameProfile(playerName, Duration.ofMillis(0), () -> supplyOfflineGameProfile(player));
     }

@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.properties.Property;
 import mod.fuji.core.auxiliary.HttpUtil;
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.module.initializer.skin.structure.SkinVariant;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public class MineSkinSkinProvider {
                 .getAsJsonObject("texture");
             String value = textureJsonObject.get("value").getAsString();
             String signature = textureJsonObject.get("signature").getAsString();
-            return Optional.of(new Property("textures", value, signature));
+            return Optional.of(new Property(AuthlibHelper.TEXTURES_PROPERTY_KEY, value, signature));
         } catch (IOException e) {
             LogUtil.debug("Failed to fetch skin from mine-skin server: url = {}", skinImageURL);
         }
