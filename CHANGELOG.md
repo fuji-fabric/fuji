@@ -8,4 +8,4 @@
 
 # 📑 Changelog
 
-- [core] fix: improved injectors to support `neoforge` platform + `connector` mod. (#536)
+- [core] fix: improved the compatibility of injectors to support `neoforge` platform + `connector` mod. (#536)
