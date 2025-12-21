@@ -21,8 +21,7 @@ public class HomeService {
 
     public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull String playerName) {
         return PlayerKey
-            .computeValueByPlayerName(HomeInitializer.data.model().getName2home(), playerName, k -> HashBiMap.create())
-            .orElseThrow();
+            .computeValueByPlayerNameOrThrow(HomeInitializer.data.model().getName2home(), playerName, k -> HashBiMap.create());
     }
 
     public static Optional<GlobalPos> findHome(@NotNull String playerName, @NotNull String homeName) {

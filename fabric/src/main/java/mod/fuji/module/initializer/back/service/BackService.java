@@ -8,6 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
+import mod.fuji.core.config.mapper.structure.PlayerKey;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerDeathEvent;
 import mod.fuji.core.event.message.player.PlayerTeleportPreEvent;
@@ -26,8 +27,8 @@ public class BackService {
 
     public static <R> R withLocationHistory(@NotNull ServerPlayer player, Function<LocationHistory, R> function) {
         String playerName = PlayerHelper.getPlayerName(player);
-        BackInitializer.savedPositionConfig.model().player2history.computeIfAbsent(playerName, k -> new LocationHistory());
-        LocationHistory locationHistory = BackInitializer.savedPositionConfig.model().player2history.get(playerName);
+        LocationHistory locationHistory = PlayerKey
+            .computeValueByPlayerNameOrThrow(BackInitializer.savedPositionConfig.model().player2history, playerName, k -> new LocationHistory());
         return function.apply(locationHistory);
     }
 

@@ -77,6 +77,11 @@ public class PlayerKey {
             .map($playerKey -> computeValueByPlayerKey(map, $playerKey, mappingFunction));
     }
 
+    public static <V> V computeValueByPlayerNameOrThrow(@NotNull Map<PlayerKey, V> map, @NotNull String playerName, Function<? super PlayerKey, ? extends V> mappingFunction) {
+        return computeValueByPlayerName(map, playerName, mappingFunction)
+            .orElseThrow(() -> new IllegalStateException("Cannot find the associated UUID for username %s in usercache.json file.".formatted(playerName)));
+    }
+
     public static <V> V computeValueByPlayerKey(@NotNull Map<PlayerKey, V> map, @NotNull PlayerKey playerKey, Function<? super PlayerKey, ? extends V> mappingFunction) {
         return map.computeIfAbsent(playerKey, mappingFunction);
     }
