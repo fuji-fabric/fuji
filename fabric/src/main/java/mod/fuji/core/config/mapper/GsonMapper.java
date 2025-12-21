@@ -29,6 +29,7 @@ import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.config.annotation.NotNullEnumType;
 import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
+import mod.fuji.core.config.mapper.structure.PlayerKey;
 import mod.fuji.core.config.mapper.structure.PropertyMapIR;
 import mod.fuji.core.config.migrator.version.IgnoreModVersionFieldStrategy;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +55,7 @@ public class GsonMapper {
         .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
         .registerTypeAdapter(PropertyMapIR.class, new PropertyMapIR.PropertyMapIRAdapter())
+        .registerTypeAdapter(PlayerKey.class, new PlayerKey.PlayerUUIDTypeAdapter())
         // Let's create it.
         .create();
 

@@ -28,12 +28,21 @@ import org.jetbrains.annotations.Nullable;
 })
 public class PlayerHelper {
 
+    public static @NotNull GameProfile getPlayerGameProfile(@NotNull Player player) {
+        return player.getGameProfile();
+    }
+
     /**
      * It's possible to generate invalid player name using <code>/player abc++ spawn</code> command.
      **/
-    public static String getPlayerName(@NotNull Player player) {
-        @NotNull GameProfile gameProfile = player.getGameProfile();
+    public static @NotNull String getPlayerName(@NotNull Player player) {
+        @NotNull GameProfile gameProfile = getPlayerGameProfile(player);
         return AuthlibHelper.getGameProfileName(gameProfile);
+    }
+
+    public static @NotNull UUID getPlayerUUID(@NotNull Player player) {
+        @NotNull GameProfile gameProfile = getPlayerGameProfile(player);
+        return AuthlibHelper.getGameProfileId(gameProfile);
     }
 
     public static void playSound(@NotNull ServerPlayer player, @NotNull SoundEvent soundEvent, @NotNull SoundSource soundCategory, float volume, float pitch) {
@@ -299,6 +308,13 @@ public class PlayerHelper {
             return getOfflineGameProfiles()
                 .stream()
                 .filter(it -> AuthlibHelper.getGameProfileName(it).equals(playerName))
+                .findFirst();
+        }
+
+        public static Optional<GameProfile> getOfflineGameProfileByUUID(@NotNull UUID uuid) {
+            return getOfflineGameProfiles()
+                .stream()
+                .filter(it -> AuthlibHelper.getGameProfileId(it).equals(uuid))
                 .findFirst();
         }
     }
