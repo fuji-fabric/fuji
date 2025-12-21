@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
+import mod.fuji.core.config.mapper.structure.PlayerKey;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.home.HomeInitializer;
 import mod.fuji.module.initializer.home.command.argument.wrapper.HomeName;
@@ -19,8 +20,9 @@ public class HomeService {
     }
 
     public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull String playerName) {
-        return HomeInitializer.data.model().getName2home()
-            .computeIfAbsent(playerName, k -> HashBiMap.create());
+        return PlayerKey
+            .computeValueByPlayerName(HomeInitializer.data.model().getName2home(), playerName, k -> HashBiMap.create())
+            .orElseThrow();
     }
 
     public static Optional<GlobalPos> findHome(@NotNull String playerName, @NotNull String homeName) {

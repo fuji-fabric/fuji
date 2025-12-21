@@ -9,5 +9,4 @@
 
 # 📑 Changelog
 
-- **[core] Fix:** Players were sharing a single empty `PropertyMap` instance since MC **1.21.9**.
-    - **Affected:** `skin`, `head`, and any feature that uses player heads to render player skins.
+- [home] feature: now store the player data using `UUID` instead of `player name`.
