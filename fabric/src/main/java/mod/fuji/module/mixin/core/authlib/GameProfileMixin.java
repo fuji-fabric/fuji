@@ -20,9 +20,9 @@ public class GameProfileMixin {
     private PropertyMap properties;
 
     /**
-     * Mojang makes the PropertyMap immutable collection, and introduces the PropertyMap.EMPTY constant.
+     * Mojang makes the PropertyMap immutable collection, and introduces the PropertyMap.EMPTY shared constant.
      * All the players share the same PropertyMap.EMPTY instance, which makes it hard to mutate and manage.
-     * Here we assign a mutable version of PropertyMap instance for each player.
+     * Here I allocate a mutable version of PropertyMap instance for each player.
      */
     @Inject(method = "<init>(Ljava/util/UUID;Ljava/lang/String;)V", at = @At("RETURN"))
     void makePropertyMapMutable(CallbackInfo ci) {

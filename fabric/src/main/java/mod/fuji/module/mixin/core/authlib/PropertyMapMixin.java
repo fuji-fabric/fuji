@@ -20,9 +20,12 @@ public class PropertyMapMixin {
     @Final
     private Multimap<String, Property> properties;
 
+    /**
+     * Since MC 1.21.9, the constructor of PropertyMap only returns the immutable-version of the backend map.
+     * This injector makes the backend Multimap instance mutable.
+     */
     @Inject(method = "<init>", at = @At("RETURN"))
     void makePropertyMapMutable(CallbackInfo ci) {
-        // NOTE: The PropertyMap becomes an immutable collection since MC 1.21.9
         this.properties = LinkedHashMultimap.create(properties);
     }
 
