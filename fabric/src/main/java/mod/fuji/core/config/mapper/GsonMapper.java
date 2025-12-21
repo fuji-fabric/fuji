@@ -57,8 +57,6 @@ public class GsonMapper {
         // Let's create it.
         .create();
 
-    private static final Map<Class<?>, Boolean> TYPE_NULLABILITY_MAP = new ConcurrentHashMap<>();
-
     private static @NotNull Gson getFallbackGson() {
         GsonBuilder fallbackGsonBuilder = gson.newBuilder();
         enableJdkUnsafeFeature(fallbackGsonBuilder);
@@ -92,29 +90,14 @@ public class GsonMapper {
     }
 
     /**
- *         The Gson library has already register a bunch of pre-defined type adapters.
-        See: TypeAdapters
-
- **/
+     * The Gson library has already register a bunch of pre-defined type adapters.
+     * See: TypeAdapters
+     **/
     public static void registerGsonTypeAdapter(@NotNull Type type, @NotNull Object typeAdapter) {
         gson = gson
             .newBuilder()
             .registerTypeAdapter(type, typeAdapter)
             .create();
-    }
-
-    public static void setTypeNullability(@NotNull Class<?> typeClass, boolean nullable) {
-        TYPE_NULLABILITY_MAP.put(typeClass, nullable);
-    }
-
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    public static boolean isNullableType(@NotNull Class<?> typeClass) {
-        return TYPE_NULLABILITY_MAP.computeIfAbsent(typeClass, k -> {
-            boolean nullable = Optional
-                .ofNullable(typeClass.getAnnotation(NotNullEnumType.class))
-                .isEmpty();
-            return nullable;
-        });
     }
 
     @SneakyThrows(IOException.class)
@@ -178,6 +161,25 @@ public class GsonMapper {
 
     public static @NotNull String toJsonString(@NotNull JsonElement jsonElement) {
         return gson.toJson(jsonElement);
+    }
+
+
+    public static class TypeNullability {
+        private static final Map<Class<?>, Boolean> TYPE_NULLABILITY_MAP = new ConcurrentHashMap<>();
+
+        public static void setTypeNullability(@NotNull Class<?> typeClass, boolean nullable) {
+            TYPE_NULLABILITY_MAP.put(typeClass, nullable);
+        }
+
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        public static boolean isNullableType(@NotNull Class<?> typeClass) {
+            return TYPE_NULLABILITY_MAP.computeIfAbsent(typeClass, k -> {
+                boolean nullable = Optional
+                    .ofNullable(typeClass.getAnnotation(NotNullEnumType.class))
+                    .isEmpty();
+                return nullable;
+            });
+        }
     }
 
 }
