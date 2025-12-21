@@ -4,7 +4,7 @@ package mod.fuji.module.mixin.core.event;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import mod.fuji.annotation.PhasedMixinTemplate;
 import mod.fuji.auxiliary.WeaverUtil;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.annotation.EventProducer;
 import mod.fuji.core.event.message.server.BypassPlayerLimitEvent;

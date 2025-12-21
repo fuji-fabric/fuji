@@ -251,7 +251,7 @@ public class TextHelper {
         }
 
         public static void setPlayerLanguageCode(String playerName, String languageRepresentationUsedByMojang) {
-            // NOTE: Mojang network protocol use a stupid language representation, mojang use `en_us` instead of `en_US`, so we need to unify it.
+            // NOTE: Mojang network protocol use a stupid language structure, mojang use `en_us` instead of `en_US`, so we need to unify it.
             String unifiedLanguageCode = unifyLanguageCode(languageRepresentationUsedByMojang);
             PLAYER_2_LANGUAGE_CODE.put(playerName, unifiedLanguageCode);
         }

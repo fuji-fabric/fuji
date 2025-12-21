@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import org.jetbrains.annotations.NotNull;
 
 

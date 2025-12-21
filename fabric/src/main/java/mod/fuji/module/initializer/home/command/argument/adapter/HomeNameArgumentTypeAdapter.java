@@ -40,7 +40,8 @@ public class HomeNameArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @Override
     @NotNull
     protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
-        return super.makeRequiredArgumentBuilder(argumentName).suggests((context, builder) -> {
+        return super.makeRequiredArgumentBuilder(argumentName)
+            .suggests((context, builder) -> {
                 ServerPlayer player = context.getSource().getPlayer();
                 if (player == null) return builder.buildFuture();
 

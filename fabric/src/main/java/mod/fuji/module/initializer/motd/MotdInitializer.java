@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.motd;
 
 import com.google.common.base.Preconditions;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;

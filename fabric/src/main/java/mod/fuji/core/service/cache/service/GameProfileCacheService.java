@@ -2,7 +2,7 @@ package mod.fuji.core.service.cache.service;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerJoinedEvent;
 import mod.fuji.core.service.cache.CacheManager;

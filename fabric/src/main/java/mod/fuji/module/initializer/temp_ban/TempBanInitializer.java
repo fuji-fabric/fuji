@@ -10,7 +10,7 @@ import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
-import mod.fuji.core.config.mapper.representation.GameProfileIR;
+import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.service.duration_parser.command.argument.wrapper.Duration;
 import mod.fuji.core.command.argument.wrapper.impl.GameProfileCollection;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;

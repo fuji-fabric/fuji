@@ -137,7 +137,7 @@ public class CommandAssistant {
             /* Compute prefix string: truncate the input string to make room for infix string. */
             String prefixString = inputString.substring(0, builder.getStart());
 
-            /* Compute infix string: the infix string can be pending state representation `...` or a selected command path. */
+            /* Compute infix string: the infix string can be pending state structure `...` or a selected command path. */
             String infixString = "..."; // There are multiple possible command paths, pending for more information.
             if (!hasUnparsedCharacters(commandContext, builder)) {
                 // The user has selected a command path, now we have the information to print the selected argument name.

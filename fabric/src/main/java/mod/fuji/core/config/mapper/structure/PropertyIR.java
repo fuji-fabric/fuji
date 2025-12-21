@@ -1,4 +1,4 @@
-package mod.fuji.core.config.mapper.representation;
+package mod.fuji.core.config.mapper.structure;
 
 import com.mojang.authlib.properties.Property;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;

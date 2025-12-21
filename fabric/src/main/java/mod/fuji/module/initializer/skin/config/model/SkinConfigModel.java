@@ -3,7 +3,7 @@ package mod.fuji.module.initializer.skin.config.model;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.document.annotation.Document;
 
-import mod.fuji.core.config.mapper.representation.PropertyIR;
+import mod.fuji.core.config.mapper.structure.PropertyIR;
 import mod.fuji.module.initializer.skin.structure.SkinDescriptor;
 import java.util.ArrayList;
 import java.util.List;

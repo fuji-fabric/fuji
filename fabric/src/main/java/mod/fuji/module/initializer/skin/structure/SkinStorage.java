@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
-import mod.fuji.core.config.mapper.representation.PropertyIR;
+import mod.fuji.core.config.mapper.structure.PropertyIR;
 import mod.fuji.module.initializer.skin.SkinInitializer;
 import mod.fuji.core.service.gameprofile_fetcher.MojangSkinProvider;
 import mod.fuji.module.initializer.skin.service.SkinService;
