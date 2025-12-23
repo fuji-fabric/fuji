@@ -729,7 +729,7 @@
   "docstring.1751824926635": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.sign.red` permission.\n",
   "docstring.1751824932882": "This module introduces `style tags` in `sign blocks`.\n",
   "docstring.1751824937869": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.anvil.red` permission.\n",
-  "docstring.1751824946979": "This module enables the use of `color tags` in the `anvil screen`.\n",
+  "docstring.1751824946979": "This module introduces `style tags` in `anvil block`.\n",
   "docstring.1751824965598": "This module allows `writing` commands on `sign blocks`, which can then be executed by `clicking` the sign.\n",
   "docstring.1751824970923": "Allow you to edit a player's `slots`.\n\n1. Edit an online/offline player's `inventory`.\n2. Edit an online/offline player's `enderchest`.\n",
   "docstring.1751824976609": "View the player's inventory.",

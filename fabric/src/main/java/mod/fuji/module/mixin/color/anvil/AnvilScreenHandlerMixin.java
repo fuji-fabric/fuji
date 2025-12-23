@@ -2,9 +2,9 @@ package mod.fuji.module.mixin.color.anvil;
 
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.module.initializer.color.ColorInitializer;
 import mod.fuji.module.initializer.color.anvil.ColorAnvilInitializer;
 import java.util.concurrent.atomic.AtomicReference;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ItemCombinerMenu;
@@ -38,21 +38,26 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
 
     /**
      * To support neo-forge platform, here I can't use the @Expression injector.
-     * Maybe I should drop the support someday.
+     * Maybe I should drop the support some day.
      */
     @Unique
-    private @NotNull Component parseInputNewItemName() {
-        AtomicReference<Component> modifiedText = new AtomicReference<>();
+    private @NotNull Component processAnvilNewNameText() {
+        AtomicReference<Component> outputText = new AtomicReference<>();
         PlayerHelper.Kind.withServerPlayerEntity(player, () -> {
+            /* Rewrite the style tags. */
+            itemName = ColorInitializer.rewriteColorCodes(itemName);
+
             /* Stripe style tags. */
             if (ColorAnvilInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
-                Player player = super.player;
                 itemName = ColorAnvilInitializer.stripeStyleTags(player, itemName);
             }
-            modifiedText.set(TextHelper.getTextByValue(null, itemName));
+
+            /* Update the output text. */
+            Component textByValue = TextHelper.getTextByValue(null, itemName);
+            outputText.set(textByValue);
         });
 
-        return modifiedText.get();
+        return outputText.get();
     }
 
     #if MC_VER <= MC_1_20_4
@@ -66,7 +71,7 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     public @NotNull Object updateResult(Object text)
     #endif
     {
-         return parseInputNewItemName();
+         return processAnvilNewNameText();
     }
 
     #if MC_VER <= MC_1_20_4
@@ -80,6 +85,6 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     public @NotNull Object newItemName(Object text)
     #endif
     {
-         return parseInputNewItemName();
+         return processAnvilNewNameText();
     }
 }

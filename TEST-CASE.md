@@ -35,7 +35,7 @@
 
 [Test Case]
 - Module: color.sign
-- Action: **Place a `sign block` and write style tags in it, then re-open the sign.**
+- Action: **Place a `sign block` and write style tags on it, then re-open the sign.**
 - Target: The style tags in the sign block should be `parsed` and `reversed`.
 
 [Test Case]
