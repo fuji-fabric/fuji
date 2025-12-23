@@ -2,7 +2,6 @@ package mod.fuji.module.mixin.color.sign;
 
 import mod.fuji.core.structure.GlobalBlockPos;
 import mod.fuji.module.initializer.color.sign.ColorSignInitializer;
-import mod.fuji.module.initializer.color.sign.structure.SignCache;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,31 +24,32 @@ public abstract class ServerPlayerEntityMixin {
 
     // NOTE: In lower MC versions like MC 1.20.1, if there are `<rb>` tag in the sign, then the `openEditSignScreen` method will not be called.
     @Inject(method = "openTextEdit", at = @At("HEAD"))
-    private void sendBlockStateUpdatePacketOfSerializedTextBeforeTheClientOpenTheEditScreen(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
-        /* Update the sign text in server-side with the SignCache value before the client-side open the sign editor screen. */
-        SignCache signCache = ColorSignInitializer.readSignCache(new GlobalBlockPos(signBlockEntity.getLevel(), signBlockEntity.getBlockPos()));
-        if (signCache == null) return;
+    private void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
+        ColorSignInitializer
+            .readSignCache(new GlobalBlockPos(signBlockEntity.getLevel(), signBlockEntity.getBlockPos()))
+            .ifPresent(signCache -> {
+                /* Modify the text of the sign. */
+                List<String> inputLineStrings = isFront ? signCache.getFrontLines() : signCache.getBackLines();
+                Component[] outputLineTexts = {Component.empty(), Component.empty(), Component.empty(), Component.empty()};
 
-        /* Modify the text of the sign. */
-        List<String> trueLines = isFront ? signCache.getFrontLines() : signCache.getBackLines();
-        Component[] newTextList = {Component.empty(), Component.empty(), Component.empty(), Component.empty()};
+                for (int i = 0; i < inputLineStrings.size(); i++) {
+                    String inputLineString = inputLineStrings.get(i);
 
-        for (int i = 0; i < trueLines.size(); i++) {
-            String line = trueLines.get(i);
-            // Escape from mojang sign editor.
-            line = line.replace("<", "\\<")
-                .replace(">", "\\>");
+                    // Escape from Mojang sign editor.
+                    inputLineString = inputLineString.replace("<", "\\<")
+                        .replace(">", "\\>");
 
-            // Restore the raw string.
-            newTextList[i] = Component.literal(line);
-        }
+                    // Restore the line string.
+                    outputLineTexts[i] = Component.literal(inputLineString);
+                }
 
-        /* Send update packet. */
-        boolean facingFront = signBlockEntity.isFacingFrontText(player);
-        SignText originalSignText = signBlockEntity.getText(facingFront);
-        SignText newSignText = new SignText(newTextList, newTextList, originalSignText.getColor(), originalSignText.hasGlowingText());
-        signBlockEntity.setText(newSignText, facingFront);
-        player.connection.send(signBlockEntity.getUpdatePacket());
+                /* Send the update packet. */
+                boolean facingFront = signBlockEntity.isFacingFrontText(player);
+                SignText oldSignText = signBlockEntity.getText(facingFront);
+                SignText newSignText = new SignText(outputLineTexts, outputLineTexts, oldSignText.getColor(), oldSignText.hasGlowingText());
+                signBlockEntity.setText(newSignText, facingFront);
+                player.connection.send(signBlockEntity.getUpdatePacket());
+            });
     }
 
 }

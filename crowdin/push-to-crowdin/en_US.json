@@ -727,7 +727,7 @@
   "docstring.1751824905935": "Close the currently `opened GUI` for the player.",
   "docstring.1751824913807": "Customize the `translatable text`, like most of `system messages`.\n\nFor example, you can customize the `translatable texts` like:\n1. Player joined and left message.\n2. Player death message. (Like get killed by a zombie)\n3. Player whitelist message. (Used in the GUI)\n4. Player advancement message.\n5. Player command feedback. (The command feedback for a specified command)\n6. Server close message.\n7. Player banned screen message.\n8. ... (There are many translatable texts in server-side)\n",
   "docstring.1751824926635": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.sign.red` permission.\n",
-  "docstring.1751824932882": "This module allows you to use `color tags` in `sign blocks`.\n",
+  "docstring.1751824932882": "This module introduces `style tags` in `sign blocks`.\n",
   "docstring.1751824937869": "By default, any player can use `all style tags`.\nEnable this option requires the player to has `corresponding permission` to use that `style tag`.\n\nFor example, to use `<red>` tag, requires `fuji.style.anvil.red` permission.\n",
   "docstring.1751824946979": "This module enables the use of `color tags` in the `anvil screen`.\n",
   "docstring.1751824965598": "This module allows `writing` commands on `sign blocks`, which can then be executed by `clicking` the sign.\n",
@@ -1101,7 +1101,7 @@
   "docstring.1751899201560": "◉ To define a shortcut for chat display module with Styled Chat mod.\nRegex: `(?<=^|\\\\s)item(?=\\\\s|$)`\nCommands: `run as fake-op %player:name% chat display item`\n",
   "docstring.1751899554713": "◉ Define a chat shortcut, to evaluate a placeholder.\nRegex: `(?<=^|\\\\s)uuid(?=\\\\s|$)`\nReplacement: `my uuid is %player:uuid%`\n",
   "docstring.1751899727098": "Pick a good implementation of `chat spy` in fabric platform is hard.\nIn vanilla Minecraft, each chat message has its `message type`.\nYou can identify the `private chat` from its `message type`.\nThough not all other chat mods respect this point.\nYou can issue `/fuji debug` to enable the `debug mode`.\nAnd see how the `chat.spy` module works.\n",
-  "docstring.1751900015107": "◉ You can write `style tags` on the sign.\nFoe example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.\n",
+  "docstring.1751900015107": "◉ You can write `style tags` on the sign block.\nFor example: `\\<red\\>`, `\\<rb\\>`, `\\<bold\\>` and `\\<i\\>`.\n",
   "docstring.1751900420030": "◉ Define a `new shortcut command` as an alias to `an existing command`.\nFor example:\n1. Define a new `/r` command, as alias to `/reply` command.\n2. Define a new `/sudo` command, as alias to `/run as fake-op` command.\n",
   "docstring.1751900579678": "The `command_alias` command only has the ability to define `a new command`, as the alias of `an existing command`.\nIt works by `command redirecting`.\nYou can't use `command_alias` module to actually define `a new command with arguments`, that's the weakness.\nIf you want to define `a new command with arguments`, see `command_bundle` module.\n\nIn short:\n1. To define `a simple command` with no arguments, use `command_alias` module.\n2. To define `a complex command` with arguments, use `command_bundle` module.\n",
   "docstring.1751901598337": "◉ Use a `bundle command` to combine many commands into one command.\nIn this example, we want to register a new command `/composite-heal`.\nTo `decorate` an existed command `/heal`.\nThe decorations are:\n1. We will `say` before the execution of `/heal` command.\n2. We will spawn a `heart particle` before the execution of `/heal` command.\n3. We will `say` after the execution of `/heal` command.\n\nTo define this `bundle command` as shown below.\nPattern: `composite-heal`\nBundle:\n1. `say before heal %player:name%`\n2. `run as fake-op %player:name% particle minecraft:heart ~ ~2 ~`\n3. `run as player %player:name% heal`\n4. `say after heal %player:name%`\n",
@@ -1541,5 +1541,6 @@
   "docstring.1759152497031": "Alias to `/lisp eval` command.",
   "docstring.1759152513020": "Eval a lisp form.",
   "docstring.1759153524537": "◉ Advanced `server-side` show-case mod.\nA new mod is released in https://modrinth.com/mod/showcase\nYou may want to check it!\n",
-  "docstring.1765471377282": "Returns the rotating string of specified string, when evaluated.\n"
+  "docstring.1765471377282": "Returns the rotating string of specified string, when evaluated.\n",
+  "docstring.1766444546546": "This module introduces the `style tags` in certain `places`.\n"
 }

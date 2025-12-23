@@ -11,6 +11,7 @@ mod.fuji.module.initializer.chat.spy.ChatSpyInitializer
 mod.fuji.module.initializer.chat.style.ChatStyleInitializer
 mod.fuji.module.initializer.chat.trigger.ChatTriggerInitializer
 mod.fuji.module.initializer.cleaner.CleanerInitializer
+mod.fuji.module.initializer.color.ColorInitializer
 mod.fuji.module.initializer.color.anvil.ColorAnvilInitializer
 mod.fuji.module.initializer.color.sign.ColorSignInitializer
 mod.fuji.module.initializer.command_advice.CommandAdviceInitializer

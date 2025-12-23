@@ -6,6 +6,7 @@ import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.structure.GlobalBlockPos;
+import mod.fuji.module.initializer.color.ColorInitializer;
 import mod.fuji.module.initializer.color.sign.ColorSignInitializer;
 import mod.fuji.module.initializer.color.sign.structure.SignCache;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -41,58 +43,69 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "setText", at = @At("HEAD"), argsOnly = true)
     @NotNull
-    SignText parseTextWhenSetText(@NotNull SignText signText, @Local(argsOnly = true) boolean isFront) {
-        // NOTE: The function will be called in client and server. When install fuji in client side, and edit sign blocks in online server, the server variable will be null.
-        if (ServerHelper.getServer() == null) {
-            return signText;
-        }
-
+    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) boolean isFront) {
+        // NOTE: Only process the sign text when there is a logic server in current session.
+        if (ServerHelper.getServer() == null) return signText;
         if (!WorldHelper.isServerWorld(this.level)) return signText;
 
+        /* Process input line texts. */
+        Component[] inputLineTexts = signText.getMessages(false);
+        Component[] outputLineTexts = new Component[inputLineTexts.length];
+        String[] inputLineStrings = new String[inputLineTexts.length];
 
-        /* Parse input strings. */
-        Component[] messages = signText.getMessages(false);
-        Component[] newMessages = new Component[messages.length];
-        for (int i = 0; i < messages.length; i++) {
-            /* Get the line string from the sign text. */
-            // NOTE: The messages[i] may be null if you write nothing.
-            if (messages[i] == null) messages[i] = Component.literal("");
-            AtomicReference<String> lineString = new AtomicReference<>(messages[i].getString());
+        for (int i = 0; i < inputLineTexts.length; i++) {
+            /* Map the line text into line string. */
+            // NOTE: The inputLineTexts[i] may be null if you write nothing.
+            if (inputLineTexts[i] == null) {
+                inputLineTexts[i] = Component.literal("");
+            }
+            AtomicReference<String> inputLineString = new AtomicReference<>(TextHelper.Operators.getString(inputLineTexts[i]));
+
+            /* Rewrite the input line string. */
+            inputLineString.getAndUpdate(ColorInitializer::rewriteColorCodes);
 
             /* Stripe style tags. */
             if (ColorSignInitializer.config.model().requires_corresponding_permission_to_use_style_tag) {
                 Optional
                     .ofNullable(getPlayerWhoMayEdit())
                     .ifPresent(editorUUID -> {
-                        Optional<ServerPlayer> playerOpt = PlayerHelper.Lookup.getOnlinePlayerByUuid(editorUUID);
-                        if (playerOpt.isPresent()) {
-                            ServerPlayer player = playerOpt.get();
-                            lineString.set(ColorSignInitializer.stripeStyleTags(player, lineString.get()));
-                        }
+                        Optional<ServerPlayer> editingPlayer = PlayerHelper.Lookup.getOnlinePlayerByUuid(editorUUID);
+                        editingPlayer.ifPresent(player -> {
+                            inputLineString.getAndUpdate(it -> ColorSignInitializer.stripeStyleTags(player, it));
+                        });
                     });
             }
 
-            /* Set the sign texts using parsed texts. */
-            newMessages[i] = TextHelper.Parsers.parseString(TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER, lineString.get());
+            /* Update the final line texts and line strings. */
+            outputLineTexts[i] = TextHelper.Parsers.parseString(TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER, inputLineString.get());
+            inputLineStrings[i] = inputLineString.get();
         }
 
         /* Write sign cache. */
-        List<String> lines = Arrays.stream(messages)
-            .map(Component::getString)
+        writeSignCache(isFront, inputLineStrings);
+
+        /* Return the output line texts. */
+        return new SignText(outputLineTexts, outputLineTexts, signText.getColor(), signText.hasGlowingText());
+    }
+
+    @Unique
+    private void writeSignCache(boolean isFront, String[] inputLines) {
+        List<String> $inputLines = Arrays
+            .stream(inputLines)
             .toList();
 
-        GlobalBlockPos globalBlockPos = new GlobalBlockPos(getLevel(), getBlockPos());
-        @Nullable SignCache signCache = ColorSignInitializer.readSignCache(globalBlockPos);
-        if (signCache == null) signCache = new SignCache(List.of(), List.of());
-        if (isFront) {
-            signCache = signCache.withFrontLines(lines);
-        } else {
-            signCache = signCache.withBackLines(lines);
-        }
-        ColorSignInitializer.writeSignCache(globalBlockPos, signCache);
+        @NotNull GlobalBlockPos globalBlockPos = new GlobalBlockPos(getLevel(), getBlockPos());
+        @NotNull SignCache signCache = ColorSignInitializer
+            .readSignCache(globalBlockPos)
+            .orElseGet(() -> new SignCache(List.of(), List.of()));
 
-        /* Return the modified text. */
-        return new SignText(newMessages, newMessages, signText.getColor(), signText.hasGlowingText());
+        if (isFront) {
+            signCache = signCache.withFrontLines($inputLines);
+        } else {
+            signCache = signCache.withBackLines($inputLines);
+        }
+
+        ColorSignInitializer.writeSignCache(globalBlockPos, signCache);
     }
 
 }
