@@ -9,4 +9,6 @@
 
 # 📑 Changelog
 
-- [home] feature: now store the player data using `UUID` instead of `player name`.
+- [home] feature: now store the player data using `UUID` instead of `player name`. (#534)
+- [back] feature: now store the player data using `UUID` instead of `player name`. (#534)
+- [color.sign & color.anvil] feature: now support `leagcy color codes`. (#549)
