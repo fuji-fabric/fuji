@@ -9,3 +9,4 @@
 
 # 📑 Changelog
 
+- [fuji] fix: the `/fuji inspect registry` functionality is broken.

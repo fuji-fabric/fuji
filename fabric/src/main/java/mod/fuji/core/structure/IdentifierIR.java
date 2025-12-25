@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor(staticName = "of")
 @Getter
 @EqualsAndHashCode
-public class IdentifierIR {
+public class IdentifierIR implements Comparable<IdentifierIR> {
 
     @Getter
     @NotNull
@@ -57,6 +57,11 @@ public class IdentifierIR {
         } catch (Throwable e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public int compareTo(@NotNull IdentifierIR o) {
+        return this.getNativeValue().compareTo(o.getNativeValue());
     }
 
 }

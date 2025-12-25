@@ -28,7 +28,7 @@ public class ReadmeDocumentBuilder extends DocumentBuilder {
                 2. **Modules**
                    For the `modules` part, please refer to the respective module chapter in this document.
 
-                This document is also available in an interactive format, use `/fuji` command to play it.
+                This document is also available in an interactive format, use `/fuji` command to read it.
                 :::
 
                 """);

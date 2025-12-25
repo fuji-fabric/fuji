@@ -95,8 +95,8 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             if (o instanceof Registry<?> r) {
                 List<IdentifierDescriptor> ids = r.registryKeySet()
                     .stream()
-                    .map(RegistryHelper::getIdentifier)
                     .sorted()
+                    .map(RegistryHelper::getIdentifier)
                     .map(identifier -> new IdentifierDescriptor(identifier, false))
                     .toList();
                 new RegistriesInspectionGui(getBackendGui(), getPlayer(), false, ids, 0)
