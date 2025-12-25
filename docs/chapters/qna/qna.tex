@@ -22,9 +22,31 @@ Remember to issue \cmd{/fuji reload} command to apply the changes.
 \end{tips}
 
 
+
+\LevelOne{This mod conflits with one of my mods.}
+You can \ttt{disable} the \ttt{conflicting module} and re-start your server.
+If possible, create an issue at \issueurl, so that it can be solved later.
+
 \LevelOne{What is .dat file?}
 The file whose name ends with \tbf{.dat} are the \ttt{vanilla minecraft NBT format file}.
 To open such a file, you need to use a \ttt{NBT Editor}, such as \ttt{NBTExplorer}.
+
+
+\LevelOne{Can I ask the forge or neoforge support?}
+There are no plans to support other platforms except the fabric platform.
+However, you can try running this mod via \tbf{sinytra-connector} mod.
+It's tested in the following environment (145/147 modules work, two modules require the \str{carpet} mod doesn't work):
+\begin{shcode}
+    Loader: --fml.neoForgeVersion 21.1.216 --fml.fmlVersion 4.0.42 --fml.mcVersion 1.21.1 --fml.neoFormVersion 20240808.144430 --launchTarget forgeclient
+    Mods:
+    - connector-2.0.0-beta.12+1.21.1-full
+    - forgified-fabric-api-0.115.6+2.1.4+1.21.1
+    - fuji-fabric-13.2.0-6dbc1fbd06-mc1.21.1
+\end{shcode}
+
+
+\LevelOne{How can I report bugs or suggest new features?}
+You can create an issue at \issueurl
 
 
 \LevelOne{How to update this mod to a new version?}
@@ -39,26 +61,6 @@ Please follow the steps:
 \begin{warn}{Never test new changes directly in your production-environment}
     New changes should always be tested in a test environment, before being deployed to the production environment.
 \end{warn}
-
-
-\LevelOne{This mod conflits with one of my mods.}
-You can \ttt{disable} the \ttt{conflicting module} and re-start your server.
-If possible, create an issue at \issueurl, so that it can be solved later.
-
-\LevelOne{Can I ask the forge or neoforge support?}
-There are no plans to support other platforms except the fabric platform.
-However, you can try running this mod via \tbf{sinytra-connector} mod.
-It's tested in the following environment (145/147 modules work, two modules require the \str{carpet} mod doesn't work):
-\begin{shcode}
-    Loader: --fml.neoForgeVersion 21.1.216 --fml.fmlVersion 4.0.42 --fml.mcVersion 1.21.1 --fml.neoFormVersion 20240808.144430 --launchTarget forgeclient
-    Mods:
-    - connector-2.0.0-beta.12+1.21.1-full
-    - forgified-fabric-api-0.115.6+2.1.4+1.21.1
-    - fuji-fabric-13.2.0-6dbc1fbd06-mc1.21.1
-\end{shcode}
-
-\LevelOne{How can I report bugs or suggest new features?}
-You can create an issue at \issueurl
 
 
 

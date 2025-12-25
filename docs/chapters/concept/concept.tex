@@ -83,51 +83,14 @@ To enable an interesting target module, follow the steps:
 
 
 \clearpage
-\LevelOne{Job}\label{sec:job}
+\LevelOne{Command}\label{sec:command}
 
 \LevelTwo{Definition}
-A \ttt{job} is some things that will be done \ttt{repeatedly}.
+A \ttt{command} is a \ttt{chat string} used to perform a specific action/function.\\
 
-\begin{tips}{List all jobs.}
-    Issue \cmd{/fuji inspect jobs} command.
-\end{tips}
-
-\LevelTwo{Schedule Table}
-The schedule table of a job is a calendar. \\
-A string named \tbf{cron expression} is used to \tbf{select} time points in the calendar. \\
-When the selected time points are reached, the job will be \tbf{triggered/fired}. \\
-When a job is triggered/fired, the things about that job will be done at once.
-
-\begin{example}{What does a cron expression look like?}
-    The cron expression \str{0 * * ? * *}, means \str{trigger the job every minute}. \\
-    The cron expression \str{0 */3 * ? * *}, means \str{trigger the job every 3 minutes}.
-\end{example}
-
-\begin{tips}{Use a generator to make a cron expression.}
-    You can use a generator to select the desired time points:
-    \url{https://www.freeformatter.com/cron-expression-generator-quartz.html}
-\end{tips}
-
-
-
-\clearpage
-\LevelOne{Regex}\label{term:regex}
-
-\LevelTwo{Definition}
-A \tbf{regex expression} is a \tbf{pattern string}, used to match a collection of \tbf{input strings}.
-
-\LevelTwo{Example}
-\begin{example}{What does a regex expression look like?}
-    The pattern string \str{cat} is used to match exactly the given input string \str{cat}. \\
-    The pattern string \str{cat|dog} is used to match the given input strings \str{cat} or \str{dog}.
-\end{example}
-
-\begin{tips}{Test your pattern string on the fly.}
-    Use the following online editor, to test your \tbf{pattern string}.
-    \begin{enumerate}
-        \item \url{https://regexr.com/}
-        \item \url{https://regex101.com/}
-    \end{enumerate}
+\begin{tips}{List all commands.}
+    Issue \cmd{/fuji} command, to list all the enabled modules.\\
+    Issue \cmd{/fuji inspect fuji-commands}, to list all the provided commands by enabled modules.
 \end{tips}
 
 
@@ -177,3 +140,55 @@ An \ttt{identifier} is a \ttt{string} to name an \ttt{object} in \ttt{Minecraft}
 \begin{example}{The identifier of an entity.}
     The identifier of zombie is \str{minecraft:zombie}.
 \end{example}
+
+
+\clearpage
+\LevelOne{Job}\label{sec:job}
+
+\LevelTwo{Definition}
+A \ttt{job} is some things that will be done \ttt{repeatedly}.
+
+\begin{tips}{List all jobs.}
+    Issue \cmd{/fuji inspect jobs} command.
+\end{tips}
+
+\LevelTwo{Schedule Table}
+The schedule table of a job is a calendar. \\
+A string named \tbf{cron expression} is used to \tbf{select} time points in the calendar. \\
+When the selected time points are reached, the job will be \tbf{triggered/fired}. \\
+When a job is triggered/fired, the things about that job will be done at once.
+
+\begin{example}{What does a cron expression look like?}
+    The cron expression \str{0 * * ? * *}, means \str{trigger the job every minute}. \\
+    The cron expression \str{0 */3 * ? * *}, means \str{trigger the job every 3 minutes}.
+\end{example}
+
+\begin{tips}{Use a generator to make a cron expression.}
+    You can use a generator to select the desired time points:
+    \url{https://www.freeformatter.com/cron-expression-generator-quartz.html}
+\end{tips}
+
+
+
+\clearpage
+\LevelOne{Regex}\label{term:regex}
+
+\LevelTwo{Definition}
+A \tbf{regex expression} is a \tbf{pattern string}, used to match a collection of \tbf{input strings}.
+
+\LevelTwo{Example}
+\begin{example}{What does a regex expression look like?}
+    The pattern string \str{cat} is used to match exactly the given input string \str{cat}. \\
+    The pattern string \str{cat|dog} is used to match the given input strings \str{cat} or \str{dog}.
+\end{example}
+
+\begin{tips}{Test your pattern string on the fly.}
+    Use the following online editor, to test your \tbf{pattern string}.
+    \begin{enumerate}
+        \item \url{https://regexr.com/}
+        \item \url{https://regex101.com/}
+    \end{enumerate}
+\end{tips}
+
+
+
