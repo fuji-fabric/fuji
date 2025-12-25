@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 @Document(id = 1766444546546L, value = """
-    This module introduces the `style tags` in certain `places`.
+    This module introduces `style tags` in certain `places`.
     """)
 public class ColorInitializer extends ModuleInitializer {
 

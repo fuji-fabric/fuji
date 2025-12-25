@@ -3,16 +3,16 @@
 
 % Packages
 
-% use a4 paper
+% Use a4 paper size.
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 
-% color extension
+% Use color extension package.
 \usepackage{xcolor}
 
-% colored box
+% Use colorbox package.
 \usepackage{tcolorbox}
 
-% hyper link colorize
+% Configure hyper link colors.
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
@@ -20,31 +20,25 @@
     urlcolor=red
 }
 
-% the 'outputdir' is reletive to fuji.tex, and must point the 'output directory' of latex compiler.
+% The 'outputdir' is reletive to fuji.tex, and must point to the 'output directory' of latex compiler.
 \usepackage{minted}
 
-% fix the character '_' can't be copied in output .pdf file
+% Fix the issue that the character '_' can't be copied in output .pdf file.
 \usepackage[T1]{fontenc}
 
-% disable double hyphen ligature in typeset
+% Disable double hyphen ligature in typeset.
 \usepackage{microtype}
 \DisableLigatures[-]{}
 
-%\usepackage[parfill]{parskip}
-
-% to listing a kind of objects
+% Use object listing package.
 \usepackage{listings}
 
-% Macros
+% Define macros.
 \input{macros/macro}
 
-% use fancy header and footer
+% Use fancy header and footer package.
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-%\fancyhf{}
-%\fancyfoot[LE,RO]{\thepage}
-%\fancyhead[RO]{\textbf{\nouppercase{\rightmark}}}
-%\fancyhead[LE]{\slshape\nouppercase{\leftmark}}
 \fancyhead[LE,RO]{\nouppercase{\rightmark}}
 \fancyhead[LO,RE]{\textbf{\nouppercase{\leftmark}}}
 \fancyfoot[C]{\thepage}
@@ -56,20 +50,19 @@
         \textbf{Fuji Manual}\\[0.5em]
         \large {\version}
     }
-    \author{sakurawald}
+    \author{fuji-fabric}
     \date{\today}
     \maketitle
 
-    % make toc
+    % Make the TOC.
     \tableofcontents
     \mainmatter
 
-    % input chapters
+    % Include the chapters.
     \input{chapters/concept/concept}
     \input{chapters/command/command}
     \input{chapters/permission/permission}
     \input{chapters/meta/meta}
-    \input{chapters/configuration/configuration}
     \input{chapters/language/language}
     \input{chapters/qna/qna}
     \input{chapters/suggestion/suggestion}

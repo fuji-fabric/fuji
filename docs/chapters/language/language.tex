@@ -1,38 +1,42 @@
 \LevelZero{Language}\label{ch:language}
 
 \LevelOne{Definition}
-The files inside \tbf{config/fuji/languages/} directory are called \tbf{language files}. \\
+The files inside \tbf{config/fuji/languages/} directory are named \tbf{language files}. \\
 Each \tbf{language file} defines a table to map a \tbf{language key} into a \tbf{language value}.
 
-\LevelOne{Modify the default language used by fuji}
-You can modify the \tbf{default language} in \mainconfig file.
-After that, issue \cmd{/fuji reload} command to apply the changes.
-
-\LevelOne{Control how the text is sent}
-The \tbf{language value} only defines what is the text.
-It didn't define how to use that text.
-You can use \tbf{language instructions} to specify how to use that \tbf{language value}. \\
-Currently supported language instructions:
-\begin{description}
-    \item [1. Send the text via action bar] {If the language value starts with \str{[send-action-bar]}}
-    \item [2. Send the text via main title] {If the language value starts with \str{[send-main-title]}}
-    \item [3. Send the text via sub title] {If the language value starts with \str{[send-sub-title]}}
-    \item [4. Suppress the sending of this text] {If the language value starts with \str{[suppress-sending]}}
-\end{description}
-If no \tbf{language instruction} is used, we will send the \tbf{text} via the \tbf{message}.
-
-\LevelOne{Control the text sending stream}
-For each fuji command, you can use \str{--silent true/false} and \str{--stdout true/false} to control the text sending stream during the command execution.\\
-For example:\\
-1. The \cmd{/fly others Steve --silent true} will \tbf{cancel the text sending} during the execution of \cmd{/fly} command.\\
-2. The \cmd{/fly others Steve --stdout true} will \tbf{log the text sending into the console} during the execution of \cmd{/fly} command.\\
-3. You can use the \str{--silent true} and \str{--stdout true} both at the same time. \\
-4. You can pass the flags into sub-command: \cmd{/run as console --stdout true send-message @r Hello}
-
-
-\LevelOne{Enable multiple language support}
-You can enable the \str{language} module, to provide the multiple language support for each player, and respect their client side language option.
-
-\begin{tips}{How to know what languages are loaded and in use?}
-    Issue \cmd{/fuji inspect languages} command, to see what language files are loaded.
+\begin{tips}{List all languages.}
+    Issue \cmd{/fuji inspect languages} command, to see what language files are loaded and in use.
 \end{tips}
+
+\LevelOne{Modify the default language.}
+You can modify the \tbf{default language} in \mainconfig file. \\
+Then, issue \cmd{/fuji reload} command to apply the changes.
+
+\LevelOne{Control how the text is used.}
+The \tbf{language value} only defines \str{what is the text}. \\
+It doesn't define \str{how the text is used}. \\
+You can insert \tbf{language instructions} to specify how to use that \tbf{language value}. \\
+
+\begin{note}{Supported language instrutions}
+    \begin{enumerate}
+        \item {If the language value starts with \str{[send-action-bar]}, the text will be displayed in the action bar.}
+        \item {If the language value starts with \str{[send-main-title]}, the text will be displayed in the main title.}
+        \item {If the language value starts with \str{[send-sub-title]}, the text will be displayed in the sub title.}
+        \item {If the language value starts with \str{[suppress-sending]}, the text will not be displayed.}
+        \item {Otherwise, the text will be displayed in the chat message.}
+    \end{enumerate}
+\end{note}
+
+
+\LevelOne{Control the text streaming}
+For each fuji command, you can specify \str{--silent true/false} and \str{--stdout true/false} flags to control the text streaming during the command execution.\\
+
+\begin{example}{}
+    \begin{enumerate}
+        \item {The \cmd{/fly others Steve --silent true} command will \tbf{not display the text} during the execution of \cmd{/fly} command.}
+        \item {The \cmd{/fly others Steve --stdout true} command will \tbf{stream the text into the console} during the execution of \cmd{/fly} command.}
+        \item {The \cmd{/run as console --stdout true send-message @r Hello} command will pass the flags into the \cmd{/send-message @r Hello} sub-command.}
+    \end{enumerate}
+\end{example}
+
+

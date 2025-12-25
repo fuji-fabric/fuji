@@ -1,26 +1,17 @@
 \LevelZero{Meta}\label{ch:meta}
 \LevelOne{Definition}
-A \ttt{meta} is a \ttt{key-value pair}.
+A \ttt{meta} is a \ttt{key-value pair} introduced by \ttt{luckperms} mod, to store \ttt{per-player} or \ttt{per-group} variables.
 
-\begin{note}{}
-    Note that \ttt{meta} is introduced by \ttt{luckperms} mod, there is no \ttt{meta} in vanilla minecraft.
-\end{note}
-
-\LevelOne{Getting Started}
-\begin{tips}{List all supported metas.}
+\begin{tips}{List all metas.}
     Issue \cmd{/fuji inspect permissions-and-metas} command.
 \end{tips}
 
 \LevelOne{Example}
 \begin{example}{Set a meta for a gruop.}
-    The \ttt{home module} supports the meta \ttt{fuji.home.home\_limit}, which controls how many homes a player can create.
-    To set the max homes limits to \ttt{3}: \cmd{/lp group default meta set fuji.home.home\_limit 3}
+    The \str{home} module provides the meta \str{fuji.home.home\_limit}, which controls how many homes a player can create. \\
+    To set the homes limit to \ttt{3}: \cmd{/lp group default meta set fuji.home.home\_limit 3}
 \end{example}
 
-\begin{example}{Query all metas for a group.}
-    \cmd{/lp group default info}
+\begin{example}{List all metas of a group.}
+    Issue \cmd{/lp group default info} command.
 \end{example}
-
-\begin{tips}{Query all registered metas.}
-    Issue \cmd{/fuji inspect permissions-and-metas} command, to see all the registered metas.
-\end{tips}

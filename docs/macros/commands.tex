@@ -1,8 +1,8 @@
-% variable
+% Define variables.
 \newcommand{\version}{v@TOKEN_MOD_VERSION@}
 \newcommand{\issueurl}[0]{\href{https://github.com/fuji-fabric/fuji/issues}{fuji issue page}}
 
-% shortcut
+% Define shortcut commands.
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\tbf}[1]{\textbf{#1}}
 \newcommand{\ldq}[0]{``}
@@ -10,10 +10,10 @@
 \newcommand{\ttie}[0]{\char`\~}
 \newcommand{\tcomma}[0]{\char`\,}
 \newcommand{\eg}[0]{e.g. }
-\newcommand{\mainconfig}[0]{\texttt{config/fuji/config.json\ }}
+\newcommand{\mainconfig}[0]{\tbf{config/fuji/config.json\ }}
 \newcommand{\configdir}[0]{\texttt{config/fuji/\ }}
 
-% building block
+% Define building blocks.
 \newcommand{\ph}[1]{\textcolor{teal}{\texttt{\%#1\%}}}
 \newcommand{\cmd}[1]{{\textcolor{orange}{\texttt{#1}}}}
 
@@ -23,7 +23,7 @@
 \definecolor{dark-green}{RGB}{0,170,0}
 \newcommand{\player}[0]{\textcolor{dark-green}{\texttt{<player> }}}
 
-% listing
+% Define listings.
 \usepackage{tocloft}
 \newcommand{\listfcmdname}{List of commands}
 \newlistof{fcmd}{fcmdfile}{\listfcmdname}

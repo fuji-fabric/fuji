@@ -2,17 +2,13 @@
 
 
 \LevelOne{Where is the configuration files of fuji?}
-As a convention, all the files are placed in \ttt{config/fuji/} directory.
-
-
-\LevelOne{What is .json file?}
-A json file is a text file, whose file name normally ends with \tbf{.json}.
+For hygiene, all the files are placed in \ttt{config/fuji/} directory.
 
 
 \LevelOne{How can I edit a configuration file?}
-To ensure the \ttt{readibility} and \ttt{compatibility}, most of the files are saved as \ttt{pure text format}.
+To ensure the \ttt{readibility} and \ttt{compatibility}, most of the files are saved as \ttt{plain text format}.
 You can open them with a \ttt{text editor}.
-Remember to issue \cmd{/fuji reload} command to apply your modification.
+Remember to issue \cmd{/fuji reload} command to apply the changes.
 
 \begin{tips}{Use a moderen text editor.}
     Some files may have a large number of lines, so it's highly recommended to use a \ttt{modern} text editor, which can highlight symbols and reveal the structure of the file, such as:
@@ -31,38 +27,35 @@ The file whose name ends with \tbf{.dat} are the \ttt{vanilla minecraft NBT form
 To open such a file, you need to use a \ttt{NBT Editor}, such as \ttt{NBTExplorer}.
 
 
-\LevelOne{How to update fuji to a new version?}
+\LevelOne{How to update this mod to a new version?}
 
 Please follow the steps:
 \begin{description}
     \item[1. Backup the data] {Back up the \ttt{config/fuji} directory.}
-    \item[2. Test the new version in your test-environment] {Put the new version of fuji into \ttt{mods/} directory, start the server, and adjust the configuration to your desired effect.}
+    \item[2. Test the changes in your test-environment] {Put the new version of this mod into \ttt{mods/} directory, start the server, test whether everything behaves as expected.}
     \item[3. Apply the changes to production-environment] {Now, it's ready to apply the changes to your production-environment.}
 \end{description}
 
-\begin{warn}{Don't test new changes directly in your production-environment}
-    It's highly recommended to setup a test-environment for a network-maintainer, so that you can test and tweak installed mods into the desired effect, and avoid un-expected situations.
+\begin{warn}{Never test new changes directly in your production-environment}
+    New changes should always be tested in a test environment, before being deployed to the production environment.
 \end{warn}
 
 
-\LevelOne{Fuji conflits with one of my mods.}
-You can \ttt{disable} that \ttt{conflicting module} and re-start your server.
-If possible, create an issue at \issueurl, so that we can solve it later.
+\LevelOne{This mod conflits with one of my mods.}
+You can \ttt{disable} the \ttt{conflicting module} and re-start your server.
+If possible, create an issue at \issueurl, so that it can be solved later.
 
 \LevelOne{Can I ask the forge or neoforge support?}
-We have no plan for forge or neoforge platform.
+There are no plans to support other platforms except the fabric platform.
 However, you can try running this mod via \tbf{sinytra-connector} mod.
-It's tested in the following environment (131/133 modules works, two modules require the \str{carpet} mod doesn't work):
+It's tested in the following environment (145/147 modules work, two modules require the \str{carpet} mod doesn't work):
 \begin{shcode}
-    Loader: --fml.neoForgeVersion 21.1.203 --fml.fmlVersion 4.0.41 --fml.mcVersion 1.21.1 --fml.neoFormVersion 20240808.144430
+    Loader: --fml.neoForgeVersion 21.1.216 --fml.fmlVersion 4.0.42 --fml.mcVersion 1.21.1 --fml.neoFormVersion 20240808.144430 --launchTarget forgeclient
     Mods:
-    - connector-2.0.0-beta.8+1.21.1-full
-    - forgified-fabric-api-0.115.6+2.1.1+1.21.1
-    - fuji-fabric-12.24.0-06d6493c8b-mc1.21.1
+    - connector-2.0.0-beta.12+1.21.1-full
+    - forgified-fabric-api-0.115.6+2.1.4+1.21.1
+    - fuji-fabric-13.2.0-6dbc1fbd06-mc1.21.1
 \end{shcode}
-
-If you encounter issues in forge or neoforge environment, you can still open an issue in github.
-We provide the support for forge and neoforge, if it's possible and handy.
 
 \LevelOne{How can I report bugs or suggest new features?}
 You can create an issue at \issueurl
