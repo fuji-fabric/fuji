@@ -8,28 +8,30 @@ A \ttt{permission} is used to decide whether \ttt{a player} can do something or 
 
 
 \LevelOne{Types}
-There are two types of permissions.
-\begin{description}
-    \item[level permission]{A level permission is a non-negative integer used in vanilla Minecraft. A higher number means greater authority.}
-    \item[string permission]{A \ttt{string permission} is introduced by a \ttt{permission mod}, such as \ttt{luckperms} mod.}
-\end{description}
-\clearpage
 
+\begin{note}{There are two types of permissions.}
+    \begin{description}
+        \item[level permission]{A level permission is a non-negative integer used in vanilla Minecraft. A higher number means greater authority.}
+        \item[string permission]{A \ttt{string permission} is introduced by a \ttt{permission mod}, such as \ttt{luckperms} mod.}
+    \end{description}
+\end{note}
+
+\clearpage
 \LevelOne{What is the permission system used by this mod?}
 \LevelTwo{Explanation}
-Fuji use the Mojang's \ttt{vanilla Minecraft permission system}, which is based on \ttt{level permission}.\\
-\\
-As a convention, most of the commands registered by fuji, require \ttt{level permission} to be \ttt{0} to use.
-Only a few of the commands require the \ttt{level permission} to be \ttt{4} to use.
+Fuji use Mojang's \ttt{vanilla Minecraft permission system}, which is based on \ttt{level permission}. \\\\
+Commands provided by this mod are split into two groups. \\
+For \ttt{user-level} commands, they require level permission to be \ttt{0} to use. \\
+For \ttt{admin-level} commands, they require level permission to be \ttt{4} to use. \\
 
 \begin{tips}{Modify the default required level permission to be 4 for all fuji commands}
-   You may want to prevent the player from using any commands registered by fuji.
-   So that you can assign the proper permission for each command one by one.
+   You may want to prevent the player from using any command provided by this mod.
+   So that you can assign the desired permission for each command one by one.
    In this case, you can set the \str{all\_commands\_require\_level\_4\_permission\_to\_use\_by\_default} in \mainconfig file to be \tbf{true}.
 \end{tips}
 
 \LevelTwo{Set a string permission for a command}
-By default, fuji only use the \ttt{level permission} as \ttt{the requirement of} a command.
+By default, this mod only uses the \ttt{level permission} as \ttt{the requirement of} a command.
 However, if you want to use \ttt{string permission} for a \ttt{command}, you can use \tbf{command\_permission} module, to provide luckperms permissions for each command.
 
 

@@ -76,31 +76,31 @@ import org.jetbrains.annotations.NotNull;
 
 @ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Open the interactive document GUI
-    Command: `/fuji`
+    Issue: `/fuji`
 
     ◉ List all Fuji commands
-    Command: `/fuji inspect fuji-commands`
+    Issue: `/fuji inspect fuji-commands`
 
     ◉ List all Fuji permissions and metas
-    Command: `/fuji inspect permissions-and-metas`
+    Issue: `/fuji inspect permissions-and-metas`
 
     ◉ List all Fuji placeholders
-    Command: `/fuji inspect placeholders`
+    Issue: `/fuji inspect placeholders`
 
     ◉ List all Fuji configurations
-    Command: `/fuji inspect configurations`
+    Issue: `/fuji inspect configurations`
 
     ◉ List all Fuji jobs
-    Command: `/fuji inspect jobs`
+    Issue: `/fuji inspect jobs`
 
     ◉ List all Fuji languages
-    Command: `/fuji inspect languages`
+    Issue: `/fuji inspect languages`
 
     ◉ List all Fuji argument types
-    Command: `/fuji inspect argument-types`
+    Issue: `/fuji inspect argument-types`
 
     ◉ List all Fuji events
-    Command: `/fuji inspect events`
+    Issue: `/fuji inspect events`
     """)
 public class CoreInitializer extends ModuleInitializer {
 
