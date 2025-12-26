@@ -1542,5 +1542,6 @@
   "docstring.1759152513020": "Eval a lisp form.",
   "docstring.1759153524537": "◉ Advanced `server-side` show-case mod.\nA new mod is released in https://modrinth.com/mod/showcase\nYou may want to check it!\n",
   "docstring.1765471377282": "Returns the rotating string of specified string, when evaluated.\n",
-  "docstring.1766444546546": "This module introduces `style tags` in certain `places`.\n"
+  "docstring.1766444546546": "This module introduces `style tags` in certain `places`.\n",
+  "docstring.1766706480385": "The `common prefix` for all language values.\n"
 }

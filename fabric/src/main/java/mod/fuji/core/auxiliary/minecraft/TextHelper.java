@@ -9,6 +9,18 @@ import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
 import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import mod.fuji.core.auxiliary.JsonUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -24,42 +36,28 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.service.game_task.GameTaskManager;
 import mod.fuji.core.service.game_task.structure.GameTask;
 import mod.fuji.core.service.toast_sender.ToastSender;
-import mod.fuji.core.structure.Pair;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import mod.fuji.core.structure.AdvancementFrameTypeIR;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import mod.fuji.core.structure.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- *     The design of language system.
-    1. Use hash map to map the language key into language value.
-    2. Teh language value should be simple enough. (Reduce the usage of long sentence)
-    3. Reduce the usage of <code>click event</code> and <code>hover event</code> tag in language value. (Use programmatically way to attach them)
-
-
+ * The design of language system.
+ * 1. Use hash map to map the language key into language value.
+ * 2. Teh language value should be simple enough. (Reduce the usage of long sentence)
+ * 3. Reduce the usage of <code>click event</code> and <code>hover event</code> tag in language value. (Use programmatically way to attach them)
  **/
 public class TextHelper {
 
@@ -75,8 +73,8 @@ public class TextHelper {
     }
 
     /**
- * The functions used to interact with the Text Parser.
- **/
+     * The functions used to interact with the Text Parser.
+     **/
     public static class Parsers {
         @SuppressWarnings("unused")
         private static final int THIS_STATIC_VARIABLE_IS_USED_TO_ENSURE_THE_EXTENDED_TAGS_ARE_REGISTERED_BEFORE_CREATING_THE_DEFAULT_PARSER = registerExtendedTags();
@@ -99,8 +97,8 @@ public class TextHelper {
         }
 
         /**
- * The style-only parser should support mini-message language and markdown language.
- **/
+         * The style-only parser should support mini-message language and markdown language.
+         **/
         private static NodeParser makeStyleOnlyParser() {
             #if MC_VER <= MC_1_20_2
             List<NodeParser> parsers = new ArrayList<>();
@@ -222,8 +220,8 @@ public class TextHelper {
     }
 
     /**
- * The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.
- **/
+     * The functions used to load language file from storage into memory, and resolve the suitable language json for given audience.
+     **/
     public static class Loader {
         public static final Map<String, String> PLAYER_2_LANGUAGE_CODE = new ConcurrentHashMap<>();
         public static final Map<String, JsonObject> LANGUAGE_CODE_2_LANGUAGE_JSON = new ConcurrentHashMap<>();
@@ -241,11 +239,10 @@ public class TextHelper {
         }
 
         /**
- *             Clear the loaded language file in memory.
-            Note that once teh attempt to load a language file from storage is failed, a JsonObject maker named `UNSUPPORTED LANGUAGE` will be put into the map.
-            Leading the subsequent attempts imply returns the marker.
-
- **/
+         * Clear the loaded language file in memory.
+         * Note that once teh attempt to load a language file from storage is failed, a JsonObject maker named `UNSUPPORTED LANGUAGE` will be put into the map.
+         * Leading the subsequent attempts imply returns the marker.
+         **/
         public static void clearLoadedLanguageJsons() {
             LANGUAGE_CODE_2_LANGUAGE_JSON.clear();
         }
@@ -379,8 +376,8 @@ public class TextHelper {
     }
 
     /**
- * The functions to map language key into language value for specified language code.
- **/
+     * The functions to map language key into language value for specified language code.
+     **/
     public static class Translator {
 
         private static @Nullable String getLanguageValueFromLanguageJson(@NotNull String languageCode, @NotNull String languageKey) {
@@ -529,8 +526,8 @@ public class TextHelper {
     }
 
     /**
- * The functions to operate on the Text domain entity.
- **/
+     * The functions to operate on the Text domain entity.
+     **/
     public static class Operators {
 
         public static String getString(@NotNull Component text) {
@@ -550,8 +547,8 @@ public class TextHelper {
     }
 
     /**
- * This is the core method to map String into Text.
- **/
+     * This is the core method to map String into Text.
+     **/
     public static @NotNull Component getText(@NotNull NodeParser parser, @Nullable Object audience, boolean isKey, String keyOrValue, Object... args) {
         // Retrieve the language value.
         String languageValue = isKey ? Translator.getLanguageValueByKey(audience, keyOrValue) : keyOrValue;
@@ -653,8 +650,8 @@ public class TextHelper {
     }
 
     /**
- * The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.
- **/
+     * The abstraction method to CommandOutput#sendMessage, ServerCommandSource#sendMessage, PlayerEntity#sendMessage and ServerPlayerEntity#sendMessage.
+     **/
     public static void sendMessageByText(@NotNull Object audience, @NotNull Component text) {
         sendText(audience, text, Sender.TextLocation.MESSAGE);
     }
@@ -664,8 +661,8 @@ public class TextHelper {
     }
 
     /**
- * Send the given text to an audience.
- **/
+     * Send the given text to an audience.
+     **/
     public static void sendText(@NotNull Object audience, @NotNull Component text, @NotNull Sender.TextLocation textLocation) {
         /* Unbox the command context, to get the command source. */
         if (audience instanceof CommandActor commandActor) {
@@ -697,9 +694,13 @@ public class TextHelper {
         Sender.sendTextToAudience(audience, text, textLocation);
     }
 
+    private static @NotNull String getLanguageValueCommonPrefix() {
+        return Configs.MAIN_CONTROL_CONFIG.model().core.language.language_value_common_prefix;
+    }
+
     /**
- * Send a language key with arguments to an audience.
- **/
+     * Send a language key with arguments to an audience.
+     **/
     public static void sendTextByKey(@NotNull Object audience, @NotNull String languageKey, Object... args) {
         /* Get the language value by language key for that audience. */
         String languageValue = Translator.getLanguageValueByKey(audience, languageKey);
@@ -713,6 +714,11 @@ public class TextHelper {
         Pair<String, Sender.TextLocation> languageInstructionResult = Sender.parseLanguageInstruction(languageValue);
         languageValue = languageInstructionResult.getKey();
         Sender.TextLocation textLocation = languageInstructionResult.getValue();
+
+        /* Insert the language value common prefix. */
+        if (textLocation.equals(Sender.TextLocation.MESSAGE)) {
+            languageValue = getLanguageValueCommonPrefix() + languageValue;
+        }
 
         /* Parse the language value into text using parsers. */
         Component text = getTextByValue(audience, languageValue, args);
@@ -915,8 +921,8 @@ public class TextHelper {
     }
 
     /**
- * The abstraction for text events.
- **/
+     * The abstraction for text events.
+     **/
     public static class Events {
 
         public static class ClickEvent {
@@ -1033,9 +1039,8 @@ public class TextHelper {
     }
 
     /**
- *         The text component format: https://minecraft.wiki/w/Text_component_format#History
-
- **/
+     * The text component format: https://minecraft.wiki/w/Text_component_format#History
+     **/
     @SuppressWarnings("unused")
     public static class Codec {
 

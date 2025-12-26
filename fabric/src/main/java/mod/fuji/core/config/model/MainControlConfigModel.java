@@ -104,6 +104,12 @@ public class MainControlConfigModel {
                 """)
             public String default_language = "en_US";
 
+            @Document(id = 1766706480385L, value = """
+                Define the `common prefix` for all language values.
+                This prefix will only be inserted when a text is displayed in `chat message`.
+                """)
+            public String language_value_common_prefix = "<orange>➜</orange> ";
+
             public Validator validator = new Validator();
             public static class Validator {
                 @Document(id = 1754322053339L, value = """

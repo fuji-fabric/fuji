@@ -5,8 +5,11 @@
 > **For user manual, refer to: https://fuji-fabric.github.io**
 >
 
-
-
 # 📑 Changelog
 
-- [fuji] fix: the `/fuji inspect registry` functionality is broken.
+### ✨ New Features
+- **[core]** Added a new option: `core.language.language_value_common_prefix`  
+  This allows you to define a shared prefix for all language values, making language configuration easier and more consistent.
+
+### 🐞 Fixes
+- **[fuji]** Fixed an issue where the `/fuji inspect registry` command was not working correctly.
