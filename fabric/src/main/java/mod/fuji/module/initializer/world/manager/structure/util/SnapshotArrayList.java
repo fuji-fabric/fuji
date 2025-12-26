@@ -36,26 +36,26 @@ public final class SnapshotArrayList<T> extends AbstractList<T> implements Rando
 
     @Override
     public T set(int index, T element) {
-        throw new UnsupportedOperationException("SafeArrayList is read-only");
+        throw new UnsupportedOperationException("SnapshotArrayList is read-only");
     }
 
     @Override
     public void add(int index, T element) {
-        throw new UnsupportedOperationException("SafeArrayList is read-only");
+        throw new UnsupportedOperationException("SnapshotArrayList is read-only");
     }
 
     @Override
     public T remove(int index) {
-        throw new UnsupportedOperationException("SafeArrayList is read-only");
+        throw new UnsupportedOperationException("SnapshotArrayList is read-only");
     }
 
     @Override
     public void replaceAll(@NotNull UnaryOperator<T> operator) {
-        throw new UnsupportedOperationException("SafeArrayList is read-only");
+        throw new UnsupportedOperationException("SnapshotArrayList is read-only");
     }
 
     @Override
     public void sort(Comparator<? super T> c) {
-        throw new UnsupportedOperationException("SafeArrayList is read-only");
+        throw new UnsupportedOperationException("SnapshotArrayList is read-only");
     }
 }
