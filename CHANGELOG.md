@@ -9,5 +9,7 @@
 
 ### ✨ New Features
 
-- **[world]**: improve the compatibility with other world related mods. (e.g. `worldmanager` and other mods) (#556)
+
+### Fixes
+- **[fuji]**: The `/fuji inspect registry` command didn't work.
 
