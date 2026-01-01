@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class AfkService {
 
-    private static final ConcurrentHashMap<String, PlayerAfkState> playerPreviousInputCounterMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, PlayerAfkState> playerAfkStateMap = new ConcurrentHashMap<>();
 
     @EventConsumer
     private static void consumePlayerJoinedEvent(PlayerJoinedEvent event) {
@@ -45,20 +45,20 @@ public class AfkService {
 
     public static boolean isInAfkState(@NotNull ServerPlayer player) {
         return getPlayerAfkState(player)
-            .isAfk();
+            .isInState();
     }
 
     public static void receiveAction(@NotNull ServerPlayer player) {
         PlayerAfkState playerAfkState = getPlayerAfkState(player);
 
         /* Try change the afk state. */
-        if (playerAfkState.isAfk()) {
+        if (playerAfkState.isInState()) {
             changeAfkState(player, false);
         }
     }
 
     private static @NotNull Component getInAfkStateDisplayNameText(@NotNull ServerPlayer player) {
-        return TextHelper.getTextByValue(player, AfkInitializer.config.model().afk_display_name_format);
+        return TextHelper.getTextByValue(player, AfkInitializer.config.model().getAfkDisplayNameFormat());
     }
 
     public static boolean isPlayerMovedBySelf(@NotNull MoverType movementType, @NotNull Vec3 vec3d) {
@@ -74,12 +74,12 @@ public class AfkService {
 
     private static @NotNull PlayerAfkState getPlayerAfkState(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
-        return playerPreviousInputCounterMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
+        return playerAfkStateMap.computeIfAbsent(playerName, k -> new PlayerAfkState());
     }
 
     private static void resetPlayerAfkState(@NotNull ServerPlayer player) {
         String playerName = PlayerHelper.getPlayerName(player);
-        playerPreviousInputCounterMap.put(playerName, new PlayerAfkState());
+        playerAfkStateMap.put(playerName, new PlayerAfkState());
     }
 
     public static long getPreviousInputCounter(@NotNull ServerPlayer player) {
@@ -100,14 +100,14 @@ public class AfkService {
 
         /* Change the afk state. */
         PlayerAfkState playerAfkState = getPlayerAfkState(player);
-        playerAfkState.setAfk(flag);
+        playerAfkState.setInState(flag);
 
         /* Update the display name. */
         PacketHelper.sendPacketToAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, player));
 
         /* Trigger afk events. */
-        AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().afk_event;
-        List<String> commandList = playerAfkState.isAfk() ? afkEvent.on_enter_afk : afkEvent.on_leave_afk;
+        AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().getAfkEvent();
+        List<String> commandList = playerAfkState.isInState() ? afkEvent.getOnEnterAfk() : afkEvent.getOnLeaveAfk();
         CommandSourceStack commandSource = CommandHelper.Source.getCommandSource(player);
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(commandSource), commandList);
     }

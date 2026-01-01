@@ -1,48 +1,49 @@
 package mod.fuji.module.initializer.afk.config.model;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mod.fuji.core.document.annotation.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class AfkConfigModel {
+
     @Document(id = 1751825634067L, value = """
-        The `display name` of an afk player in `tab` list.
+        Define the `display name` of a player in afk state.
         """)
     @SerializedName(value = "afk_display_name_format", alternate = "format")
-    public String afk_display_name_format = "<gray>[AFK] %player:displayname_visual%";
+    String afkDisplayNameFormat = "<gray>[AFK] %player:displayname_visual%";
 
     @Document(id = 1751825643038L, value = """
-        Afk checker is `triggered` periodically.
-        To check whether a player has any input action.
-        And mark the player as `afk` if there is no `action` for too long.
+        An afk checker is used to compare and mark a player as in afk state.
         """)
-    public AfkChecker afk_checker = new AfkChecker();
+    AfkChecker afkChecker = new AfkChecker();
+    @Data
+    @NoArgsConstructor
     public static class AfkChecker {
-        @Document(id = 1751825650915L, value = """
-            The `cron` expression used to trigger `afk checker`.
-            """)
         public String cron = "0 0/5 * ? * *";
     }
 
     @Document(id = 1751825654901L, value = """
-        Define commands to run on afk events.
+        Define commands to be executed when enter or leave the afk state.
         """)
-    public AfkEvent afk_event = new AfkEvent();
+    AfkEvent afkEvent = new AfkEvent();
+    @Data
+    @NoArgsConstructor
     public static class AfkEvent {
-        @Document(id = 1751825659946L, value = "When a player enters afk state.")
-        public List<String> on_enter_afk = new ArrayList<>() {
+
+        List<String> onEnterAfk = new ArrayList<>() {
             {
                 this.add("send-broadcast <gold>Player %player:name% is now afk");
 
             }
         };
 
-        @Document(id = 1751826157602L, value = """
-            When a player leaves afk state.
-            """)
-        public List<String> on_leave_afk = new ArrayList<>() {
+        List<String> onLeaveAfk = new ArrayList<>() {
             {
                 this.add("send-broadcast <gold>Player %player:name% is no longer afk");
             }

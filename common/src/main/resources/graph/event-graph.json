@@ -1150,8 +1150,8 @@
     },
     {
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
-      "declaring_class_name": "mod.fuji.module.initializer.afk.job.AfkMarkerJob",
-      "declaring_method_name": "scheduleAfkMarkerJob",
+      "declaring_class_name": "mod.fuji.module.initializer.afk.job.AfkCheckerJob",
+      "declaring_method_name": "scheduleAfkCheckerJob",
       "injector_priority": 1000,
       "consumer_priority": 1000,
       "is_dynamic": false

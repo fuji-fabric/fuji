@@ -13,18 +13,17 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 @Document(id = 1751826177457L, value = """
-    This `job` is used to check the last action time for each player.
+    This `job` is used to compare and mark a player as in afk state.
     """)
-public class AfkMarkerJob extends CronJob {
+public class AfkCheckerJob extends CronJob {
 
-    public AfkMarkerJob() {
-        super(() -> AfkInitializer.config.model().afk_checker.cron);
+    public AfkCheckerJob() {
+        super(() -> AfkInitializer.config.model().getAfkChecker().getCron());
     }
 
     @EventConsumer
-    private static void scheduleAfkMarkerJob(@Unused ServerStartedEvent event) {
-        AfkMarkerJob afkMarkerJob = new AfkMarkerJob();
-        JobManager.addJob(afkMarkerJob);
+    private static void scheduleAfkCheckerJob(@Unused ServerStartedEvent event) {
+        JobManager.addJob(new AfkCheckerJob());
     }
 
     @Override
@@ -33,13 +32,12 @@ public class AfkMarkerJob extends CronJob {
             .stream()
             .filter(it -> !it.isRemoved())
             .forEach(it -> {
-
                 /* Update previous input counter. */
                 long prevInputCounter = AfkService.getPreviousInputCounter(it);
                 long curInputCounter = it.getLastActionTime();
                 AfkService.setPreviousInputCounter(it, curInputCounter);
 
-                /* Enter afk state if consecutive values are identical. */
+                /* If the two consecutive values are identical, enter the afk state. */
                 if (prevInputCounter == curInputCounter && !AfkService.isInAfkState(it)) {
                     AfkService.changeAfkState(it, true);
                 }

@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PlayerAfkState {
-    boolean isAfk = false;
+    boolean inState = false;
     long previousInputCounter = -1L;
 }
