@@ -29,7 +29,7 @@ public class AfkConfigModel {
     }
 
     @Document(id = 1751825654901L, value = """
-        Define commands to be executed when enter or leave the afk state.
+        Define commands to be executed when a player enters or leaves the afk state.
         """)
     AfkEvent afkEvent = new AfkEvent();
     @Data

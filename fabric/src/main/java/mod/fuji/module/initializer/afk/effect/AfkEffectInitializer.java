@@ -13,9 +13,9 @@ import mod.fuji.module.initializer.afk.service.AfkService;
 @Document(id = 1751826206965L, value = """
     This module applies `effects` for a player in `afk` state.
     Supported effects are:
-    1. `Invulnerable`: a player in afk state is immune to all `damage`.
-    2. `Targetable`: a player in afk state cannot be selected as a `target` by hostile entities.
-    3. `Moveable`: the position of a player in afk state can not be `moved` by `external cause`. (Piston, Gravity...)
+    1. `Invulnerable`: a player in afk state can not be `damaged`.
+    2. `Targetable`: a player in afk state can not be selected as a `target` by hostile entities.
+    3. `Moveable`: a player in afk state can not be `moved` by `external cause`. (Piston, Gravity...)
     """)
 public class AfkEffectInitializer extends ModuleInitializer {
 
