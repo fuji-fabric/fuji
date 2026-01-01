@@ -107,7 +107,7 @@ public class AfkService {
 
         /* Trigger afk events. */
         AfkConfigModel.AfkEvent afkEvent = AfkInitializer.config.model().getAfkEvent();
-        List<String> commandList = playerAfkState.isInState() ? afkEvent.getOnEnterAfk() : afkEvent.getOnLeaveAfk();
+        List<String> commandList = playerAfkState.isInState() ? afkEvent.getOnEnterAfkCommands() : afkEvent.getOnLeaveAfkCommands();
         CommandSourceStack commandSource = CommandHelper.Source.getCommandSource(player);
         CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(commandSource), commandList);
     }

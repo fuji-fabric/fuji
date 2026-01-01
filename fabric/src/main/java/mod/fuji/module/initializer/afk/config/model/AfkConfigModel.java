@@ -36,14 +36,16 @@ public class AfkConfigModel {
     @NoArgsConstructor
     public static class AfkEvent {
 
-        List<String> onEnterAfk = new ArrayList<>() {
+        @SerializedName(value = "on_enter_afk_commands", alternate = "on_enter_afk")
+        List<String> onEnterAfkCommands = new ArrayList<>() {
             {
                 this.add("send-broadcast <gold>Player %player:name% is now afk");
 
             }
         };
 
-        List<String> onLeaveAfk = new ArrayList<>() {
+        @SerializedName(value = "on_leave_afk_commands", alternate = "on_leave_afk")
+        List<String> onLeaveAfkCommands = new ArrayList<>() {
             {
                 this.add("send-broadcast <gold>Player %player:name% is no longer afk");
             }
