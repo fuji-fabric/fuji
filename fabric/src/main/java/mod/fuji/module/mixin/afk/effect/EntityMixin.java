@@ -1,11 +1,11 @@
 package mod.fuji.module.mixin.afk.effect;
 
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.module.initializer.afk.effect.AfkEffectInitializer;
 import mod.fuji.module.initializer.afk.service.AfkService;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,20 +17,21 @@ public class EntityMixin {
 
     @Inject(method = "move", at = @At("HEAD"), cancellable = true)
     public void processMoveableEffect(MoverType movementType, Vec3 vec3d, CallbackInfo ci) {
-        Object self = this;
-        if (self instanceof ServerPlayer player) {
-            /* Handle moveable option. */
-            if (!AfkEffectInitializer.config.model().moveable && AfkService.isInAfkState(player)) {
-                /* Store the originalX before the call to move() */
+        PlayerHelper.Kind.ifServerPlayerEntity(this,player -> {
+            if (!AfkEffectInitializer.config.model().moveable
+                && AfkService.isInAfkState(player)) {
+
+                /* Store the originalX before the call to move(). */
                 double originalX = player.getX();
                 double originalY = player.getY();
                 double originalZ = player.getZ();
 
-                // Send packet to force set the position of the player in client-side. (If we didn't request a teleport for client, the position of player will de-sync between client and server)
+                /* Send a packet to re-sync the position between the client and server. */
                 player.teleportTo(originalX, originalY, originalZ);
+
+                /* Cancel this move() call in the server. */
                 ci.cancel();
             }
-        }
-
+        });
     }
 }

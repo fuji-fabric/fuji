@@ -833,7 +833,7 @@
   "docstring.1751826184182": "Should the `afk player` be invulnerable?\n",
   "docstring.1751826187343": "Should the `afk player` be targeted by `hostile entity`?\n",
   "docstring.1751826191115": "Should the `afk player` be moveable? (Like `pushed by piston` or `gravity`)\n",
-  "docstring.1751826206965": "This module provides special `effects` for `afk player`:\n1. `Invulnerable`: the afk player is immune to all damage.\n2. `Targetable`: the afk player cannot be selected as a target by hostile entities.\n3. `Moveable`: the position of afk player can not be moved by `external cause`. (Piston, gravity...)\n",
+  "docstring.1751826206965": "This module applies `effects` for a player in `afk` state.\nSupported effects are:\n1. `Invulnerable`: a player in afk state is immune to all damage.\n2. `Targetable`: a player in afk sate cannot be selected as a target by hostile entities.\n3. `Moveable`: the position of a player in afk state can not be moved by `external cause`. (Piston, Gravity...)\n",
   "docstring.1751826238005": "This module adds a `checker` to check if a player is in `Away From Keyboard` state.\nWith the `afk` state:\n1. You can define `commands` to be executed when `enter this state` and `leave this state`.\n2. You can define the `display name` in this state.\n",
   "docstring.1751826266551": "Enter afk state.",
   "docstring.1751826271499": "Test if a player is in afk state.",
