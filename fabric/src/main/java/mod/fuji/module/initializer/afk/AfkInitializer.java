@@ -18,20 +18,20 @@ import net.minecraft.server.level.ServerPlayer;
 
 
 @Document(id = 1751826238005L, value = """
-    This module provides:
-    1. Afk Detection: When a player remains `idle` beyond a specified threshold, they are marked as being in `the AFK state`.
-    2. Afk Event: Execute configured commands when a player `enters` or `leaves` the afk state.
-    3. Afk Name Customization: Allows customization of the `display name` of AFK players.
+    This module adds a `checker` to check if a player is in `Away From Keyboard` state.
+    With the `afk` state:
+    1. You can define `commands` to be executed when `enter this state` and `leave this state`.
+    2. You can define the `display name` in this state.
     """)
 @ColorBox(id = 1751870451351L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
 
     For each player, define a `number` to track `the last action time`.
-    Actions can be: `mine a block`, `movement`, `issue a command` ...
-    When action received, update the number.
-    Define a `job` using cron, to be triggered periodically.
-    The job will check and compare 2 consecutive value of the `number`.
-    If number is identical, then the player is considered as in `afk`.
+    The `actions` can be: `mine a block`, `movement`, `issue a command`...
+    When an `action` received, update the number.
+
+    Define a `job` to compare 2 consecutive values of the `number`.
+    If values are identical, then the player is considered as in `afk` state.
     """)
 public class AfkInitializer extends ModuleInitializer {
 
@@ -40,13 +40,13 @@ public class AfkInitializer extends ModuleInitializer {
     @CommandNode("afk")
     @Document(id = 1751826266551L, value = "Enter afk state.")
     private static int $afk(@CommandSource @CommandTarget ServerPlayer player) {
-        // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
-        if (!AfkService.canEnterAfk(player)) {
+        if (!AfkService.canEnterAfkState(player)) {
             TextHelper.sendTextByKey(player, "afk.on.failed");
             return CommandHelper.Return.FAILURE;
         }
 
-        AfkService.changeAfk(player, true);
+        // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
+        AfkService.changeAfkState(player, true);
         TextHelper.sendTextByKey(player, "afk.on");
         return CommandHelper.Return.SUCCESS;
     }
@@ -55,7 +55,7 @@ public class AfkInitializer extends ModuleInitializer {
     @CommandNode("is-afk?")
     @CommandRequirement(level = 4)
     private static int $isAfk(@CommandSource CommandSourceStack source, ServerPlayer player) {
-        boolean value = AfkService.isAfk(player);
+        boolean value = AfkService.isInAfkState(player);
         return CommandHelper.Return.returnBoolean(source, value);
     }
 

@@ -92,7 +92,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
     public static void processAntiBuild(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
-        PlayerHelper.Kind.withServerPlayerEntity(player,() -> {
+        PlayerHelper.Kind.ifServerPlayerEntity(player,() -> {
             // NOTE: This method will NOT be called for a dispenser block.
             if (isThisActionAllowed(player, antiType, ids, id)) {
                 return;

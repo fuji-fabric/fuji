@@ -22,7 +22,7 @@ public class PlayerInteractEntityPreEventMixin {
     @EventProducer(PlayerInteractEntityPreEvent.class)
     @Inject(method = "interact", at = @At("HEAD"), cancellable = true)
     void producePlayerInteractEntityPreEvent(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerHelper.Kind.withServerPlayerEntity(player, serverPlayer -> {
+        PlayerHelper.Kind.ifServerPlayerEntity(player, serverPlayer -> {
             Entity entity = (Entity) (Object) this;
             PlayerInteractEntityPreEvent event = new PlayerInteractEntityPreEvent(serverPlayer, entity, hand, cir);
             EventManager.dispatchEvent(PlayerInteractEntityPreEvent.class, event, WeaverUtil.TOKEN_PLACEHOLDER);

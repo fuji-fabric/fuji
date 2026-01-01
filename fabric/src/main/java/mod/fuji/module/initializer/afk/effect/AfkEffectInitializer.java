@@ -24,7 +24,7 @@ public class AfkEffectInitializer extends ModuleInitializer {
     private static void processInvulnerableEffect(LivingEntityDamageEvent event) {
         if (event.getLivingEntity() instanceof ServerPlayer player) {
             if (AfkEffectInitializer.config.model().invulnerable
-                && AfkService.isAfk(player)) {
+                && AfkService.isInAfkState(player)) {
                 event.setDamage(0);
             }
         }

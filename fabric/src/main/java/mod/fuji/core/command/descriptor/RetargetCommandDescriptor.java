@@ -63,7 +63,7 @@ public class RetargetCommandDescriptor extends CommandDescriptor {
     }
 
     private void weakenCommandSourceConstraint() {
-        // NOTE: The `retarget commands` are just a delegate to original command, it should accept any command source to use it.
+        // NOTE: A retarget command is just a delegate to the original command, it should accept any command source to use it.
         if (!this.canBeExecutedByConsole()) {
             CollectionUtil
                 .findFirstIndex(commandArguments, CommandArgument::isCommandSource)

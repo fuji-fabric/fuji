@@ -8,5 +8,4 @@ import lombok.NoArgsConstructor;
 public class PlayerAfkState {
     boolean isAfk = false;
     long previousInputCounter = -1L;
-
 }

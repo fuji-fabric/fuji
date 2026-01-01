@@ -20,7 +20,7 @@ public class EntityMixin {
         Object self = this;
         if (self instanceof ServerPlayer player) {
             /* Handle moveable option. */
-            if (!AfkEffectInitializer.config.model().moveable && AfkService.isAfk(player)) {
+            if (!AfkEffectInitializer.config.model().moveable && AfkService.isInAfkState(player)) {
                 /* Store the originalX before the call to move() */
                 double originalX = player.getX();
                 double originalY = player.getY();

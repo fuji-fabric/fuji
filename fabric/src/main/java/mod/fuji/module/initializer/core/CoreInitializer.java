@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
     2. Set the desired modules to `enabled`.
     3. Re-start the server to apply the changes.
     """)
-
 @ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Does this mod support hot reload?
     Yes. It supports hot reloading for files belonging to `enabled` modules.
@@ -37,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
     3. Module-level conflicts can be resolved by disabling only the affected module.
     4. Disabled modules incur no performance cost.
     """)
-
 @ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Adjust lore text font size
     If lore text appears too large:
@@ -48,7 +46,6 @@ import org.jetbrains.annotations.NotNull;
     - https://modrinth.com/mod/tooltipfix
     - https://www.curseforge.com/minecraft/mc-mods/tooltipfix
     """)
-
 @ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Use a modern text editor
     Most configuration files are written in JSON and may be large.
@@ -60,7 +57,6 @@ import org.jetbrains.annotations.NotNull;
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
-
 @ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Set up a local test server
     If you run a remote production server, it is strongly recommended to maintain a local test server.
@@ -73,7 +69,6 @@ import org.jetbrains.annotations.NotNull;
     2. Verify everything works as expected.
     3. Upload the updated mods and configurations to the production server.
     """)
-
 @ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Open the interactive document GUI
     Issue: `/fuji`

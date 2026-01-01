@@ -16,7 +16,7 @@ public abstract class LivingEntityMixin {
     void handleTargetableEffect(LivingEntity livingEntity, CallbackInfoReturnable<Boolean> cir) {
         if (livingEntity instanceof ServerPlayer player) {
             if (!AfkEffectInitializer.config.model().targetable
-                && AfkService.isAfk(player)) {
+                && AfkService.isInAfkState(player)) {
                 cir.setReturnValue(false);
             }
         }

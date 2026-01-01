@@ -43,7 +43,7 @@ public abstract class AnvilScreenHandlerMixin extends ItemCombinerMenu {
     @Unique
     private @NotNull Component processAnvilNewNameText() {
         AtomicReference<Component> outputText = new AtomicReference<>();
-        PlayerHelper.Kind.withServerPlayerEntity(player, () -> {
+        PlayerHelper.Kind.ifServerPlayerEntity(player, () -> {
             /* Rewrite the style tags. */
             itemName = ColorInitializer.rewriteColorCodes(itemName);
 

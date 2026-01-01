@@ -15,8 +15,8 @@ public abstract class ServerPlayerEntityMixin {
     private final ServerPlayer player = (ServerPlayer) (Object) this;
 
     @Inject(method = "resetLastActionTime", at = @At("TAIL"))
-    public void $updateLastActionTime(CallbackInfo ci) {
-        AfkService.countAction(player);
+    public void resetLastActionTime(CallbackInfo ci) {
+        AfkService.receiveAction(player);
     }
 
 }

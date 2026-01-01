@@ -40,8 +40,8 @@ public class AfkMarkerJob extends CronJob {
                 AfkService.setPreviousInputCounter(it, curInputCounter);
 
                 /* Enter afk state if consecutive values are identical. */
-                if (prevInputCounter == curInputCounter && !AfkService.isAfk(it)) {
-                    AfkService.changeAfk(it, true);
+                if (prevInputCounter == curInputCounter && !AfkService.isInAfkState(it)) {
+                    AfkService.changeAfkState(it, true);
                 }
             });
 

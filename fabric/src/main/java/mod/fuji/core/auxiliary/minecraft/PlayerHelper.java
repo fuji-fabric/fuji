@@ -241,25 +241,25 @@ public class PlayerHelper {
          * This happens when you install this mod in the client side, and plays in the single-player world.
          **/
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-        public static boolean isServerPlayer(@NotNull Player player) {
-            return player instanceof ServerPlayer;
+        public static boolean isServerPlayer(@Nullable Object object) {
+            return object instanceof ServerPlayer;
         }
-
 
         /**
          * If your mod is installed on the client-side, and run the single-player world.
          * Then some functions will be called twice.
          * One for ClientPlayerEntity, one for ServerPlayerEntity.
          **/
-        public static void withServerPlayerEntity(@Nullable Player player, @NotNull Consumer<ServerPlayer> consumer) {
-            if (player == null) return;
-            if (!isServerPlayer(player)) return;
-            consumer.accept((ServerPlayer) player);
+        public static void ifServerPlayerEntity(@Nullable Object object, @NotNull Consumer<ServerPlayer> consumer) {
+            if (isServerPlayer(object)) {
+                consumer.accept((ServerPlayer) object);
+            }
         }
 
-        public static void withServerPlayerEntity(@Nullable Player player, @NotNull Runnable runnable) {
-            withServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
+        public static void ifServerPlayerEntity(@Nullable Player player, @NotNull Runnable runnable) {
+            ifServerPlayerEntity(player, (serverPlayerEntity) -> runnable.run());
         }
+
     }
 
     public static class Cache {

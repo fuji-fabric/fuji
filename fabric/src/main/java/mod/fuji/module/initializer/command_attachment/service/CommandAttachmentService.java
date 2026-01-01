@@ -55,7 +55,7 @@ public class CommandAttachmentService {
     }
 
     private static void tryTriggerCommandAttachments(@NotNull CommandAttachments attachments, @NotNull Player player, @NotNull List<InteractType> inputInteractTypes, @NotNull Runnable triggeredHook) {
-        PlayerHelper.Kind.withServerPlayerEntity(player, (serverPlayer) -> {
+        PlayerHelper.Kind.ifServerPlayerEntity(player, (serverPlayer) -> {
             /* Process attachment nodes. */
             for (BaseCommandAttachmentEntry entry : attachments.getEntries()) {
                 /* Filtered by interaction type. */
