@@ -76,7 +76,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AntiBuildConfigModel.class);
 
     @DocStringProvider(id = 1751999560958L, value = """
-        To bypass a specific `action` with a specific `id`.
+        To `bypass` a specific `action` with a specific `id`.
         """)
     private static final PermissionDescriptor ANTI_BUILD_BYPASS_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.bypass.<id>", 1751999560958L);
 
