@@ -1,15 +1,19 @@
 package mod.fuji.module.initializer.anti_build;
 
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
+import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
-import mod.fuji.core.document.annotation.ColorBox;
-import mod.fuji.core.document.annotation.DocStringProvider;
-import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
+import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.document.annotation.DocStringProvider;
+import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerBlockBreakPreEvent;
 import mod.fuji.core.event.message.player.PlayerInteractBlockPreEvent;
@@ -17,25 +21,20 @@ import mod.fuji.core.event.message.player.PlayerInteractEntityPreEvent;
 import mod.fuji.core.event.message.player.PlayerInteractItemPreEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.anti_build.config.model.AntiBuildConfigModel;
-import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import net.luckperms.api.util.Tristate;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Supplier;
-
 @Document(id = 1751825625507L, value = """
-    This module allows restricting specific player `actions`.
+    This module `bans` specific player `actions`.
 
-    Currently supported `action types` include:
+    The `actions` can be:
     1. Break a specified block.
     2. Place a specified block.
     3. Interact with a specified item.
@@ -43,28 +42,28 @@ import java.util.function.Supplier;
     5. Interact with a specified entity.
     6. Attack a specified entity.
     """)
-@ColorBox(id = 1751896813134L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    Read the document to see the definition of `identifier` in Minecraft.
-    """)
-@ColorBox(id = 1751896904529L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    Use the `command suggestion` from `luckperms` mod to see the supported types by this module.
-    """)
 @ColorBox(id = 1751897087633L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ To ban the placement of TNT block:
-    Just add the `minecraft:tnt` into the `place_block` list in config file.
+    ◉ To ban the placement of TNT block.
+    Add the `minecraft:tnt` into the `place_block` list in config file.
 
     ◉ To ban the placement of TNT block, but allow player Alice to use it.
-    Grant a `bypass permission` for that player: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
+    Assign a `bypass permission` for that player.
+    Issue: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
 
-    ◉ To assign a override permission for a player explicitly.
+    ◉ To `ban` or `allow` the player Alice to do a specific action explicitly.
+    Assign a `override permission` for that player.
+
     Issue: `/lp user Alice permission set fuji.anti_build.break_block.override.minecraft:grass_block false`
-    This will `dis-allow` the player Alice to `break a minecraft:grass_block block`.
+    It will `ban` the player Alice from breaking `minecraft:grass_block` block.
 
-    ◉ Dis-allow to place `any` blocks.
-    Use `*` as the wildcard character, put it into the `place_block` list.
+    Issue: `/lp user Alice permission set fuji.anti_build.break_block.override.minecraft:grass_block true`
+    It will `allow` the player Alice to break `minecraft:grass_block` block.
+
+    ◉ To ban the placement of `any` block.
+    Add the `*` into the `place_block` list in config file.
     """)
 @ColorBox(id = 1753246687639L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Ban the `placement` of `mushroom` in `minecraft:the_end` dimension.
+    ◉ Ban the `placement` of `mushroom` blocks in `minecraft:the_end` dimension.
     Issue:
     1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`
     2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`
@@ -73,35 +72,36 @@ import java.util.function.Supplier;
     "Check if the anti type hooks remains the identical semantics."
 })
 public class AntiBuildInitializer extends ModuleInitializer {
+
     public static final BaseConfigurationHandler<AntiBuildConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, AntiBuildConfigModel.class);
 
     @DocStringProvider(id = 1751999560958L, value = """
-        To bypass a specific `anti type` with a specific `id`.
-
-        For example, the permission `fuji.anti_build.place_block.bypass.minecraft:tnt` allows a player to place the TNT block.
+        To bypass a specific `action` with a specific `id`.
         """)
     private static final PermissionDescriptor ANTI_BUILD_BYPASS_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.bypass.<id>", 1751999560958L);
 
     @DocStringProvider(id = 1752994843864L, value = """
-        To `override` a specific `anti type` with a specific `id`.
+        To `override` a specific `action` with a specific `id`.
 
-        If the permission value is `true`, then it means `allow` this action.
-        If the permission value is `false`, then it means `dis-allow` this action.
-        If the permission value is `undefined`, then it means this action is `ignored`.
+        If the permission value is `true`, then it means to `allow (no ban)` this action.
+        If the permission value is `false`, then it means to `dis-allow (ban)` this action.
+        If the permission value is `undefined`, then it means to `ignore (no process)` this action.
         """)
     private static final PermissionDescriptor ANTI_BUILD_OVERRIDE_PERMISSION = new PermissionDescriptor("fuji.anti_build.<anti-type>.override.<id>", 1752994843864L);
 
-    public static void processAntiBuild(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
-        PlayerHelper.Kind.ifServerPlayerEntity(player,() -> {
-            // NOTE: This method will NOT be called for a dispenser block.
-            if (isThisActionAllowed(player, antiType, ids, id)) {
+    private static final String IDENTIFIER_WILDCARD_CHARACTER = "*";
+
+    public static void processAntiBuildAction(@Nullable Player player, @NotNull String actionType, @NotNull Set<String> ids, @NotNull String id, @NotNull Runnable canceller, @NotNull Supplier<Boolean> feedbackTrigger) {
+        PlayerHelper.Kind.ifServerPlayerEntity(player, () -> {
+            /* If this action is allowed. */
+            if (isThisActionAllowed(player, actionType, ids, id)) {
                 return;
             }
 
-            /* Call the canceller to cancel this event. */
+            /* Call the canceller to cancel this action. */
             canceller.run();
 
-            /* Send the cation cancelled message to the player. */
+            /* Send the feedback text. */
             if (feedbackTrigger.get() && player != null) {
                 // NOTE: The `dispenser block` can also place blocks in the world.
                 // NOTE: You may see the double message if you install the mod in client-side.
@@ -111,40 +111,43 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     }
 
-    public static <T> void processAntiBuild(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> feedbackTrigger) {
-        processAntiBuild(player, antiType, ids, id, () -> cir.setReturnValue(cancelWithValue), feedbackTrigger);
+    public static <T> void processAntiBuildAction(@Nullable Player player, @NotNull String actionType, @NotNull Set<String> ids, @NotNull String id, @NotNull CallbackInfoReturnable<T> cir, @NotNull T cancelWithValue, @NotNull Supplier<Boolean> feedbackTrigger) {
+        processAntiBuildAction(player, actionType, ids, id, () -> cir.setReturnValue(cancelWithValue), feedbackTrigger);
     }
 
-    private static boolean isThisActionAllowed(@Nullable Player player, @NotNull String antiType, @NotNull Set<String> ids, @NotNull String id) {
+    private static boolean isThisActionAllowed(@Nullable Player player, @NotNull String actionType, @NotNull Set<String> ids, @NotNull String id) {
         /* Check the override permission for the player. */
-        Tristate overridePermission = getOverridePermission(player, antiType, id);
+        Tristate overridePermission = getOverridePermission(player, actionType, id);
         if (overridePermission != Tristate.UNDEFINED) {
             return overridePermission.asBoolean();
         }
 
         /* Check the bypass permission for the player. */
-        if (isAllowedByBypassPermission(player, antiType, id)) {
+        if (isThisActionAllowedByBypassPermission(player, actionType, id)) {
             return true;
         }
 
         /* Check the config file for the player. */
-        return isAllowedByConfigurationFile(ids, id);
+        return isThisActionAllowedByConfigurationFile(ids, id);
     }
 
-    private static boolean isAllowedByConfigurationFile(@NotNull Set<String> ids, @NotNull String id) {
-        return !ids.contains(id)
-            && !ids.contains("*");
+    private static boolean isThisActionAllowedByConfigurationFile(@NotNull Set<String> ids, @NotNull String id) {
+        if (ids.contains(IDENTIFIER_WILDCARD_CHARACTER)) {
+            return false;
+        }
+
+        return !ids.contains(id);
     }
 
-    private static Tristate getOverridePermission(@Nullable Player player, @NotNull String antiType, @NotNull String id) {
+    private static Tristate getOverridePermission(@Nullable Player player, @NotNull String actionType, @NotNull String id) {
         return Optional.ofNullable(player)
-            .map(p -> LuckpermsHelper.getPermission(player.getUUID(), ANTI_BUILD_OVERRIDE_PERMISSION, antiType, id))
+            .map(p -> LuckpermsHelper.getPermission(player.getUUID(), ANTI_BUILD_OVERRIDE_PERMISSION, actionType, id))
             .orElse(Tristate.UNDEFINED);
     }
 
-    private static boolean isAllowedByBypassPermission(@Nullable Player player, @NotNull String antiType, @NotNull String id) {
+    private static boolean isThisActionAllowedByBypassPermission(@Nullable Player player, @NotNull String actionType, @NotNull String id) {
         return Optional.ofNullable(player)
-            .map(p -> LuckpermsHelper.hasPermission(player.getUUID(), ANTI_BUILD_BYPASS_PERMISSION, antiType, id))
+            .map(p -> LuckpermsHelper.hasPermission(player.getUUID(), ANTI_BUILD_BYPASS_PERMISSION, actionType, id))
             .orElse(false);
     }
 
@@ -157,7 +160,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         BlockState blockState = event.getWorld().getBlockState(event.getBlockPos());
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "break_block", config.getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
+        AntiBuildInitializer.processAntiBuildAction(event.getPlayer(), "break_block", config.getId(), id, event.getCallbackInfoReturnable(), false, () -> true);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
@@ -167,7 +170,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getItemStack());
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuildAction(event.getPlayer(), "interact_item", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
@@ -179,7 +182,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
         BlockState blockState = event.getWorld().getBlockState(blockPos);
         String id = RegistryHelper.getIdAsString(blockState);
 
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
+        AntiBuildInitializer.processAntiBuildAction(event.getPlayer(), "interact_block", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> true);
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
@@ -189,6 +192,6 @@ public class AntiBuildInitializer extends ModuleInitializer {
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getEntity());
-        AntiBuildInitializer.processAntiBuild(event.getPlayer(), "interact_entity", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> event.getHand() == InteractionHand.MAIN_HAND);
+        AntiBuildInitializer.processAntiBuildAction(event.getPlayer(), "interact_entity", config.getId(), id, event.getCallbackInfoReturnable(), InteractionResult.FAIL, () -> event.getHand() == InteractionHand.MAIN_HAND);
     }
 }

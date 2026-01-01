@@ -19,7 +19,7 @@ public class ServerPlayerEntityMixin {
 
         ServerPlayer serverPlayerEntity = (ServerPlayer) (Object) this;
         String id = RegistryHelper.getIdAsString(entity);
-        AntiBuildInitializer.processAntiBuild(serverPlayerEntity, "attack_entity", config.getId(), id, ci::cancel, () -> true);
+        AntiBuildInitializer.processAntiBuildAction(serverPlayerEntity, "attack_entity", config.getId(), id, ci::cancel, () -> true);
     }
 
 }

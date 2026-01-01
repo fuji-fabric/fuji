@@ -22,10 +22,10 @@ public class BlockItemMixin {
         var config = AntiBuildInitializer.config.model().getAntiTypes().getPlaceBlock();
         if (!config.isEnable()) return;
 
-        @Nullable Player player = itemPlacementContext.getPlayer();
+        @Nullable("If it is a dispenser.") Player player = itemPlacementContext.getPlayer();
         String id = RegistryHelper.getIdAsString(itemPlacementContext.getItemInHand());
         InteractionHand hand = itemPlacementContext.getHand();
 
-        AntiBuildInitializer.processAntiBuild(player, "place_block", config.getId(), id, cir, false, () -> hand == InteractionHand.MAIN_HAND);
+        AntiBuildInitializer.processAntiBuildAction(player, "place_block", config.getId(), id, cir, false, () -> hand == InteractionHand.MAIN_HAND);
     }
 }
