@@ -13,19 +13,22 @@ import java.util.Comparator;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocationEntry implements Comparable<LocationEntry> {
-    GlobalPos location;
-    Long savedTimestamp;
+public class LocationSnapshot implements Comparable<LocationSnapshot> {
 
-    public static LocationEntry makeLocationEntry(@NotNull ServerPlayer player) {
+    GlobalPos location;
+    long savedTimestamp;
+
+    public static @NotNull LocationSnapshot ofPlayer(@NotNull ServerPlayer player) {
         GlobalPos location = GlobalPos.of(player);
-        Long saved_timestamp = ChronosUtil.getCurrentTimestamp();
-        return new LocationEntry(location, saved_timestamp);
+        long savedTimestamp = ChronosUtil.getCurrentTimestamp();
+        return new LocationSnapshot(location, savedTimestamp);
     }
 
     @Override
-    public int compareTo(@NotNull LocationEntry that) {
-        return Comparator.comparingLong(LocationEntry::getSavedTimestamp)
+    public int compareTo(@NotNull LocationSnapshot that) {
+        return Comparator
+            .comparingLong(LocationSnapshot::getSavedTimestamp)
             .compare(this, that);
     }
+
 }

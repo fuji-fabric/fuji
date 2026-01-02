@@ -1,25 +1,27 @@
 package mod.fuji.module.initializer.back.config.model;
 
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mod.fuji.core.document.annotation.Document;
 
+@Data
+@NoArgsConstructor
 public class BackConfigModel {
+
     @Document(id = 1751825546269L, value = """
-        Ignore `this teleport` if the `distance` is too close in between.
+        Do not push the current `location` if it is too `close` to the most recently pushed `location`.
         """)
-    public double ignore_distance = 32d;
+    @SerializedName(value = "do_not_push_back_location_if_closer_than_n_blocks", alternate = "ignore_distance")
+    double doNotPushBackLocationIfCloserThanNBlocks = 32d;
 
-    @Document(id = 1751825551657L, value = """
-        Should we save the location on player death?
-        """)
-    public boolean enable_back_on_death = true;
+    @SerializedName(value = "push_back_location_on_player_death", alternate = "enable_back_on_death")
+    boolean pushBackLocationOnPlayerDeath = true;
 
-    @Document(id = 1751825557852L, value = """
-        Should we save the location on player teleport?
-        """)
-    public boolean enable_back_on_teleport = true;
+    @SerializedName(value = "push_back_location_on_player_teleport", alternate = "enable_back_on_teleport")
+    boolean pushBackLocationOnPlayerTeleport = true;
 
-    @Document(id = 1751825562969L, value = """
-        Max saved location slots.
-        """)
-    public int max_back_location_entries_to_save = 3;
+    @SerializedName(value = "max_back_locations_to_save", alternate = "max_back_location_entries_to_save")
+    int maxBackLocationsToSave = 3;
+
 }

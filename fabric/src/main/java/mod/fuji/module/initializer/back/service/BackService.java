@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.back.service;
 
+import java.util.function.Function;
 import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -14,10 +15,8 @@ import mod.fuji.core.event.message.player.PlayerDeathEvent;
 import mod.fuji.core.event.message.player.PlayerTeleportPreEvent;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.back.BackInitializer;
-import mod.fuji.module.initializer.back.structure.LocationEntry;
 import mod.fuji.module.initializer.back.structure.LocationHistory;
-import java.util.Optional;
-import java.util.function.Function;
+import mod.fuji.module.initializer.back.structure.LocationSnapshot;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -25,22 +24,22 @@ import org.jetbrains.annotations.Nullable;
 
 public class BackService {
 
-    public static <R> R withLocationHistory(@NotNull ServerPlayer player, Function<LocationHistory, R> function) {
+    public static <R> R withLocationHistory(@NotNull ServerPlayer player, @NotNull Function<LocationHistory, R> function) {
         String playerName = PlayerHelper.getPlayerName(player);
         LocationHistory locationHistory = PlayerKey
-            .computeValueByPlayerNameOrThrow(BackInitializer.savedPositionConfig.model().player2history, playerName, k -> new LocationHistory());
+            .computeValueByPlayerNameOrThrow(BackInitializer.playerBackLocationHistoryData.model().getPlayer2history(), playerName, k -> new LocationHistory());
         return function.apply(locationHistory);
     }
 
-    public static Integer listBackLocations(CommandSourceStack source, ServerPlayer player) {
+    public static int listBackLocations(@NotNull CommandSourceStack source, @NotNull ServerPlayer player) {
         return withLocationHistory(player, locationHistory -> {
-            // Print header.
+            /* Print header. */
             String targetPlayerName = PlayerHelper.getPlayerName(player);
             TextHelper.sendTextByKey(source, "back.list", targetPlayerName);
 
-            // Print body.
+            /* Print body. */
             locationHistory
-                .listEntries()
+                .listLocationSnapshots()
                 .forEachRemaining(it -> {
                     GlobalPos location = it.getLocation();
                     TextHelper.sendTextByKey(source, "back.list.entry"
@@ -55,69 +54,70 @@ public class BackService {
         });
     }
 
-    public static int teleportBackLocation(@NotNull ServerPlayer player, int lastNLocation, @Nullable Dimension targetDimension) {
+    @SuppressWarnings("CodeBlock2Expr")
+    public static int teleportToLocation(@NotNull ServerPlayer player, int lastNLocation, @Nullable Dimension targetDimension) {
         return withLocationHistory(player, locationHistory -> {
-            // find location entry.
-            LocationEntry latestEntry = locationHistory.findEntry(lastNLocation, targetDimension);
-            if (latestEntry == null) {
-                TextHelper.sendTextByKey(player, "back.no_previous_position");
-                throw new AbortCommandExecutionException();
-            }
-
-            // teleport with the location entry.
-            latestEntry.getLocation().teleport(player);
-            return CommandHelper.Return.SUCCESS;
+            return locationHistory
+                .findLocationSnapshot(lastNLocation, targetDimension)
+                .map(targetLocationSnapshot -> {
+                    targetLocationSnapshot.getLocation().teleport(player);
+                    return CommandHelper.Return.SUCCESS;
+                })
+                .orElseThrow(() -> {
+                    TextHelper.sendTextByKey(player, "back.no_previous_position");
+                    return new AbortCommandExecutionException();
+                });
         });
     }
 
-    private static int getMaxBackLocationEntriesToSave(@NotNull ServerPlayer player) {
-        Optional<Integer> value = LuckpermsHelper.getMeta(player.getUUID(), BackInitializer.MAX_LOCATION_ENTRIES_TO_SAVE_META);
-        return value.orElse(BackInitializer.config.model().max_back_location_entries_to_save);
+    private static int getMaxBackLocationsToSave(@NotNull ServerPlayer player) {
+        return LuckpermsHelper
+            .getMeta(player.getUUID(), BackInitializer.MAX_LOCATIONS_TO_SAVE_META)
+            .orElse(BackInitializer.config.model().getMaxBackLocationsToSave());
     }
 
-    @SuppressWarnings("RedundantIfStatement")
-    private static boolean shouldSaveCurrentLocation(@NotNull ServerPlayer player) {
+    @SuppressWarnings({"RedundantIfStatement", "CodeBlock2Expr"})
+    private static boolean shouldPushCurrentLocation(@NotNull ServerPlayer player) {
         return withLocationHistory(player, locationHistory -> {
-            LocationEntry latestEntry = locationHistory.getLatestEntry();
+            return locationHistory
+                .getLastLocationSnapshot()
+                .map(lastLocationSnapshot -> {
+                    /* Process ignore distance option. */
+                    GlobalPos lastLocation = lastLocationSnapshot.getLocation();
+                    double ignoreDistance = BackInitializer.config.model().getDoNotPushBackLocationIfCloserThanNBlocks();
+                    double ignoreDistanceSquare = ignoreDistance * ignoreDistance;
+                    boolean tooClose = EntityHelper.getPos(player).distanceToSqr(lastLocation.getX(), lastLocation.getY(), lastLocation.getZ()) <= ignoreDistanceSquare;
+                    if (lastLocation.sameLevel(PlayerHelper.getServerWorld(player)) && tooClose) {
+                        return false;
+                    }
 
-            // Should save if there is no history entry before.
-            if (latestEntry == null) {
-                return true;
-            }
-
-            // Should not save location inside ignore distance.
-            GlobalPos latestLocation = latestEntry.getLocation();
-            double ignoreDistance = BackInitializer.config.model().ignore_distance;
-            if (latestLocation.sameLevel(PlayerHelper.getServerWorld(player))
-                && EntityHelper.getPos(player).distanceToSqr(latestLocation.getX(), latestLocation.getY(), latestLocation.getZ()) <= ignoreDistance * ignoreDistance
-            ) {
-                return false;
-            }
-
-            return true;
+                    return true;
+                })
+                /* Always save if there is no locations. */
+                .orElse(true);
         });
     }
 
-    private static void trySaveCurrentLocation(@NotNull ServerPlayer player) {
+    private static void tryPushCurrentLocation(@NotNull ServerPlayer player) {
         withLocationHistory(player, locationHistory -> {
-            if (shouldSaveCurrentLocation(player)) {
-                LocationEntry locationEntry = LocationEntry.makeLocationEntry(player);
-                pushBackLocation(player, locationHistory, locationEntry);
+            if (shouldPushCurrentLocation(player)) {
+                LocationSnapshot locationSnapshot = LocationSnapshot.ofPlayer(player);
+                pushBackLocation(player, locationHistory, locationSnapshot);
             }
 
             return null;
         });
     }
 
-    public static void pushBackLocation(@NotNull ServerPlayer player, @NotNull LocationHistory locationHistory, @NotNull LocationEntry locationEntry) {
-        locationHistory.pushEntry(locationEntry);
-        locationHistory.trimEntries(getMaxBackLocationEntriesToSave(player));
+    public static void pushBackLocation(@NotNull ServerPlayer player, @NotNull LocationHistory locationHistory, @NotNull LocationSnapshot locationSnapshot) {
+        locationHistory.pushLocationSnapshot(locationSnapshot);
+        locationHistory.trimHistory(getMaxBackLocationsToSave(player));
     }
 
     @EventConsumer
     private static void handleOnPlayerDeathEvent(PlayerDeathEvent event) {
-        if (BackInitializer.config.model().enable_back_on_death) {
-            trySaveCurrentLocation(event.getPlayer());
+        if (BackInitializer.config.model().isPushBackLocationOnPlayerDeath()) {
+            tryPushCurrentLocation(event.getPlayer());
         }
     }
 
@@ -125,8 +125,8 @@ public class BackService {
     private static void handlePlayerPreTeleportEvent(PlayerTeleportPreEvent event) {
         if (event.getCallbackInfo().isCancelled()) return;
 
-        if (BackInitializer.config.model().enable_back_on_teleport) {
-            trySaveCurrentLocation(event.getPlayer());
+        if (BackInitializer.config.model().isPushBackLocationOnPlayerTeleport()) {
+            tryPushCurrentLocation(event.getPlayer());
         }
     }
 }

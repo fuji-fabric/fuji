@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CollectionUtil {
 
-    public static <T> boolean validIndex(int index, List<T> list) {
+    public static <T> boolean validIndex(int index, @NotNull List<T> list) {
         return index >= 0 && index < list.size();
     }
 
