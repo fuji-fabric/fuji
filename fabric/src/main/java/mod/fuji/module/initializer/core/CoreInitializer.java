@@ -14,87 +14,81 @@ import org.jetbrains.annotations.NotNull;
 
 @ColorBox(id = 1751870436910L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ How to use this mod?
+    Functions are provided by modules.
     All modules are disabled by default.
-    Enable only the modules you need.
+    You need to enable the modules you want to use.
 
-    Steps:
-    1. Edit `config/fuji/config.json` file.
-    2. Set the desired modules to `enabled`.
+    ◉ How to enable a module?
+    1. Edit the `<your-server>/config/fuji/config.json` file.
+    2. In `modules` section, set the `true` and `false` values for each module.
     3. Re-start the server to apply the changes.
     """)
 @ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.NOTE, value = """
-    ◉ Does this mod support hot reload?
-    Yes. It supports hot reloading for files belonging to `enabled` modules.
-    Use the command `/fuji reload` to do that.
+    ◉ Can I reload the config files while the server is running?
+    Yes.
+    You can do that only for a `enabled` module.
+    For such module, use `/fuji reload` to reload the module specific files.
 
-    Limitations:
-    - Modules cannot be `enabled` or `disabled` while the server is running.
+    You can not `enable` or `disable` a module while the server is running.
+    Modules are only loaded during the server start-up.
 
-    Design rationale:
-    1. Disabled modules are never loaded.
-    2. You can freely disable unwanted modules.
-    3. Module-level conflicts can be resolved by disabling only the affected module.
-    4. Disabled modules incur no performance cost.
+    It's a design choice, for reasons:
+    1. For performance: You never pay for the disabled modules.
+    2. For compatibility: If conflicting with other mods, you can disable the related module to solve it.
     """)
 @ColorBox(id = 1752891903903L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Adjust lore text font size
-    If lore text appears too large:
+    ◉ How can I make the lore text easier to read?
+
+    ➜ Adjust lore text font size if too large
+    If lore text is too large:
     - Open `Esc` → `Options` → `Video Settings` → `GUI Scale`.
 
-    ◉ Improve tooltip rendering
-    If `GUI scaling` is insufficient, install the client-side mod `ToolTipFix`:
+    ➜ Improve lore text rendering if necessary
+    If `GUI scaling` isn't enough, install the client-side mod `ToolTipFix`:
     - https://modrinth.com/mod/tooltipfix
     - https://www.curseforge.com/minecraft/mc-mods/tooltipfix
     """)
 @ColorBox(id = 1753331128791L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Use a modern text editor
-    Most configuration files are written in JSON and may be large.
-    A modern text editor provides `syntax highlighting` and `error checking`.
-    It makes configuration easier and safer.
+    ◉ How can I make the config file easier to edit?
+    Please use a modern text editor.
+
+    Most configuration files are written in `JSON format` and may be large.
+    A modern `text editor` provides `structure highlighting` and `error checking` features.
+    It makes configuration easier.
 
     Recommended text editors:
     1. Visual Studio Code: https://code.visualstudio.com/
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
-@ColorBox(id = 1753331405512L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Set up a local test server
-    If you run a remote production server, it is strongly recommended to maintain a local test server.
-    The test server should mirror the production environment:
-    1. Same mods
-    2. Same configuration files
-
-    Workflow:
-    1. Test changes locally.
-    2. Verify everything works as expected.
-    3. Upload the updated mods and configurations to the production server.
-    """)
 @ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Open the interactive document GUI
+    ◉ How can I know what is provided by this mod?
+
+    ➜ Open the interactive document GUI
     Issue: `/fuji`
 
-    ◉ List all Fuji commands
+    ➜ List all commands
     Issue: `/fuji inspect fuji-commands`
 
-    ◉ List all Fuji permissions and metas
+    ➜ List all permissions and metas
     Issue: `/fuji inspect permissions-and-metas`
 
-    ◉ List all Fuji placeholders
+    ➜ List all placeholders
     Issue: `/fuji inspect placeholders`
 
-    ◉ List all Fuji configurations
+    ➜ List all configurations
     Issue: `/fuji inspect configurations`
 
-    ◉ List all Fuji jobs
+    ➜ List all jobs
     Issue: `/fuji inspect jobs`
 
-    ◉ List all Fuji languages
+    ➜ List all languages
     Issue: `/fuji inspect languages`
 
-    ◉ List all Fuji argument types
+    ➜ List all argument types
     Issue: `/fuji inspect argument-types`
 
-    ◉ List all Fuji events
+    ➜ List all events
     Issue: `/fuji inspect events`
     """)
 public class CoreInitializer extends ModuleInitializer {
