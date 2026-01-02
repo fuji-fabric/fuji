@@ -20,7 +20,7 @@ import net.minecraft.server.level.ServerPlayer;
 @Document(id = 1751826238005L, value = """
     This module adds a `checker` to check if a player is in `Away From Keyboard` state.
     With the `afk` state:
-    1. You can define `commands` to be executed when `enter this state` and `leave this state`.
+    1. You can define `commands` to be executed when a player `enters` or `leaves` this state.
     2. You can define the `display name` in this state.
     """)
 @ColorBox(id = 1751870451351L, color = ColorBox.ColorBoxTypes.NOTE, value = """

@@ -14,7 +14,7 @@ public class ServerPlayerEntityMixin {
 
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     void handleAttackEntity(Entity entity, CallbackInfo ci) {
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getAttackEntity();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getAttackEntity();
         if (!config.isEnable()) return;
 
         ServerPlayer serverPlayerEntity = (ServerPlayer) (Object) this;

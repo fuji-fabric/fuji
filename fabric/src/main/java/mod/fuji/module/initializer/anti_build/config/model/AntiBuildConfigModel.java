@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AntiBuildConfigModel {
 
-    @SerializedName(value = "anti_types", alternate = "anti")
-    AntiTypes antiTypes = new AntiTypes();
+    @SerializedName(value = "anti_action_types", alternate = {"anti", "anti_types"})
+    AntiActionTypes antiActionTypes = new AntiActionTypes();
 
     @Data
     @NoArgsConstructor
-    public static class AntiTypes {
+    public static class AntiActionTypes {
 
         BreakBlock breakBlock = new BreakBlock();
         PlaceBlock placeBlock = new PlaceBlock();

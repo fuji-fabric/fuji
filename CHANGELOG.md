@@ -10,5 +10,5 @@
 ## ✨ Features
 - [docs] Improved documentation for the `afk`, `afk.effect`, and `anti_build` modules.
 
-## 🐛 Fixes
-- [fuji] Fixed an issue where `/fuji inspect registry` did not work.
+## 🐞 Fixes
+- None

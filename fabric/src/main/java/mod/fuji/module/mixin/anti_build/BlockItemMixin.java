@@ -19,7 +19,7 @@ public class BlockItemMixin {
 
     @Inject(method = "canPlace", at = @At("RETURN"), cancellable = true)
     void handlePlaceBlock(@NotNull BlockPlaceContext itemPlacementContext, BlockState blockState, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getPlaceBlock();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getPlaceBlock();
         if (!config.isEnable()) return;
 
         @Nullable("If it is a dispenser.") Player player = itemPlacementContext.getPlayer();

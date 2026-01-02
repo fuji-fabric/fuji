@@ -48,7 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
     ◉ To ban the placement of TNT block, but allow player Alice to use it.
     Assign a `bypass permission` for that player.
-    Issue: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`.
+    Issue: `/lp user Alice permission set fuji.anti_build.place_block.bypass.minecraft:tnt`
 
     ◉ To `ban` or `allow` the player Alice to do a specific action explicitly.
     Assign a `override permission` for that player.
@@ -63,7 +63,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
     Add the `*` into the `place_block` list in config file.
     """)
 @ColorBox(id = 1753246687639L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Ban the `placement` of `mushroom` blocks in `minecraft:the_end` dimension.
+    ◉ To ban the `placement` of `mushroom` blocks in `minecraft:the_end` dimension.
     Issue:
     1. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:red_mushroom false world=the_end`
     2. `/lp group default permission set fuji.anti_build.place_block.override.minecraft:brown_mushroom false world=the_end`
@@ -154,7 +154,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerBlockBreakPreEvent(PlayerBlockBreakPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getBreakBlock();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getBreakBlock();
         if (!config.isEnable()) return;
 
         BlockState blockState = event.getWorld().getBlockState(event.getBlockPos());
@@ -166,7 +166,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractItemPreEvent(PlayerInteractItemPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractItem();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getInteractItem();
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getItemStack());
@@ -175,7 +175,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractBlockPreEvent(PlayerInteractBlockPreEvent event) {
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractBlock();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getInteractBlock();
         if (!config.isEnable()) return;
 
         BlockPos blockPos = event.getBlockHitResult().getBlockPos();
@@ -188,7 +188,7 @@ public class AntiBuildInitializer extends ModuleInitializer {
     @EventConsumer(injectorPriority = EventConsumer.LOWEST)
     private static void consumePlayerInteractEntityPreEvent(PlayerInteractEntityPreEvent event) {
         if (event.getCallbackInfoReturnable().isCancelled()) return;
-        var config = AntiBuildInitializer.config.model().getAntiTypes().getInteractEntity();
+        var config = AntiBuildInitializer.config.model().getAntiActionTypes().getInteractEntity();
         if (!config.isEnable()) return;
 
         String id = RegistryHelper.getIdAsString(event.getEntity());
