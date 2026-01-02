@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
     2. In `modules` section, set the `true` and `false` values for each module.
     3. Re-start the server to apply the changes.
     """)
-@ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+@ColorBox(id = 1751870440489L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ Can I reload the config files while the server is running?
     Yes.
     You can do that only for a `enabled` module.
@@ -61,7 +61,7 @@ import org.jetbrains.annotations.NotNull;
     2. Vim: https://neovim.io/
     3. Emacs: https://www.gnu.org/software/emacs/
     """)
-@ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+@ColorBox(id = 1754014854649L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ How can I know what is provided by this mod?
 
     ➜ Open the interactive document GUI
