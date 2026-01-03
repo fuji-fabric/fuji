@@ -4,7 +4,9 @@ import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import java.util.Optional;
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -60,7 +62,10 @@ public abstract class BaseDisplayGuiFactory {
             ItemStack itemStack = slot.getItemStack();
             if (ItemStackHelper.Kind.isShulkerBox(itemStack)) {
                 // NOTE: Copy the parent GUI's title, for consistency.
-                Component childGuiTitle = parentGui.getTitle();
+                Component childGuiTitle = Optional
+                    .ofNullable(parentGui.getTitle())
+                    .orElse(GuiHelper.EMPTY_TITLE_TEXT);
+
                 ShulkerBoxDisplayGuiFactory shulkerBoxDisplayGui = new ShulkerBoxDisplayGuiFactory(childGuiTitle, itemStack, parentGui);
                 shulkerBoxDisplayGui
                     .build(viewingPlayer)

@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public class GuiHelper {
 
     public static final int GENERIC_CONTAINER_LINE_SIZE = 9;
+    public static final Component EMPTY_TITLE_TEXT = Component.literal("[title-is-empty]");
 
     public static class Handler {
 

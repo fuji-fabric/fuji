@@ -27,7 +27,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         this.parentGui = parentGui;
     }
 
-    public ShulkerBoxDisplayGuiFactory(ServerPlayer sharingPlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
+    public ShulkerBoxDisplayGuiFactory(@NotNull ServerPlayer sharingPlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
         super(sharingPlayer);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
