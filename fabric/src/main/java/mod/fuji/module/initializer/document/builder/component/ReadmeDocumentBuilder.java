@@ -18,10 +18,10 @@ public class ReadmeDocumentBuilder extends DocumentBuilder {
                 :::tip[Tip]
                 ## How to Use This Document
 
-                This document is divided into two main sections:
+                This document is divided into two parts:
 
                 1. **Core**
-                   For the `core` part, please refer to the following resources:
+                   For the `core` part, please refer to:
                    - [Fuji Manual (PDF)](https://github.com/fuji-fabric/fuji/raw/dev/docs/release/fuji.pdf)
                    - [Core (HTML)](./001-Modules/002-core.md)
 
