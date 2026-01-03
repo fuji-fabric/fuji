@@ -7,15 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SoftReferenceMap<K, V> {
-    private final Map<K, SoftReference<V>> map = new HashMap<>();
+
+    private final Map<K, SoftReference<V>> backendMap = new HashMap<>();
 
     public void put(K key, V value) {
         SoftReference<V> softRef = new SoftReference<>(value);
-        map.put(key, softRef);
+        backendMap.put(key, softRef);
     }
 
     public @Nullable V get(K key) {
-        SoftReference<V> softRef = map.get(key);
+        SoftReference<V> softRef = backendMap.get(key);
         if (softRef != null) {
             return softRef.get();
         }
@@ -23,14 +24,14 @@ public class SoftReferenceMap<K, V> {
     }
 
     public boolean containsKey(K key) {
-        return map.containsKey(key);
+        return backendMap.containsKey(key);
     }
 
     public void remove(K key) {
-        map.remove(key);
+        backendMap.remove(key);
     }
 
     public void clear() {
-        map.clear();
+        backendMap.clear();
     }
 }

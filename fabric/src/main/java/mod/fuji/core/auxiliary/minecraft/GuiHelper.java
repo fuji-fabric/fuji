@@ -27,6 +27,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class GuiHelper {
 
+    public static final int GENERIC_CONTAINER_LINE_SIZE = 9;
+
     public static class Handler {
 
         public static MenuType<ChestMenu> getGenericContainerType(int rows) {
@@ -316,15 +318,14 @@ public class GuiHelper {
         }
 
         public static List<GuiElementInterface> makeLinePaddingElements(int filledSlotsSize) {
-            final int LINE_SIZE = 9;
 
-            int remainder = filledSlotsSize % LINE_SIZE;
+            int remainder = filledSlotsSize % GENERIC_CONTAINER_LINE_SIZE;
             if (remainder == 0) {
                 return List.of();
             }
 
             List<GuiElementInterface> elements = new ArrayList<>();
-            int unfilledSlotsSize = LINE_SIZE - remainder;
+            int unfilledSlotsSize = GENERIC_CONTAINER_LINE_SIZE - remainder;
             for (int i = 0; i < unfilledSlotsSize; i++) {
                 elements.add(Button.makeSlotPlaceholderButton());
             }

@@ -71,6 +71,8 @@ import org.jetbrains.annotations.NotNull;
     You need to install the `luckperms` mod, to provide the `prefix` and `suffix` feature.
     After install it, issue `/lp group default meta setprefix \\<yellow\\>[awesome]` to assign a `prefix`.
     To use the `prefix`, use the placeholder `%fuji:player_prefix%`.
+
+    See: https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta
     """)
 @ColorBox(id = 1751870550677L, color = ColorBox.ColorBoxTypes.TIP, value = """
     ◉ To set the per-player chat style:

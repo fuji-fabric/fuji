@@ -15,7 +15,7 @@
 
 [Test Case]
 - Module: chat
-- Action: **Enable the `online-mode` in server.properties**
+- Action: **Enable the `online-mode` in server.properties file**
 - Target: All of chat-related modules should not break the Mojang's chat signature.
 
 [Test Case]

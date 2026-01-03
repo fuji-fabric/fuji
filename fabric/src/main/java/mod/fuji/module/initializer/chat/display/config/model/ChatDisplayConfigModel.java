@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatDisplayConfigModel {
 
-    @Document(id = 1751826638318L, value = "The expiration duration for each created `display`.")
+    @Document(id = 1751826638318L, value = "The expiration duration for a created `display`.")
     @SerializedName(value = "expiration_duration_seconds", alternate = "expiration_duration_s")
     int expirationDurationSeconds = 3600;
+
 }

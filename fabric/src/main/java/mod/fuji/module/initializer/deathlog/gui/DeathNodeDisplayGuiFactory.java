@@ -4,6 +4,7 @@ import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
@@ -26,15 +27,15 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayer viewingPlayer) {
-        SimpleGui displayGui = super.build(viewingPlayer);
+    public @NotNull SlotGuiInterface build(@NotNull ServerPlayer viewingPlayer) {
+        SlotGuiInterface displayGui = super.build(viewingPlayer);
 
         /* Place the back button. */
         GuiElement backButton = GuiHelper.Button.makeBackButton(viewingPlayer)
             .setCallback(() -> {
                 displayGui.close();
             }).build();
-        displayGui.setSlot(LINE_SIZE, backButton);
+        displayGui.setSlot(GuiHelper.GENERIC_CONTAINER_LINE_SIZE, backButton);
 
         /* Place the restore button. */
         GuiElement restoreButton = new GuiElementBuilder()
@@ -43,7 +44,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
             .setLore(deathNode.getLore(viewingPlayer))
             .setCallback(() -> handleRestoreButton(viewingPlayer))
             .build();
-        displayGui.setSlot(LINE_SIZE + 8, restoreButton);
+        displayGui.setSlot(GuiHelper.GENERIC_CONTAINER_LINE_SIZE + 8, restoreButton);
 
         /* Check if the NBT format is supported. */
         checkIfCurrentNbtFormatSupported(displayGui);
@@ -51,7 +52,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         return displayGui;
     }
 
-    private void checkIfCurrentNbtFormatSupported(SimpleGui displayGui) {
+    private void checkIfCurrentNbtFormatSupported(SlotGuiInterface displayGui) {
         boolean notSupported = this.main.stream().allMatch(ItemStack::isEmpty)
             && this.armor.stream().allMatch(ItemStack::isEmpty)
             && this.offhand.stream().allMatch(ItemStack::isEmpty);
@@ -61,7 +62,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
                 .setName(TextHelper.getTextByKey(displayGui.getPlayer(), "deathlog.death_node.not_supported_nbt_format"))
                 .build();
 
-            for (int i = 0; i < LINE_SIZE * 6; i++) {
+            for (int i = 0; i < GuiHelper.GENERIC_CONTAINER_LINE_SIZE * 6; i++) {
                 GuiElementInterface slot = displayGui.getSlot(i);
                 if (slot == null) continue;
                 if (slot.getItemStack().isEmpty()) {

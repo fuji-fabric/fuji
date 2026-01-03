@@ -2,6 +2,7 @@ package mod.fuji.core.service.display.gui;
 
 import com.google.errorprone.annotations.Keep;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.MenuType;
@@ -18,16 +19,16 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     @Keep
     private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final @NotNull ItemStack shulkerBoxStack;
-    private final @Nullable SimpleGui parentGui;
+    private final @Nullable SlotGuiInterface parentGui;
 
-    public ShulkerBoxDisplayGuiFactory(Component title, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
+    public ShulkerBoxDisplayGuiFactory(@NotNull Component title, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
         super(title);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
     }
 
-    public ShulkerBoxDisplayGuiFactory(ServerPlayer sourcePlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SimpleGui parentGui) {
-        super(sourcePlayer);
+    public ShulkerBoxDisplayGuiFactory(ServerPlayer sharingPlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
+        super(sharingPlayer);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
     }
@@ -63,7 +64,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SimpleGui build(ServerPlayer viewingPlayer) {
+    public @NotNull SimpleGui build(@NotNull ServerPlayer viewingPlayer) {
         SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x4, viewingPlayer, false);
         gui.setTitle(this.title);
 
@@ -73,7 +74,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         }
         gui.setSlot(4, shulkerBoxStack);
         if (this.parentGui != null) {
-            gui.setSlot(LINE_SIZE - 1, GuiHelper.Button.makeBackButton(viewingPlayer).setCallback(parentGui::open));
+            gui.setSlot(GuiHelper.GENERIC_CONTAINER_LINE_SIZE - 1, GuiHelper.Button.makeBackButton(viewingPlayer).setCallback(parentGui::open));
         }
 
         /* Place container items. */
@@ -82,7 +83,8 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
             int offset = 0;
         };
         containerStream.forEach(item -> {
-            gui.setSlot(LINE_SIZE + counter.offset, item.copy());
+            ItemStack copy = item.copy();
+            gui.setSlot(GuiHelper.GENERIC_CONTAINER_LINE_SIZE + counter.offset, copy);
             counter.offset++;
         });
 

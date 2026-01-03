@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemArgument;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.ListTag;
@@ -288,6 +290,15 @@ public class ItemStackHelper {
                 .map(Pair::getFirst)
                 .resultOrPartial(string -> LogUtil.debug("Failed to decode item: '{}'", string));
             #endif
+        }
+    }
+
+    public static class Kind {
+        public static boolean isShulkerBox(@Nullable ItemStack itemStack) {
+            if (itemStack == null) return false;
+
+            return itemStack.getItem() instanceof BlockItem bi
+                && bi.getBlock() instanceof ShulkerBoxBlock;
         }
     }
 }
