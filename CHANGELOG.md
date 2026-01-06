@@ -8,7 +8,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [docs] Improved documentation for the `afk`, `afk.effect`, and `anti_build` modules.
+- [docs] Improved documentation for the `core`, `chat`, `afk` modules.
 
 ## 🐞 Fixes
 - None
