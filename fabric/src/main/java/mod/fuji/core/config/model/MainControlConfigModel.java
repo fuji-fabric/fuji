@@ -9,48 +9,36 @@ import java.util.List;
 @Document(id = 1754987954725L, value = """
     This file is named `Main Control File`.
     It's used to:
-    1. Configure the options for `core`, which affects all `modules`.
+    1. Control the behaviour of the `core`, which affects all `modules`.
     2. Enable or disable a `module`.
 
-    <green>NOTE: You need to re-start the server, to `enable` or `disable` a `module`.
+    <green>You can NOT `enable` or `disable` a `module` while the server is running.
+    <green>You MUST re-start the server, to switch the modules.
     """)
 public class MainControlConfigModel {
 
     @Document(id = 1751823676896L, value = """
-        Fuji is composed by `core` and `module`.
-        The `core` config affects `all` modules.
-        The `module` config only affects that specific module.
+        This mod is composed of `core` and `module` parts.
+        The `core` part options are applied to ALL the modules.
+        The `module` part options are applied to ONLY that module.
         """)
     public Core core = new Core();
     public static class Core {
-        @Document(id = 1751823723851L, value = "Debug related options.")
+
         public Debug debug = new Debug();
 
         @Document(id = 1751823731455L, value = """
-            Fuji will back up the `config/fuji` dir before it loads any module.
+            Backup options.
+            This mod will back up the `config/fuji` directory at server start-up, before it loads any module.
             """)
         public Backup backup = new Backup();
 
-        @Document(id = 1751823748647L, value = """
-            The language related options.
-            """)
         public Core.Language language = new Core.Language();
 
-        @Document(id = 1755571534946L, value = """
-            The options for all fuji commands.
-            """)
         public Command command = new Command();
 
-
-        @Document(id = 1751823755527L, value = """
-            The permission related options.
-            """)
         public Permission permission = new Permission();
 
-        @Document(id = 1751823761222L, value = """
-            The scheduler related options.
-            The `scheduler` system is used to run `jobs`.
-            """)
         public Scheduler scheduler = new Scheduler();
 
         public static class Scheduler {
@@ -70,10 +58,10 @@ public class MainControlConfigModel {
         public DocumentSection document = new DocumentSection();
         public static class DocumentSection {
             @Document(id = 1752484948715L, value = """
-                When `enable` this option, we will always use the `built-in doc strings`, which is written in `English`.
-                This option is used to ensure you always see the `latest version` of `doc strings` from your `current using version`.
+                If true, it will always use the `built-in doc strings` from the `.jar` file. (It's written in `English`)
+                So that you can always see the `latest version` of `doc strings`.
 
-                When `disable` this option, we will ues the `doc strings` from the `language files`.
+                If false, it will use the `external doc strings` from the `config/fuji/languages/<default-language>.json` file.
                 """)
             public boolean alwaysUseBuiltInDocStrings = true;
         }
@@ -82,13 +70,13 @@ public class MainControlConfigModel {
         public static class Backup {
 
             @Document(id = 1751823774480L, value = """
-                How many `backup files` should we keep?
+                Max number of backup files to keep in `config/fuji/backup/` directory.
                 """)
             public int max_slots = 15;
 
             @Document(id = 1751823780583L, value = """
-                The `paths` that should be skipped when backup.
-                The `path` is resolved and related to `config/fuji/` dir.
+                Define the `paths` to be ignored when creating a `backup file`.
+                A `path` is resolved and related to the `config/fuji/` directory.
                 """)
             public List<String> skip = new ArrayList<>() {
                 {
@@ -99,21 +87,22 @@ public class MainControlConfigModel {
 
         public static class Language {
             @Document(id = 1751823787824L, value = """
-                The `default language` used by Fuji.
-                The language files are located in `config/fuji/lang` dir.
+                Define the `default language` used by this mod.
+                A language file is located in `config/fuji/languages/` directory.
                 """)
             public String default_language = "en_US";
 
             @Document(id = 1766706480385L, value = """
-                Define the `common prefix` for all language values.
-                This prefix will only be inserted when a text is displayed in `chat message`.
+                Define the `common prefix` for all `language values`.
+                This prefix will `only` be inserted when a text is displayed in `chat message`.
                 """)
             public String language_value_common_prefix = "<orange>➜</orange> ";
 
             public Validator validator = new Validator();
             public static class Validator {
                 @Document(id = 1754322053339L, value = """
-                Should we validate the `arguments` when loading a `language file`?
+                If true, it will `validate` the `arity` of `arguments` for each `language value`, when loading a `language file`.
+                If false, do nothing.
                 """)
                 public boolean validate_arguments = true;
             }
@@ -122,19 +111,19 @@ public class MainControlConfigModel {
         public static class Command {
 
             @Document(id = 1755571654986L, value = """
-                The `command assistant` offers an `auto help` feature for all fuji commands.
+                The `command assistant` function offers the `auto /help feature` for all commands from this mod.
                 It dynamically inspects possible command paths and provides users with real-time command hints.
 
-                <green>NOTE: To hot-switch this feature without a server re-start, you have to:
-                1. Issue `/fuji reload` first, to reload the `main control file`.
-                2. Issue `/reload`, to reload `all the commands`.
+                <green>NOTE: To hot-switch this feature without a server re-start, do:
+                1. Issue `/fuji reload` command, to reload the `main control file`.
+                2. Issue `/reload` command, to reload `all the commands`.
                 """)
             public Assistant assistant = new Assistant();
             public static class Assistant {
                 public boolean enable = true;
 
                 @Document(id = 1755571789064L, value = """
-                    The requirement to use the `command assistant`.
+                    Define the requirement to use the `command assistant` function.
                     """)
                 public Requirement requirement = new Requirement();
                 public static class Requirement {
@@ -147,46 +136,48 @@ public class MainControlConfigModel {
 
         public static class Permission {
             @Document(id = 1751823793347L, value = """
-                Fuji defines commands into 2 groups, for different users.
+                ◉ What is the permission system of this mod?
+
+                ➜ Vanilla `permission level` is used for all commands.
+                You can use this mod without a 3rd party `permission mods`.
+                By default, all commands from this mod using the `permission level` as their requirement.
+                It makes it easier to use this mod in a `single player` world.
+
+                ➜ There are two groups of commands
+                This mod splits commands into 2 groups, for different users.
                 One group for `normal user`, these commands require `level 0 permission` to use.
                 One group for `admin user`, these commands require `level 4 permission` to use.
 
-                If you want to define the permission of commands by yourself,
-                you can enable `this` option.
-                And use `command_permission` module to define permission for each command.
+                ➜ Integrate with the `LuckPerms` mod.
+                One typical use-case, is to:
+                1. Set this option to be `true`
+                2. Use `command_permission` module, to assign a `string permission` for each command.
                 """)
             public boolean all_commands_require_level_4_permission_to_use_by_default = false;
         }
 
         public static class Debug {
             @Document(id = 1751823800414L, value = """
-                Force disable `all` modules.
-                Used to test the compatibility between `fuji` and `other mods`.
+                Forcefully disable `all` modules.
+                If you want to test the `compatibility` between `this mod` and `other mods`, set the option to `true`.
                 """)
             public boolean disable_all_modules = false;
 
             @Document(id = 1751823806770L, value = """
-                Should we log the `debug` level messages into the `console`?
-                This option can be changed using `/fuji debug` command.
+                Print the `DEBUG` level messages into the `console`.
+
+                This option can be switched using `/fuji debug` command, while the server is running.
                 """)
             public boolean log_debug_messages = false;
 
             @Document(id = 1751823813518L, value = """
-                Should we print the user guide in the console on server startup?
+                Print the `first-time user guide` in the `console` on server start-up.
                 """)
             public boolean print_user_guide_in_console = true;
         }
     }
 
 
-    @Document(id = 1751823688579L, value = """
-        Fuji is designed to be fully-modular.
-        All modules is `disabled` by default.
-        You can modify the `enable` field to enable a module <red>after a server re-start</red>.
-        <b>Remember to `restart` the server to apply the modification.
-
-        Issue `/fuji inspect modules` to see the module status.
-        """)
     public Modules modules = new Modules();
 
     @SuppressWarnings("unused")

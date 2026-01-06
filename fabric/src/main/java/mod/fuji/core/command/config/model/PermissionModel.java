@@ -6,21 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Document(id = 1754983291877L, value = """
-    ◉ How is `permission` handled for each fuji command?
-    1. Each fuji command is registered with a `default level permission`.
-    1.a. Check the status of `all_commands_require_level_4_permission_to_use_by_default` option in `config.json` file.
-    1.a.i. If it's `true`, then all fuji commands are registered with `level permission 4`.
-    1.a.ii. If it's `false`, then each fuji command is registered with `level permission N` defined in `permission.json` file.
-    2. You can use `command_permission` module to assign a `string permission` for each command, and override the `default level permission`.
+    ◉ What is the permission of a command from this mod?
+    1. Each command is registered with a default `level permission`.
+    1.a. Check the value of `all_commands_require_level_4_permission_to_use_by_default` option in `config/fuji/config.json` file.
+    1.a.i. If `true`, then `all` commands from this mod are registered with `level permission 4`.
+    1.a.ii. If `false`, then `each` command from this mod is registered with `level permission N` defined in `config/fuji/permission.json` file.
 
     ◉ What is the `permission.json` file?
-    This file is used to define the `default required level permission` for each registered fuji commands.
+    This file is used to define the `default required level permission` for each command from this mod.
     After modifying this file, issue the `/reload` command to reload all the commands.
 
-    This config is typically used in a `single-player world`, where no `LuckPerms` mod is installed.
-    If you are hosting a dedicated Minecraft server, you can configure the `string permission` for each command using `command_permission` module.
-    The `command_permission` module will override the `command requirement` defined in this file.
-    So, if you are hosting a dedicated Minecraft server, you can simply use `command_permission` module, and ignore this file.
+    This config is usually used in a `single-player` world, where `LuckPerms` mod is NOT installed.
+    If you are hosting a dedicated Minecraft server, you may want to use the `command_permission` module.
+
+    ◉ What if I want to use a `string permission` from `LuckPerms` mod?
+    You can use `command_permission` module.
+    That module is used to assign a `string permission` for each command, and `override` the original (the default level permission) requirement.
+    In other words, the `default required level permission` defined in `permission.json` file will be `overridden` by `command_permission` module.
     """)
 @Data
 @NoArgsConstructor
