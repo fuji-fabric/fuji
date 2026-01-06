@@ -26,12 +26,18 @@ import net.minecraft.server.level.ServerPlayer;
 @ColorBox(id = 1751870451351L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
 
+    ➜ Track the last action time
     For each player, define a `number` to track `the last action time`.
     The `actions` can be: `mine a block`, `movement`, `issue a command`...
-    When an `action` received, update the number.
+    When an `action` received from a player, update the number for that player.
 
+    ➜ Enter the afk state
     Define a `job` to compare 2 consecutive values of the `number`.
-    If values are identical, then the player is considered as in `afk` state.
+    If the values are identical, then cause the player to `enter` the `afk` state.
+    Besides that, a player can use `/afk` command to enter it manually.
+
+    ➜ Leave the afk state
+    When an `action` received from a player, it causes the player to `leave` the `afk` state.
     """)
 public class AfkInitializer extends ModuleInitializer {
 
@@ -45,7 +51,7 @@ public class AfkInitializer extends ModuleInitializer {
             return CommandHelper.Return.FAILURE;
         }
 
-        // NOTE: Issue a command will update the lastLastActionTime, so it's impossible to use /afk to disable afk
+        // NOTE: Issue a command is also treated as an action.
         AfkService.changeAfkState(player, true);
         TextHelper.sendTextByKey(player, "afk.on");
         return CommandHelper.Return.SUCCESS;

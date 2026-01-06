@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 
 public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
-    @Keep
-    private static final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
     private final @NotNull ItemStack shulkerBoxStack;
     private final @Nullable SlotGuiInterface parentGui;
 
@@ -33,7 +31,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         this.parentGui = parentGui;
     }
 
-    private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(ItemStack stack) {
+    private static @NotNull Stream<ItemStack> extractItemsFromShulkerBox(@NotNull ItemStack stack) {
 
         #if MC_VER <= MC_1_20_4
         net.minecraft.nbt.CompoundTag blockEntityData = net.minecraft.world.item.BlockItem.getBlockEntityData(stack);
@@ -41,6 +39,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
             net.minecraft.nbt.ListTag items = (net.minecraft.nbt.ListTag) blockEntityData.get("Items");
             if (items == null) return Stream.empty();
 
+            final int SHULKER_BOX_MAX_CAPACITY = 3 * 9;
             net.minecraft.core.NonNullList<ItemStack> temp = net.minecraft.core.NonNullList.withSize(SHULKER_BOX_MAX_CAPACITY, ItemStack.EMPTY);
             items.forEach(item -> {
                 net.minecraft.nbt.CompoundTag itemNbtCompound = (net.minecraft.nbt.CompoundTag) item;
