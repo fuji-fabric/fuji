@@ -79,7 +79,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         /* Place debug button. */
         var debugConfig = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
         GuiElementBuilder debugButton = new GuiElementBuilder()
-            .setItem(debugConfig.log_debug_messages ? Items.GREEN_BANNER : Items.RED_BANNER)
+            .setItem(debugConfig.print_debug_messages_in_console ? Items.GREEN_BANNER : Items.RED_BANNER)
             .setName(TextHelper.getTextByKey(player, "debug"))
             .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.apply_it")))
             .setCallback(() -> {

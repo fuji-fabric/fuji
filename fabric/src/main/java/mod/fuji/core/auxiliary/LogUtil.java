@@ -48,7 +48,7 @@ public class LogUtil {
     public static void debug(String message, Object... args) {
         /* Early return for performance. */
         var debugConfig = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
-        if (!debugConfig.log_debug_messages) {
+        if (!debugConfig.print_debug_messages_in_console) {
             return;
         }
 
@@ -56,7 +56,7 @@ public class LogUtil {
         message = attachSourceModulePrefix(message);
 
         /* Process the debug config. */
-        if (debugConfig.log_debug_messages) {
+        if (debugConfig.print_debug_messages_in_console) {
             String ansiColorPrefix = IS_CONSOLE_SUPPORTS_ANSI_COLOR ? "\u001B[37m" : ""; // Escape for the ansi color code.
             message = ansiColorPrefix + message;
             MOD_LOGGER.info(message, args);

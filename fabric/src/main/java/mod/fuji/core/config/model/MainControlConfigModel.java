@@ -168,7 +168,8 @@ public class MainControlConfigModel {
 
                 This option can be switched using `/fuji debug` command, while the server is running.
                 """)
-            public boolean log_debug_messages = false;
+            @SerializedName(value = "print_debug_messages_in_console", alternate = "log_debug_messages")
+            public boolean print_debug_messages_in_console = false;
 
             @Document(id = 1751823813518L, value = """
                 Print the `first-time user guide` in the `console` on server start-up.

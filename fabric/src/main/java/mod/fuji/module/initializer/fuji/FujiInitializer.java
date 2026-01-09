@@ -8,7 +8,6 @@ import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.config.Configs;
 import mod.fuji.core.document.gui.CommandsInspectionGui;
-import mod.fuji.core.lifecycle.ModInitializers;
 import mod.fuji.core.job.JobManager;
 import mod.fuji.core.module.ModuleManager;
 import mod.fuji.module.initializer.ModuleInitializer;
@@ -84,9 +83,9 @@ public class FujiInitializer extends ModuleInitializer {
     @CommandNode("debug")
     public static int $debug(@CommandSource CommandSourceStack source) {
         var config = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
-        config.log_debug_messages = !config.log_debug_messages;
+        config.print_debug_messages_in_console = !config.print_debug_messages_in_console;
 
-        TextHelper.sendTextByKey(source, config.log_debug_messages ? "fuji.debug.on" : "fuji.debug.off");
+        TextHelper.sendTextByKey(source, config.print_debug_messages_in_console ? "fuji.debug.on" : "fuji.debug.off");
         return CommandHelper.Return.SUCCESS;
     }
 
