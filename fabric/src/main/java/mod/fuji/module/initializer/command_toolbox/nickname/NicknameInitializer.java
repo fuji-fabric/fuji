@@ -38,7 +38,7 @@ public class NicknameInitializer extends ModuleInitializer {
     private static String formatNickname(@NotNull ServerPlayer player, @NotNull String inputNickName) {
         // Parse the placeholders first to make the Java Formatter happy.
         String nicknameFormat = config.model().getNicknameFormat();
-        nicknameFormat = TextHelper.Operators.getString(TextHelper.getTextByValue(player, nicknameFormat));
+        nicknameFormat = TextHelper.Parsers.parsePlaceholderString(player, nicknameFormat);
 
         inputNickName = config.model().getNicknameConstraints().apply(inputNickName, player);
         return nicknameFormat.formatted(inputNickName);

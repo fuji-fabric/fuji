@@ -8,7 +8,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [docs] Improved documentation for the `core`, `chat`, `afk` modules.
+- None
 
 ## 🐞 Fixes
-- None
+- [command_toolbox.nickname] Fix an issue where the `/nickname set` command should not `eat` the `color tags`.
