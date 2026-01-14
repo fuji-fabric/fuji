@@ -10,7 +10,7 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessagePreEvent;
-import mod.fuji.core.structure.RegexRewriteNode;
+import mod.fuji.core.structure.RegexRewriteRule;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.replace.model.ChatReplaceConfigModel;
@@ -52,7 +52,7 @@ public class ChatReplaceInitializer extends ModuleInitializer {
     public static Component replaceChatText(@NotNull Player player, @NotNull Component oldText) {
         MutableComponent newText = oldText.copy();
 
-        for (RegexRewriteNode rule : config.model().getReplace().getRules()) {
+        for (RegexRewriteRule rule : config.model().getReplace().getRules()) {
             Optional<Pattern> pattern = rule.getPattern();
             if (pattern.isEmpty()) continue;
             Pattern $pattern = pattern.get();

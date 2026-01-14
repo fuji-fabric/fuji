@@ -3,7 +3,7 @@ package mod.fuji.module.initializer.color;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.structure.RegexRewriteNode;
+import mod.fuji.core.structure.RegexRewriteRule;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.color.config.model.ColorConfigModel;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ public class ColorInitializer extends ModuleInitializer {
     private static final BaseConfigurationHandler<ColorConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ColorConfigModel.class);
 
     public static @NotNull String rewriteColorCodes(@NotNull String string) {
-        for (RegexRewriteNode rule : config.model().getRewrite().getRules()) {
+        for (RegexRewriteRule rule : config.model().getRewrite().getRules()) {
             string = rule.apply(string);
         }
 

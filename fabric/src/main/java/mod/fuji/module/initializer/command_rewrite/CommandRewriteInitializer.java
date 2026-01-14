@@ -11,7 +11,7 @@ import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerCommandIssuePreEvent;
-import mod.fuji.core.structure.RegexRewriteNode;
+import mod.fuji.core.structure.RegexRewriteRule;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.command_rewrite.config.model.CommandRewriteConfigModel;
 import java.util.List;
@@ -51,7 +51,7 @@ public class CommandRewriteInitializer extends ModuleInitializer {
 
     private static @NotNull String processCommandRewrite(@NotNull String oldString) {
         /* Compute effective rewrite rules. */
-        List<RegexRewriteNode> effectiveRewriteRules = CommandRewriteInitializer.config.model().rules
+        List<RegexRewriteRule> effectiveRewriteRules = CommandRewriteInitializer.config.model().rules
             .stream()
             .filter(rule -> {
                 boolean result = rule.getRegex() != null && rule.getReplacement() != null;
@@ -63,7 +63,7 @@ public class CommandRewriteInitializer extends ModuleInitializer {
             .toList();
 
         /* Applied the rewrite rules. */
-        for (RegexRewriteNode rewriteRule : effectiveRewriteRules) {
+        for (RegexRewriteRule rewriteRule : effectiveRewriteRules) {
             Optional<Pattern> pattern = rewriteRule.getPattern();
             if (pattern.isEmpty()) continue;
             Pattern $pattern = pattern.get();

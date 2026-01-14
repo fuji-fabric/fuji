@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
-public class RegexRewriteNode {
+public class RegexRewriteRule {
 
     @Document(id = 1751823950782L, value = """
         The `pattern string` used to match the `target string`.
@@ -30,7 +30,7 @@ public class RegexRewriteNode {
     @Setter(value = AccessLevel.NONE)
     transient Optional<Pattern> pattern = Optional.empty();
 
-    public RegexRewriteNode(@NotNull String regex, @NotNull String replacement) {
+    public RegexRewriteRule(@NotNull String regex, @NotNull String replacement) {
         this.regex = regex;
         this.replacement = replacement;
     }

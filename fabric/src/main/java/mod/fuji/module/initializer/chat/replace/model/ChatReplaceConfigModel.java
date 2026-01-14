@@ -2,7 +2,7 @@ package mod.fuji.module.initializer.chat.replace.model;
 
 import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.document.annotation.Document;
-import mod.fuji.core.structure.RegexRewriteNode;
+import mod.fuji.core.structure.RegexRewriteRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,14 @@ public class ChatReplaceConfigModel {
     @NoArgsConstructor
     public static class Replace {
         @SerializedName(value = "rules", alternate = "regex")
-        List<RegexRewriteNode> rules = new ArrayList<>() {
+        List<RegexRewriteRule> rules = new ArrayList<>() {
             {
-                this.add(new RegexRewriteNode("(?<=^|\\s)item(?=\\s|$)", "%fuji:item%"));
-                this.add(new RegexRewriteNode("(?<=^|\\s)inv(?=\\s|$)", "%fuji:inv%"));
-                this.add(new RegexRewriteNode("(?<=^|\\s)ender(?=\\s|$)", "%fuji:ender%"));
+                this.add(new RegexRewriteRule("(?<=^|\\s)item(?=\\s|$)", "%fuji:item%"));
+                this.add(new RegexRewriteRule("(?<=^|\\s)inv(?=\\s|$)", "%fuji:inv%"));
+                this.add(new RegexRewriteRule("(?<=^|\\s)ender(?=\\s|$)", "%fuji:ender%"));
 
-                this.add(new RegexRewriteNode("(?<=^|\\s)pos(?=\\s|$)", "%fuji:pos%"));
-                this.add(new RegexRewriteNode("(?<=^|\\s)uuid(?=\\s|$)", "<green>My uuid is %player:uuid%</green>"));
+                this.add(new RegexRewriteRule("(?<=^|\\s)pos(?=\\s|$)", "%fuji:pos%"));
+                this.add(new RegexRewriteRule("(?<=^|\\s)uuid(?=\\s|$)", "<green>My uuid is %player:uuid%</green>"));
             }
         };
     }
