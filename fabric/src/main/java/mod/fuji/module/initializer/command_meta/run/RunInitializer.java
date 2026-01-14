@@ -110,7 +110,7 @@ public class RunInitializer extends ModuleInitializer {
         return CommandExecutor.executeSingle(ExtendedCommandSource.asPlayer(source, player), rest.getValue());
     }
 
-    @Document(id = 1751824003937L, value = "Execute a command as a player with fake-op.")
+    @Document(id = 1751824003937L, value = "Execute a command as a player with level permission 4.")
     @CommandNode("as fake-op")
     private static int $runAsFakeOp(@CommandSource CommandSourceStack source, ServerPlayer player, GreedyCommandString rest) {
         return CommandExecutor.executeSingle(ExtendedCommandSource.asFakeOp(source, player), rest.getValue());

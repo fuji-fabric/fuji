@@ -139,11 +139,11 @@ public class MainControlConfigModel {
                 ◉ What is the permission system of this mod?
 
                 ➜ Vanilla `permission level` is used for all commands.
-                You can use this mod without a 3rd party `permission mods`.
+                You can use this mod without a `3rd party permission mod`.
                 By default, all commands from this mod using the `permission level` as their requirement.
                 It makes it easier to use this mod in a `single player` world.
 
-                ➜ There are two groups of commands
+                ➜ There are two groups of commands.
                 This mod splits commands into 2 groups, for different users.
                 One group for `normal user`, these commands require `level 0 permission` to use.
                 One group for `admin user`, these commands require `level 4 permission` to use.

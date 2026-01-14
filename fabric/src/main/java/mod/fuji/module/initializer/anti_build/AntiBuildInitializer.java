@@ -32,9 +32,9 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Document(id = 1751825625507L, value = """
-    This module `bans` specific player `actions`.
+    This module `bans` a specific player `action`.
 
-    The `actions` can be:
+    The `action` can be:
     1. Break a specified block.
     2. Place a specified block.
     3. Interact with a specified item.
