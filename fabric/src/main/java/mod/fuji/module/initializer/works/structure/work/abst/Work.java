@@ -57,7 +57,7 @@ public abstract class Work implements ObjectTypeStringGetter {
 
     public Work(@NotNull ServerPlayer player, String name) {
         this.type = getObjectTypeString();
-        this.id = RandomUtil.randomUUID();
+        this.id = RandomUtil.drawUUID();
         this.createTimeMS = System.currentTimeMillis();
         this.creator = PlayerHelper.getPlayerName(player);
         this.name = name;

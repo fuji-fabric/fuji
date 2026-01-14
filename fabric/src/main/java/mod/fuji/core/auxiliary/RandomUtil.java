@@ -8,27 +8,27 @@ import java.util.Random;
 
 public class RandomUtil {
 
-    private static final Random random = new Random();
+    private static final Random RNG = new Random();
 
-    public static <T> T drawList(@NotNull List<T> list) {
-        return list.get(random.nextInt(list.size()));
+    public static <T> @NotNull T drawList(@NotNull List<T> list) {
+        return list.get(RNG.nextInt(list.size()));
     }
 
-    public static String randomUUID() {
+    public static @NotNull String drawUUID() {
         return UUID.randomUUID().toString();
     }
 
     @SuppressWarnings("DataFlowIssue")
-    public static int getRandomNumberExclusive(int minInclusive, int maxExclusive) {
+    public static int drawNumberExclusive(int minInclusive, int maxExclusive) {
         if (minInclusive >= maxExclusive) {
             LogUtil.error("The min value {} must be less than the max value {}. Returning the minimal value as the random number.", minInclusive, maxExclusive);
             return Math.min(minInclusive, maxExclusive);
         }
 
-        return random.nextInt(minInclusive, maxExclusive);
+        return RNG.nextInt(minInclusive, maxExclusive);
     }
 
-    public static int getRandomNumber(int minInclusive, int maxInclusive) {
-        return getRandomNumberExclusive(minInclusive, maxInclusive + 1);
+    public static int drawNumber(int minInclusive, int maxInclusive) {
+        return drawNumberExclusive(minInclusive, maxInclusive + 1);
     }
 }

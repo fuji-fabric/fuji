@@ -38,7 +38,7 @@ public abstract class BaseJob implements Job {
             jobGroup = this.getClass().getName();
         }
         if (jobName == null) {
-            jobName = RandomUtil.randomUUID();
+            jobName = RandomUtil.drawUUID();
         }
         if (jobDataMap == null) {
             jobDataMap = new JobDataMap();

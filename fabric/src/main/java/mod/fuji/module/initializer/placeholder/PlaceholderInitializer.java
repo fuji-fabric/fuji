@@ -404,7 +404,7 @@ public class PlaceholderInitializer extends ModuleInitializer {
             try {
                 int minInclusive = Integer.parseInt(split.get(0));
                 int maxExclusive = Integer.parseInt(split.get(1));
-                i = RandomUtil.getRandomNumberExclusive(minInclusive, maxExclusive);
+                i = RandomUtil.drawNumberExclusive(minInclusive, maxExclusive);
             } catch (Exception e) {
                 return PlaceholderHelper.makeInvalidArgsErrorText();
             }

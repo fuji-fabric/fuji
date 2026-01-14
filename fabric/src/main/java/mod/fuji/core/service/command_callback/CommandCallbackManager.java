@@ -68,7 +68,7 @@ public class CommandCallbackManager {
     }
 
     public static @NotNull String makeCallbackCommandString(@NotNull Consumer<ServerPlayer> callback, long ttl, @NotNull TimeUnit timeUnit) {
-        return CommandCallbackManager.makeCallbackCommandString(RandomUtil.randomUUID(), callback, ttl, timeUnit);
+        return CommandCallbackManager.makeCallbackCommandString(RandomUtil.drawUUID(), callback, ttl, timeUnit);
     }
 
     private static @NotNull ClickEvent makeCallbackClickEvent(@NotNull String uuid, @NotNull Consumer<ServerPlayer> callback, long ttl, @NotNull TimeUnit timeUnit) {
@@ -79,7 +79,7 @@ public class CommandCallbackManager {
     }
 
     public static @NotNull ClickEvent makeCallbackClickEvent(@NotNull Consumer<ServerPlayer> callback, long ttl, @NotNull TimeUnit timeUnit) {
-        return makeCallbackClickEvent(RandomUtil.randomUUID(), callback, ttl, timeUnit);
+        return makeCallbackClickEvent(RandomUtil.drawUUID(), callback, ttl, timeUnit);
     }
 
 }

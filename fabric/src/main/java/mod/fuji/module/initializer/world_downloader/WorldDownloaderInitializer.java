@@ -94,7 +94,7 @@ public class WorldDownloaderInitializer extends ModuleInitializer {
         String url = config.model().url_format;
         int port = config.model().port;
         url = url.replace("%port%", String.valueOf(port));
-        String path = "/world-download/" + RandomUtil.randomUUID();
+        String path = "/world-download/" + RandomUtil.drawUUID();
         url = url.replace("%path%", path);
         downloadContextQueue.add(path);
 

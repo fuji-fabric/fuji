@@ -27,7 +27,7 @@ public class ChatDisplayService {
     private static final SoftReferenceMap<String, BaseDisplayGuiFactory> uuid2factory = new SoftReferenceMap<>();
 
     private static @NotNull String bindUUID(@NotNull BaseDisplayGuiFactory displayGuiFactory) {
-        String uuid = RandomUtil.randomUUID();
+        String uuid = RandomUtil.drawUUID();
         uuid2factory.put(uuid, displayGuiFactory);
         return uuid;
     }

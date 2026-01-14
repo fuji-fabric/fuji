@@ -86,7 +86,7 @@ public class UuidHelper {
 
         /* Attach a new UUID if not existed. */
         if (!root.contains(FUJI_UUID_NBT_KEY)) {
-            String uuidString = RandomUtil.randomUUID();
+            String uuidString = RandomUtil.drawUUID();
             root.putString(FUJI_UUID_NBT_KEY, uuidString);
         }
 
