@@ -1,5 +1,8 @@
 package mod.fuji.module.initializer.command_rewrite;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -61,8 +64,13 @@ public class CommandRewriteInitializer extends ModuleInitializer {
 
         /* Applied the rewrite rules. */
         for (RegexRewriteNode rewriteRule : effectiveRewriteRules) {
-            if (rewriteRule.getCachedPattern().matcher(oldString).matches()) {
-                String newString = oldString.replaceAll(rewriteRule.getRegex(), rewriteRule.getReplacement());
+            Optional<Pattern> pattern = rewriteRule.getPattern();
+            if (pattern.isEmpty()) continue;
+            Pattern $pattern = pattern.get();
+
+            Matcher matcher = $pattern.matcher(oldString);
+            if (matcher.matches()) {
+                String newString = matcher.replaceAll(rewriteRule.getReplacement());
                 LogUtil.debug("Rewrite the command string: old = {}, new = {}", oldString, newString);
                 oldString = newString;
             }

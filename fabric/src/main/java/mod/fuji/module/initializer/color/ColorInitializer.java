@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.color;
 
-import java.util.regex.Matcher;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.Document;
@@ -11,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 @Document(id = 1766444546546L, value = """
-    This module introduces `style tags` in certain `places`.
+    This module introduces `style tags` in some `places`.
     """)
 public class ColorInitializer extends ModuleInitializer {
 
@@ -19,8 +18,7 @@ public class ColorInitializer extends ModuleInitializer {
 
     public static @NotNull String rewriteColorCodes(@NotNull String string) {
         for (RegexRewriteNode rule : config.model().getRewrite().getRules()) {
-            Matcher matcher = rule.getCachedPattern().matcher(string);
-            string = matcher.replaceAll(rule.getReplacement());
+            string = rule.apply(string);
         }
 
         return string;

@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.chat.replace;
 
+import java.util.Optional;
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -52,11 +53,14 @@ public class ChatReplaceInitializer extends ModuleInitializer {
         MutableComponent newText = oldText.copy();
 
         for (RegexRewriteNode rule : config.model().getReplace().getRules()) {
-            Pattern cachedPattern = rule.getCachedPattern();
-            newText = TextHelper.Replacer.replaceTextWithPattern(newText, cachedPattern, (matcher) -> {
+            Optional<Pattern> pattern = rule.getPattern();
+            if (pattern.isEmpty()) continue;
+            Pattern $pattern = pattern.get();
+
+            newText = TextHelper.Replacer.replaceTextWithPattern(newText, $pattern, (matcher) -> {
                 /* Replace the captured groups. */
                 String replacement = rule.getReplacement();
-                replacement = StringUtil.copyMatcherAndReplaceFirst(cachedPattern, matcher, replacement);
+                replacement = StringUtil.copyMatcherAndReplaceFirst($pattern, matcher, replacement);
 
                 /* Parse the placeholders. */
                 return TextHelper.getTextByValue(player, replacement);

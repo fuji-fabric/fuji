@@ -1,11 +1,13 @@
 package mod.fuji.core.structure;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import lombok.AccessLevel;
+import lombok.Setter;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.document.annotation.Document;
 import java.util.regex.Pattern;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
@@ -13,34 +15,53 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @NoArgsConstructor
 public class RegexRewriteNode {
+
     @Document(id = 1751823950782L, value = """
-        The `regex` expression used to match the `target string`.
+        The `pattern string` used to match the `target string`.
         """)
     String regex;
 
     @Document(id = 1751823954950L, value = """
-        The `pattern` used to replace the `matched target string`.
+        The `replacement string` used to replace the `matched target string`.
         """)
     String replacement;
 
     @ToString.Exclude
-    @Getter(AccessLevel.NONE)
-    transient Pattern pattern;
+    @Setter(value = AccessLevel.NONE)
+    transient Optional<Pattern> pattern = Optional.empty();
 
-    public RegexRewriteNode(String regex, String replacement) {
+    public RegexRewriteNode(@NotNull String regex, @NotNull String replacement) {
         this.regex = regex;
         this.replacement = replacement;
     }
 
-    public @NotNull Pattern getCachedPattern() {
-        if (this.pattern == null) {
+    public @NotNull String apply(@NotNull String input) {
+        /* Ignore malformed regex rewrite rule. */
+        Optional<Pattern> pattern = this.getPattern();
+        if (pattern.isEmpty()) {
+            LogUtil.warn("Failed to apply the regex rewrite rule: {} (This rule is malformed.)", this);
+            return input;
+        }
+
+        /* Rewrite the input string using the rule. */
+        Pattern $pattern = pattern.get();
+        Matcher matcher = $pattern.matcher(input);
+        input = matcher.replaceAll(this.getReplacement());
+        return input;
+    }
+
+    public @NotNull Optional<Pattern> getPattern() {
+        /* Compile the pattern if empty. */
+        if (this.pattern.isEmpty()) {
             try {
-                this.pattern = Pattern.compile(this.regex);
+                Pattern pattern = Pattern.compile(this.regex);
+                this.pattern = Optional.of(pattern);
             } catch (Exception e) {
                 LogUtil.error("Failed to compile the regex string '{}'. (Regex Syntax Error)", this.regex, e);
             }
         }
 
+        /* Return the cached pattern. */
         return this.pattern;
     }
 
