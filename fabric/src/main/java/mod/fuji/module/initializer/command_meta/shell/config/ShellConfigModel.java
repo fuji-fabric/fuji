@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.command_meta.shell.config;
 
+import com.google.gson.annotations.SerializedName;
 import mod.fuji.core.document.annotation.Document;
 
 import java.util.ArrayList;
@@ -7,7 +8,8 @@ import java.util.List;
 
 public class ShellConfigModel {
 
-    public String enable_warning = "ENABLE THIS MODULE IS POTENTIAL TO HARM YOUR COMPUTER! YOU NEED TO CHANGE THIS FIELD INTO `CONFIRM` TO ENABLE THIS MODULE";
+    @SerializedName(value = "DANGER", alternate = "enable_warning")
+    public String DANGER = "ENABLE THIS MODULE IS POTENTIAL TO HARM YOUR COMPUTER! YOU NEED TO CHANGE THIS FIELD INTO `CONFIRM` TO ENABLE THIS MODULE";
 
     @Document(id = 1751824744477L, value = """
         Security options.

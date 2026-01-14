@@ -61,7 +61,7 @@ public class ShellInitializer extends ModuleInitializer {
     private static void checkSecurity(CommandContext<CommandSourceStack> ctx) {
         var config = ShellInitializer.config.model();
 
-        if (!config.enable_warning.equals("CONFIRM")) {
+        if (!config.DANGER.equals("CONFIRM")) {
             TextHelper.sendTextByKey(ctx.getSource(), "shell.failed.rtfm");
             throw new AbortCommandExecutionException();
         }
