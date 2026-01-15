@@ -88,7 +88,7 @@ dependencies {
     include(implementation("com.jayway.jsonpath:json-path:${project.json_path_version}"))
 
     /* For permission system: luckperms */
-    include(implementation "net.luckperms:api:${project.luckperms_api_version}")
+    implementation "net.luckperms:api:${project.luckperms_api_version}"
 
     /* For server side gui: sgui*/
     include(modImplementation("eu.pb4:sgui:${project.sgui_version}"))
