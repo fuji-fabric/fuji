@@ -73,7 +73,7 @@ public class BackService {
     private static int getMaxBackLocationsToSave(@NotNull ServerPlayer player) {
         return LuckpermsHelper
             .getMeta(player.getUUID(), BackInitializer.MAX_LOCATIONS_TO_SAVE_META)
-            .orElse(BackInitializer.config.model().getMaxBackLocationsToSave());
+            .orElse(BackInitializer.config.model().getMaxNumberOfBackLocationsToSave());
     }
 
     @SuppressWarnings({"RedundantIfStatement", "CodeBlock2Expr"})

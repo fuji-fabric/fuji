@@ -21,7 +21,7 @@ public class BackConfigModel {
     @SerializedName(value = "push_back_location_on_player_teleport", alternate = "enable_back_on_teleport")
     boolean pushBackLocationOnPlayerTeleport = true;
 
-    @SerializedName(value = "max_back_locations_to_save", alternate = "max_back_location_entries_to_save")
-    int maxBackLocationsToSave = 3;
+    @SerializedName(value = "max_number_of_back_locations_to_save", alternate = {"max_back_location_entries_to_save", "max_back_locations_to_save"})
+    int maxNumberOfBackLocationsToSave = 3;
 
 }

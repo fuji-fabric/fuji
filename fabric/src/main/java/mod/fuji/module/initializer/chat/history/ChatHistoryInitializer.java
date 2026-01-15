@@ -23,13 +23,28 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Document(id = 1751826684077L, value = """
-    This module does:
-    1. Stores chat messages as history.
-    2. Delivers them to players when they join the server.
+    This module provides the `history` function for vanilla Minecraft's `chat` system.
     """)
-@ColorBox(id = 1751870560992L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ This module works with `Styled Chat` mod.
-    You can use this module to provide the `chat history` for it.
+@ColorBox(id = 1768404087952L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ How it works?
+
+    ➜ Store the `chat text` sent by a player.
+    When a player sends a chat text, store it.
+
+    ➜ Restore the `chat texts` to a new joined player.
+    When a player joins the server, send all the stored chat texts to the player.
+    """)
+@ColorBox(id = 1768405649879L, color = ColorBox.ColorBoxTypes.NOTE, value = """
+    ◉ What is the `acceptors` and `rejectors`?
+    A `chat message` = `chat type` + `chat content` + `chat parameter`
+    In vanilla Minecraft, all `chat messages` are sent in a shared channel.
+
+    The `acceptors` and `rejectors` are used to `select` the interested `chat message`.
+    They are introduced to improve the compatibility with other chat-related mods.
+
+    A `chat type acceptor` filter a `chat message` by its `chat type`.
+    A `chat content rejector` filter a `chat message` by its `chat content`.
+    A `chat parameter rejector` filter a `chat message` by its `chat parameter`.
     """)
 public class ChatHistoryInitializer extends ModuleInitializer {
 
@@ -38,22 +53,22 @@ public class ChatHistoryInitializer extends ModuleInitializer {
     private static Queue<Component> chatHistory;
 
     @SuppressWarnings("RedundantIfStatement")
-    private static boolean isMessageTypeAccepted(@NotNull String messageTypeAsString) {
-        boolean acceptedMessageType = false;
+    private static boolean isMessageTypeAccepted(@NotNull String messageTypeString) {
+        boolean accepted = false;
 
         /* Filter message types. */
         if (config.model().getMessageTypeAcceptors()
             .stream()
-            .anyMatch(messageTypeAsString::equals)) {
-            acceptedMessageType = true;
+            .anyMatch(messageTypeString::equals)) {
+            accepted = true;
         }
 
         /* Log it. */
-        if (!acceptedMessageType) {
-            LogUtil.debug("There is no an acceptor defined to accept the message type {}, ignoring it for the chat history.", messageTypeAsString);
+        if (!accepted) {
+            LogUtil.debug("There is no an acceptor defined to accept the message type {}, ignoring it for the chat history.", messageTypeString);
         }
 
-        return acceptedMessageType;
+        return accepted;
     }
 
     @SuppressWarnings("RedundantIfStatement")
@@ -63,29 +78,28 @@ public class ChatHistoryInitializer extends ModuleInitializer {
         Due to this reason, we can't distinguish the private message and public message.
         **/
         LogUtil.debug("content = {}, parameters = {}", contentString, parametersString);
-
-        boolean rejectedMessage = false;
+        boolean rejected = false;
 
         /* Reject message by content. */
         if (config.model().getMessageRejectors().getContentRejector().getMatches()
             .stream()
             .anyMatch(contentString::matches)) {
-            rejectedMessage = true;
+            rejected = true;
         }
 
         /* Reject message by parameters. */
         if (config.model().getMessageRejectors().getParameterRejector().getMatches()
             .stream()
             .anyMatch(parametersString::matches)) {
-            rejectedMessage = true;
+            rejected = true;
         }
 
         /* Log it. */
-        if (rejectedMessage) {
+        if (rejected) {
             LogUtil.debug("One defined rejector REJECTS a message, ignoring it for the chat history: content = {}, parameters = {}", contentString, parametersString);
         }
 
-        return rejectedMessage;
+        return rejected;
     }
 
     private static void processChatHistory(@NotNull PlayerChatMessage signedMessage, @NotNull ChatType.Bound parameters) {
@@ -95,29 +109,33 @@ public class ChatHistoryInitializer extends ModuleInitializer {
             return;
         }
 
-        /* Reject the message by content and parameters. (Styled Chat mod will encode info into parameters, and we can detect the feature.) */
+        /* Filter the message by content and parameters. */
         String contentString = TextHelper.Operators.getString(signedMessage.decoratedContent());
         String parametersString = parameters.toString();
         if (isMessageRejected(contentString, parametersString)) {
             return;
         }
 
-        /* Add the message into chat history. */
-        Component decoratedTextAsTheClientSideDo = parameters.decorate(signedMessage.decoratedContent());
-        storeChatHistory(decoratedTextAsTheClientSideDo);
+        /* Store the text into the chat history. */
+        Component decorateTheTextAsTheClientSideDoes = parameters.decorate(signedMessage.decoratedContent());
+        storeChatHistory(decorateTheTextAsTheClientSideDoes);
     }
 
     @EventConsumer
-    private static void onServerStarted(@Unused ServerStartedEvent event) {
-        chatHistory = EvictingQueue.create(config.model().getBufferSize());
+    private static void initializeChatHistory(@Unused ServerStartedEvent event) {
+        chatHistory = EvictingQueue.create(config.model().getMaxChatHistorySize());
+    }
+
+    private static void resizeChatHistory() {
+        EvictingQueue<Component> newQueue = EvictingQueue.create(config.model().getMaxChatHistorySize());
+        newQueue.addAll(chatHistory);
+        chatHistory.clear();
+        chatHistory = newQueue;
     }
 
     @Override
     protected void onReload() {
-        EvictingQueue<Component> newQueue = EvictingQueue.create(config.model().getBufferSize());
-        newQueue.addAll(chatHistory);
-        chatHistory.clear();
-        chatHistory = newQueue;
+        resizeChatHistory();
     }
 
     private static void storeChatHistory(@NotNull Component text) {
@@ -125,14 +143,14 @@ public class ChatHistoryInitializer extends ModuleInitializer {
     }
 
     @EventConsumer(injectorPriority = EventConsumer.LOWEST, consumerPriority = EventConsumer.LOWEST)
-    private static void replayChatHistory(PlayerJoinedEvent event) {
+    private static void restoreChatHistory(PlayerJoinedEvent event) {
         // NOTE: Use a lower priority, to ensure the chat history is re-played before other welcome messages.
         ServerPlayer player = event.getPlayer();
         chatHistory.forEach(text -> TextHelper.sendMessageByText(player, text));
     }
 
     @EventConsumer(injectorPriority = EventConsumer.HIGHEST, consumerPriority = EventConsumer.HIGHEST)
-    private static void consumePlayerChatMessageSentEvent(PlayerChatMessageSentEvent event) {
+    private static void watchSentChatText(PlayerChatMessageSentEvent event) {
         processChatHistory(event.getSignedMessage(), event.getParameters());
     }
 
