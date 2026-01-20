@@ -11,4 +11,4 @@
 - None
 
 ## 🐞 Fixes
-- [command_toolbox.nickname] Fix an issue where the `/nickname set` command should not `eat` the `color tags`.
+- [tpa && chat.mention] The `ping sound` should be played only to the `target player`, instead of playing in the world.
