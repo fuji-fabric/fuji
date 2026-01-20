@@ -49,9 +49,7 @@ public class PlayerHelper {
         #if MC_VER < MC_1_21_11
         player.playNotifySound(soundEvent, soundCategory, volume, pitch);
         #elif MC_VER >= MC_1_21_11
-        PlayerHelper
-            .getServerWorld(player)
-            .playSound(player, player.getX(), player.getY(), player.getZ(), soundEvent, soundCategory, volume, pitch);
+        player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent), soundCategory, player.getX(), player.getY(), player.getZ(), volume, pitch, player.getRandom().nextLong()));
         #endif
     }
 
