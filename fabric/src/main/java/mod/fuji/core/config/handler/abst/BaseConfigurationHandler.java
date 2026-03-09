@@ -1,8 +1,26 @@
 package mod.fuji.core.config.handler.abst;
 
 import com.google.gson.JsonObject;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.Setter;
 import mod.fuji.core.annotation.CallerSensitive;
 import mod.fuji.core.auxiliary.ExceptionUtil;
 import mod.fuji.core.auxiliary.IOUtil;
@@ -20,35 +38,16 @@ import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.event.consumer.DynamicEventConsumer;
 import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppingEvent;
-import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.core.job.JobManager;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import lombok.AccessLevel;
-import lombok.Cleanup;
-import lombok.Getter;
-import lombok.Setter;
+import mod.fuji.core.module.ModulePathResolver;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.JobDataMap;
 
 /**
- *     1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
-    2. If you want to register a new type for gson, just override the template method in module initializer.
-    3. The type system of java is static, so you only need to give the object instance to gson. (A generic type can be passed via method parameter)
-    4. Define configuration handler using static variable, to ensure it's unique.
-
+ * 1. Only use static inner class for a nested structure. (This is because a historical design problem in Java)
+ * 2. If you want to register a new type for gson, just override the template method in module initializer.
+ * 3. The type system of java is static, so you only need to give the object instance to gson. (A generic type can be passed via method parameter)
+ * 4. Define configuration handler using static variable, to ensure it's unique.
  **/
 public abstract class BaseConfigurationHandler<T> implements SourceModuleGetter {
 
