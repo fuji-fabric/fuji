@@ -152,7 +152,8 @@ javaProjects.each { projectName ->
         /* Configure Java compiler. */
         tasks.withType(JavaCompile).configureEach { task ->
 
-            options.release = rootProject.java_version as Integer
+            sourceCompatibility = rootProject.java_version as Integer
+            targetCompatibility = rootProject.java_version as Integer
             options.encoding = "UTF-8"
 
             /* Configure error-prone gradle plugin. */
@@ -196,6 +197,9 @@ javaProjects.each { projectName ->
 
                 /* For error-prone in JDK 21 version. */
                 options.compilerArgs << "-XDaddTypeAnnotationsToSymbol=true"
+
+                /* For manifold in JDK 21 version. */
+                options.compilerArgs << "--add-exports=java.base/jdk.internal.access=ALL-UNNAMED"
             }
         }
 
