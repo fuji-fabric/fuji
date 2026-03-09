@@ -1,5 +1,6 @@
 package mod.fuji.core.auxiliary;
 
+import com.google.errorprone.annotations.FormatMethod;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.config.Configs;
@@ -85,6 +86,7 @@ public class LogUtil {
         // This logging method is a dummy method used for disabled logs.
     }
 
+    @FormatMethod
     @SuppressWarnings("unused")
     public static void stdout(String message, Object ... args) {
         System.out.printf(message, args);
