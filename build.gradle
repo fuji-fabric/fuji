@@ -231,7 +231,9 @@ allprojects { p ->
     }
 
     /* Define the archive name. */
-    archivesBaseName = "fuji-" + project.name
+    base {
+        archivesName = "fuji-" + project.name
+    }
     // The `version` must starts with sem-ver to make the fabric loader happy
     def gitVersionDetails = versionDetails()
     version = "${project.mod_version}-${gitVersionDetails.gitHash}-mc${project.minecraft_version}"
