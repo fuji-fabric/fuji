@@ -193,6 +193,9 @@ javaProjects.each { projectName ->
 
                 /* Display all errors. */
                 options.compilerArgs << "-Xmaxerrs" << "8192"
+
+                /* For error-prone in JDK 21 version. */
+                options.compilerArgs << "-XDaddTypeAnnotationsToSymbol=true"
             }
         }
 
