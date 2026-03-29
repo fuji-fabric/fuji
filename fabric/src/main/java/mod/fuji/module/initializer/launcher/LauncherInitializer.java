@@ -32,12 +32,12 @@ import org.jetbrains.annotations.NotNull;
     Issue: `/command-attachment attach-item-one launch at %player:name% @e[type=!minecraft:player,distance=..8] 30 1`
     """)
 @ColorBox(id = 1756440410476L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Use a lower `angle` for `fast horizontal movement`.
+    ◉ Use a lower `angle` for `fast horizontal` move.
     1. `/launch facing @s 15 1`
     2. `/launch facing @s 15 3.9`
     <green>The `power` is clamped in `[-3.9, +3.9]`
 
-    ◉ Use a median `angle` for `balanced horizontal and vertical movement`.
+    ◉ Use a median `angle` for `balanced horizontal and vertical` move.
     1. `/launch facing @s 30 3.9`
     2. `/launch facing @s 45 3.9`
 
