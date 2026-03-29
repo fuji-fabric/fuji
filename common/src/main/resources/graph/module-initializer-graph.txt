@@ -109,8 +109,6 @@ mod.fuji.module.initializer.functional.loom.LoomInitializer
 mod.fuji.module.initializer.functional.smithing.SmithInitializer
 mod.fuji.module.initializer.functional.stonecutter.StoneCutterInitializer
 mod.fuji.module.initializer.functional.workbench.WorkbenchInitializer
-mod.fuji.module.initializer.gameplay.carpet.better_info.BetterInfoInitializer
-mod.fuji.module.initializer.gameplay.carpet.fake_player_manager.FakePlayerManagerInitializer
 mod.fuji.module.initializer.gameplay.multi_obsidian_platform.MultiObsidianPlatformInitializer
 mod.fuji.module.initializer.head.HeadInitializer
 mod.fuji.module.initializer.home.HomeInitializer

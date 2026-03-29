@@ -111,9 +111,6 @@ functional.smithing
 functional.stonecutter
 functional.workbench
 gameplay
-gameplay.carpet
-gameplay.carpet.better_info
-gameplay.carpet.fake_player_manager
 gameplay.multi_obsidian_platform
 head
 home
