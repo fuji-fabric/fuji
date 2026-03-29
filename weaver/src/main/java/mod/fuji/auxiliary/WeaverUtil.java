@@ -92,9 +92,10 @@ public class WeaverUtil {
 
         /* Append import expressions from the compilation unit. */
         try {
-            List<JCTree.JCImport> imports = cu.getImports();
+            var imports = cu.getImports();
+
             if (imports != null && !imports.isEmpty()) {
-                for (JCTree.JCImport imp : imports) {
+                for (var imp : imports) {
                     // JCImport.toString() should produce a valid import statement text
                     javaTextBuilder.append(imp.toString()).append("\n");
                 }
