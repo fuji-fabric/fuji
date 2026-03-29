@@ -610,22 +610,6 @@ public class MainControlConfigModel {
             public boolean enable = false;
 
             public MultiObsidianPlatform multi_obsidian_platform = new MultiObsidianPlatform();
-            public Carpet carpet = new Carpet();
-
-            public static class Carpet {
-                public boolean enable = false;
-
-                public FakePlayerManager fake_player_manager = new FakePlayerManager();
-                public BetterInfo better_info = new BetterInfo();
-
-                public static class FakePlayerManager {
-                    public boolean enable = false;
-                }
-
-                public static class BetterInfo {
-                    public boolean enable = false;
-                }
-            }
 
             public static class MultiObsidianPlatform {
                 public boolean enable = false;
