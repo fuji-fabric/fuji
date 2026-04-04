@@ -292,16 +292,6 @@ allprojects { p ->
         }
     }
 
-    tasks.register('copyAccessWidenerResources', Copy) {
-        from project(":common").file("build/resources/main/merged.fuji.accesswidener")
-        into(file(p.file("build/resources/main")))
-        rename "merged.fuji.accesswidener", "fuji.accesswidener"
-
-        doFirst {
-            println("Copy accesswidener file for specified MC version.")
-        }
-    }
-
     /* Configure test framework. */
     // NOTE If :fabric:test task failed for no reason, you can comment out this block, disable the test, and run again, see what's happening.
     test {
@@ -312,3 +302,7 @@ allprojects { p ->
 
 }
 
+/* Derefine dependency handler method help functions. */
+def boolean isObfuscatedMinecraft() {
+    project.findProperty("obfuscated_minecraft") == "true"
+}
