@@ -111,6 +111,7 @@ processResources {
     // NOTE The fabric.mod.json file will always be copied to fabric/build/resources/main dir.
     dependsOn(copyCommonResources)
     dependsOn(copyLanguageResources)
+    dependsOn(copyAccessWidenerResources)
 }
 
 /* Validate the access widener file. */

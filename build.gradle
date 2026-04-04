@@ -291,6 +291,13 @@ allprojects { p ->
         }
     }
 
+    tasks.register('copyAccessWidenerResources', Copy) {
+        println("Copy accesswidener file for specified MC version.")
+        from project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+        into(file(p.file("build/resources/main")))
+        rename "${access_widener_version}.fuji.accesswidener", "fuji.accesswidener"
+    }
+
     /* Configure test framework. */
     // NOTE If :fabric:test task failed for no reason, you can comment out this block, disable the test, and run again, see what's happening.
     test {
