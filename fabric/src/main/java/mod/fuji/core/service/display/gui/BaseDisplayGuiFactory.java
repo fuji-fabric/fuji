@@ -2,7 +2,6 @@ package mod.fuji.core.service.display.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.Optional;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -11,6 +10,7 @@ import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -49,10 +49,10 @@ public abstract class BaseDisplayGuiFactory {
     }
 
     @TestCase(action = "Create an inventory display that contains a shulker box.", targets = "See if we can go inside the shulker box.")
-    private record RecursiveItemDisplayClickCallback(@NotNull SlotGuiInterface parentGui, @NotNull ServerPlayer viewingPlayer) implements GuiElementInterface.ClickCallback {
+    private record RecursiveItemDisplayClickCallback(@NotNull SlotGuiInterface parentGui, @NotNull ServerPlayer viewingPlayer) implements GuiClickCallbackDuck {
         @Override
         public void click(int i, ClickType clickType, net.minecraft.world.inventory.ClickType clickType1, SlotGuiInterface slotGuiInterface) {
-            GuiElementInterface slot = slotGuiInterface.getSlot(i);
+            var slot = slotGuiInterface.getSlot(i);
             if (slot == null) {
                 LogUtil.error("A slot in display GUI is null.");
                 return;

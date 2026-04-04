@@ -1,13 +1,13 @@
 package mod.fuji.module.initializer.command_meta.when_online.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.ConfirmSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer;
 import mod.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
@@ -67,8 +67,8 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
         return GuiElementIR.of(builder.build());
     }
 
-    private static GuiElementInterface.@NotNull ItemClickCallback onClickEntity(SimpleGui gui, ServerPlayer player, WhenOnlineTicket entity) {
-        return (a, b, c) -> {
+    private static GuiClickCallbackDuck onClickEntity(SimpleGui gui, ServerPlayer player, WhenOnlineTicket entity) {
+        return (a, b, c, d) -> {
             // Right click -> delete.
             if (b.isRight) {
                 new ConfirmSignGui(player) {

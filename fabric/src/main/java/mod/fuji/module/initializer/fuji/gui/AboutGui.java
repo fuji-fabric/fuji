@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ContactInformation;
@@ -71,7 +71,7 @@ public class AboutGui extends PagedGui<Person> {
         return string.contains("http://") || string.contains("https://");
     }
 
-    public GuiElementInterface.ClickCallback makeCallback(Person entity) {
+    public GuiClickCallbackDuck makeCallback(Person entity) {
         return (a, b, c, d) -> {
             // construct the text
             MutableComponent text = Component.empty();

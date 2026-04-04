@@ -2,7 +2,6 @@ package mod.fuji.module.initializer.command_menu.structure;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
@@ -13,6 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
+import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_menu.CommandMenuInitializer;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
@@ -125,7 +125,7 @@ public class SlotDescriptor {
         return true;
     }
 
-    public record CommandMenuSlotClickCallback(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor, SlotDescriptor slotDescriptor) implements GuiElementInterface.ClickCallback {
+    public record CommandMenuSlotClickCallback(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor, SlotDescriptor slotDescriptor) implements GuiClickCallbackDuck {
 
 
         @SuppressWarnings("UnnecessaryReturnStatement")

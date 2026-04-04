@@ -2,11 +2,11 @@ package mod.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
+import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -75,8 +75,8 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
     protected abstract boolean canDeleteEntity(T entity);
 
     @SuppressWarnings("UnnecessaryReturnStatement")
-    private GuiElementInterface.ItemClickCallback dispatchClickType(T entity) {
-        return (index, clickType, actionType) -> {
+    private GuiClickCallbackDuck dispatchClickType(T entity) {
+        return (index, clickType, actionType, gui) -> {
             /* Dispatch click type. */
             if (clickType == ClickType.MOUSE_LEFT) {
                 onLeftClickEntity(entity);
