@@ -3,9 +3,22 @@ plugins {
     id "java"
     id "idea"
 
-    // Fabric Loom
-    id "fabric-loom" version "1.13-SNAPSHOT"
+    id "fabric-loom" version "1.15-SNAPSHOT" apply(false)
+    id "net.fabricmc.fabric-loom" version "1.15-SNAPSHOT" apply(false)
 }
+
+/* Apply the fabric loom gradle plugin. */
+fabricLoomPluginApplicator()
+def void fabricLoomPluginApplicator() {
+    if (isObfuscatedMinecraft()) {
+        println("Apply the fabric-loom plugin for obfuscated Minecraft.")
+        apply plugin: "fabric-loom"
+    } else {
+        println("Apply the fabric-loom plugin for unobfuscated Minecraft.")
+        apply plugin: "net.fabricmc.fabric-loom"
+    }
+}
+
 
 /* Define the jar repositories. */
 repositories {
