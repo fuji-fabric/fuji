@@ -25,34 +25,16 @@ repositories {
     mavenCentral()
 
     // For fabric-carpet mod.
-    maven {url 'https://masa.dy.fi/maven'}
+    maven { url 'https://masa.dy.fi/maven' }
 
     // For text-placeholder and sgui mod.
     maven { url "https://maven.nucleoid.xyz" }
 }
 
-/* Define AW files merge function. */
-ext.mergedAw = project(":common").file("build/resources/main/merged.fuji.accesswidener")
-def mergeAccessWidenerFiles() {
-    def commonAw = project(":common").file("src/main/resources/common.fuji.accesswidener")
-    def versionAw = project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
-
-    mergedAw.parentFile.mkdirs()
-    def versionContent = versionAw.text
-    def commonContent = commonAw.text
-    mergedAw.text = versionContent + "\n" + commonContent + "\n"
-}
-tasks.register("mergeAccessWidener") {
-    doLast {
-        mergeAccessWidenerFiles()
-    }
-}
-tasks.copyAccessWidenerResources.dependsOn(mergeAccessWidener)
-
 /* Configure fabric-loom plugin. */
 loom {
-    mergeAccessWidenerFiles()
-    accessWidenerPath = mergedAw
+    accessWidenerPath = project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
+
 
     mods {
         "${project.mod_id}" {
@@ -82,10 +64,11 @@ loom {
     }
 }
 
-/**
- * Each time adds a new library, you should build the software, and go to the production-env to check whether the library works.
- * It's possible the necessary libraries are not packed into the release package, even you `include` the library ...
- */
+/* Define the Minecraft related dependencies. */
+def useModImplementation(Object dep) {
+    return dependencies.add(isObfuscatedMinecraft() ? "modImplementation" : "implementation", dep)
+}
+
 dependencies {
     /* For mod loader: fabric-loader */
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -129,7 +112,6 @@ processResources {
     // NOTE The fabric.mod.json file will always be copied to fabric/build/resources/main dir.
     dependsOn(copyCommonResources)
     dependsOn(copyLanguageResources)
-    dependsOn(copyAccessWidenerResources)
 }
 
 /* Validate the access widener file. */
