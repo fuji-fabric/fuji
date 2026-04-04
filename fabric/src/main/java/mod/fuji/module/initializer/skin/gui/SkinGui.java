@@ -2,11 +2,11 @@ package mod.fuji.module.initializer.skin.gui;
 
 import com.mojang.authlib.properties.Property;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.skin.service.SkinService;
 import mod.fuji.module.initializer.skin.structure.SkinDescriptor;
 import java.util.List;
@@ -32,7 +32,7 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull SkinDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull SkinDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
         Property skinProperty = entity.getSkinProperty().toNative();
         String value = AuthlibHelper.getPropertyValue(skinProperty);
@@ -48,6 +48,6 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
                 SkinService.changeSkin(getPlayer(), () -> entity.getSkinProperty().toNative());
             });
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 }

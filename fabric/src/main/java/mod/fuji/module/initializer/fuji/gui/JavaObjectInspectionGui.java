@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.List;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
@@ -10,6 +9,7 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.inspector.FailedToInspectException;
 import mod.fuji.core.document.inspector.InspectingObject;
 import mod.fuji.core.document.inspector.JavaObjectInspector;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -44,14 +44,14 @@ public class JavaObjectInspectionGui extends PagedGui<InspectingObject> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull InspectingObject entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull InspectingObject entity) {
         GuiElementBuilder guiElementBuilder = new GuiElementBuilder()
             .setName(entity.toNameText(getPlayer()))
             .setItem(GuiHelper.Material.fromObjectType(entity.getObjectValue(), entity.getObjectType()))
             .setLore(entity.toLore(getPlayer()))
             .setCallback(() -> openChildInspectorGui(entity));
 
-        return guiElementBuilder.build();
+        return GuiElementIR.of(guiElementBuilder.build());
     }
 
     private void openChildInspectorGui(@NotNull InspectingObject inspectingObject) {

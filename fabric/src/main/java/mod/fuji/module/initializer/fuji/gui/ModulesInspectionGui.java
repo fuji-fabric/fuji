@@ -2,12 +2,12 @@ package mod.fuji.module.initializer.fuji.gui;
 
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.module.ModuleLoadDeterminer;
 import mod.fuji.core.module.ModuleManager;
 import mod.fuji.core.module.ModulePathResolver;
@@ -66,7 +66,7 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull Pair<String, Boolean> entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull Pair<String, Boolean> entity) {
         List<Component> lore = new ArrayList<>();
 
         /* Attach module enable status. */
@@ -99,12 +99,12 @@ public class ModulesInspectionGui extends PagedGui<Pair<String, Boolean>> {
         Component itemName = Component.literal(modulePathString)
                             .withStyle(ChatFormatting.YELLOW);
 
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(itemMaterial)
             .setName(itemName)
             .setLore(lore)
             .setCallback(() -> openModuleDetailsInspectionGui(getBackendGui(), getPlayer(), modulePathString, moduleEnableStatus))
-            .build();
+            .build());
     }
 
     private static Item getItemMaterial(Pair<String, Boolean> entity) {

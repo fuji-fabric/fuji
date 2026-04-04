@@ -8,6 +8,7 @@ import java.util.function.Function;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.mapper.structure.GameProfileIR;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ public class GuiHelper {
 
     public static final int GENERIC_CONTAINER_LINE_SIZE = 9;
     public static final Component EMPTY_TITLE_TEXT = Component.literal("[title-is-empty]");
+
+    public static void setSlot(@NotNull SlotGuiInterface gui, int index, @NotNull GuiElementIR guiElement) {
+        gui.setSlot(index, guiElement.getNativeValue());
+    }
 
     public static class Handler {
 
@@ -58,9 +63,9 @@ public class GuiHelper {
 
     public static class PlayerSkull {
 
-        private static @NotNull GuiElementBuilder fromSlot(@NotNull GuiElementInterface slot) {
+        private static @NotNull GuiElementBuilder fromSlot(@NotNull GuiElementIR slot) {
             GuiElementBuilder builder = new GuiElementBuilder();
-            ItemStack itemStack = slot.getItemStack();
+            ItemStack itemStack = slot.getNativeValue().getItemStack();
 
             /* Copy data from slot into builder. */
             builder.setItem(itemStack.getItem());
@@ -69,7 +74,7 @@ public class GuiHelper {
             if (!lore.isEmpty()) {
                 builder.setLore(lore);
             }
-            builder.setCallback(slot.getGuiCallback());
+            builder.setCallback(slot.getNativeValue().getGuiCallback());
 
             return builder;
         }
@@ -81,14 +86,14 @@ public class GuiHelper {
         public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Function<ItemStack, String> playerNameMapper, @NotNull Runnable onCompleteCallback) {
             final int logicalSize = gui.getWidth() * (gui.getHeight() - 1);
             for (int i = 0; i < logicalSize; i++) {
-                GuiElementInterface targetSlot = gui.getSlot(i);
-                if (targetSlot == null) return;
+                GuiElementIR targetSlot = GuiElementIR.of(gui.getSlot(i));
+                if (targetSlot.getNativeValue() == null) return;
 
                 /* Run async method to fetch game profile. */
                 int finalI = i;
                 AsyncUtil.runAsyncAndHandleExceptions(() -> {
                     /* Ignore non-player-skull item stack. */
-                    ItemStack itemStack = targetSlot.getItemStack();
+                    ItemStack itemStack = targetSlot.getNativeValue().getItemStack();
                     if (!itemStack.getItem().equals(Items.PLAYER_HEAD)) return;
 
                     /* Get cached game profile. */
@@ -106,9 +111,9 @@ public class GuiHelper {
 
                     /* Update the target slot. */
                     for (int j = 0; j < logicalSize; j++) {
-                        @Nullable GuiElementInterface currentSlot = gui.getSlot(j);
+                        @Nullable GuiElementIR currentSlot = GuiElementIR.of(gui.getSlot(j));
                         if (currentSlot == null) continue;
-                        if (currentSlot.getItemStack() == targetSlot.getItemStack()) {
+                        if (currentSlot.getNativeValue().getItemStack() == targetSlot.getNativeValue().getItemStack()) {
                             gui.setSlot(finalI, builder);
                             break;
                         }
@@ -127,10 +132,12 @@ public class GuiHelper {
         private static final Item BANNED_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
 
         @SuppressWarnings("RedundantIfStatement")
-        public static boolean isBlankSlot(@Nullable GuiElementInterface slot) {
-            if (slot == null) return true;
-            if (slot.getItemStack() == null) return true;
-            if (slot.getItemStack().isEmpty()) return true;
+        public static boolean isBlankSlot(@NotNull GuiElementIR slot) {
+            GuiElementInterface guiElement = slot.getNativeValue();
+
+            if (guiElement == null) return true;
+            if (guiElement.getItemStack() == null) return true;
+            if (guiElement.getItemStack().isEmpty()) return true;
 
             return false;
         }
@@ -150,16 +157,16 @@ public class GuiHelper {
         }
 
         public static ItemStack makeBannedSlotPlaceholderItemStack() {
-            return makeBannedSlotPlaceholder().getItemStack();
+            return makeBannedSlotPlaceholder().getNativeValue().getItemStack();
         }
 
         public static boolean isBannedSlotPlaceholder(ItemStack stack) {
             return stack.getItem().equals(BANNED_SLOT_PLACEHOLDER_ITEM);
         }
 
-        public static GuiElementInterface makeBannedSlotPlaceholder() {
-            return hideTooltip(new GuiElementBuilder().setItem(BANNED_SLOT_PLACEHOLDER_ITEM))
-                .build();
+        public static GuiElementIR makeBannedSlotPlaceholder() {
+            return GuiElementIR.of(hideTooltip(new GuiElementBuilder().setItem(BANNED_SLOT_PLACEHOLDER_ITEM))
+                .build());
         }
     }
 
@@ -178,9 +185,9 @@ public class GuiHelper {
 
     public static class Button {
 
-        public static GuiElementInterface makeSlotPlaceholderButton() {
-            return hideTooltip(new GuiElementBuilder().setItem(Items.GRAY_STAINED_GLASS_PANE))
-                .build();
+        public static GuiElementIR makeSlotPlaceholderButton() {
+            return GuiElementIR.of(hideTooltip(new GuiElementBuilder().setItem(Items.GRAY_STAINED_GLASS_PANE))
+                .build());
         }
 
         public static GuiElementBuilder makePlayerHeadButton(String skullOwner) {
@@ -256,76 +263,77 @@ public class GuiHelper {
     public static class Placer {
 
         public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementBuilder builder) {
-            fillEmptySlots(gui, builder.build());
+            fillEmptySlots(gui, GuiElementIR.of(builder.build()));
         }
 
-        public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface guiElementInterface) {
+        public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR guiElementInterface) {
             for (int i = 0; i < gui.getSize(); i++) {
-                GuiElementInterface slot = gui.getSlot(i);
+                GuiElementIR slot = GuiElementIR.of(gui.getSlot(i));
                 if (Validator.isBlankSlot(slot)) {
-                    gui.setSlot(i, guiElementInterface);
+                    gui.setSlot(i, guiElementInterface.getNativeValue());
                 }
             }
         }
 
         public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementBuilder elementBuilder) {
-            setSlotInLastLine(gui, inlineOffset, elementBuilder.build());
+            setSlotInLastLine(gui, inlineOffset, GuiElementIR.of(elementBuilder.build()));
         }
 
-        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementInterface element) {
+        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementIR element) {
             final int lastLineIndex = gui.getHeight() - 1;
             setSlotInSpecifiedLine(gui, lastLineIndex, inlineOffset, element);
         }
 
-        public static void setSlotInSpecifiedLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementInterface element) {
+        public static void setSlotInSpecifiedLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementIR element) {
             final int baseIndex = lineIndex * gui.getWidth();
             int slotIndex = baseIndex + inlineOffset;
-            gui.setSlot(slotIndex, element);
+            gui.setSlot(slotIndex, element.getNativeValue());
         }
 
-        public static void fillLastLineIfEmpty(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element) {
+        @SuppressWarnings("Convert2MethodRef")
+        public static void fillLastLineIfEmpty(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR element) {
             fillLastLineIf(gui, element, ($gui, slotIndex) -> Optional
                 .ofNullable($gui.getSlot(slotIndex))
-                .map(GuiElementInterface::getItemStack)
+                .map(it -> it.getItemStack())
                 .map(ItemStack::isEmpty)
                 .orElse(true));
         }
 
-        public static void fillLastLineIf(@NotNull SlotGuiInterface gui, @NotNull GuiElementInterface element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
+        public static void fillLastLineIf(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
             final int lastLineIndex = gui.getHeight() - 1;
             fillLineIf(gui, lastLineIndex, element, predicate);
         }
 
         @SuppressWarnings("unused")
-        public static void fillLine(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementInterface element) {
+        public static void fillLine(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementIR element) {
             fillLineIf(gui, lineIndex, element, (a, b) -> true);
         }
 
-        public static void fillLineIf(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementInterface element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
+        public static void fillLineIf(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
             final int lineWidth = gui.getWidth();
             final int baseIndex = lineIndex * lineWidth;
 
             for (int i = baseIndex; i < baseIndex + lineWidth; i++) {
                 if (predicate.test(gui, i)) {
-                    gui.setSlot(i, element);
+                    gui.setSlot(i, element.getNativeValue());
                 }
             }
         }
 
-        public static void fillGui(@NotNull SlotGuiInterface gui, @NotNull ItemStack itemStack) {
+        public static void fillGui(@NotNull SlotGuiInterface gui, GuiElementIR guiElement) {
             for (int i = 0; i < gui.getSize(); i++) {
-                gui.setSlot(i, itemStack);
+                GuiHelper.setSlot(gui, i, guiElement);
             }
         }
 
-        public static List<GuiElementInterface> makeLinePaddingElements(int filledSlotsSize) {
+        public static List<GuiElementIR> makeLinePaddingElements(int filledSlotsSize) {
 
             int remainder = filledSlotsSize % GENERIC_CONTAINER_LINE_SIZE;
             if (remainder == 0) {
                 return List.of();
             }
 
-            List<GuiElementInterface> elements = new ArrayList<>();
+            List<GuiElementIR> elements = new ArrayList<>();
             int unfilledSlotsSize = GENERIC_CONTAINER_LINE_SIZE - remainder;
             for (int i = 0; i < unfilledSlotsSize; i++) {
                 elements.add(Button.makeSlotPlaceholderButton());

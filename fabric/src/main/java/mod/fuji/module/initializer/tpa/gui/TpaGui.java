@@ -2,12 +2,12 @@ package mod.fuji.module.initializer.tpa.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.tpa.service.TpaService;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,13 +40,13 @@ public class TpaGui extends PagedGui<ServerPlayer> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull ServerPlayer entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull ServerPlayer entity) {
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
             .setName(TextHelper.getTextByKey(player, "player.name", PlayerHelper.getPlayerName(entity)))
             .setCallback(clickType -> onEntityClicked(clickType,entity));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     @Override

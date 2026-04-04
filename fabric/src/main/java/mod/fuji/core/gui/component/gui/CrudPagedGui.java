@@ -7,6 +7,7 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import java.util.List;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -41,13 +42,13 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
     }
 
     @Override
-    protected final @NotNull GuiElementInterface toGuiElement(@NotNull T entity) {
+    protected final @NotNull GuiElementIR toGuiElement(@NotNull T entity) {
         /* Hide the entity if no permission to view. */
         if (!this.canReadEntity(entity)) {
-            return new GuiElementBuilder()
+            return GuiElementIR.of(new GuiElementBuilder()
                 .setItem(Items.BARRIER)
                 .setName(TextHelper.getTextByKey(entity, "no_permission"))
-                .build();
+                .build());
         }
 
         /* Let subclass build the object first. */
@@ -56,7 +57,7 @@ public abstract class CrudPagedGui<T> extends PagedGui<T> {
         /* Set click callback. */
         builder.setCallback(dispatchClickType(entity));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     protected abstract GuiElementBuilder toGuiElementBuilder(T entity);

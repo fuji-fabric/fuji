@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.title.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.title.TitleInitializer;
 import mod.fuji.module.initializer.title.service.TitleService;
 import mod.fuji.module.initializer.title.structure.TitleDescriptor;
@@ -71,7 +71,7 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull TitleDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull TitleDescriptor entity) {
         ServerPlayer player = getPlayer();
 
         GuiElementBuilder builder = GuiElementBuilder
@@ -109,6 +109,6 @@ public class ListTitlesGui extends PagedGui<TitleDescriptor> {
 
         });
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 }

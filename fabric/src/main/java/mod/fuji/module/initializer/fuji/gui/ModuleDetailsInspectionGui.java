@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -10,6 +9,7 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.gui.CommandsInspectionGui;
 import mod.fuji.core.document.annotation.ColorBox;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.module.initializer.fuji.FujiInitializer;
 
@@ -22,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
+public class ModuleDetailsInspectionGui extends PagedGui<GuiElementIR> {
 
-    public ModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, Component prefixTitle, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    public ModuleDetailsInspectionGui(@Nullable SimpleGui parent, ServerPlayer player, Component prefixTitle, @NotNull List<GuiElementIR> entities, int pageIndex) {
         super(parent, player, prefixTitle, entities, pageIndex);
         this.streamMessageIntoToast = false;
     }
 
-    public static void attachThingsForCore(ServerPlayer player, ModuleDetailsInspectionGui gui, List<GuiElementInterface> entities, String modulePathString) {
+    public static void attachThingsForCore(ServerPlayer player, ModuleDetailsInspectionGui gui, List<GuiElementIR> entities, String modulePathString) {
         /* Only attach things for core module. */
         if (!modulePathString.equals(ModulePathResolver.CORE_MODULE_PATH_STRING)) return;
 
@@ -39,7 +39,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
             .setName(TextHelper.getTextByKey(player, "about"))
             .setLore(List.of(TextHelper.getTextByKey(player, "prompt.click.see_inside")))
             .setCallback(() -> AboutGui.make(gui.getBackendGui(), player).open());
-        entities.add(aboutButton.build());
+        entities.add(GuiElementIR.of(aboutButton.build()));
 
         /* Place user guide button. */
         GuiElementBuilder userGuideButton = new GuiElementBuilder()
@@ -51,7 +51,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 gui.closeWithoutOpenParentGui();
                 FujiInitializer.$userGuide(player.createCommandSourceStack());
             });
-        entities.add( userGuideButton.build());
+        entities.add(GuiElementIR.of(userGuideButton.build()));
 
         /* Place languages button. */
         GuiElementBuilder languagesButton = new GuiElementBuilder()
@@ -63,7 +63,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                     .inspectAll(gui.getBackendGui(), player)
                     .open();
             });
-        entities.add( languagesButton.build());
+        entities.add(GuiElementIR.of(languagesButton.build()));
 
         /* Place reload button. */
         GuiElementBuilder reloadButton = new GuiElementBuilder()
@@ -74,7 +74,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 gui.closeWithoutOpenParentGui();
                 FujiInitializer.$reload(player.createCommandSourceStack());
             });
-        entities.add(reloadButton.build());
+        entities.add(GuiElementIR.of(reloadButton.build()));
 
         /* Place debug button. */
         var debugConfig = Configs.MAIN_CONTROL_CONFIG.model().core.debug;
@@ -86,7 +86,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                 gui.closeWithoutOpenParentGui();
                 FujiInitializer.$debug(player.createCommandSourceStack());
             });
-        entities.add(debugButton.build());
+        entities.add(GuiElementIR.of(debugButton.build()));
 
         /* Fill the first line. */
         entities.add(GuiHelper.Button.makeSlotPlaceholderButton());
@@ -96,13 +96,13 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected @NotNull PagedGui<GuiElementIR> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer player, Component title, @NotNull List<GuiElementIR> entities, int pageIndex) {
         return new ModuleDetailsInspectionGui(parent, player, title, entities, pageIndex);
     }
 
     public static ModuleDetailsInspectionGui inspectModuleDetails(@Nullable SimpleGui parent, @NotNull ServerPlayer player, @NotNull String modulePathString, boolean moduleEnableStatus) {
         /* Make the GUI. */
-        List<GuiElementInterface> entities = new ArrayList<>();
+        List<GuiElementIR> entities = new ArrayList<>();
         Component title = TextHelper.getTextByKey(player, "fuji.inspect.module_details.gui.title", modulePathString);
         ModuleDetailsInspectionGui moduleDetailsInspectionGui = new ModuleDetailsInspectionGui(parent, player, title, entities, 0);
 
@@ -129,7 +129,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         return moduleDetailsInspectionGui;
     }
 
-    private static List<GuiElementInterface> searchModuleJobs(SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModuleJobs(SimpleGui parent, ServerPlayer player, String modulePathString) {
         return JobsInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
@@ -147,7 +147,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         GuiHelper.Placer.fillEmptySlots(gui, builder);
    }
 
-    private static void attachColorBoxes(ServerPlayer player, List<GuiElementInterface> entities, String modulePathString) {
+    private static void attachColorBoxes(ServerPlayer player, List<GuiElementIR> entities, String modulePathString) {
         DocumentUtil.getColorBoxes(modulePathString)
             .forEach(colorBox -> {
                 GuiElementBuilder colorboxElementBuilder = new GuiElementBuilder();
@@ -163,7 +163,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
                     .setLore(colorBoxTextList)
                     .setCallback(() -> sendColorBoxMessage(player, colorBoxName, colorBoxTextList));
 
-                entities.add(colorboxElementBuilder.build());
+                entities.add(GuiElementIR.of(colorboxElementBuilder.build()));
 
             });
     }
@@ -175,35 +175,35 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
         TextHelper.sendMessageByText(player, TextHelper.TEXT_EMPTY);
     }
 
-    private static List<GuiElementInterface> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return ArgumentTypesInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
-    private static List<GuiElementInterface> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return ConfigurationsInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
-    private static List<GuiElementInterface> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return PlaceholdersInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
-    private static List<GuiElementInterface> searchModuleCommands(SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModuleCommands(SimpleGui parent, ServerPlayer player, String modulePathString) {
         return CommandsInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
-    private static List<GuiElementInterface> searchModulePermissionsAndMetas(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
+    private static List<GuiElementIR> searchModulePermissionsAndMetas(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return PermissionsAndMetasInspectionGui
             .inspectAll(parent, player)
             .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
@@ -211,7 +211,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementInterface> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull GuiElementInterface entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull GuiElementIR entity) {
         return entity;
     }
 

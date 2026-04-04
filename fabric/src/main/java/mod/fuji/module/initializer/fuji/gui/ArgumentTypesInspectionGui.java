@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
@@ -10,6 +9,7 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.ArrayList;
 import java.util.List;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -62,7 +62,7 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull BaseArgumentTypeAdapter entity) {
         List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_module", entity.getSourceModule()));
         lore.add(TextHelper.getTextByKey(getPlayer(), "command.argument.type.is_vanilla", entity.isVanillaMinecraftArgumentType()));
@@ -81,8 +81,8 @@ public class ArgumentTypesInspectionGui extends PagedGui<BaseArgumentTypeAdapter
             guiElementBuilder.glow();
         }
 
-        return guiElementBuilder
-            .build();
+        return GuiElementIR.of(guiElementBuilder
+            .build());
     }
 
 }

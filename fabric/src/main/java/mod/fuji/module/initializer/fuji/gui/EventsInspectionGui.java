@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.event.EventManager;
 import mod.fuji.core.event.consumer.BaseEventConsumer;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.module.ModulePathResolver;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +36,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseEventConsumer<?> entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull BaseEventConsumer<?> entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
         String eventConsumerDeclaringClassName = entity.getEventConsumerMethod().getClass().getName();
 
@@ -53,7 +53,7 @@ public class EventsInspectionGui extends PagedGui<BaseEventConsumer<?>> {
                 TextHelper.getTextByKey(player, "event.priority.consumer", entity.getEventConsumerInfo().getConsumerPriority())
             ));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
 }

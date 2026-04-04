@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.warning.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.List;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -31,13 +31,13 @@ public class WarningGui extends PagedGui<String> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull String entity) {
         GuiElementBuilder builder = GuiHelper.Button.makeLuckyBlockButton();
         builder
             .setName(Component.literal(entity))
             .setCallback(() -> ListPlayerWarningsGui.make(getBackendGui(), getPlayer(), entity).open());
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
 }

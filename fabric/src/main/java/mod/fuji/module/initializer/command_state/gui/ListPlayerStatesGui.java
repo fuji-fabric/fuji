@@ -7,6 +7,7 @@ import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.service.cache.structure.Cache;
 import mod.fuji.module.initializer.command_state.service.CommandStateService;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
 
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull GuiElementInterface entity) {
-        return entity;
+    protected @NotNull GuiElementIR toGuiElement(@NotNull GuiElementInterface entity) {
+        return GuiElementIR.of(entity);
     }
 }

@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.fuji.structure.ServerCommandNodeWrapper;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,14 +42,14 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull ServerCommandNodeWrapper entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull ServerCommandNodeWrapper entity) {
         List<Component> lore = new ArrayList<>();
 
         /* Guess what package the command node is. */
         lore.add(TextHelper.getTextByKey(getPlayer(), "from_package", entity.fromPackage));
 
         String commandPath = entity.getPath();
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.COMMAND_BLOCK)
             .setName(Component.literal(commandPath))
             .setLore(lore)
@@ -57,7 +57,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
                 TextHelper.sendTextByKey(getPlayer(), "fuji.inspect.server_commands.gui.copy_command_path", commandPath, commandPath);
                 close();
             })
-            .build();
+            .build());
     }
 
 }

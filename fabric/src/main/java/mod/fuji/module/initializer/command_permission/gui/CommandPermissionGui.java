@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.command_permission.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_permission.CommandPermissionInitializer;
 import mod.fuji.module.initializer.command_permission.service.CommandPermissionService;
 import mod.fuji.module.initializer.command_permission.structure.CommandNodePermissionWrapper;
@@ -31,10 +31,10 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandNodePermissionWrapper entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull CommandNodePermissionWrapper entity) {
         boolean commandNodeWrapped = CommandPermissionService.isCommandNodeWrapped(entity.getNode());
 
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(GuiHelper.Material.fromBooleanValue(commandNodeWrapped))
             .setName(Component.literal(entity.getPath()))
             .setCallback((index, clickType, actionType) -> {
@@ -55,7 +55,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
                 close();
             })
             .setLore(List.of(TextHelper.getTextByKey(getPlayer(), "command_permission.list.gui.entry.lore", commandNodeWrapped)))
-            .build();
+            .build());
     }
 
 }

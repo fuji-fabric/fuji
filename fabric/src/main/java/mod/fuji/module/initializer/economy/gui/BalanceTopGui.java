@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.economy.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.economy.service.EconomyService;
 import mod.fuji.module.initializer.economy.structure.GameProfileAndEconomyAccount;
@@ -37,7 +37,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull GameProfileAndEconomyAccount entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull GameProfileAndEconomyAccount entity) {
         List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "economy.balance", TextHelper.Operators.getString(entity.economyAccount.formattedBalance())));
 
@@ -47,7 +47,7 @@ public class BalanceTopGui extends PagedGui<GameProfileAndEconomyAccount> {
             .setName(Component.literal(name))
             .setLore(lore);
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     @Override

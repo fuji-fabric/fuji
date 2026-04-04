@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.command_toolbox.warp.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_toolbox.warp.service.WarpService;
 import mod.fuji.module.initializer.command_toolbox.warp.structure.WarpDescriptor;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,14 +32,14 @@ public class WarpGui extends PagedGui<WarpDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull WarpDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull WarpDescriptor entity) {
         List<Component> lore = entity
             .getLore()
             .stream()
             .map(line -> TextHelper.getTextByValue(getPlayer(), line))
             .toList();
 
-        return GuiElementBuilder
+        return GuiElementIR.of(GuiElementBuilder
             .from(ItemStackHelper.Parser.parseItemStack(entity.getItem()))
             .setName(TextHelper.getTextByValue(getPlayer(), entity.getDisplayName()))
             .setLore(lore)
@@ -47,7 +47,7 @@ public class WarpGui extends PagedGui<WarpDescriptor> {
                 WarpService.doWarp(entity, getPlayer());
                 close();
             })
-            .build();
+            .build());
     }
 
 }

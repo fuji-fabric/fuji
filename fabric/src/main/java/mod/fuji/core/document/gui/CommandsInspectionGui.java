@@ -2,7 +2,6 @@ package mod.fuji.core.document.gui;
 
 import com.mojang.brigadier.context.CommandContext;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -12,6 +11,7 @@ import mod.fuji.core.gui.component.gui.PagedGui;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -83,7 +83,7 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull CommandDescriptor entity) {
         List<Component> lore = new ArrayList<>();
 
         /* Add basic properties of command descriptor. */
@@ -105,11 +105,11 @@ public class CommandsInspectionGui extends PagedGui<CommandDescriptor> {
         }
 
         /* Make the GUI. */
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setName(Component.literal(entity.getUserFriendlyCommandSyntax()))
             .setItem(Items.REPEATING_COMMAND_BLOCK)
             .setLore(lore)
-            .build();
+            .build());
     }
 
 }

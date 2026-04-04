@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.deathlog.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.NbtHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.deathlog.DeathLogInitializer;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
 import java.io.IOException;
@@ -42,13 +42,13 @@ public class DeathDataListGui extends PagedGui<String> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull String entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull String entity) {
         GuiElementBuilder builder = GuiHelper.Button
             .makeLuckyBlockButton()
             .setName(Component.literal(entity))
             .setCallback(() -> openDeathNodeListGui(entity));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     @Override

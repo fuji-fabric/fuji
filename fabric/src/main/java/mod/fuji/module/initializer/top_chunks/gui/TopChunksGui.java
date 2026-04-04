@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.top_chunks.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.service.type_formatter.TypeFormatter;
 import mod.fuji.module.initializer.top_chunks.service.TopChunksService;
 import mod.fuji.module.initializer.top_chunks.structure.ChunkScore;
@@ -32,7 +32,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull ChunkScore entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull ChunkScore entity) {
         CommandSourceStack commandSource = getPlayer().createCommandSourceStack();
 
         List<Component> lore = new ArrayList<>();
@@ -48,7 +48,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
         }
 
         Component scoreText = TextHelper.getTextByKey(getPlayer(), "top_chunks.prop.score", entity.getScore());
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(entity.getPlayers().isEmpty() ? Items.WHITE_STAINED_GLASS : Items.LIME_STAINED_GLASS)
             .setName(scoreText)
             .setLore(lore)
@@ -58,7 +58,7 @@ public class TopChunksGui extends PagedGui<ChunkScore> {
                 entity.teleportToThisChunk(player);
                 close();
             })
-            .build();
+            .build());
     }
 
 }

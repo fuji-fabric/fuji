@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
@@ -13,6 +12,7 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.inspector.FailedToInspectException;
 import mod.fuji.core.document.inspector.JavaObjectInspector;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,7 +42,7 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull BaseConfigurationHandler<?> entity) {
         Class<?> configHandlerClass = entity.getClass();
         String configHandlerClassName = ReflectionUtil.getSimpleClassName(configHandlerClass);
         String configRelativePath = entity.computeRelativePathBasedOnGameDir();
@@ -73,8 +73,8 @@ public class ConfigurationsInspectionGui extends PagedGui<BaseConfigurationHandl
             .setLore(lore)
             .setCallback(() -> openRootJavaObjectInspectorGui(trueParentGui, entity, configRelativePath));
 
-        return guiElementBuilder
-            .build();
+        return GuiElementIR.of(guiElementBuilder
+            .build());
     }
 
     private void openRootJavaObjectInspectorGui(@Nullable SimpleGui parent, @NotNull BaseConfigurationHandler<?> entity, @NotNull String fileRelativePath) {

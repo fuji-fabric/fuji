@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.command_scheduler.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_scheduler.structure.CommandSchedulerJobDescriptor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -26,15 +26,15 @@ public class JobGui extends PagedGui<CommandSchedulerJobDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull CommandSchedulerJobDescriptor entity) {
-        return new GuiElementBuilder()
+    protected @NotNull GuiElementIR toGuiElement(@NotNull CommandSchedulerJobDescriptor entity) {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setName(Component.literal(entity.getName()))
             .setItem(GuiHelper.Material.fromBooleanValue(entity.isEnable()))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "job.props.enabled", entity.isEnable())
                 , TextHelper.getTextByKey(getPlayer(), "job.props.left_times", entity.getRemainingRuns())
             ))
-            .build();
+            .build());
     }
 
 }

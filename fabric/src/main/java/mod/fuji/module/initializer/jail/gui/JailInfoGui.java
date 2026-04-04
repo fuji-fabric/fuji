@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.jail.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import mod.fuji.module.initializer.jail.structure.JailRecord;
@@ -39,7 +39,7 @@ public class JailInfoGui extends PagedGui<JailRecord> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull JailRecord entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull JailRecord entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         ServerPlayer player = getPlayer();
@@ -57,6 +57,6 @@ public class JailInfoGui extends PagedGui<JailRecord> {
                 , TextHelper.getTextByKey(player, "jail.record.reason", TextHelper.Parsers.escapeTags(entity.getReason()))
             ));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 }

@@ -26,7 +26,7 @@ public class ItemDisplayGuiFactory extends BaseDisplayGuiFactory {
 
         /* Place elements in the GUI. */
         for (int i = 0; i < 9; i++) {
-            gui.setSlot(i, GuiHelper.Button.makeSlotPlaceholderButton());
+            GuiHelper.setSlot(gui, i, GuiHelper.Button.makeSlotPlaceholderButton());
         }
 
         /* Place the displaying item in the GUI. */

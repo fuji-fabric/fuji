@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.ReflectionUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -9,6 +8,7 @@ import mod.fuji.core.document.auxiliary.DocumentUtil;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.document.structure.JobDescriptor;
 import lombok.SneakyThrows;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -60,7 +60,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull JobDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull JobDescriptor entity) {
         JobDetail jobDetail = entity.jobDetail;
         JobKey jobKey = jobDetail.getKey();
         String sourceModule = entity.getSourceModule();
@@ -94,7 +94,7 @@ public class JobsInspectionGui extends PagedGui<JobDescriptor> {
                 .setItem(Items.CLOCK)
                 .setName(TextHelper.getTextByKey(getPlayer(), "fuji.inspect.jobs.gui.item.name"))
                 .setLore(lore);
-        return guiElementBuilder.build();
+        return GuiElementIR.of(guiElementBuilder.build());
     }
 
 }

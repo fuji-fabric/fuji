@@ -52,7 +52,7 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
         gui.setTitle(this.title);
 
         for (int i = 0; i < GuiHelper.GENERIC_CONTAINER_LINE_SIZE * 2; i++) {
-            gui.setSlot(i, GuiHelper.Button.makeSlotPlaceholderButton());
+            GuiHelper.setSlot(gui, i, GuiHelper.Button.makeSlotPlaceholderButton());
         }
 
         /* Place armor items. */

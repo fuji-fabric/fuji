@@ -1,7 +1,6 @@
 package mod.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.ClickType;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
@@ -9,6 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
@@ -89,7 +89,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         int slotIndex = 0;
         for (int i = getEntityBeginIndex(this.pageIndex); i < getEntityEndIndex(this.pageIndex); i++) {
             T entity = entities.get(i);
-            this.setSlot(slotIndex++, makeGuiElementAndBindIt(entity));
+            GuiHelper.setSlot(this, slotIndex++, makeGuiElementAndBindIt(entity));
         }
     }
 
@@ -133,10 +133,10 @@ public abstract class PagedGui<T> extends SimpleGui {
         return makePage(this.parent, getPlayer(), resultTitle, resultEntities, 0);
     }
 
-    protected abstract @NotNull GuiElementInterface toGuiElement(@NotNull T entity);
+    protected abstract @NotNull GuiElementIR toGuiElement(@NotNull T entity);
 
-    private @NotNull GuiElementInterface makeGuiElementAndBindIt(@NotNull T entity) {
-        GuiElementInterface element = this.toGuiElement(entity);
+    private @NotNull GuiElementIR makeGuiElementAndBindIt(@NotNull T entity) {
+        var element = this.toGuiElement(entity);
         this.entityToElementMapping.setBinding(entity, element);
         return element;
     }
@@ -149,12 +149,12 @@ public abstract class PagedGui<T> extends SimpleGui {
     private boolean combinedFilterEntity(@NotNull T entity, @NotNull String keyword) {
         /* Filter using the displaying GUI item stack. (What you see is what you get) */
         // NOTE: We have to make the GUI element for each entity. It's expensive, but saves time.
-        GuiElementInterface element = entityToElementMapping.getBinding(entity);
+        GuiElementIR element = entityToElementMapping.getBinding(entity);
         if (element == null) {
             element = makeGuiElementAndBindIt(entity);
         }
 
-        ItemStack itemStack = element.getItemStack();
+        ItemStack itemStack = element.getNativeValue().getItemStack();
         if (ItemStackHelper.Filter.filterItemStack(itemStack, keyword)) {
             return true;
         }
@@ -175,7 +175,7 @@ public abstract class PagedGui<T> extends SimpleGui {
             .collect(Collectors.toList());
     }
 
-    public List<GuiElementInterface> toGuiElements() {
+    public List<GuiElementIR> toGuiElements() {
         return this.entities
             .stream()
             .map(this::makeGuiElementAndBindIt)
@@ -245,7 +245,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public boolean click(int index, ClickType type, net.minecraft.world.inventory.ClickType action) {
-        GuiElementInterface element = super.getSlot(index);
+        var element = super.getSlot(index);
 
         /* Prevent the `gui callback` invoke if the `F` key is pressed. */
         if (action.equals(net.minecraft.world.inventory.ClickType.SWAP)) {

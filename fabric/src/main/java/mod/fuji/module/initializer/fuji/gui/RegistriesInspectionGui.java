@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.fuji.structure.IdentifierDescriptor;
 import net.minecraft.world.item.Item;
@@ -58,7 +58,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull IdentifierDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull IdentifierDescriptor entity) {
         List<Component> lore = new ArrayList<>();
         lore.add(TextHelper.getTextByKey(getPlayer(), "registry.type.is_dynamic", entity.isDynamic()));
         if (this.isMetaRegistry) {
@@ -75,8 +75,8 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             guiElementBuilder.glow();
         }
 
-        return guiElementBuilder
-            .build();
+        return GuiElementIR.of(guiElementBuilder
+            .build());
     }
 
     private Item getItem(IdentifierDescriptor entity) {

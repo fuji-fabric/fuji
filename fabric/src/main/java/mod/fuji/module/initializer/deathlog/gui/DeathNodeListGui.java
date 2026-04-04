@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.deathlog.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,13 +30,13 @@ public class DeathNodeListGui extends PagedGui<DeathNode> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull DeathNode entity) {
-        return new GuiElementBuilder()
+    protected @NotNull GuiElementIR toGuiElement(@NotNull DeathNode entity) {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.CHEST)
             .setName(Component.nullToEmpty(entity.time))
             .setLore(entity.getLore(getPlayer()))
             .setCallback(() -> openDeathNodeDisplayGui(entity))
-            .build();
+            .build());
     }
 
     private void openDeathNodeDisplayGui(DeathNode entity) {

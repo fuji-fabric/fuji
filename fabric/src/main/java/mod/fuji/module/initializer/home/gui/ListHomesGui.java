@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.home.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.ConfirmSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.structure.GlobalPos;
 import mod.fuji.module.initializer.home.service.HomeService;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
 
     @SuppressWarnings({"CollectionAddAllCanBeReplacedWithConstructor", "UnnecessaryReturnStatement"})
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull GlobalPos entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull GlobalPos entity) {
         String homeName = HomeService
             .withHomeMap(targetPlayerName)
             .inverse()
@@ -56,7 +56,7 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
         lore.addAll(entity.asLore(player));
         lore.add(TextHelper.getTextByKey(player, "prompt.click.teleport"));
 
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.PINK_BED)
             .setName(Component.literal(homeName))
             .setLore(lore)
@@ -84,6 +84,6 @@ public class ListHomesGui extends PagedGui<GlobalPos> {
                 }
 
             })
-            .build();
+            .build());
     }
 }

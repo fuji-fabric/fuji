@@ -2,12 +2,12 @@ package mod.fuji.module.initializer.head.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.head.HeadInitializer;
 import mod.fuji.module.initializer.head.structure.EconomyType;
 import mod.fuji.module.initializer.head.structure.Head;
@@ -31,7 +31,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull Head entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull Head entity) {
         /* Add the price text to the head stack. */
         var builder = GuiElementBuilder.from(entity.toItemStack());
         if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {
@@ -41,7 +41,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
 
         /* Set click callback. */
         builder.setCallback((index, type, action) -> handleEntityClick(entity, type));
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     @Override

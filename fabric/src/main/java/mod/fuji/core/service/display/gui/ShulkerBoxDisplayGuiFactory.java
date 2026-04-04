@@ -1,6 +1,5 @@
 package mod.fuji.core.service.display.gui;
 
-import com.google.errorprone.annotations.Keep;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
@@ -69,7 +68,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
         /* Place UI items.  */
         for (int i = 0; i < 9; i++) {
-            gui.setSlot(i, GuiHelper.Button.makeSlotPlaceholderButton().getItemStack());
+            GuiHelper.setSlot(gui, i, GuiHelper.Button.makeSlotPlaceholderButton());
         }
         gui.setSlot(4, shulkerBoxStack);
         if (this.parentGui != null) {

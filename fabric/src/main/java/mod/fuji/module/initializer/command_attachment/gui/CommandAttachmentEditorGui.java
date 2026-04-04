@@ -2,7 +2,6 @@ package mod.fuji.module.initializer.command_attachment.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.minecraft.EntityHelper;
@@ -13,6 +12,7 @@ import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.gui.component.gui.ConfirmSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_attachment.service.CommandAttachmentService;
 import mod.fuji.module.initializer.command_attachment.structure.CommandAttachmentDataNode;
 import mod.fuji.module.initializer.command_attachment.structure.attachment_entry.BaseCommandAttachmentEntry;
@@ -93,7 +93,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull BaseCommandAttachmentEntry entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull BaseCommandAttachmentEntry entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder.setItem(Items.NAME_TAG);
@@ -101,7 +101,7 @@ public class CommandAttachmentEditorGui extends PagedGui<BaseCommandAttachmentEn
         builder.setLore(entity.asLore(player));
         builder.setCallback((clickType) -> onEntityCallback(clickType, entity));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     private void reopenThis() {

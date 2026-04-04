@@ -1,11 +1,11 @@
 package mod.fuji.module.initializer.fuji.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.module.ModulePathResolver;
 import mod.fuji.core.structure.MixinApplicationInfo;
 import mod.fuji.module.mixin.GlobalMixinConfigPlugin;
@@ -40,7 +40,7 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull MixinApplicationInfo entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull MixinApplicationInfo entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder
@@ -55,6 +55,6 @@ public class MixinsInspectionGui extends PagedGui<MixinApplicationInfo> {
                 TextHelper.getTextByKey(player, "mixin.priority", entity.getPriority())
             ));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 }

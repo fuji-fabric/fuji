@@ -1,10 +1,10 @@
 package mod.fuji.module.initializer.placeholder.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.core.structure.IdentifierIR;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,11 +26,11 @@ public class PlaceholderGui extends PagedGui<IdentifierIR> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull IdentifierIR entity) {
-        return new GuiElementBuilder()
+    protected @NotNull GuiElementIR toGuiElement(@NotNull IdentifierIR entity) {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setName(Component.literal(entity.toString()))
             .setItem(Items.NAME_TAG)
-            .build();
+            .build());
     }
 
 }

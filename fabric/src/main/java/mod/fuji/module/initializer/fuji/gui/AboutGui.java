@@ -7,6 +7,7 @@ import mod.fuji.Fuji;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ContactInformation;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -96,12 +97,12 @@ public class AboutGui extends PagedGui<Person> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull Person entity) {
-        return GuiHelper.Button.makeLuckyBlockButton()
+    protected @NotNull GuiElementIR toGuiElement(@NotNull Person entity) {
+        return GuiElementIR.of(GuiHelper.Button.makeLuckyBlockButton()
             .setName(TextHelper.getTextByKey(getPlayer(), "contact.name", entity.getName()))
             .setLore(makeTextListFromContact(entity.getContact()))
             .setCallback(makeCallback(entity))
-            .build();
+            .build());
     }
 
 }

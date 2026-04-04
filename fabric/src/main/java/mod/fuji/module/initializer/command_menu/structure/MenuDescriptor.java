@@ -10,6 +10,7 @@ import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -96,7 +97,10 @@ public class MenuDescriptor {
 
         /* Process the blank slots filler. */
         if (blankSlotsFiller.get() != null) {
-            GuiElementInterface element = blankSlotsFiller.get().buildGuiElement(viewingPlayer, this);
+            GuiElementIR element = GuiElementIR
+                .of(blankSlotsFiller
+                    .get()
+                    .buildGuiElement(viewingPlayer, this));
             GuiHelper.Placer.fillEmptySlots(menuGui, element);
         }
 

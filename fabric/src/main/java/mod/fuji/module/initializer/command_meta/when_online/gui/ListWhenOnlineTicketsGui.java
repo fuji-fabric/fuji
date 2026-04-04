@@ -8,6 +8,7 @@ import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.ConfirmSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_meta.when_online.WhenOnlineInitializer;
 import mod.fuji.module.initializer.command_meta.when_online.structure.WhenOnlineTicket;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull WhenOnlineTicket entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull WhenOnlineTicket entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         List<Component> lore = new ArrayList<>();
@@ -63,7 +64,7 @@ public class ListWhenOnlineTicketsGui extends PagedGui<WhenOnlineTicket> {
             .setLore(lore)
             .setCallback(onClickEntity(getBackendGui(), getPlayer(), entity));
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 
     private static GuiElementInterface.@NotNull ItemClickCallback onClickEntity(SimpleGui gui, ServerPlayer player, WhenOnlineTicket entity) {

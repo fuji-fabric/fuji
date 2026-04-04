@@ -1,10 +1,10 @@
 package mod.fuji.module.initializer.jail.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.jail.service.JailService;
 import mod.fuji.module.initializer.jail.structure.JailDescriptor;
 import java.util.List;
@@ -32,7 +32,7 @@ public class JailListGui extends PagedGui<JailDescriptor> {
 
     @SuppressWarnings("CodeBlock2Expr")
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull JailDescriptor entity) {
+    protected @NotNull GuiElementIR toGuiElement(@NotNull JailDescriptor entity) {
         GuiElementBuilder builder = new GuiElementBuilder();
 
         builder
@@ -45,6 +45,6 @@ public class JailListGui extends PagedGui<JailDescriptor> {
                     .open();
             });
 
-        return builder.build();
+        return GuiElementIR.of(builder.build());
     }
 }

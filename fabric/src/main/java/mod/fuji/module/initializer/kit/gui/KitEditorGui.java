@@ -1,13 +1,13 @@
 package mod.fuji.module.initializer.kit.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.LogicHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.InputSignGui;
 import mod.fuji.core.gui.component.gui.PagedGui;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.kit.service.KitService;
 import mod.fuji.module.initializer.kit.structure.Kit;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +68,9 @@ public class KitEditorGui extends PagedGui<Kit> {
 
         /* Place the forbidden zone placeholder items. */
         for (int i = 41; i <= 44; i++) {
-            simpleInventory.setItem(i, GuiHelper.Validator.makeBannedSlotPlaceholder().getItemStack());
+            simpleInventory.setItem(i, GuiHelper.Validator.makeBannedSlotPlaceholder()
+                .getNativeValue()
+                .getItemStack());
         }
 
         /* Make a generic container GUI for kit editing. */
@@ -122,8 +124,8 @@ public class KitEditorGui extends PagedGui<Kit> {
     }
 
     @Override
-    protected @NotNull GuiElementInterface toGuiElement(@NotNull Kit entity) {
-        return new GuiElementBuilder()
+    protected @NotNull GuiElementIR toGuiElement(@NotNull Kit entity) {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.CHEST)
             .setName(Component.literal(entity.getName()))
             .setCallback((event) -> {
@@ -141,7 +143,7 @@ public class KitEditorGui extends PagedGui<Kit> {
                     TextHelper.sendTextByKey(getPlayer(), "deleted");
                 }
 
-            }).build();
+            }).build());
     }
 
 }
