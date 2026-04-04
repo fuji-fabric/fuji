@@ -1,4 +1,4 @@
-package mod.fuji.core.command.descriptor;
+package mod.fuji.core.structure;
 
 import org.jetbrains.annotations.NotNull;
 

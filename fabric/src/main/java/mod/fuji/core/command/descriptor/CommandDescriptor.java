@@ -41,6 +41,7 @@ import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
 import mod.fuji.core.module.ModulePathResolver;
+import mod.fuji.core.structure.ConsoleSpammer;
 import mod.fuji.core.structure.Pair;
 import mod.fuji.core.structure.SpecialVariable;
 import net.minecraft.commands.Commands;
