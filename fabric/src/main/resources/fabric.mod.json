@@ -94,8 +94,7 @@
   },
   "suggests": {
     "luckperms": "*",
-    "spark": "*",
-    "carpet": "*"
+    "spark": "*"
   },
   "custom": {
     "mc-publish": {
