@@ -2,7 +2,6 @@ package mod.fuji.module.initializer.deathlog.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -63,7 +62,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
                 .build();
 
             for (int i = 0; i < GuiHelper.GENERIC_CONTAINER_LINE_SIZE * 6; i++) {
-                GuiElementInterface slot = displayGui.getSlot(i);
+                var slot = displayGui.getSlot(i);
                 if (slot == null) continue;
                 if (slot.getItemStack().isEmpty()) {
                     displayGui.setSlot(i, errorNotification);

@@ -2,23 +2,7 @@ package mod.fuji.module.initializer.profiler.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import mod.fuji.core.auxiliary.StringUtil;
-import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
-import mod.fuji.core.auxiliary.minecraft.TextHelper;
-import mod.fuji.core.auxiliary.minecraft.WorldHelper;
-import mod.fuji.module.initializer.profiler.ProfilerInitializer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.NaturalSpawner;
-import net.minecraft.world.level.chunk.LevelChunk;
-
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
@@ -28,6 +12,22 @@ import java.nio.file.FileStore;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
+import mod.fuji.core.auxiliary.StringUtil;
+import mod.fuji.core.auxiliary.minecraft.GuiHelper;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.auxiliary.minecraft.WorldHelper;
+import mod.fuji.core.gui.structure.GuiElementIR;
+import mod.fuji.module.initializer.profiler.ProfilerInitializer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 public class ProfilerGui extends SimpleGui {
 
@@ -39,37 +39,37 @@ public class ProfilerGui extends SimpleGui {
 
         this.setTitle(TextHelper.getTextByKey(getPlayer(), "profiler.gui.title"));
 
-        this.setSlot(0, makeOperatingSystemElement());
-        this.setSlot(1, makeVirtualMachineElement());
+        GuiHelper.setSlot(this, 0, makeOperatingSystemElement());
+        GuiHelper.setSlot(this, 1, makeVirtualMachineElement());
 
-        this.setSlot(3, makeCpuElement());
-        this.setSlot(4, makeTpsElement());
-        this.setSlot(5, makeMsptElement());
+        GuiHelper.setSlot(this, 3, makeCpuElement());
+        GuiHelper.setSlot(this, 4, makeTpsElement());
+        GuiHelper.setSlot(this, 5, makeMsptElement());
 
-        List<GuiElementInterface> dimensionElements = makeDimensionElements();
+        List<GuiElementIR> dimensionElements = makeDimensionElements();
         int dimensionElementsOffset = dimensionElements.size() >= LINE_SIZE ? 0 : LINE_SIZE;
         for (int i = 0; i < dimensionElements.size(); i++) {
-            this.setSlot(LINE_SIZE + dimensionElementsOffset + i, dimensionElements.get(i));
+            GuiHelper.setSlot(this, LINE_SIZE + dimensionElementsOffset + i, dimensionElements.get(i));
         }
 
-        List<GuiElementInterface> fileSystemElements = makeFileSystemElements();
+        List<GuiElementIR> fileSystemElements = makeFileSystemElements();
         for (int i = 0; i < fileSystemElements.size(); i++) {
-            this.setSlot(LINE_SIZE * 3 + i, fileSystemElements.get(i));
+            GuiHelper.setSlot(this, LINE_SIZE * 3 + i, fileSystemElements.get(i));
         }
 
-        List<GuiElementInterface> memoryElements = makeMemoryElements();
+        List<GuiElementIR> memoryElements = makeMemoryElements();
         for (int i = 0; i < memoryElements.size(); i++) {
-            this.setSlot(LINE_SIZE * 4 + i, memoryElements.get(i));
+            GuiHelper.setSlot(this, LINE_SIZE * 4 + i, memoryElements.get(i));
         }
 
-        List<GuiElementInterface> gcElements = makeGcElements();
+        List<GuiElementIR> gcElements = makeGcElements();
         for (int i = 0; i < gcElements.size(); i++) {
-            this.setSlot(LINE_SIZE * 5 + i, gcElements.get(i));
+            GuiHelper.setSlot(this, LINE_SIZE * 5 + i, gcElements.get(i));
         }
     }
 
-    private List<GuiElementInterface> makeDimensionElements() {
-        List<GuiElementInterface> elements = new ArrayList<>();
+    private List<GuiElementIR> makeDimensionElements() {
+        List<GuiElementIR> elements = new ArrayList<>();
 
         for (ServerLevel world : WorldHelper.getWorlds()) {
             List<Component> lore = new ArrayList<>();
@@ -99,23 +99,23 @@ public class ProfilerGui extends SimpleGui {
 
             }
 
-            GuiElement element = new GuiElementBuilder()
+            var element = GuiElementIR.of(new GuiElementBuilder()
                 .setItem(WorldHelper.toGuiItem(RegistryHelper.getIdAsString(world)))
                 .setName(TextHelper.getTextByKey(getPlayer(), "profiler.dimension"))
                 .setLore(lore)
-                .build();
+                .build());
             elements.add(element);
         }
 
         return elements;
     }
 
-    private GuiElementInterface makeOperatingSystemElement() {
+    private GuiElementIR makeOperatingSystemElement() {
         String osName = ManagementFactory.getOperatingSystemMXBean().getName();
         String osVersion = ManagementFactory.getOperatingSystemMXBean().getVersion();
         String osArch = ManagementFactory.getOperatingSystemMXBean().getArch();
 
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.SLIME_BLOCK)
             .setName(TextHelper.getTextByKey(getPlayer(), "profiler.os"))
             .setLore(List.of(
@@ -123,25 +123,25 @@ public class ProfilerGui extends SimpleGui {
                 , TextHelper.getTextByKey(getPlayer(), "profiler.os.version", osVersion)
                 , TextHelper.getTextByKey(getPlayer(), "profiler.os.arch", osArch)
             ))
-            .build();
+            .build());
     }
 
-    private GuiElementInterface makeVirtualMachineElement() {
+    private GuiElementIR makeVirtualMachineElement() {
         String vmName = ManagementFactory.getRuntimeMXBean().getVmName();
         String vmVersion = ManagementFactory.getRuntimeMXBean().getVmVersion();
 
-        return new GuiElementBuilder()
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.HONEY_BLOCK)
             .setName(TextHelper.getTextByKey(getPlayer(), "profiler.vm"))
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "profiler.vm.name", vmName)
                 , TextHelper.getTextByKey(getPlayer(), "profiler.vm.version", vmVersion)
             ))
-            .build();
+            .build());
     }
 
-    private GuiElementInterface makeTpsElement() {
-        return new GuiElementBuilder()
+    private GuiElementIR makeTpsElement() {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.CLOCK)
             .setName(TextHelper.getTextByKey(getPlayer(), "profiler.tps"))
             .setLore(List.of(
@@ -152,11 +152,11 @@ public class ProfilerGui extends SimpleGui {
                 , TextHelper.getTextByKey(getPlayer(), "profiler.tps.avg.5m")
                 , TextHelper.getTextByKey(getPlayer(), "profiler.tps.avg.15m")
             ))
-            .build();
+            .build());
     }
 
-    private GuiElementInterface makeMsptElement() {
-        return new GuiElementBuilder()
+    private GuiElementIR makeMsptElement() {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.CLOCK)
             .setName(TextHelper.getTextByKey(getPlayer(), "profiler.mspt"))
             .setLore(List.of(
@@ -164,11 +164,11 @@ public class ProfilerGui extends SimpleGui {
                 , TextHelper.getTextByKey(getPlayer(), "profiler.mspt.summary.10s")
                 , TextHelper.getTextByKey(getPlayer(), "profiler.mspt.summary.1m")
             ))
-            .build();
+            .build());
     }
 
-    private GuiElementInterface makeCpuElement() {
-        return new GuiElementBuilder()
+    private GuiElementIR makeCpuElement() {
+        return GuiElementIR.of(new GuiElementBuilder()
             .setItem(Items.COMPARATOR)
             .setName(TextHelper.getTextByKey(getPlayer(), "profiler.cpu"))
             .setLore(List.of(
@@ -176,11 +176,11 @@ public class ProfilerGui extends SimpleGui {
                 , TextHelper.getTextByKey(getPlayer(), "profiler.cpu.usage.system")
                 , TextHelper.getTextByKey(getPlayer(), "profiler.cpu.usage.user")
             ))
-            .build();
+            .build());
     }
 
-    private List<GuiElementInterface> makeFileSystemElements() {
-        List<GuiElementInterface> elements = new ArrayList<>();
+    private List<GuiElementIR> makeFileSystemElements() {
+        List<GuiElementIR> elements = new ArrayList<>();
 
         /* Make file store list. */
         List<FileStore> fileStores = new ArrayList<>();
@@ -232,7 +232,7 @@ public class ProfilerGui extends SimpleGui {
                         , TextHelper.getTextByKey(getPlayer(), "profiler.fs.usage", usagePercent)
                     ));
 
-                elements.add(builder.build());
+                elements.add(GuiElementIR.of(builder.build()));
             } catch (Exception ignore) {
                 // Okay, no permission for that file.
             }
@@ -241,8 +241,8 @@ public class ProfilerGui extends SimpleGui {
         return elements;
     }
 
-    private List<GuiElementInterface> makeMemoryElements() {
-        List<GuiElementInterface> elements = new ArrayList<>();
+    private List<GuiElementIR> makeMemoryElements() {
+        List<GuiElementIR> elements = new ArrayList<>();
 
         /* Get memory pools. */
         List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
@@ -297,14 +297,14 @@ public class ProfilerGui extends SimpleGui {
                     , TextHelper.getTextByKey(getPlayer(), "profiler.memory.max", max)
                 ));
 
-            elements.add(guiElementBuilder.build());
+            elements.add(GuiElementIR.of(guiElementBuilder.build()));
         }
 
         return elements;
     }
 
-    private List<GuiElementInterface> makeGcElements() {
-        List<GuiElementInterface> elements = new ArrayList<>();
+    private List<GuiElementIR> makeGcElements() {
+        List<GuiElementIR> elements = new ArrayList<>();
 
         List<GarbageCollectorMXBean> gcMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
         long uptime = ManagementFactory.getRuntimeMXBean().getUptime();
@@ -316,17 +316,17 @@ public class ProfilerGui extends SimpleGui {
             double avgTime = (double) totalGcTime / totalGcCount;
 
             GuiElement element = new GuiElementBuilder()
-                    .setItem(Items.CAMPFIRE)
-                    .setName(TextHelper.getTextByKey(getPlayer(), "profiler.gc"))
-                    .setLore(List.of(
-                        TextHelper.getTextByKey(getPlayer(), "profiler.gc.name", name)
-                        , TextHelper.getTextByKey(getPlayer(), "profiler.gc.average_gc_time", avgTime)
-                        , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_time", totalGcTime)
-                        , TextHelper.getTextByKey(getPlayer(), "profiler.gc.average_frequency", avgFrequency)
-                        , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_count", totalGcCount)
-                    ))
+                .setItem(Items.CAMPFIRE)
+                .setName(TextHelper.getTextByKey(getPlayer(), "profiler.gc"))
+                .setLore(List.of(
+                    TextHelper.getTextByKey(getPlayer(), "profiler.gc.name", name)
+                    , TextHelper.getTextByKey(getPlayer(), "profiler.gc.average_gc_time", avgTime)
+                    , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_time", totalGcTime)
+                    , TextHelper.getTextByKey(getPlayer(), "profiler.gc.average_frequency", avgFrequency)
+                    , TextHelper.getTextByKey(getPlayer(), "profiler.gc.total_gc_count", totalGcCount)
+                ))
                 .build();
-            elements.add(element);
+            elements.add(GuiElementIR.of(element));
         }
 
         return elements;

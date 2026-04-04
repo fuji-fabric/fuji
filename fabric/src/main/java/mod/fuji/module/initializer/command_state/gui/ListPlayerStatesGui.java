@@ -1,7 +1,6 @@
 package mod.fuji.module.initializer.command_state.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.ChronosUtil;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -19,22 +18,22 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
+public class ListPlayerStatesGui extends PagedGui<GuiElementIR> {
 
     final ServerPlayer target;
 
-    public ListPlayerStatesGui(@Nullable SimpleGui parent, @NotNull ServerPlayer source, @NotNull ServerPlayer target, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    public ListPlayerStatesGui(@Nullable SimpleGui parent, @NotNull ServerPlayer source, @NotNull ServerPlayer target, @NotNull List<GuiElementIR> entities, int pageIndex) {
         super(parent, source, TextHelper.getTextByKey(source, "command_state.info.gui.title", PlayerHelper.getPlayerName(target)), entities, pageIndex);
         this.target = target;
     }
 
     @Override
-    protected @NotNull PagedGui<GuiElementInterface> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer source, Component title, @NotNull List<GuiElementInterface> entities, int pageIndex) {
+    protected @NotNull PagedGui<GuiElementIR> makePage(@Nullable SimpleGui parent, @NotNull ServerPlayer source, Component title, @NotNull List<GuiElementIR> entities, int pageIndex) {
         return new ListPlayerStatesGui(parent, source, this.target, entities, pageIndex);
     }
 
     public static @NotNull ListPlayerStatesGui make(@NotNull ServerPlayer source, @NotNull ServerPlayer target) {
-        List<GuiElementInterface> entities = new ArrayList<>();
+        List<GuiElementIR> entities = new ArrayList<>();
 
         CommandStateService.withPlayerStateMap(target, playerStates -> {
             ConcurrentHashMap<String, Cache<Boolean>> stateMap = playerStates.getStateMap();
@@ -49,7 +48,7 @@ public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
                     TextHelper.getTextByKey(source, "entity.updated_timestamp", ChronosUtil.Formatter.formatDate(stateCache.getUpdatedTimestamp()))
                 ));
 
-                entities.add(builder.build());
+                entities.add(GuiElementIR.of(builder.build()));
             });
         });
 
@@ -58,7 +57,7 @@ public class ListPlayerStatesGui extends PagedGui<GuiElementInterface> {
 
 
     @Override
-    protected @NotNull GuiElementIR toGuiElement(@NotNull GuiElementInterface entity) {
-        return GuiElementIR.of(entity);
+    protected @NotNull GuiElementIR toGuiElement(@NotNull GuiElementIR entity) {
+        return entity;
     }
 }

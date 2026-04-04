@@ -1,6 +1,5 @@
 package mod.fuji.module.initializer.command_menu.structure;
 
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.document.annotation.Document;
@@ -78,14 +77,14 @@ public class MenuDescriptor {
         this.slots.forEach(slotDescriptor -> {
             if (slotDescriptor.canViewThisSlot(viewingPlayer)) {
                 /* Make the GUI element. */
-                GuiElementInterface element = slotDescriptor.buildGuiElement(viewingPlayer, this);
+                var element = slotDescriptor.buildGuiElement(viewingPlayer, this);
 
                 /* Set primary index. */
-                menuGui.setSlot(slotDescriptor.getIndex(), element);
+                GuiHelper.setSlot(menuGui, slotDescriptor.getIndex(), element);
 
                 /* Set other indexes. */
                 slotDescriptor.getOtherIndexes().forEach(otherIndex -> {
-                    menuGui.setSlot(otherIndex, element);
+                    GuiHelper.setSlot(menuGui, otherIndex, element);
                 });
 
                 /* Set blank slots filler. */
@@ -97,10 +96,7 @@ public class MenuDescriptor {
 
         /* Process the blank slots filler. */
         if (blankSlotsFiller.get() != null) {
-            GuiElementIR element = GuiElementIR
-                .of(blankSlotsFiller
-                    .get()
-                    .buildGuiElement(viewingPlayer, this));
+            GuiElementIR element = blankSlotsFiller.get().buildGuiElement(viewingPlayer, this);
             GuiHelper.Placer.fillEmptySlots(menuGui, element);
         }
 

@@ -1,7 +1,7 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import eu.pb4.sgui.api.SlotHolder;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.Map;
 import java.util.function.Function;
@@ -31,7 +31,7 @@ public class GuiHelper {
     public static final int GENERIC_CONTAINER_LINE_SIZE = 9;
     public static final Component EMPTY_TITLE_TEXT = Component.literal("[title-is-empty]");
 
-    public static void setSlot(@NotNull SlotGuiInterface gui, int index, @NotNull GuiElementIR guiElement) {
+    public static void setSlot(@NotNull SlotHolder gui, int index, @NotNull GuiElementIR guiElement) {
         gui.setSlot(index, guiElement.getNativeValue());
     }
 
@@ -132,12 +132,12 @@ public class GuiHelper {
         private static final Item BANNED_SLOT_PLACEHOLDER_ITEM = Items.BARRIER;
 
         @SuppressWarnings("RedundantIfStatement")
-        public static boolean isBlankSlot(@NotNull GuiElementIR slot) {
-            GuiElementInterface guiElement = slot.getNativeValue();
+        public static boolean isBlankSlot(@NotNull GuiElementIR guiElement) {
+            var $guiElement = guiElement.getNativeValue();
 
-            if (guiElement == null) return true;
-            if (guiElement.getItemStack() == null) return true;
-            if (guiElement.getItemStack().isEmpty()) return true;
+            if ($guiElement == null) return true;
+            if ($guiElement.getItemStack() == null) return true;
+            if ($guiElement.getItemStack().isEmpty()) return true;
 
             return false;
         }

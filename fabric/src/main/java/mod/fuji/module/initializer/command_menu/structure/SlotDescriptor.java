@@ -13,6 +13,7 @@ import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
+import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_menu.CommandMenuInitializer;
 import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import lombok.Data;
@@ -168,7 +169,7 @@ public class SlotDescriptor {
         }
     }
 
-    public GuiElementInterface buildGuiElement(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor) {
+    public GuiElementIR buildGuiElement(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor) {
         ItemStack itemStack = ItemStackHelper.Parser.parseItemStack(this.item);
         GuiElementBuilder slotElementBuilder = GuiElementBuilder.from(itemStack);
 
@@ -195,6 +196,6 @@ public class SlotDescriptor {
 
         slotElementBuilder.setCallback(new CommandMenuSlotClickCallback(viewingPlayer, menuDescriptor, this));
 
-        return slotElementBuilder.build();
+        return GuiElementIR.of(slotElementBuilder.build());
     }
 }
