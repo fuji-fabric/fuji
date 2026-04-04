@@ -249,7 +249,6 @@ allprojects { p ->
     tasks.register('copyCommonResources', Copy) {
         from project(":common").file("src/main/resources/")
         into(file(p.file("build/resources/main/")))
-        exclude '**/*.accesswidener'
 
         doFirst {
             println("Copy all resource files in :common project.")

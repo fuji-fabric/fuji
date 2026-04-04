@@ -35,7 +35,6 @@ repositories {
 loom {
     accessWidenerPath = project(":common").file("src/main/resources/${access_widener_version}.fuji.accesswidener")
 
-
     mods {
         "${project.mod_id}" {
             sourceSet sourceSets.main
