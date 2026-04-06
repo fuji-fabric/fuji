@@ -1,0 +1,82 @@
+accessWidener v2 official
+
+# --- Common AW Entries Begin ---
+# core
+accessible field net/minecraft/commands/CommandSourceStack silent Z
+accessible field net/minecraft/world/entity/Entity position Lnet/minecraft/world/phys/Vec3;
+
+# common economy api
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
+
+# temp ban
+accessible method net/minecraft/server/players/StoredUserList removeExpired ()V
+
+# nametag
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_TEXT_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V
+
+accessible method net/minecraft/world/entity/Display setBillboardConstraints (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V
+accessible field net/minecraft/world/entity/Display$BillboardConstraints CENTER Lnet/minecraft/world/entity/Display$BillboardConstraints;
+
+accessible field net/minecraft/world/entity/Display DATA_TRANSLATION_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible method net/minecraft/world/entity/Display setWidth (F)V
+accessible method net/minecraft/world/entity/Display setHeight (F)V
+
+accessible method net/minecraft/world/entity/Display$TextDisplay setBackgroundColor (I)V
+accessible method net/minecraft/world/entity/Display$TextDisplay setTextOpacity (B)V
+
+accessible field net/minecraft/world/entity/Display DATA_SCALE_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible field net/minecraft/world/entity/Display$TextDisplay DATA_STYLE_FLAGS_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
+
+accessible method net/minecraft/world/entity/Display setShadowRadius (F)V
+accessible method net/minecraft/world/entity/Display setShadowStrength (F)V
+
+accessible method net/minecraft/world/entity/Display setViewRange (F)V
+accessible method net/minecraft/world/entity/Display setBrightnessOverride (Lnet/minecraft/util/Brightness;)V
+
+accessible field net/minecraft/network/protocol/game/ClientboundSetPassengersPacket passengers [I
+accessible method net/minecraft/network/protocol/game/ClientboundSetPassengersPacket <init> (Lnet/minecraft/network/FriendlyByteBuf;)V
+
+# view
+accessible method net/minecraft/server/players/PlayerList save (Lnet/minecraft/server/level/ServerPlayer;)V
+
+# send-chat
+accessible method net/minecraft/server/network/ServerGamePacketListenerImpl broadcastChatMessage (Lnet/minecraft/network/chat/PlayerChatMessage;)V
+
+# world
+accessible field net/minecraft/core/Holder$Reference value Ljava/lang/Object;
+accessible field net/minecraft/server/MinecraftServer levels Ljava/util/Map;
+accessible field net/minecraft/server/MinecraftServer storageSource Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;
+accessible method net/minecraft/world/level/border/WorldBorder$Settings <init> (DDDDIIDJD)V
+
+# --- Common AW Entries END ---
+
+# core
+accessible class net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo
+accessible field net/minecraft/server/players/CachedUserNameToIdResolver profilesByName Ljava/util/Map;
+accessible field net/minecraft/world/level/ChunkPos x I
+accessible field net/minecraft/world/level/ChunkPos z I
+
+# chat module
+#accessible class net/minecraft/resources/RegistryDataLoader$Loader
+
+# view module
+accessible field net/minecraft/server/MinecraftServer playerDataStorage Lnet/minecraft/world/level/storage/PlayerDataStorage;
+
+# world helper
+accessible field net/minecraft/server/level/ChunkMap visibleChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+
+# player
+accessible field net/minecraft/world/entity/LivingEntity equipment Lnet/minecraft/world/entity/EntityEquipment;
+
+# skin
+accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+
+# rtp
+accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMainThread (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Ljava/util/concurrent/CompletableFuture;
+
+# world
+accessible method net/minecraft/server/level/ServerLevel prepareWeather (Lnet/minecraft/world/level/saveddata/WeatherData;)V

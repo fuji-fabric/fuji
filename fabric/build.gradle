@@ -68,7 +68,10 @@ def useModImplementation(Object dep) {
 dependencies {
     /* For mod loader: fabric-loader */
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
+
+    if (isObfuscatedMinecraft()) {
+        mappings loom.officialMojangMappings()
+    }
 
     useModImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 
@@ -80,7 +83,7 @@ dependencies {
     /* For permission system: luckperms */
     include(implementation "net.luckperms:api:${project.luckperms_api_version}")
 
-    /* For server side gui: sgui*/
+    /* For server side gui: sgui */
     include(useModImplementation("eu.pb4:sgui:${project.sgui_version}"))
     include(useModImplementation("eu.pb4:placeholder-api:${project.placeholder_api_version}"))
 
