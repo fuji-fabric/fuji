@@ -25,6 +25,11 @@ public class SimpleGuiDuck extends SimpleGui implements SlotGuiInterfaceDuck
     public final void onManualClose() {
         this.onVirtualGuiClose();
     }
-    #endif
+
+    @Override
+    public void onPlayerClose(boolean success) {
+        this.onVirtualGuiClose();
+    }
+   #endif
 
 }

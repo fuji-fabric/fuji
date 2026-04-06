@@ -224,8 +224,7 @@ public abstract class PagedGui<T> extends SimpleGuiDuck {
 
     @Override
     public void onVirtualGuiClose() {
-        if (this.openParentGuiWhenClose
-            && this.parent != null) {
+        if (this.openParentGuiWhenClose && this.parent != null) {
             parent.open();
         }
     }
