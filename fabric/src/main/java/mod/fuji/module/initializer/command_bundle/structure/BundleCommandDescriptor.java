@@ -3,8 +3,6 @@ package mod.fuji.module.initializer.command_bundle.structure;
 import com.google.errorprone.annotations.Keep;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.ParsedArgument;
-import com.mojang.brigadier.context.StringRange;
 import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
@@ -15,7 +13,6 @@ import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.descriptor.CommandDescriptor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import mod.fuji.module.initializer.command_bundle.accessor.CommandContextAccessor;
 import java.util.Comparator;
 import java.util.TreeMap;
 import lombok.Getter;
@@ -109,20 +106,13 @@ public class BundleCommandDescriptor extends CommandDescriptor {
     protected @NotNull List<Object> makeMethodParameterValues(@NotNull CommandContext<CommandSourceStack> ctx) {
         List<Object> parameterValues = new ArrayList<>();
 
-        CommandContextAccessor<?> ctxAccessor = (CommandContextAccessor<?>) ctx;
         for (CommandArgument commandArgument : this.getMethodParameterSpecifiers()) {
             String argumentName = commandArgument.getArgumentName();
 
             /* Collect the matched lexeme. */
-            String lexeme;
-            ParsedArgument<?, ?> parsedArgument = ctxAccessor.fuji$getArguments().get(argumentName);
-            if (parsedArgument != null) {
-                StringRange lexemeRange = parsedArgument.getRange();
-                lexeme = ctx.getInput().substring(lexemeRange.getStart(), lexemeRange.getEnd());
-            } else {
-                // If the optional argument is not specified, it will be null.
-                lexeme = optionalArgumentName2DefaultValue.get(argumentName);
-            }
+            String lexeme = CommandHelper.Context
+                .getArgumentInputString(ctx, argumentName)
+                .orElseGet(() -> optionalArgumentName2DefaultValue.get(argumentName));
 
             parameterValues.add(lexeme);
         }

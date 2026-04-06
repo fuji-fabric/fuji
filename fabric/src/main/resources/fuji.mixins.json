@@ -15,7 +15,7 @@
     "color.sign.SignBlockEntityMixin",
     "command_attachment.ServerPlayerEntityMixin",
     "command_attachment.ServerPlayerInteractionManagerMixin",
-    "command_bundle.CommandContextMixin",
+    "core.command.CommandContextMixin",
     "command_event.BlockMixin",
     "command_event.PlayerListManagerMixin",
     "command_permission.CommandNodeMixin",

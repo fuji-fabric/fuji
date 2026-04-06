@@ -5,7 +5,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
+import com.mojang.brigadier.context.ParsedArgument;
 import com.mojang.brigadier.context.ParsedCommandNode;
+import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -32,6 +34,7 @@ import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.document.annotation.TestCase;
+import mod.fuji.core.extension.CommandContextAccessor;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -728,12 +731,28 @@ public class CommandHelper {
     }
 
     public static class Context {
-        public static <T> Optional<T> tryGetArgument(@NotNull CommandContext<?> commandContext, String argumentName, Class<T> clazz) {
+
+        public static <T> Optional<T> getCommandArgumentObject(@NotNull CommandContext<?> commandContext, String argumentName, Class<T> clazz) {
             try {
                 return Optional.ofNullable(commandContext.getArgument(argumentName, clazz));
             } catch (Exception e) {
                 return Optional.empty();
             }
+        }
+
+        public static Optional<String> getArgumentInputString(@NotNull CommandContext<?> commandContext, String argumentName) {
+            CommandContextAccessor<?> commandContextAccessor = (CommandContextAccessor<?>) commandContext;
+            ParsedArgument<?, ?> parsedArgument = commandContextAccessor.fuji$getArguments().get(argumentName);
+
+            /* Returns empty string, if the argument does not exist. */
+            if (parsedArgument == null) {
+                return Optional.empty();
+            }
+
+            /* Return the raw input string for the argument. */
+            StringRange lexemeRange = parsedArgument.getRange();
+            String inputString = commandContext.getInput().substring(lexemeRange.getStart(), lexemeRange.getEnd());
+            return Optional.of(inputString);
         }
 
     }

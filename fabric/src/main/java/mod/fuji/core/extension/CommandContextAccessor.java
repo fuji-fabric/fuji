@@ -1,4 +1,4 @@
-package mod.fuji.module.initializer.command_bundle.accessor;
+package mod.fuji.core.extension;
 
 import com.mojang.brigadier.context.ParsedArgument;
 

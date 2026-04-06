@@ -3,6 +3,7 @@ package mod.fuji.core.command.argument.adapter.impl;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
@@ -26,15 +27,12 @@ public class ItemStackArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     @SneakyThrows(CommandSyntaxException.class)
     @Override
     public Object makeArgumentValue(@NotNull CommandContext<CommandSourceStack> context, @NotNull CommandArgument commandArgument) {
-        ItemInput itemStackArgument = ItemArgument.getItem(context, commandArgument.getArgumentName());
+        String argumentName = commandArgument.getArgumentName();
+        ItemInput itemStackArgument = ItemArgument.getItem(context, argumentName);
         ItemStack itemStack = ItemStackHelper.Parser.createItemStack(itemStackArgument);
-        String inputString;
-
-        #if MC_VER <= MC_1_20_4
-        inputString = itemStackArgument.serialize();
-        #elif MC_VER > MC_1_20_4
-        inputString = itemStackArgument.serialize(mod.fuji.core.auxiliary.minecraft.RegistryHelper.getDefaultWrapperLookup());
-        #endif
+        String inputString = CommandHelper.Context
+            .getArgumentInputString(context, argumentName)
+            .orElse("[FAILED-TO-GET-THE-ITEM-ARGUMENT-INPUT-STRING]");
 
         return new ItemStackWrapper(itemStack, inputString);
     }

@@ -1,8 +1,8 @@
-package mod.fuji.module.mixin.command_bundle;
+package mod.fuji.module.mixin.core.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;
-import mod.fuji.module.initializer.command_bundle.accessor.CommandContextAccessor;
+import mod.fuji.core.extension.CommandContextAccessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
