@@ -44,7 +44,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     #if MC_VER < MC_26_1
     public void onClose()
     #elif MC_VER >= MC_26_1
-    public void onManualClose()
+    public void afterRemoval()
     #endif
     {
         parentGui.open();

@@ -22,12 +22,7 @@ public class SimpleGuiDuck extends SimpleGui implements SlotGuiInterfaceDuck
     }
     #elif MC_VER >= MC_26_1
     @Override
-    public final void onManualClose() {
-        this.onVirtualGuiClose();
-    }
-
-    @Override
-    public void onPlayerClose(boolean success) {
+    public void afterRemoval() {
         this.onVirtualGuiClose();
     }
    #endif

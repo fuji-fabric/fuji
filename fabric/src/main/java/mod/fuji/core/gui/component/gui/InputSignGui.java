@@ -46,7 +46,7 @@ public class InputSignGui extends SignGui {
     }
     #elif MC_VER >= MC_26_1
     @Override
-    public final void onManualClose() {
+    public final void afterRemoval() {
         this.onVirtualGuiClose();
     }
     #endif
