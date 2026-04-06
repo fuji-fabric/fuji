@@ -50,7 +50,6 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
             return temp.stream();
         }
         return Stream.empty();
-
         #elif MC_VER > MC_1_20_4
         net.minecraft.world.item.component.ItemContainerContents containerComponent = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
         if (containerComponent == null) {
@@ -58,7 +57,7 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         }
         #endif
 
-        #if MC_VER < MC_26_1
+        #if MC_VER > MC_1_20_4 && MC_VER < MC_26_1
         return containerComponent.stream();
         #elif MC_VER >= MC_26_1
         return containerComponent.allItemsCopyStream();

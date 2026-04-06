@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
@@ -29,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.Coerce;
 import net.minecraft.core.HolderLookup;
 #elif MC_VER >= MC_26_1
-import org.spongepowered.asm.mixin.Unique;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.resources.RegistryLoadTask;
