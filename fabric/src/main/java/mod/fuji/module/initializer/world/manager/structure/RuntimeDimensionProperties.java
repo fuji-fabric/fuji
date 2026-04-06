@@ -49,6 +49,7 @@ public final class RuntimeDimensionProperties extends DerivedLevelData {
         return super.getGameTime();
     }
 
+    #if MC_VER < MC_26_1
     @Override
     public long getDayTime() {
         return this.getEffectiveRuntimeDimensionDescriptor().timeOfDay;
@@ -108,5 +109,9 @@ public final class RuntimeDimensionProperties extends DerivedLevelData {
     public void setClearWeatherTime(int i) {
         this.getEffectiveRuntimeDimensionDescriptor().weather.sunnyTime = i;
     }
+
+    #elif MC_VER >= MC_26_1
+    // Since this version, the weather data is moved from LevelData to WeatherData
+    #endif
 
 }

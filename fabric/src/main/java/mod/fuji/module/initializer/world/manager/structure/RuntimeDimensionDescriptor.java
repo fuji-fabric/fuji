@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1752170874671L, value = """
@@ -88,6 +89,7 @@ public class RuntimeDimensionDescriptor {
     public long timeOfDay = 6000;
 
     public Weather weather = new Weather();
+
     public static class Weather {
         public int sunnyTime;
         public boolean isRaining;
@@ -95,6 +97,12 @@ public class RuntimeDimensionDescriptor {
         public boolean isThundering;
         public int thunderTime;
     }
+
+    #if MC_VER >= MC_26_1
+    public @NotNull net.minecraft.world.level.saveddata.WeatherData asWeatherData() {
+        return new net.minecraft.world.level.saveddata.WeatherData(this.weather.sunnyTime, this.weather.rainTime, this.weather.thunderTime, this.weather.isRaining, this.weather.isThundering);
+    }
+    #endif
 
     public boolean isDimensionLoaded() {
         return WorldHelper

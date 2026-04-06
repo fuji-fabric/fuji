@@ -14,7 +14,6 @@ import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkG
 import mod.fuji.module.initializer.world.manager.service.FlatPresetParser;
 import java.util.Optional;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.core.Registry;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
@@ -80,14 +79,32 @@ public class RuntimeDimensionMaker {
             runtimeDimensionDescriptor.isDebugWorld(),
             BiomeManager.obfuscateSeed(runtimeDimensionDescriptor.seed),
             ImmutableList.of(),
-            runtimeDimensionDescriptor.shouldTickTime,
-            makeRandomSequenceState(runtimeDimensionDescriptor));
+            runtimeDimensionDescriptor.shouldTickTime
+            #if MC_VER < MC_26_1
+            , makeRandomSequenceState(runtimeDimensionDescriptor)
+            #elif MC_VER >= MC_26_1
+            // The random sequence state argument is removed since this version.
+            #endif
+        );
+
+        /* Create weather data. */
+        prepareWeatherDataForRuntimeDimension(dimension, runtimeDimensionDescriptor);
 
         /* Do some post things for this dimension. */
         postRuntimeDimensionMake(dimension, runtimeDimensionDescriptor);
 
         /* Return the dimension instance with the dimension options. */
         return new Pair<>(dimension, dimensionOptions);
+    }
+
+    private static void prepareWeatherDataForRuntimeDimension(@NotNull ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+        #if MC_VER < MC_26_1
+        // Before this version, the weather data is associated with the level data, not the server level itself.
+        #elif MC_VER >= MC_26_1
+        if (dimension.canHaveWeather()) {
+            dimension.prepareWeather(runtimeDimensionDescriptor.asWeatherData());
+        }
+        #endif
     }
 
     private static @NotNull RuntimeDimensionProperties makeWorldProperties(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
@@ -109,8 +126,22 @@ public class RuntimeDimensionMaker {
     private static void postRuntimeDimensionMake(ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         // If the dimension type is THE_END, then start the dragon fight.
         if (BuiltinDimensionTypesIR.END.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
-            dimension.setDragonFight(new EndDragonFight(dimension, dimension.getSeed(), EndDragonFight.Data.DEFAULT));
+            dimension.setDragonFight(makeEndDragonFight(dimension));
         }
+    }
+
+    private static @NotNull
+    #if MC_VER < MC_26_1
+    net.minecraft.world.level.dimension.end.EndDragonFight
+    #elif MC_VER >= MC_26_1
+    net.minecraft.world.level.dimension.end.EnderDragonFight
+    #endif
+    makeEndDragonFight(@NotNull ServerLevel dimension) {
+        #if MC_VER < MC_26_1
+        return new net.minecraft.world.level.dimension.end.EndDragonFight(dimension, dimension.getSeed(), net.minecraft.world.level.dimension.end.EndDragonFight.Data.DEFAULT);
+        #elif MC_VER >= MC_26_1
+        return net.minecraft.world.level.dimension.end.EnderDragonFight.createDefault();
+        #endif
     }
 
     private static @NotNull LevelStem makeDimensionOptions(RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
