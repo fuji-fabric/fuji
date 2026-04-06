@@ -9,7 +9,7 @@ jobs:
       matrix:
         java: [21]
         os: [ubuntu-latest]
-        target-mc-version: ["1.21.11", "1.21.9", "1.21.6", "1.21.5", "1.21.4", "1.21.3", "1.21", "1.20.6", "1.20.4", "1.20.2", "1.20.1"]
+        target-mc-version: ["26.1", "1.21.11", "1.21.9", "1.21.6", "1.21.5", "1.21.4", "1.21.3", "1.21", "1.20.6", "1.20.4", "1.20.2", "1.20.1"]
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
@@ -20,7 +20,7 @@ jobs:
       - name: Crowdin action
         uses: crowdin/github-action@v2
         # If we parallel run the crowdin action, it will fail with 409 error.
-        if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '1.21.9'
+        if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '26.1'
         with:
             # Define the location of crowdin.yml file.
             config: "crowdin/crowdin.yml"
