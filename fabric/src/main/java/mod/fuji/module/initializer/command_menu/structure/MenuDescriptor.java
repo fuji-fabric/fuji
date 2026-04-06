@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mod.fuji.core.gui.structure.GuiElementIR;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -56,7 +57,7 @@ public class MenuDescriptor {
 
     public SimpleGui build(ServerPlayer viewingPlayer) {
         /* Make the menu GUI. */
-        SimpleGui menuGui = new SimpleGui(this.getScreenHandlerType(), viewingPlayer, false) {
+        SimpleGuiDuck menuGui = new SimpleGuiDuck(this.getScreenHandlerType(), viewingPlayer, false) {
             @Override
             public void onOpen() {
                 super.onOpen();
@@ -64,8 +65,8 @@ public class MenuDescriptor {
             }
 
             @Override
-            public void onClose() {
-                super.onClose();
+            public void onVirtualGuiClose() {
+                super.onVirtualGuiClose();
                 CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), commands.on_closed_commands);
             }
         };

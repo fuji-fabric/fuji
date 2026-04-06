@@ -35,4 +35,20 @@ public class InputSignGui extends SignGui {
         return this.joinStrings().isBlank();
     }
 
+    public void onVirtualGuiClose() {
+
+    }
+
+    #if MC_VER < MC_26_1
+    @Override
+    public final void onClose() {
+        this.onVirtualGuiClose();
+    }
+    #elif MC_VER >= MC_26_1
+    @Override
+    public final void onManualClose() {
+        this.onVirtualGuiClose();
+    }
+    #endif
+
 }

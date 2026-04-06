@@ -2,29 +2,27 @@ package mod.fuji.module.initializer.command_menu.structure;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
-import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import mod.fuji.core.document.annotation.DocStringProvider;
-import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
+import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.LuckpermsHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
+import mod.fuji.core.document.annotation.DocStringProvider;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.document.descriptor.PermissionDescriptor;
 import mod.fuji.core.gui.structure.GuiClickCallbackDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import mod.fuji.module.initializer.command_menu.CommandMenuInitializer;
-import mod.fuji.core.document.descriptor.PermissionDescriptor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -101,7 +99,7 @@ public class SlotDescriptor {
     @Data
     @NoArgsConstructor
     public static class Commands {
-        List<String> onLeftClickCommands = new ArrayList<>(){
+        List<String> onLeftClickCommands = new ArrayList<>() {
             {
                 this.add("send-message %player:name% You just clicked me.");
                 this.add("chain has-level? %player:name% 4 chain send-message %player:name% <yellow>You are op player.");
@@ -120,53 +118,70 @@ public class SlotDescriptor {
         if (!CommandHelper.Requirement.hasLevelPermission(player, this.viewRequirement.level)) return false;
         if (this.viewRequirement.string != null
             && !this.viewRequirement.string.isEmpty()
-            && !LuckpermsHelper.hasPermission(player.getUUID(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string)) return false;
+            && !LuckpermsHelper.hasPermission(player.getUUID(), SLOT_VIEW_REQUIREMENT_PERMISSION, this.viewRequirement.string))
+            return false;
 
         return true;
     }
 
-    public record CommandMenuSlotClickCallback(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor, SlotDescriptor slotDescriptor) implements GuiClickCallbackDuck {
+    private static GuiClickCallbackDuck createCommandMenuSlotClickCallback(
+        ServerPlayer viewingPlayer,
+        MenuDescriptor menuDescriptor,
+        SlotDescriptor slotDescriptor
+    ) {
+        return (i, clickType, clickType1, slotGuiInterface) -> {
 
-
-        @SuppressWarnings("UnnecessaryReturnStatement")
-        @Override
-        public void click(int i, ClickType clickType, net.minecraft.world.inventory.ClickType clickType1, SlotGuiInterface slotGuiInterface) {
+            Runnable tryCloseThisMenu = () -> {
+                if (menuDescriptor.closeMenuOnClicked) {
+                    CommandMenuInitializer.closeCurrentHandledScreen(viewingPlayer);
+                }
+            };
 
             /* Dispatch click type. */
             if (clickType == ClickType.MOUSE_LEFT && !slotDescriptor.commands.onLeftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onLeftClickCommands);
-                tryCloseThisMenu();
+                CommandExecutor.executeBatch(
+                    ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()),
+                    slotDescriptor.commands.onLeftClickCommands
+                );
+                tryCloseThisMenu.run();
                 return;
             }
+
             if (clickType == ClickType.MOUSE_RIGHT && !slotDescriptor.commands.onRightClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onRightClickCommands);
-                tryCloseThisMenu();
+                CommandExecutor.executeBatch(
+                    ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()),
+                    slotDescriptor.commands.onRightClickCommands
+                );
+                tryCloseThisMenu.run();
                 return;
             }
+
             if (clickType == ClickType.MOUSE_LEFT_SHIFT && !slotDescriptor.commands.onLeftShiftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onLeftShiftClickCommands);
-                tryCloseThisMenu();
+                CommandExecutor.executeBatch(
+                    ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()),
+                    slotDescriptor.commands.onLeftShiftClickCommands
+                );
+                tryCloseThisMenu.run();
                 return;
             }
+
             if (clickType == ClickType.MOUSE_RIGHT_SHIFT && !slotDescriptor.commands.onRightShiftClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onRightShiftClickCommands);
-                tryCloseThisMenu();
+                CommandExecutor.executeBatch(
+                    ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()),
+                    slotDescriptor.commands.onRightShiftClickCommands
+                );
+                tryCloseThisMenu.run();
                 return;
             }
+
             if (clickType == ClickType.MOUSE_MIDDLE && !slotDescriptor.commands.onMiddleClickCommands.isEmpty()) {
-                CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()), slotDescriptor.commands.onMiddleClickCommands);
-                tryCloseThisMenu();
-                return;
+                CommandExecutor.executeBatch(
+                    ExtendedCommandSource.asConsole(viewingPlayer.createCommandSourceStack()),
+                    slotDescriptor.commands.onMiddleClickCommands
+                );
+                tryCloseThisMenu.run();
             }
-
-        }
-
-        private void tryCloseThisMenu() {
-            /* Close the menu if the slot is clicked. */
-            if (menuDescriptor.closeMenuOnClicked) {
-                CommandMenuInitializer.closeCurrentHandledScreen(viewingPlayer);
-            }
-        }
+        };
     }
 
     public GuiElementIR buildGuiElement(ServerPlayer viewingPlayer, MenuDescriptor menuDescriptor) {
@@ -194,7 +209,7 @@ public class SlotDescriptor {
             slotElementBuilder.setLore(lore);
         }
 
-        slotElementBuilder.setCallback(new CommandMenuSlotClickCallback(viewingPlayer, menuDescriptor, this));
+        slotElementBuilder.setCallback(createCommandMenuSlotClickCallback(viewingPlayer, menuDescriptor, this));
 
         return GuiElementIR.of(slotElementBuilder.build());
     }

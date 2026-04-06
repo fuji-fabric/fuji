@@ -3,6 +3,7 @@ package mod.fuji.module.initializer.head.structure;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.Component;
@@ -44,10 +45,12 @@ public class Head {
     }
 
     public ItemStack toItemStack() {
-        return new GuiElementBuilder()
+        GuiElementBuilder builder = new GuiElementBuilder()
             .setItem(Items.PLAYER_HEAD)
-            .setName(Component.literal(name))
-            .setSkullOwner(value, null, uuid)
-            .asStack();
+            .setName(Component.literal(name));
+
+        GuiHelper.PlayerSkull.setSkullOwner(builder, value, null, uuid);
+
+        return builder.asStack();
     }
 }
