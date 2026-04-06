@@ -5,6 +5,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import eu.pb4.common.economy.api.EconomyTransaction;
+import java.math.BigInteger;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.auxiliary.minecraft.UuidHelper;
@@ -48,48 +49,61 @@ public class CustomEconomyAccount implements EconomyAccount {
     net.minecraft.resources.ResourceLocation
     #elif MC_VER >= MC_1_21_11
     net.minecraft.resources.Identifier
-    #endif id() {
+    #endif
+    id() {
         // NOTE: Make the `account ID` identical to `currency ID`, for simplicity.
         return IdentifierIR.makeIdentifierOrThrow(this.currencyDescriptor.currencyId).getNativeValue();
     }
 
     @Override
-    public long balance() {
+    public
+    #if MC_VER < MC_26_1
+    long
+    #elif MC_VER >= MC_26_1
+    BigInteger
+    #endif
+    balance() {
         CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.toIdentifier());
-        return accountNode.balance;
+        return EconomyService.toBalanceType(accountNode.balance);
     }
 
     @Override
-    public void setBalance(long value) {
+    public void setBalance(#if MC_VER < MC_26_1 long #elif MC_VER >= MC_26_1 BigInteger #endif value) {
         CustomEconomyAccountNode accountNode = EconomyService.getCustomAccountNode(this.gameProfile, this.currencyDescriptor.toIdentifier());
-        accountNode.balance = value;
+        accountNode.balance = EconomyService.toBigInteger(value);
         EconomyInitializer.data.writeStorage();
     }
 
     @Override
-    public EconomyTransaction canIncreaseBalance(long value) {
-        return makeEconomyTransaction(value);
+    public EconomyTransaction canIncreaseBalance(#if MC_VER < MC_26_1 long #elif MC_VER >= MC_26_1 BigInteger #endif value)
+    {
+        return makeEconomyTransaction(EconomyService.toBigInteger(value));
     }
 
     @Override
-    public EconomyTransaction canDecreaseBalance(long value) {
-        return makeEconomyTransaction(-value);
+    public EconomyTransaction canDecreaseBalance(#if MC_VER < MC_26_1 long #elif MC_VER >= MC_26_1 BigInteger #endif value) {
+        var negateValue = EconomyService.negate(value);
+        return makeEconomyTransaction(negateValue);
+    }
+
+
+    private EconomyTransaction makeEconomyTransaction(long deltaValue) {
+        return makeEconomyTransaction(EconomyService.toBigInteger(deltaValue));
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")
-    private EconomyTransaction makeEconomyTransaction(long deltaValue) {
+    private EconomyTransaction makeEconomyTransaction(@NotNull BigInteger deltaValue) {
         /* Define variables. */
-        long previousBalance = this.balance();
-        long transactionAmount = deltaValue;
-        long finalBalance = previousBalance + transactionAmount;
+        BigInteger previousBalance = EconomyService.toBigInteger(this.balance());
+        BigInteger transactionAmount = deltaValue;
+        BigInteger finalBalance = previousBalance.add(transactionAmount);
 
         /* Check bounds. */
         boolean isSuccessful;
         Component feedbackText;
 
-        if (finalBalance < 0
-            || (transactionAmount > 0 && previousBalance > Long.MAX_VALUE - transactionAmount)
-            || (transactionAmount < 0 && previousBalance < Long.MIN_VALUE - transactionAmount)) {
+        // No numeric overflow or underflow.
+        if (finalBalance.compareTo(BigInteger.ZERO) < 0) {
             isSuccessful = false;
             finalBalance = previousBalance;
             feedbackText = TextHelper.getTextByKey(gameProfile, "operation.fail");

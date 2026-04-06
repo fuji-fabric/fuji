@@ -5,6 +5,8 @@ import eu.pb4.common.economy.api.CommonEconomy;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
@@ -30,6 +32,8 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class EconomyService {
+
+    private static final BigDecimal FACE_VALUE_TO_RAW_VALUE_FACTOR = BigDecimal.valueOf(100);
 
     public static @NotNull Collection<EconomyCurrency> getServerCurrencies() {
         MinecraftServer server = ServerHelper.getServer();
@@ -103,7 +107,7 @@ public class EconomyService {
             /* Make a new account node. */
             CustomEconomyAccountNode $customEconomyAccountNode = customEconomyAccountNode.orElseGet(() -> {
                 CustomEconomyCurrency customEconomyCurrency = CustomEconomyProvider.getCustomEconomyCurrency(currencyId);
-                long defaultBalance = (long) (customEconomyCurrency.currencyDescriptor.defaultFaceBalance * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
+                BigInteger defaultBalance = EconomyService.toRawValue(customEconomyCurrency.currencyDescriptor.defaultFaceBalance);
 
                 CustomEconomyAccountNode newValue = CustomEconomyAccountNode.make(gameProfile, defaultBalance);
                 customEconomyCurrencyNode.accounts.add(newValue);
@@ -115,28 +119,29 @@ public class EconomyService {
         });
     }
 
-    public static void transferCurrency(@NotNull ServerPlayer source, @NotNull OfflineGameProfile player, @NotNull IdentifierIR currencyId, double amount) {
-        long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
-        deltaValue = Math.max(0, deltaValue);
+    public static void payCurrency(@NotNull ServerPlayer source, @NotNull OfflineGameProfile player, @NotNull IdentifierIR currencyId, double amount) {
+        amount = Math.max(0, amount);
+
+        BigInteger deltaValue = EconomyService.toRawValue(amount);
 
         EconomyAccount fromAccount = tryGetEconomyAccount(source.createCommandSourceStack(), source.getGameProfile(), currencyId);
         EconomyAccount toAccount = tryGetEconomyAccount(source.createCommandSourceStack(), player.getValue(), currencyId);
 
-        long fromAccountPreviousBalance = fromAccount.balance();
-        long toAccountPreviousBalance = toAccount.balance();
+        BigInteger fromAccountPreviousBalance = EconomyService.toBigInteger(fromAccount.balance());
+        BigInteger toAccountPreviousBalance = EconomyService.toBigInteger(toAccount.balance());
 
-        if (fromAccount.canDecreaseBalance(deltaValue).isSuccessful()
-            && toAccount.canIncreaseBalance(deltaValue).isSuccessful()) {
+        if (fromAccount.canDecreaseBalance(EconomyService.toBalanceType(deltaValue)).isSuccessful()
+            && toAccount.canIncreaseBalance(EconomyService.toBalanceType(deltaValue)).isSuccessful()) {
 
             try {
-                fromAccount.decreaseBalance(deltaValue);
-                toAccount.increaseBalance(deltaValue);
+                fromAccount.decreaseBalance(EconomyService.toBalanceType(deltaValue));
+                toAccount.increaseBalance(EconomyService.toBalanceType(deltaValue));
 
                 TextHelper.sendTextByKey(source, "operation.success");
             } catch (Exception rollbackIfFailed) {
                 LogUtil.error("Failed to transfer currency {} with amount {} from account {} to account {}", currencyId, amount, fromAccount, toAccount, rollbackIfFailed);
-                fromAccount.setBalance(fromAccountPreviousBalance);
-                toAccount.setBalance(toAccountPreviousBalance);
+                fromAccount.setBalance(EconomyService.toBalanceType(fromAccountPreviousBalance));
+                toAccount.setBalance(EconomyService.toBalanceType(toAccountPreviousBalance));
                 TextHelper.sendTextByKey(source, "operation.fail");
             }
 
@@ -171,4 +176,50 @@ public class EconomyService {
 
         return economyAccount.get();
     }
+
+    public static @NotNull BigInteger toBigInteger(long value) {
+        return BigInteger.valueOf(value);
+    }
+
+    public static @NotNull BigInteger toBigInteger(@NotNull BigInteger value) {
+        return value;
+    }
+
+    public static long negate(long value) {
+        return -value;
+    }
+
+    public static @NotNull BigInteger negate(@NotNull BigInteger value) {
+        return value.negate();
+    }
+
+    public static
+    #if MC_VER < MC_26_1
+    long
+    #elif MC_VER >= MC_26_1
+    BigInteger
+    #endif
+    toBalanceType(@NotNull BigInteger value) {
+        #if MC_VER < MC_26_1
+        return value.longValue();
+        #elif MC_VER >= MC_26_1
+        return value;
+        #endif
+    }
+
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    public static @NotNull BigInteger toRawValue(double faceValue) {
+        BigDecimal $faceValue = new BigDecimal(faceValue);
+        BigInteger rawValue = $faceValue.multiply(FACE_VALUE_TO_RAW_VALUE_FACTOR).toBigInteger();
+        return rawValue;
+    }
+
+    public static @NotNull BigInteger getRawValue(@NotNull EconomyAccount economyAccount) {
+        return EconomyService.toBigInteger(economyAccount.balance());
+    }
+
+    public static @NotNull BigDecimal toFaceValue(@NotNull BigInteger rawValue) {
+        return new BigDecimal(rawValue).divide(FACE_VALUE_TO_RAW_VALUE_FACTOR);
+    }
+
 }

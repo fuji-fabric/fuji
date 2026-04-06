@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.economy.config.structure;
 
 import com.mojang.authlib.GameProfile;
+import java.math.BigInteger;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.document.annotation.Document;
 import lombok.Data;
@@ -14,9 +15,9 @@ public class CustomEconomyAccountNode {
     public String ownerName;
 
     @Document(id = 1751826963753L, value = "The balance of this account.")
-    public long balance;
+    public BigInteger balance;
 
-    public static CustomEconomyAccountNode make(GameProfile gameProfile, long balance) {
+    public static CustomEconomyAccountNode make(GameProfile gameProfile, BigInteger balance) {
         CustomEconomyAccountNode customEconomyAccountNode = new CustomEconomyAccountNode();
         customEconomyAccountNode.ownerName = AuthlibHelper.getGameProfileName(gameProfile);
         customEconomyAccountNode.balance = balance;

@@ -35,7 +35,6 @@ public class CustomEconomyProvider implements EconomyProvider {
     public static final String CUSTOM_ECONOMY_PROVIDER_NAMESPACE = Fuji.MOD_ID;
     public static CustomEconomyProvider INSTANCE = new CustomEconomyProvider();
 
-    public static final double SUPPORTED_PRECISE_FACTOR = 100.0;
     public static Map<IdentifierIR, CustomEconomyCurrency> CURRENCY_ID_2_CURRENCY = new HashMap<>();
 
     public static void initializeCustomEconomyProvider() {

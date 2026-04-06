@@ -4,6 +4,7 @@ import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
 import eu.pb4.common.economy.api.EconomyProvider;
 import eu.pb4.common.economy.api.EconomyTransaction;
+import java.math.BigInteger;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -199,8 +200,8 @@ public class EconomyInitializer extends ModuleInitializer {
     private static int $give(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
-        long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
-        EconomyTransaction economyTransaction = economyAccount.increaseBalance(deltaValue);
+        BigInteger deltaValue = EconomyService.toRawValue(amount);
+        EconomyTransaction economyTransaction = economyAccount.increaseBalance(EconomyService.toBalanceType(deltaValue));
 
         TextHelper.sendMessageByText(source, economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
@@ -212,8 +213,8 @@ public class EconomyInitializer extends ModuleInitializer {
     private static int $take(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
-        long deltaValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
-        EconomyTransaction economyTransaction = economyAccount.decreaseBalance(deltaValue);
+        BigInteger deltaValue = EconomyService.toRawValue(amount);
+        EconomyTransaction economyTransaction = economyAccount.decreaseBalance(EconomyService.toBalanceType(deltaValue));
 
         TextHelper.sendMessageByText(source, economyTransaction.message());
         return CommandHelper.Return.SUCCESS;
@@ -223,7 +224,7 @@ public class EconomyInitializer extends ModuleInitializer {
     @CommandNode("economy pay")
     @CommandRequirement(level = 4)
     private static int $pay(@CommandSource ServerPlayer source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
-        EconomyService.transferCurrency(source, player, currencyId.getValue(), amount);
+        EconomyService.payCurrency(source, player, currencyId.getValue(), amount);
         return CommandHelper.Return.SUCCESS;
     }
 
@@ -234,9 +235,11 @@ public class EconomyInitializer extends ModuleInitializer {
     private static int $hasCurrency(@CommandSource CommandSourceStack source, OfflineGameProfile player, CurrencyId currencyId, double amount) {
         IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
-        long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
 
-        boolean value = economyAccount.balance() >= finalValue;
+        BigInteger specifiedRawValue = EconomyService.toRawValue(amount);
+        BigInteger actualRawValue = EconomyService.getRawValue(economyAccount);
+
+        boolean value = actualRawValue.compareTo(specifiedRawValue) >= 0;
         return CommandHelper.Return.returnBoolean(source, value);
     }
 
@@ -248,8 +251,8 @@ public class EconomyInitializer extends ModuleInitializer {
         IdentifierIR $currencyId = currencyId.getValue();
         EconomyAccount economyAccount = EconomyService.tryGetEconomyAccount(source, player.getValue(), $currencyId);
 
-        long finalValue = (long) (amount * CustomEconomyProvider.SUPPORTED_PRECISE_FACTOR);
-        economyAccount.setBalance(finalValue);
+        BigInteger finalValue = EconomyService.toRawValue(amount);
+        economyAccount.setBalance(EconomyService.toBalanceType(finalValue));
         TextHelper.sendTextByKey(source, "operation.success");
         return CommandHelper.Return.SUCCESS;
     }
