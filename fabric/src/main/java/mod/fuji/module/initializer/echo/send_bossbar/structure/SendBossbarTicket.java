@@ -1,10 +1,10 @@
 package mod.fuji.module.initializer.echo.send_bossbar.structure;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.service.bossbar.BossBarManager;
 import mod.fuji.core.service.bossbar.command.argument.wrapper.StepType;
 import mod.fuji.core.service.bossbar.BossBarTicket;
 import net.minecraft.world.BossEvent;
-import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public class SendBossbarTicket extends BossBarTicket {
     float elapsedTicks;
 
     public SendBossbarTicket(String title, BossEvent.BossBarColor color, BossEvent.BossBarOverlay style, int totalMS, StepType stepType, @NotNull ServerPlayer player, Runnable onComplete) {
-        super(new ServerBossEvent(Component.empty(), color, style), totalMS, stepType, List.of(player));
+        super(BossBarManager.makeServerBossEvent(Component.empty(), color, style), totalMS, stepType, List.of(player));
         this.player = player;
         this.title = title;
         this.onComplete = onComplete;

@@ -1,5 +1,6 @@
 package mod.fuji.core.service.bossbar;
 
+import java.util.UUID;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.event.annotation.EventConsumer;
@@ -7,7 +8,10 @@ import mod.fuji.core.event.message.player.PlayerDamageEvent;
 import mod.fuji.core.event.message.server.tick.ServerTickStartEvent;
 import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -124,6 +128,14 @@ public class BossBarManager {
             })
             .map(it -> (T) it)
             .findFirst();
+    }
+
+    public static @NotNull ServerBossEvent makeServerBossEvent(@NotNull Component name, @NotNull BossEvent.BossBarColor color, @NotNull BossEvent.BossBarOverlay overlay) {
+        #if MC_VER < MC_26_1
+        return new ServerBossEvent(name, color, overlay);
+        #elif MC_VER >= MC_26_1
+        return new ServerBossEvent(UUID.randomUUID(), name, color, overlay);
+        #endif
     }
 
 }

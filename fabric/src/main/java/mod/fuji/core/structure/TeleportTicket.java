@@ -1,11 +1,11 @@
 package mod.fuji.core.structure;
 
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.service.bossbar.BossBarManager;
 import mod.fuji.core.service.bossbar.structure.Interruptible;
 import mod.fuji.core.service.bossbar.structure.InterruptibleTicket;
 import lombok.Getter;
 import net.minecraft.world.BossEvent;
-import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +24,7 @@ public class TeleportTicket extends InterruptibleTicket {
         , RelativeFlagsIR flags
     ) {
         super(
-            new ServerBossEvent(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossEvent.BossBarColor.BLUE, net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS)
+            BossBarManager.makeServerBossEvent(TextHelper.getTextByKey(player, "teleport_warmup.bossbar.name"), BossEvent.BossBarColor.BLUE, net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS)
             , totalMs
             , player
             , source
