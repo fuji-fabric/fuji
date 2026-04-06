@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 
@@ -68,7 +67,12 @@ public abstract class RedirectScreenHandlerFactory {
         return new ChestMenu(getTargetInventorySize(), syncId, sourceInventory, makeTargetInventoryRedirectScreen(), rows) {
 
             @Override
-            public void clicked(int i, int j, ClickType slotActionType, Player playerEntity) {
+            #if MC_VER < MC_26_1
+            public void clicked(int i, int j, net.minecraft.world.inventory.ClickType slotActionType, Player playerEntity)
+            #elif MC_VER >= MC_26_1
+            public void clicked(int i, int j, net.minecraft.world.inventory.ContainerInput slotActionType, Player playerEntity)
+            #endif
+            {
                 if (!canClick(this, i)) return;
 
                 // save player data in time, in keep sync if player gets online.

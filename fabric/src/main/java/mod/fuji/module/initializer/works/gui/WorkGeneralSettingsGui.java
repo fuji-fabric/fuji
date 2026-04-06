@@ -94,7 +94,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.introduction"))
             .setCallback(() -> new InputSignGui(player, null) {
                 @Override
-                public void onClose() {
+                public void onVirtualGuiClose() {
                     String newIntroduction = this.joinStrings();
                     LogicHelper.withCancelCheck(player, newIntroduction.isBlank(), () -> {
                         work.introduction = newIntroduction;
@@ -111,7 +111,7 @@ public class WorkGeneralSettingsGui extends SimpleGui {
             .setName(TextHelper.getTextByKey(player, "works.work.set.target.name"))
             .setCallback(() -> new InputSignGui(player, null) {
                 @Override
-                public void onClose() {
+                public void onVirtualGuiClose() {
                     String newValue = this.joinStrings();
                     if (newValue.isBlank()) {
                         TextHelper.sendTextByKey(player, "works.work.add.empty_name");

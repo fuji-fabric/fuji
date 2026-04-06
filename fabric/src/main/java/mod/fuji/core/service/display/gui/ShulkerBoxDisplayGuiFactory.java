@@ -1,8 +1,8 @@
 package mod.fuji.core.service.display.gui;
 
-import eu.pb4.sgui.api.gui.SimpleGui;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
+import mod.fuji.core.gui.structure.SlotGuiInterfaceDuck;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,15 +16,15 @@ import java.util.stream.Stream;
 public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     private final @NotNull ItemStack shulkerBoxStack;
-    private final @Nullable SlotGuiInterface parentGui;
+    private final @Nullable SlotGuiInterfaceDuck parentGui;
 
-    public ShulkerBoxDisplayGuiFactory(@NotNull Component title, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
+    public ShulkerBoxDisplayGuiFactory(@NotNull Component title, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterfaceDuck parentGui) {
         super(title);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
     }
 
-    public ShulkerBoxDisplayGuiFactory(@NotNull ServerPlayer sharingPlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterface parentGui) {
+    public ShulkerBoxDisplayGuiFactory(@NotNull ServerPlayer sharingPlayer, @NotNull ItemStack shulkerBoxStack, @Nullable SlotGuiInterfaceDuck parentGui) {
         super(sharingPlayer);
         this.shulkerBoxStack = shulkerBoxStack;
         this.parentGui = parentGui;
@@ -56,14 +56,18 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
         if (containerComponent == null) {
             return Stream.empty();
         }
-        return containerComponent.stream();
         #endif
 
+        #if MC_VER < MC_26_1
+        return containerComponent.stream();
+        #elif MC_VER >= MC_26_1
+        return containerComponent.allItemsCopyStream();
+        #endif
     }
 
     @Override
-    public @NotNull SimpleGui build(@NotNull ServerPlayer viewingPlayer) {
-        SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x4, viewingPlayer, false);
+    public @NotNull SimpleGuiDuck build(@NotNull ServerPlayer viewingPlayer) {
+        SimpleGuiDuck gui = new SimpleGuiDuck(MenuType.GENERIC_9x4, viewingPlayer, false);
         gui.setTitle(this.title);
 
         /* Place UI items.  */

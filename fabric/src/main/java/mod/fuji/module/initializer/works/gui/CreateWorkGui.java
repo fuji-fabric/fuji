@@ -1,12 +1,12 @@
 package mod.fuji.module.initializer.works.gui;
 
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.gui.component.gui.InputSignGui;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
 import mod.fuji.module.initializer.works.WorksInitializer;
 import mod.fuji.module.initializer.works.config.model.WorksDataModel;
 import mod.fuji.module.initializer.works.structure.work.impl.NonProductionWork;
@@ -24,7 +24,7 @@ public class CreateWorkGui extends InputSignGui {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
-    public void onClose() {
+    public void onVirtualGuiClose() {
         /* input name */
         String name = this.getLine(0).getString().trim();
         if (name.isBlank()) {
@@ -33,7 +33,7 @@ public class CreateWorkGui extends InputSignGui {
         }
 
         /* input type */
-        SimpleGui selectWorkTypeGui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
+        SimpleGuiDuck selectWorkTypeGui = new SimpleGuiDuck(MenuType.GENERIC_9x3, player, false);
         selectWorkTypeGui.setTitle(TextHelper.getTextByKey(player, "works.work.add.select_work_type.title"));
         GuiHelper.Placer.fillGui(selectWorkTypeGui, GuiHelper.Button.makeSlotPlaceholderButton());
 

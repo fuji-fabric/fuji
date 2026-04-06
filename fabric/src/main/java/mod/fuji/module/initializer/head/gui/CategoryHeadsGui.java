@@ -40,7 +40,7 @@ public class CategoryHeadsGui extends PagedGui<Head> {
         }
 
         /* Set click callback. */
-        builder.setCallback((index, type, action) -> handleEntityClick(entity, type));
+        builder.setCallback((index, type, action, gui) -> handleEntityClick(entity, type));
         return GuiElementIR.of(builder.build());
     }
 

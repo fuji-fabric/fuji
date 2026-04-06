@@ -42,7 +42,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     }
 
     @Override
-    public void onClose() {
+    public void onManualClose() {
         parentGui.open();
     }
 
@@ -64,7 +64,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                 /* Set skull textures if online game profile is valid. */
                 MojangProfileFetcher
                     .fetchOnlineGameProfile(this.getInput())
-                    .ifPresent(gameProfile -> builder.setSkullOwner(gameProfile, ServerHelper.getServer()));
+                    .ifPresent(gameProfile -> GuiHelper.PlayerSkull.setSkullOwner(builder, gameProfile));
 
                 /* Make head stack. */
                 if (HeadInitializer.config.model().economy_type != EconomyType.FREE) {

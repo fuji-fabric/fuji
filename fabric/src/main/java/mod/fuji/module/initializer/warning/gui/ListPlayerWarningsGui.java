@@ -59,7 +59,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
     protected void onCreateEntity() {
         new InputSignGui(getPlayer(), null) {
             @Override
-            public void onClose() {
+            public void onVirtualGuiClose() {
                 String warningDescription = joinStrings();
                 if (warningDescription.isBlank()) {
                     ListPlayerWarningsGui.make(getParent(), player, targetPlayerName)
@@ -105,7 +105,7 @@ public class ListPlayerWarningsGui extends CrudPagedGui<Warning> {
         String originalDescription = entity.getDescription();
         new EditSignGui(getPlayer(), originalDescription) {
             @Override
-            public void onClose() {
+            public void onVirtualGuiClose() {
                 String newDescription = joinStrings();
                 entity.setDescription(newDescription);
                 WarningInitializer.data.writeStorage();

@@ -17,7 +17,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +36,7 @@ public class KitEditorGui extends PagedGui<Kit> {
         GuiHelper.Placer.setSlotInLastLine(this, 4, GuiHelper.Button.makeAddButton(player).setCallback(() -> new InputSignGui(player, TextHelper.getTextByKey(player, "prompt.input.name")) {
 
             @Override
-            public void onClose() {
+            public void onVirtualGuiClose() {
                 /* Get input kit name. */
                 String name = getLine(0).getString().trim();
 
@@ -76,8 +75,14 @@ public class KitEditorGui extends PagedGui<Kit> {
         /* Make a generic container GUI for kit editing. */
         SimpleMenuProvider simpleNamedScreenHandlerFactory = new SimpleMenuProvider((i, playerInventory, p) ->
             new ChestMenu(MenuType.GENERIC_9x5, i, playerInventory, simpleInventory, rows) {
+
                 @Override
-                public void clicked(int i, int j, ClickType slotActionType, Player playerEntity) {
+                #if MC_VER < MC_26_1
+                public void clicked(int i, int j, net.minecraft.world.inventory.ClickType slotActionType, Player playerEntity)
+                #elif MC_VER >= MC_26_1
+                public void clicked(int i, int j, net.minecraft.world.inventory.ContainerInput slotActionType, Player playerEntity)
+                #endif
+                {
                     // NOTE: skip BARRIER item stack click.
                     if (GuiHelper.Validator.isBannedSlotIndex(this, i)) return;
                     super.clicked(i, j, slotActionType, playerEntity);

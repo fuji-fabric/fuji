@@ -2,12 +2,15 @@ package mod.fuji.core.gui.component.gui;
 
 import eu.pb4.sgui.api.ClickType;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import java.util.function.Consumer;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.gui.structure.EntityToElementMapping;
 import lombok.Getter;
+import mod.fuji.core.gui.structure.GuiContainerInputs;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
 import mod.fuji.core.gui.structure.GuiElementIR;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.MenuType;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class PagedGui<T> extends SimpleGui {
+public abstract class PagedGui<T> extends SimpleGuiDuck {
 
     @Getter
     private final @Nullable SimpleGui parent;
@@ -64,7 +67,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     private void onSearchButtonClicked() {
         new InputSignGui(getPlayer(), null) {
             @Override
-            public void onClose() {
+            public void onVirtualGuiClose() {
                 String keyword = joinStrings();
                 linkCurrentGuiAndSearch(keyword).open();
             }
@@ -220,7 +223,7 @@ public abstract class PagedGui<T> extends SimpleGui {
     }
 
     @Override
-    public void onClose() {
+    public void onVirtualGuiClose() {
         if (this.openParentGuiWhenClose
             && this.parent != null) {
             parent.open();
@@ -232,7 +235,7 @@ public abstract class PagedGui<T> extends SimpleGui {
         this.close();
     }
 
-    public @NotNull SimpleGui getBackendGui() {
+    public @NotNull SimpleGuiDuck getBackendGui() {
         return this;
     }
 
@@ -244,11 +247,18 @@ public abstract class PagedGui<T> extends SimpleGui {
     })
     @SuppressWarnings("UnstableApiUsage")
     @Override
-    public boolean click(int index, ClickType type, net.minecraft.world.inventory.ClickType action) {
-        var element = super.getSlot(index);
+    #if MC_VER < MC_26_1
+    public boolean click(int index, ClickType type, net.minecraft.world.inventory.ClickType action)
+    #elif MC_VER >= MC_26_1
+    public boolean click(int index, ClickType type, net.minecraft.world.inventory.ContainerInput action)
+    #endif
+    {
+        var element = GuiHelper
+            .getSlot(this, index)
+            .getNativeValue();
 
         /* Prevent the `gui callback` invoke if the `F` key is pressed. */
-        if (action.equals(net.minecraft.world.inventory.ClickType.SWAP)) {
+        if (action.equals(GuiContainerInputs.SWAP)) {
             this.onSearchButtonClicked();
             return super.onClick(index, type, action, element);
         }
@@ -258,6 +268,24 @@ public abstract class PagedGui<T> extends SimpleGui {
         }
 
         return super.onClick(index, type, action, element);
+    }
+
+    public static void ifPagedGuiOpening(@NotNull ServerPlayer player, @NotNull Consumer<PagedGui<?>> consumer) {
+
+        if (#if MC_VER < MC_26_1
+            player.containerMenu instanceof eu.pb4.sgui.virtual.inventory.VirtualScreenHandler virtualScreenHandler
+            #elif MC_VER >= MC_26_1
+            player.containerMenu instanceof eu.pb4.sgui.api.containerwrappers.AbstractWrapperMenu virtualScreenHandler
+            #endif) {
+            if (#if MC_VER < MC_26_1
+            virtualScreenHandler.getGui() instanceof PagedGui<?> pagedGui
+            #elif MC_VER >= MC_26_1
+            virtualScreenHandler.getBackingGui() instanceof PagedGui<?> pagedGui
+            #endif
+            ) {
+                consumer.accept(pagedGui);
+            }
+        }
     }
 
 }

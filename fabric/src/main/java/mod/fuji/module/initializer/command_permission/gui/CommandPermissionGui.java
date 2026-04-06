@@ -37,7 +37,7 @@ public class CommandPermissionGui extends PagedGui<CommandNodePermissionWrapper>
         return GuiElementIR.of(new GuiElementBuilder()
             .setItem(GuiHelper.Material.fromBooleanValue(commandNodeWrapped))
             .setName(Component.literal(entity.getPath()))
-            .setCallback((index, clickType, actionType) -> {
+            .setCallback((index, clickType, actionType, gui) -> {
                 String commandPathString = entity.getPath();
                 String commandPermissionString = CommandPermissionInitializer.COMMAND_PERMISSION_UNIFIED_PERMISSION.withArguments(commandPathString);
 

@@ -1,11 +1,11 @@
 package mod.fuji.core.service.display.gui;
 
-import eu.pb4.sgui.api.gui.SimpleGui;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.ArrayList;
 import java.util.List;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
+import mod.fuji.core.gui.structure.SlotGuiInterfaceDuck;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.MenuType;
@@ -16,12 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
-    private final SlotGuiInterface parentGui;
+    private final SlotGuiInterfaceDuck parentGui;
     protected final List<ItemStack> armor = new ArrayList<>();
     protected final List<ItemStack> offhand = new ArrayList<>();
     protected final List<ItemStack> main = new ArrayList<>();
 
-    public InventoryDisplayGuiFactory(@Nullable SlotGuiInterface parentGui, @NotNull Component title, @NotNull List<ItemStack> main, @NotNull List<ItemStack> armor, @NotNull List<ItemStack> offhand) {
+    public InventoryDisplayGuiFactory(@Nullable SlotGuiInterfaceDuck parentGui, @NotNull Component title, @NotNull List<ItemStack> main, @NotNull List<ItemStack> armor, @NotNull List<ItemStack> offhand) {
         super(title);
         this.parentGui = parentGui;
         this.main.addAll(main);
@@ -39,11 +39,11 @@ public class InventoryDisplayGuiFactory extends BaseDisplayGuiFactory {
 
     @SuppressWarnings("SequencedCollectionMethodCanBeUsed")
     @Override
-    public @NotNull SlotGuiInterface build(@NotNull ServerPlayer viewingPlayer) {
+    public @NotNull SlotGuiInterfaceDuck build(@NotNull ServerPlayer viewingPlayer) {
         /* Place the layout elements of the GUI. */
-        SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x6, viewingPlayer, false) {
+        SimpleGuiDuck gui = new SimpleGuiDuck(MenuType.GENERIC_9x6, viewingPlayer, false) {
             @Override
-            public void onClose() {
+            public void onVirtualGuiClose() {
                 if (parentGui != null) {
                     parentGui.open();
                 }

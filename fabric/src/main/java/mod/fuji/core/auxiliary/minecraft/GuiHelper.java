@@ -1,14 +1,16 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import com.mojang.authlib.GameProfile;
 import eu.pb4.sgui.api.SlotHolder;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.gui.structure.GuiElementIR;
+import mod.fuji.core.gui.structure.SlotGuiInterfaceDuck;
 import mod.fuji.core.service.cache.service.GameProfileCacheService;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,16 @@ public class GuiHelper {
         gui.setSlot(index, guiElement.getNativeValue());
     }
 
+    public static GuiElementIR getSlot(@NotNull SlotHolder gui, int index) {
+        #if MC_VER < MC_26_1
+        var nativeSlotValue = gui.getSlot(index);
+        #elif MC_VER >= MC_26_1
+        var nativeSlotValue = gui.getGuiElement(index);
+        #endif
+
+        return GuiElementIR.of(nativeSlotValue);
+    }
+
     public static class Handler {
 
         public static MenuType<ChestMenu> getGenericContainerType(int rows) {
@@ -45,7 +57,7 @@ public class GuiHelper {
             if (rows == 5) return MenuType.GENERIC_9x5;
             if (rows == 6) return MenuType.GENERIC_9x6;
 
-            LogUtil.warn("The rows {} should be in the range [1, 6]. Falling back to GENERIC_9X6.", rows);
+            LogUtil.warn("The row {} should be in the range [1, 6]. Falling back to GENERIC_9X6.", rows);
             return MenuType.GENERIC_9x6;
         }
 
@@ -63,6 +75,30 @@ public class GuiHelper {
 
     public static class PlayerSkull {
 
+        public static GuiElementBuilder setSkullOwner(@NotNull GuiElementBuilder builder, String value, @Nullable String signature, @Nullable UUID uuid) {
+            #if MC_VER < MC_26_1
+            return builder.setSkullOwner(value, signature, uuid);
+            #elif MC_VER >= MC_26_1
+            return builder.setProfileSkinTexture(value, signature, uuid);
+            #endif
+        }
+
+        public static GuiElementBuilder setSkullOwner(@NotNull GuiElementBuilder builder, String value) {
+            #if MC_VER < MC_26_1
+            return builder.setSkullOwner(value);
+            #elif MC_VER >= MC_26_1
+            return builder.setProfileSkinTexture(value);
+            #endif
+        }
+
+        public static GuiElementBuilder setSkullOwner(@NotNull GuiElementBuilder builder, GameProfile gameProfile) {
+            #if MC_VER < MC_26_1
+            return builder.setSkullOwner(gameProfile);
+            #elif MC_VER >= MC_26_1
+            return builder.setProfile(gameProfile);
+            #endif
+        }
+
         private static @NotNull GuiElementBuilder fromSlot(@NotNull GuiElementIR slot) {
             GuiElementBuilder builder = new GuiElementBuilder();
             ItemStack itemStack = slot.getNativeValue().getItemStack();
@@ -79,14 +115,14 @@ public class GuiHelper {
             return builder;
         }
 
-        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui) {
+        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterfaceDuck gui) {
             fillPlayerHeadTextures(gui, (itemStack) -> itemStack.getHoverName().getString().trim(), () -> {});
         }
 
-        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterface gui, @NotNull Function<ItemStack, String> playerNameMapper, @NotNull Runnable onCompleteCallback) {
+        public static void fillPlayerHeadTextures(@NotNull SlotGuiInterfaceDuck gui, @NotNull Function<ItemStack, String> playerNameMapper, @NotNull Runnable onCompleteCallback) {
             final int logicalSize = gui.getWidth() * (gui.getHeight() - 1);
             for (int i = 0; i < logicalSize; i++) {
-                GuiElementIR targetSlot = GuiElementIR.of(gui.getSlot(i));
+                GuiElementIR targetSlot = GuiHelper.getSlot(gui, i);
                 if (targetSlot.getNativeValue() == null) return;
 
                 /* Run async method to fetch game profile. */
@@ -107,11 +143,12 @@ public class GuiHelper {
                         .findFirst()
                         .map(AuthlibHelper::getPropertyValue)
                         .orElse(Texture.LUCKY_BLOCK_TEXTURE);
-                    builder.setSkullOwner(texturesValue, null, gameProfileIR.getId());
+
+                    GuiHelper.PlayerSkull.setSkullOwner(builder, texturesValue, null, gameProfileIR.getId());
 
                     /* Update the target slot. */
                     for (int j = 0; j < logicalSize; j++) {
-                        @Nullable GuiElementIR currentSlot = GuiElementIR.of(gui.getSlot(j));
+                        @Nullable GuiElementIR currentSlot = GuiHelper.getSlot(gui, j);
                         if (currentSlot == null) continue;
                         if (currentSlot.getNativeValue().getItemStack() == targetSlot.getNativeValue().getItemStack()) {
                             gui.setSlot(finalI, builder);
@@ -142,7 +179,7 @@ public class GuiHelper {
             return false;
         }
 
-        public static boolean isValidSlotIndex(@NotNull SlotGuiInterface gui, int slotIndex) {
+        public static boolean isValidSlotIndex(@NotNull SlotGuiInterfaceDuck gui, int slotIndex) {
             return slotIndex >= 0 && slotIndex < gui.getSize();
         }
 
@@ -191,9 +228,10 @@ public class GuiHelper {
         }
 
         public static GuiElementBuilder makePlayerHeadButton(String skullOwner) {
-            return new GuiElementBuilder()
-                .setItem(Items.PLAYER_HEAD)
-                .setSkullOwner(skullOwner);
+            GuiElementBuilder builder = new GuiElementBuilder()
+                .setItem(Items.PLAYER_HEAD);
+
+            return GuiHelper.PlayerSkull.setSkullOwner(builder, skullOwner);
         }
 
         public static GuiElementBuilder makePreviousPageButton(ServerPlayer player) {
@@ -262,54 +300,56 @@ public class GuiHelper {
 
     public static class Placer {
 
-        public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementBuilder builder) {
+        public static void fillEmptySlots(@NotNull SlotGuiInterfaceDuck gui, @NotNull GuiElementBuilder builder) {
             fillEmptySlots(gui, GuiElementIR.of(builder.build()));
         }
 
-        public static void fillEmptySlots(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR guiElementInterface) {
+        public static void fillEmptySlots(@NotNull SlotGuiInterfaceDuck gui, @NotNull GuiElementIR guiElementInterface) {
             for (int i = 0; i < gui.getSize(); i++) {
-                GuiElementIR slot = GuiElementIR.of(gui.getSlot(i));
+                GuiElementIR slot = GuiHelper.getSlot(gui, i);
                 if (Validator.isBlankSlot(slot)) {
                     gui.setSlot(i, guiElementInterface.getNativeValue());
                 }
             }
         }
 
-        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementBuilder elementBuilder) {
+        public static void setSlotInLastLine(@NotNull SlotGuiInterfaceDuck gui, int inlineOffset, @NotNull GuiElementBuilder elementBuilder) {
             setSlotInLastLine(gui, inlineOffset, GuiElementIR.of(elementBuilder.build()));
         }
 
-        public static void setSlotInLastLine(@NotNull SlotGuiInterface gui, int inlineOffset, @NotNull GuiElementIR element) {
+        public static void setSlotInLastLine(@NotNull SlotGuiInterfaceDuck gui, int inlineOffset, @NotNull GuiElementIR element) {
             final int lastLineIndex = gui.getHeight() - 1;
             setSlotInSpecifiedLine(gui, lastLineIndex, inlineOffset, element);
         }
 
-        public static void setSlotInSpecifiedLine(@NotNull SlotGuiInterface gui, int lineIndex, int inlineOffset, @NotNull GuiElementIR element) {
+        public static void setSlotInSpecifiedLine(@NotNull SlotGuiInterfaceDuck gui, int lineIndex, int inlineOffset, @NotNull GuiElementIR element) {
             final int baseIndex = lineIndex * gui.getWidth();
             int slotIndex = baseIndex + inlineOffset;
             gui.setSlot(slotIndex, element.getNativeValue());
         }
 
         @SuppressWarnings("Convert2MethodRef")
-        public static void fillLastLineIfEmpty(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR element) {
+        public static void fillLastLineIfEmpty(@NotNull SlotGuiInterfaceDuck gui, @NotNull GuiElementIR element) {
             fillLastLineIf(gui, element, ($gui, slotIndex) -> Optional
-                .ofNullable($gui.getSlot(slotIndex))
+                .ofNullable(GuiHelper
+                    .getSlot($gui, slotIndex)
+                    .getNativeValue())
                 .map(it -> it.getItemStack())
                 .map(ItemStack::isEmpty)
                 .orElse(true));
         }
 
-        public static void fillLastLineIf(@NotNull SlotGuiInterface gui, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
+        public static void fillLastLineIf(@NotNull SlotGuiInterfaceDuck gui, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterfaceDuck, Integer> predicate) {
             final int lastLineIndex = gui.getHeight() - 1;
             fillLineIf(gui, lastLineIndex, element, predicate);
         }
 
         @SuppressWarnings("unused")
-        public static void fillLine(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementIR element) {
+        public static void fillLine(@NotNull SlotGuiInterfaceDuck gui, int lineIndex, @NotNull GuiElementIR element) {
             fillLineIf(gui, lineIndex, element, (a, b) -> true);
         }
 
-        public static void fillLineIf(@NotNull SlotGuiInterface gui, int lineIndex, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterface, Integer> predicate) {
+        public static void fillLineIf(@NotNull SlotGuiInterfaceDuck gui, int lineIndex, @NotNull GuiElementIR element, @NotNull BiPredicate<SlotGuiInterfaceDuck, Integer> predicate) {
             final int lineWidth = gui.getWidth();
             final int baseIndex = lineIndex * lineWidth;
 
@@ -320,7 +360,7 @@ public class GuiHelper {
             }
         }
 
-        public static void fillGui(@NotNull SlotGuiInterface gui, GuiElementIR guiElement) {
+        public static void fillGui(@NotNull SlotGuiInterfaceDuck gui, GuiElementIR guiElement) {
             for (int i = 0; i < gui.getSize(); i++) {
                 GuiHelper.setSlot(gui, i, guiElement);
             }

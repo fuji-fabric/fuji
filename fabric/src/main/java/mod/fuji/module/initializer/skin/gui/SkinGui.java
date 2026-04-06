@@ -4,6 +4,7 @@ import com.mojang.authlib.properties.Property;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.minecraft.AuthlibHelper;
+import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.gui.component.gui.PagedGui;
 import mod.fuji.core.gui.structure.GuiElementIR;
@@ -42,11 +43,12 @@ public class SkinGui extends PagedGui<SkinDescriptor> {
             .setLore(List.of(
                 TextHelper.getTextByKey(getPlayer(), "prompt.click.apply_it")
             ))
-            .setSkullOwner(value)
             .setCallback(() -> {
                 closeWithoutOpenParentGui();
                 SkinService.changeSkin(getPlayer(), () -> entity.getSkinProperty().toNative());
             });
+
+        GuiHelper.PlayerSkull.setSkullOwner(builder, value);
 
         return GuiElementIR.of(builder.build());
     }

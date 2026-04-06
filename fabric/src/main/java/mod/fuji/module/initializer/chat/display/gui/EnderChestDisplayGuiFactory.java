@@ -1,9 +1,9 @@
 package mod.fuji.module.initializer.chat.display.gui;
 
-import eu.pb4.sgui.api.gui.SimpleGui;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
+import mod.fuji.core.gui.structure.SlotGuiInterfaceDuck;
 import mod.fuji.core.service.display.gui.BaseDisplayGuiFactory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,9 +24,9 @@ public class EnderChestDisplayGuiFactory extends BaseDisplayGuiFactory {
     }
 
     @Override
-    public @NotNull SlotGuiInterface build(@NotNull ServerPlayer viewingPlayer) {
+    public @NotNull SlotGuiInterfaceDuck build(@NotNull ServerPlayer viewingPlayer) {
         /* Make the GUI. */
-        SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x4, viewingPlayer, false);
+        SimpleGuiDuck gui = new SimpleGuiDuck(MenuType.GENERIC_9x4, viewingPlayer, false);
         gui.setTitle(this.title);
 
         /* Place elements in the GUI. */

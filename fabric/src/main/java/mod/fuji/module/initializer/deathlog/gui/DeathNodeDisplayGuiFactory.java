@@ -2,13 +2,13 @@ package mod.fuji.module.initializer.deathlog.gui;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SimpleGui;
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.InventoryHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.gui.structure.SimpleGuiDuck;
+import mod.fuji.core.gui.structure.SlotGuiInterfaceDuck;
 import mod.fuji.core.service.display.gui.InventoryDisplayGuiFactory;
 import mod.fuji.module.initializer.deathlog.structure.DeathNode;
 import net.minecraft.world.item.ItemStack;
@@ -20,14 +20,14 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
 
     private final DeathNode deathNode;
 
-    public DeathNodeDisplayGuiFactory(@NotNull SimpleGui parent, DeathNode deathNode) {
+    public DeathNodeDisplayGuiFactory(@NotNull SimpleGuiDuck parent, DeathNode deathNode) {
         super(parent, TextHelper.getTextByKey(parent.getPlayer(), "deathlog.death_node.view.gui.title"), deathNode.main, deathNode.armor, deathNode.offhand);
         this.deathNode = deathNode;
     }
 
     @Override
-    public @NotNull SlotGuiInterface build(@NotNull ServerPlayer viewingPlayer) {
-        SlotGuiInterface displayGui = super.build(viewingPlayer);
+    public @NotNull SlotGuiInterfaceDuck build(@NotNull ServerPlayer viewingPlayer) {
+        SlotGuiInterfaceDuck displayGui = super.build(viewingPlayer);
 
         /* Place the back button. */
         GuiElement backButton = GuiHelper.Button.makeBackButton(viewingPlayer)
@@ -51,7 +51,7 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
         return displayGui;
     }
 
-    private void checkIfCurrentNbtFormatSupported(SlotGuiInterface displayGui) {
+    private void checkIfCurrentNbtFormatSupported(SlotGuiInterfaceDuck displayGui) {
         boolean notSupported = this.main.stream().allMatch(ItemStack::isEmpty)
             && this.armor.stream().allMatch(ItemStack::isEmpty)
             && this.offhand.stream().allMatch(ItemStack::isEmpty);
@@ -62,9 +62,9 @@ public class DeathNodeDisplayGuiFactory extends InventoryDisplayGuiFactory {
                 .build();
 
             for (int i = 0; i < GuiHelper.GENERIC_CONTAINER_LINE_SIZE * 6; i++) {
-                var slot = displayGui.getSlot(i);
-                if (slot == null) continue;
-                if (slot.getItemStack().isEmpty()) {
+                var slot = GuiHelper.getSlot(displayGui, i);
+                if (slot.getNativeValue() == null) continue;
+                if (slot.getNativeValue().getItemStack().isEmpty()) {
                     displayGui.setSlot(i, errorNotification);
                 }
             }

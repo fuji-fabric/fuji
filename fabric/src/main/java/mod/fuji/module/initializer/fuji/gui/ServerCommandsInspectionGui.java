@@ -53,7 +53,7 @@ public class ServerCommandsInspectionGui extends PagedGui<ServerCommandNodeWrapp
             .setItem(Items.COMMAND_BLOCK)
             .setName(Component.literal(commandPath))
             .setLore(lore)
-            .setCallback((index, clickType, actionType) -> {
+            .setCallback((index, clickType, actionType, gui) -> {
                 TextHelper.sendTextByKey(getPlayer(), "fuji.inspect.server_commands.gui.copy_command_path", commandPath, commandPath);
                 close();
             })

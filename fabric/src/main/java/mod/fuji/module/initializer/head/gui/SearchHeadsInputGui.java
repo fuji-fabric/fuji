@@ -21,7 +21,7 @@ public class SearchHeadsInputGui extends InputSignGui {
     }
 
     @Override
-    public void onClose() {
+    public void onVirtualGuiClose() {
         String keywords = joinStrings();
 
         /* If no user input, re-open the parent gui. */
