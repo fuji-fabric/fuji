@@ -71,8 +71,8 @@
 [Test Case]
 - Module: command_cooldown
 - Action: **Test the compatibility with other modules.**
-- Target: Issue `/heal` command twice, the `command warmup` should be performed first, then the `command cooldown` should be applied.
-- Target: Issue `/run as player @s heal` command twice, the `command cooldown` should be applied.
+- Target: Issue `/heal` command twice, the `command warmup` should be performed first, then the `command cooldown`
+- Target: Issue `/run as player @s heal` command twice, the command cooldown should be performed.
 
 [Test Case]
 - Module: command_interactive
@@ -102,7 +102,7 @@
 [Test Case]
 - Module: command_permission
 - Action: **Issue `/reload` command, and check the client command tree.**
-- Target: The `command_permission` module should wrap the newly registered commands `instantly`.
+- Target: The `command_permission` module should warp the newly registered commands.
 - Target: The client-side command tree should be updated.
 
 [Test Case]
@@ -139,7 +139,6 @@
 - Target: Once a player die, the old ServerPlayerEntity is invalid.
 - Target: A player may `disconnect` from the server.
 - Target: A player may in `spectator` game-mode.
-- Target: A player may in `creative` game-mode.
 - Target: If a player is during the transferring of end portal, he is in no dimensions.
 
 [Test Case]
@@ -259,7 +258,7 @@
 - Module: core
 - Action: **Test the functionality of async chunk loading.**
 - Target: The RTP process should not block the game-playing. (Ticking entities, selecting target blocks...)
-- Target: Throw item entities during RTP process, the game should be ticked normally.
+- Target: Throwing item entities during RTP process, the game should be ticked normally.
 - Target: Start 3 RTP processes at the same time, it should be processed normally.
 - Target: Run `/execute as @a run rtp` command, it should be processed normally.
 
@@ -276,7 +275,7 @@
 - Target: Issue: `/chain run as fake-op @s run as console say 1 chain say 2`
 - Target: Issue: `/chain run as fake-op %player:name% sa`
 - Target: Issue: `/chain run as fake-op %player:name% run as console run as player @r say 1 chain say 2`
-- Target: Issue: `/run as player @s run as console run as fake-op %player:name% send-message @s I am %player:name%`
+- Target: Issue: `/run as player SakuraWald run as console run as fake-op %player:name% send-message @s I am %player:name%`
 
 [Test Case]
 - Module: core
@@ -365,13 +364,11 @@
 - Target: The old nametag entity should be removed after the use of `/kill Steve`
 - Target: A new nametag entity should be seen after mounting a `pig` entity.
 - Target: A new nametag entity should be seen after dis-mounting a `pig` entity.
-- Target: `Ride` a pig and then `enter` and `leave` the `nether`.
 
 [Test Case]
 - Module: sit
 - Action: **Issue `/sit` command while stepping on the `bed block`.**
 - Target: The raycast height should be proper.
-- Target: Rotate the `camera`, the `body` should be synced.
 
 [Test Case]
 - Module: skin
@@ -404,9 +401,8 @@
 [Test Case]
 - Module: world
 - Action: **In MC 1.20.1, create a `overworld` dimension type with seed `12345`.**
-- Target: Issue `/world create test minecraft:overworld --seed 12345` command.
-- Target: Issue `/tp @s 14665 ~ 345`. (You should get `emerald * 7`, `gold ingot * 3`, `iron ingot * 11`, `tnt * 2`, `heart of the sea * 1`, `cooked cod * 8` and `potion of water breathing * 1`.)
-- Target: Issue `/tp @s 0 128 0`, you should in `minecraft:ocean`, and there is a `minecraft:dark_forest` in front of you, also there is a `lava source` flowing down.
+- Target: Goto `/tp @s 14665 ~ 345`. (You should get `emerald * 7`, `gold ingot * 3`, `iron ingot * 11`, `tnt * 2`, `heart of the sea * 1`, `cooked cod * 8` and `potion of water breathing * 1`.)
+- Target: Goto `/tp @s 0 128 0`, you should in `minecraft:ocean`, and there is a `minecraft:dark_forest` in front of you, also there is a `lava source` flowing down.
 
 [Test Case]
 - Module: world

@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.economy.structure;
 
+import com.google.errorprone.annotations.Keep;
 import com.mojang.authlib.GameProfile;
 import eu.pb4.common.economy.api.EconomyAccount;
 import eu.pb4.common.economy.api.EconomyCurrency;
@@ -87,6 +88,7 @@ public class CustomEconomyAccount implements EconomyAccount {
     }
 
 
+    @Keep
     private EconomyTransaction makeEconomyTransaction(long deltaValue) {
         return makeEconomyTransaction(EconomyService.toBigInteger(deltaValue));
     }

@@ -6,7 +6,6 @@ import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.AsyncUtil;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
-import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import mod.fuji.module.initializer.head.HeadInitializer;
@@ -42,7 +41,12 @@ public class PlayerHeadGui extends AnvilInputGui {
     }
 
     @Override
-    public void onManualClose() {
+    #if MC_VER < MC_26_1
+    public void onClose()
+    #elif MC_VER >= MC_26_1
+    public void onManualClose()
+    #endif
+    {
         parentGui.open();
     }
 

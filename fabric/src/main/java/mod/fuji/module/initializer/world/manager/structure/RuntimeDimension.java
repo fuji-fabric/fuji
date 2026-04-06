@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.world.manager.structure;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
+import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.module.initializer.world.manager.service.WorldService;
 import java.util.Optional;
 import net.minecraft.resources.ResourceKey;
