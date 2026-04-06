@@ -303,11 +303,11 @@ public class CommandDescriptor implements SourceModuleGetter, ConsoleSpammer {
 
             /* Define the special variables during the dynamic extent of this command execution. */
             Boolean stdoutFlag = CommandHelper.Context
-                .tryGetArgument(commandContext, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
+                .getCommandArgumentObject(commandContext, CommandDescriptor.STDOUT_LITERAL, Boolean.class)
                 .orElse(stdoutSpecialVariable.get());
 
             Boolean silentFlag = CommandHelper.Context
-                .tryGetArgument(commandContext, CommandDescriptor.SILENT_LITERAL, Boolean.class)
+                .getCommandArgumentObject(commandContext, CommandDescriptor.SILENT_LITERAL, Boolean.class)
                 .orElse(silentSpecialVariable.get());
 
             stdoutSpecialVariable.bind(stdoutFlag, () -> {
