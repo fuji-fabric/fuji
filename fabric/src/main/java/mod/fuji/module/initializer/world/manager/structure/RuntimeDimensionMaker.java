@@ -98,7 +98,7 @@ public class RuntimeDimensionMaker {
         return new Pair<>(dimension, dimensionOptions);
     }
 
-    private static void prepareWeatherDataForRuntimeDimension(@NotNull ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
+    private static void prepareWeatherDataForRuntimeDimension(@NotNull @Unused ServerLevel dimension, @NotNull @Unused RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         #if MC_VER < MC_26_1
         // Before this version, the weather data is associated with the level data, not the server level itself.
         #elif MC_VER >= MC_26_1

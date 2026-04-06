@@ -93,7 +93,7 @@ public class GuiHelper {
 
         public static GuiElementBuilder setSkullOwner(@NotNull GuiElementBuilder builder, GameProfile gameProfile) {
             #if MC_VER < MC_26_1
-            return builder.setSkullOwner(gameProfile);
+            return builder.setSkullOwner(gameProfile, ServerHelper.getServer());
             #elif MC_VER >= MC_26_1
             return builder.setProfile(gameProfile);
             #endif

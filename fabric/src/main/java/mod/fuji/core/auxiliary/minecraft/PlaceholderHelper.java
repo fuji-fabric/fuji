@@ -46,7 +46,7 @@ public class PlaceholderHelper {
 
     private static void registerPlaceholder(@NotNull PlaceholderDescriptor descriptor,
                                             #if MC_VER < MC_26_1
-                                            @NotNull PlaceholderHandler
+                                            @NotNull eu.pb4.placeholders.api.PlaceholderHandler
                                             #elif MC_VER >= MC_26_1
                                             @NotNull eu.pb4.placeholders.api.Placeholder.Handler<eu.pb4.placeholders.api.ServerPlaceholderContext, String>
                                             #endif
