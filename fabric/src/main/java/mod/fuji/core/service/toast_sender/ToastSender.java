@@ -1,6 +1,7 @@
 package mod.fuji.core.service.toast_sender;
 
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ToastSender {
             .makeIdentifierOrThrow(DUMMY_RESOURCE_IMAGE_IDENTIFIER)
             .getNativeValue();
         DisplayInfo advancementDisplay = new DisplayInfo(
-            icon
+            makeAdvancementIcon(icon)
             , title
             , Component.empty()
             ,
@@ -63,6 +64,20 @@ public class ToastSender {
         /* Send packets. */
         player.connection.send(makeGrantPacket(advancementEntry, SEND_TOAST_IDENTIFIER));
         player.connection.send(makeRevokePacket(SEND_TOAST_IDENTIFIER));
+    }
+
+    private static
+    #if MC_VER < MC_26_1
+    ItemStack
+    #elif MC_VER >= MC_26_1
+    net.minecraft.world.item.ItemStackTemplate
+    #endif
+    makeAdvancementIcon(@NotNull ItemStack icon) {
+        #if MC_VER < MC_26_1
+        return icon;
+        #elif MC_VER >= MC_26_1
+        return ItemStackHelper.toItemStackTemplate(icon);
+        #endif
     }
 
     @SuppressWarnings("UnnecessaryLocalVariable")

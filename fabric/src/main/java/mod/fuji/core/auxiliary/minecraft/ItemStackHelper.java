@@ -32,6 +32,24 @@ import net.minecraft.world.item.component.ItemLore;
 
 public class ItemStackHelper {
 
+    public static boolean canCombine(@NotNull ItemStack a, @NotNull ItemStack b) {
+        if (!a.is(b.getItem())) {
+            return false;
+        }
+        if (a.isEmpty() && b.isEmpty()) {
+            return true;
+        }
+        return Objects.equals(CustomData.getCustomDataNbt(a), CustomData.getCustomDataNbt(b));
+    }
+
+    #if MC_VER >= MC_26_1
+    public static @NotNull net.minecraft.world.item.ItemStackTemplate toItemStackTemplate(@NotNull ItemStack itemStack) {
+        return net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(itemStack);
+    }
+    #endif
+
+
+
     public static class CustomName {
 
         public static void removeCustomName(@NotNull ItemStack stack) {
@@ -100,16 +118,6 @@ public class ItemStackHelper {
         }
     }
 
-    public static boolean canCombine(@NotNull ItemStack a, @NotNull ItemStack b) {
-        if (!a.is(b.getItem())) {
-            return false;
-        }
-        if (a.isEmpty() && b.isEmpty()) {
-            return true;
-        }
-        return Objects.equals(CustomData.getCustomDataNbt(a), CustomData.getCustomDataNbt(b));
-    }
-
     public static class Parser {
 
         public static @NotNull ItemStack parseItemStack(@NotNull String itemString) {
@@ -127,7 +135,11 @@ public class ItemStackHelper {
         }
 
         public static @NotNull ItemStack createItemStack(@NotNull ItemInput itemStackArgument) throws CommandSyntaxException {
+            #if MC_VER < MC_26_1
             return itemStackArgument.createItemStack(1, false);
+            #elif MC_VER >= MC_26_1
+            return itemStackArgument.createItemStack(1);
+            #endif
         }
     }
 
