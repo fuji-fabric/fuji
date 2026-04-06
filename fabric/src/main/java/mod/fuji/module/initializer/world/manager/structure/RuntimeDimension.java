@@ -86,11 +86,14 @@ public class RuntimeDimension extends ServerLevel {
         #elif MC_VER >= MC_1_21_11 && MC_VER < MC_26_1
         return runtimeDimensionProperties.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME);
         #elif MC_VER >= MC_26_1
-        return ServerHelper.getServer().getGameRules().get(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME);
+        var gameRules = runtimeDimensionProperties
+            .getEffectiveRuntimeDimensionDescriptor()
+            .getLoadedWorld()
+            .map(ServerLevel::getGameRules)
+            .orElseGet(() -> ServerHelper.getServer().getGameRules());
+        return gameRules.get(net.minecraft.world.level.gamerules.GameRules.ADVANCE_TIME);
         #endif
-
     }
-
 
 }
 

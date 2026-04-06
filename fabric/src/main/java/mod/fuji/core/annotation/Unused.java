@@ -7,5 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 @Keep
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Unused {
-
+    String value() default "";
 }

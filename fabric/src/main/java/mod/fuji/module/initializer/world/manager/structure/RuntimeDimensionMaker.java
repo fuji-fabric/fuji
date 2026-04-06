@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.Keep;
 import java.util.concurrent.Executor;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -112,6 +113,7 @@ public class RuntimeDimensionMaker {
         return new RuntimeDimensionProperties(server.getWorldData(), runtimeDimensionDescriptor);
     }
 
+    @Keep
     private static @NotNull RandomSequences makeRandomSequenceState(@NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
         @Unused long seed = runtimeDimensionDescriptor.seed;
 
@@ -136,7 +138,7 @@ public class RuntimeDimensionMaker {
     #elif MC_VER >= MC_26_1
     net.minecraft.world.level.dimension.end.EnderDragonFight
     #endif
-    makeEndDragonFight(@NotNull ServerLevel dimension) {
+    makeEndDragonFight(@NotNull @Unused("Since MC 26.1") ServerLevel dimension) {
         #if MC_VER < MC_26_1
         return new net.minecraft.world.level.dimension.end.EndDragonFight(dimension, dimension.getSeed(), net.minecraft.world.level.dimension.end.EndDragonFight.Data.DEFAULT);
         #elif MC_VER >= MC_26_1
