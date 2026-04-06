@@ -70,7 +70,12 @@ public class PlaceholderInitializer extends ModuleInitializer {
     @CommandNode("list")
     private static int $list(@CommandSource ServerPlayer player) {
         List<IdentifierIR> list =
-            Placeholders.getPlaceholders().keySet().asList()
+            #if MC_VER < MC_26_1
+            Placeholders.getPlaceholders()
+            #elif MC_VER >= MC_26_1
+            Placeholders.getServerPlaceholders()
+                #endif
+                .keySet().asList()
                 .stream()
                 .map(IdentifierIR::of)
                 .toList();

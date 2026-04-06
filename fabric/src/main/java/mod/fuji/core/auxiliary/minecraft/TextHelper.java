@@ -8,7 +8,6 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.node.LiteralNode;
 import eu.pb4.placeholders.api.node.TextNode;
 import eu.pb4.placeholders.api.parsers.NodeParser;
-import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -125,7 +124,11 @@ public class TextHelper {
             return NodeParser.builder()
                 .quickText()
                 .simplifiedTextFormat()
+                #if MC_VER < MC_26_1
                 .globalPlaceholders()
+                #elif MC_VER >= MC_26_1
+                .serverPlaceholders()
+                #endif
                 .markdown()
                 .build();
             #endif
@@ -141,7 +144,12 @@ public class TextHelper {
             #elif MC_VER > MC_1_20_2
             return NodeParser
                 .builder()
-                .globalPlaceholders().build();
+                #if MC_VER < MC_26_1
+                .globalPlaceholders()
+                #elif MC_VER >= MC_26_1
+                .serverPlaceholders()
+                #endif
+                .build();
             #endif
         }
 
@@ -182,7 +190,12 @@ public class TextHelper {
         }
 
         public static Component parseString(NodeParser parser, String input) {
-            return parser.parseNode(input).toText();
+            TextNode textNode = parser.parseNode(input);
+            #if MC_VER < MC_26_1
+            return textNode.toText();
+            #elif MC_VER >= MC_26_1
+            return textNode.toComponent();
+            #endif
         }
 
         @TestCase(action = "Test the parsers in Sign block and Anvil block.", targets = {
@@ -200,14 +213,31 @@ public class TextHelper {
                 // NOTE: Prevent the class cast exception in client side.
                 if (!PlayerHelper.Kind.isServerPlayer(playerEntity)) {
                     LogUtil.debug("PlayerEntity {} is a client-side player entity, we can't use it to make the context for placeholder parser. (I will just fallback to the server context).");
+
+                    #if MC_VER < MC_26_1
                     return PlaceholderContext.of(ServerHelper.getServer());
+                    #elif MC_VER >= MC_26_1
+                    return eu.pb4.placeholders.api.ServerPlaceholderContext.of(ServerHelper.getServer());
+                    #endif
                 }
 
+                #if MC_VER < MC_26_1
                 placeholderContext = PlaceholderContext.of(playerEntity);
+                #elif MC_VER >= MC_26_1
+                placeholderContext = eu.pb4.placeholders.api.ServerPlaceholderContext.of(playerEntity);
+                #endif
             } else if (audience instanceof GameProfile gameProfile) {
+                #if MC_VER < MC_26_1
                 placeholderContext = PlaceholderContext.of(gameProfile, ServerHelper.getServer());
+                #elif MC_VER >= MC_26_1
+                placeholderContext = eu.pb4.placeholders.api.ServerPlaceholderContext.of(gameProfile, ServerHelper.getServer());
+                #endif
             } else {
+                #if MC_VER < MC_26_1
                 placeholderContext = PlaceholderContext.of(ServerHelper.getServer());
+                #elif MC_VER >= MC_26_1
+                placeholderContext = eu.pb4.placeholders.api.ServerPlaceholderContext.of(ServerHelper.getServer());
+                #endif
             }
 
             return placeholderContext;
@@ -563,14 +593,25 @@ public class TextHelper {
         languageValue = formatStringArgs(languageValue, args);
 
         // Make placeholder context.
-        PlaceholderContext placeholderContext = Parsers.makePlaceholderContext(audience);
-        ParserContext parserContext = ParserContext.of(PlaceholderContext.KEY, placeholderContext);
+        var placeholderContext = Parsers.makePlaceholderContext(audience);
+        ParserContext parserContext = placeholderContext.asParserContext();
+//        #if MC_VER < MC_26_1
+//        ParserContext parserContext = ParserContext.of(PlaceholderContext.KEY, placeholderContext);
+//        #elif MC_VER >= MC_26_1
+//        ParserContext parserContext = placeholderContext.asParserContext();
+//        #endif
 
         // Fix the parser input.
         languageValue = Fixer.fixParserInput(languageValue);
 
         // Call text parser to parse the string.
-        return parser.parseText(TextNode.of(languageValue), parserContext);
+        TextNode textNode = TextNode.of(languageValue);
+
+        #if MC_VER < MC_26_1
+        return parser.parseText(textNode, parserContext);
+        #elif MC_VER >= MC_26_1
+        return parser.parseComponent(textNode, parserContext);
+        #endif
     }
 
     @SuppressWarnings("AnnotateFormatMethod")
@@ -748,42 +789,49 @@ public class TextHelper {
         private static final String SEND_SUB_TITLE_MARKER = "[send-sub-title]";
 
         private static void sendMessageToServerPlayerEntity(@NotNull ServerPlayer serverPlayerEntity, @NotNull Component text) {
+            //noinspection ConstantValue
             if (serverPlayerEntity.connection == null) {
                 LogUtil.warn("Failed to send the message to player {}, because its network handler is null. (Is it an dummy offline player entity?): text = {}", serverPlayerEntity, text);
                 return;
             }
+            #if MC_VER < MC_26_1
             serverPlayerEntity.displayClientMessage(text, false);
+            #elif MC_VER >= MC_26_1
+            serverPlayerEntity.sendSystemMessage(text, false);
+            #endif
 
             /* Stream the text sent to the `message` into the `toast`, if the player has any opened screen handler. */
             streamMessageToToast(serverPlayerEntity, text);
         }
 
         private static void streamMessageToToast(@NotNull ServerPlayer serverPlayerEntity, @NotNull Component text) {
-            if (serverPlayerEntity.containerMenu instanceof VirtualScreenHandler virtualScreenHandler) {
-                if (virtualScreenHandler.getGui() instanceof PagedGui<?> pagedGui) {
-                    /* Filter. */
-                    if (!pagedGui.isStreamMessageIntoToast()) return;
+            PagedGui.ifPagedGuiOpening(serverPlayerEntity, pagedGui -> {
+                /* Filter. */
+                if (!pagedGui.isStreamMessageIntoToast()) return;
 
-                    /* Send the toast, if this GUI is still alive in ticks. */
-                    GameTask gameTask = new GameTask(3,
-                        () -> {
-                        },
-                        () -> {
-                        },
-                        () -> {
-                            if (pagedGui.isOpen() && serverPlayerEntity.containerMenu != null) {
-                                ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
-                                TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
-                            }
-                        });
-                    GameTaskManager.submitTask(gameTask);
-                }
-            }
+                /* Send the toast, if this GUI is still alive in ticks. */
+                GameTask gameTask = new GameTask(3,
+                    () -> {
+                    },
+                    () -> {
+                    },
+                    () -> {
+                        if (pagedGui.isOpen()) {
+                            ItemStack itemStack = GuiHelper.Button.makeLetterIButton().build().getItemStack();
+                            TextHelper.sendToastByText(serverPlayerEntity, itemStack, text);
+                        }
+                    });
+                GameTaskManager.submitTask(gameTask);
+            });
         }
 
         private static void sendActionBarToAudience(@NotNull Object audience, @NotNull Component text) {
             if (audience instanceof Player playerEntity) {
+                #if MC_VER < MC_26_1
                 playerEntity.displayClientMessage(text, true);
+                #elif MC_VER >= MC_26_1
+                playerEntity.sendOverlayMessage(text);
+                #endif
                 return;
             }
 
@@ -812,7 +860,11 @@ public class TextHelper {
             }
 
             if (audience instanceof Player playerEntity) {
+                #if MC_VER < MC_26_1
                 playerEntity.displayClientMessage(text, false);
+                #elif MC_VER >= MC_26_1
+                playerEntity.sendSystemMessage(text);
+                #endif
                 return;
             }
 
