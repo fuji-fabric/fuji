@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 #elif MC_VER > MC_1_21 && MC_VER < MC_26_1
 import org.spongepowered.asm.mixin.injection.Coerce;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.RegistryOps;
 #elif MC_VER >= MC_26_1
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.concurrent.CompletableFuture;
