@@ -13,8 +13,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class EnchantmentScreenHandlerMixin {
 
     @TestCase(action = "See if a pickaxe gets the max power level in `/enchantment`", targets = "See if the lambda of enchantment context is modified.")
+    #if MC_VER < MC_26_1
     @ModifyArg(method = "method_17411(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentCost(Lnet/minecraft/util/RandomSource;IILnet/minecraft/world/item/ItemStack;)I"), index = 2)
-    int modifyTheNumberOfPowerOfProviders(int i) {
+    #elif MC_VER >= MC_26_1
+    @ModifyArg(method = "lambda$slotsChanged$0(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentCost(Lnet/minecraft/util/RandomSource;IILnet/minecraft/world/item/ItemStack;)I"), index = 2)
+    #endif
+    int modifyTheNumberOfPowerOfProviders(int i)
+    {
         var enchantment = Configs.MAIN_CONTROL_CONFIG.model().modules.functional.enchantment;
         if (enchantment.enable) {
             EnchantmentMenu instance = (EnchantmentMenu) (Object) this;
