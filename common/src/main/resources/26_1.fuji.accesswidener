@@ -80,3 +80,6 @@ accessible method net/minecraft/server/level/ServerChunkCache getChunkFutureMain
 
 # world
 accessible method net/minecraft/server/level/ServerLevel prepareWeather (Lnet/minecraft/world/level/saveddata/WeatherData;)V
+
+# chat.style
+accessible field net/minecraft/resources/RegistryLoadTask registry Lnet/minecraft/core/WritableRegistry;
