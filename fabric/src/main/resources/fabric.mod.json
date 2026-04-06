@@ -75,6 +75,13 @@
         "role": "contributor",
         "homepage": "https://github.com/zonary123"
       }
+    },
+    {
+      "name": "Steedr",
+      "contact": {
+        "role": "cs_CZ translator",
+        "homepage": "https://github.com/Steedr"
+      }
     }
   ],
   "environment": "*",
