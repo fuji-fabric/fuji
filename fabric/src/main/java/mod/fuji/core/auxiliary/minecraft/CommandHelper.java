@@ -34,7 +34,7 @@ import mod.fuji.core.command.structure.RegisteredCommandNode;
 import mod.fuji.core.command.suggestion.CommandSuggestionOptimizer;
 import mod.fuji.core.config.mapper.structure.GameProfileIR;
 import mod.fuji.core.document.annotation.TestCase;
-import mod.fuji.core.extension.CommandContextAccessor;
+import mod.fuji.core.command.extension.CommandContextAccessor;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
