@@ -10,12 +10,12 @@ import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1753517400537L, value = """
     This module provides the `/nop` command.
-    This command `does nothing` and returns `success` directly.
-    It can be used as a `dummy command`.
+    It is a command that `does nothing`, and returns `SUCCESS` directly as its return value.
+    It can be used to hold the `place` where a command is required.
     """)
 public class NopInitializer extends ModuleInitializer {
 
-    @Document(id = 1754648842246L, value = "Do nothing, simply return SUCCESS as the command return value.")
+    @Document(id = 1754648842246L, value = "Do nothing, return SUCCESS directly as the command return value.")
     @CommandNode("nop")
     @CommandRequirement(level = 4)
     private static int $nop(@CommandSource CommandSourceStack source) {

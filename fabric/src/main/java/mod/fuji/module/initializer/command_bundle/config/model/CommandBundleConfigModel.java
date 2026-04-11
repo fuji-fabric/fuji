@@ -68,6 +68,10 @@ public class CommandBundleConfigModel {
             this.add(new BundleCommandNode(true, "This command will print the UUID of specified player.", new CommandRequirementDescriptor(4, null),
                 "uuid <player target>", List.of("run as fake-op $target send-message %player:name% <yellow>The UUID of player $target is %fuji:escape player:uuid 2%")));
 
+            /* Register the meta commands. */
+            this.add(new BundleCommandNode(true, "This command does nothing, and returns `SUCCESS` as its return value.", new CommandRequirementDescriptor(4, null), "success", List.of("nop")));
+            this.add(new BundleCommandNode(true, "This command does nothing, and returns `FAILURE` as its return value.", new CommandRequirementDescriptor(4, null), "failure", List.of("NOT nop")));
+
         }
     };
 
