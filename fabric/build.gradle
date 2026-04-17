@@ -117,11 +117,6 @@ processResources {
 /* Validate the access widener file. */
 tasks.compileJava.dependsOn(validateAccessWidener)
 
-/* Define the time point to run compile-time tasks. */
-tasks.register("runServerOrClient") {}
-tasks.runServer.dependsOn(runServerOrClient)
-tasks.runClient.dependsOn(runServerOrClient)
-
 /* Ensure the file is not locked. */
 tasks.register('deleteWorldLockFile') {
     outputs.upToDateWhen { false }
@@ -132,7 +127,7 @@ tasks.register('deleteWorldLockFile') {
         delete(file)
     }
 }
-tasks.runServerOrClient.dependsOn(deleteWorldLockFile)
+tasks.runServer.dependsOn(deleteWorldLockFile)
 
 /* Ensure the language files are up to date. */
 tasks.register('deleteLanguageFiles') {
@@ -144,7 +139,7 @@ tasks.register('deleteLanguageFiles') {
         delete(file)
     }
 }
-tasks.runServerOrClient.dependsOn(deleteLanguageFiles)
+tasks.runServer.dependsOn(deleteLanguageFiles)
 
 /* Re-generate graph (Actually, the graph files should be generated before process the resources) */
-tasks.runServerOrClient.dependsOn(check)
+tasks.runServer.dependsOn(check)

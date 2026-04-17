@@ -308,7 +308,7 @@ allprojects { p ->
 
 }
 
-/* Derefine dependency handler method help functions. */
+/* Define dependency handler method help functions. */
 def boolean isObfuscatedMinecraft() {
     project.findProperty("obfuscated_minecraft") == "true"
 }
