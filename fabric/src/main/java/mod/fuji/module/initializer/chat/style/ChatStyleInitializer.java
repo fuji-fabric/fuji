@@ -1,8 +1,10 @@
 package mod.fuji.module.initializer.chat.style;
 
 import eu.pb4.placeholders.api.parsers.NodeParser;
+import java.util.concurrent.atomic.AtomicBoolean;
 import mod.fuji.Fuji;
-import mod.fuji.core.auxiliary.StringUtil;
+import mod.fuji.core.annotation.Unused;
+import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -15,14 +17,16 @@ import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
+import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessagePreEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent;
+import mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent;
 import mod.fuji.core.service.style_striper.StyleStriper;
 import mod.fuji.core.structure.IdentifierIR;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.style.model.ChatFormatModel;
 import mod.fuji.module.initializer.chat.style.model.ChatStyleConfigModel;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ChatTypeDecoration;
@@ -99,20 +103,45 @@ import org.jetbrains.annotations.NotNull;
 public class ChatStyleInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatStyleConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatStyleConfigModel.class);
-
-    /**
-     * To avoid the message type already registered in the client-side, and the client-side message type will influence the client-side decorator.
-     **/
-    private static final IdentifierIR MESSAGE_TYPE_ID = IdentifierIR.makeIdentifierOrThrow(Fuji.MOD_ID, "chat_" + StringUtil.toLowerCase(FabricLoader.getInstance().getEnvironmentType().toString()));
-    public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, MESSAGE_TYPE_ID.getNativeValue());
-    public static final ChatType MESSAGE_TYPE_VALUE = new ChatType(
-        ChatTypeDecoration.withSender("%s%s"),
-        ChatTypeDecoration.withSender("%s%s"));
-
     private static final BaseConfigurationHandler<ChatFormatModel> chatFormatData = ObjectConfigurationHandler.ofModule("chat.json", ChatFormatModel.class);
     private static final NodeParser CHAT_STYLE_PARSER = TextHelper.Parsers.MINI_MESSAGE_ONLY_PARSER;
     private static final String DEFAULT_CONTENT_FORMAT = "%message%";
     private static final String CHAT_STYLE_TYPE = "chat";
+
+    public static class CustomMessageType {
+
+        /**
+         * This variable is used to prevent the double-registration of custom message type, when the mod is installed on the client-side.
+         */
+        public static AtomicBoolean MESSAGE_TYPE_REGISTERED = new AtomicBoolean(false);
+
+        private static final IdentifierIR MESSAGE_TYPE_ID = makeCustomChatTypeIdentifier();
+
+        private static @NotNull IdentifierIR makeCustomChatTypeIdentifier() {
+            return IdentifierIR.makeIdentifierOrThrow(Fuji.MOD_ID, "chat_" + ServerHelper.Environment.getEnvironmentString());
+        }
+
+        public static final ResourceKey<ChatType> MESSAGE_TYPE_KEY = ResourceKey.create(Registries.CHAT_TYPE, MESSAGE_TYPE_ID.getNativeValue());
+        public static final ChatType MESSAGE_TYPE_VALUE = new ChatType(
+            ChatTypeDecoration.withSender("%s%s"),
+            ChatTypeDecoration.withSender("%s%s"));
+
+    }
+
+    @TestCase(action = "Test the re-entrance of the world in client-side environment.", targets = {
+        "The custom message type should not be double registered."
+    })
+    @EventConsumer
+    private static void onServerStopped(@Unused ServerStoppedEvent event) {
+        /*
+         * When installed on the client-side, the datapack loading process is started in the world creation GUI.
+         * However, the actual server starting process is postponed until the click of `Create New World` button.
+         * For a dedicated server, it's impossible to re-enter the loading process.
+         */
+        LogUtil.warn("server stopped: reset registration status");
+        CustomMessageType.MESSAGE_TYPE_REGISTERED.set(false);
+    }
+
 
     private static @NotNull String stripeStyleTags(@NotNull Player player, @NotNull String chatString) {
         return StyleStriper.stripe(player, CHAT_STYLE_TYPE, chatString);
@@ -177,7 +206,7 @@ public class ChatStyleInitializer extends ModuleInitializer {
         /* Make sender text. */
         ServerPlayer player = event.getPlayer();
         Component senderText = ChatStyleInitializer.parseSenderText(player);
-        ChatType.Bound newParameters = ChatType.bind(ChatStyleInitializer.MESSAGE_TYPE_KEY, ServerHelper.getServer().registryAccess(), senderText);
+        ChatType.Bound newParameters = ChatType.bind(CustomMessageType.MESSAGE_TYPE_KEY, ServerHelper.getServer().registryAccess(), senderText);
         event.setParameters(newParameters);
 
         /* Make content text. */

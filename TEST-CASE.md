@@ -34,6 +34,11 @@
 - Target: Input `prefix prefix item`
 
 [Test Case]
+- Module: chat.style
+- Action: **Test the re-entrance of the world in client-side environment.**
+- Target: The custom message type should not be double registered.
+
+[Test Case]
 - Module: color.sign
 - Action: **Place a `sign block` and write style tags on it, then re-open the sign.**
 - Target: The style tags in the sign block should be `parsed` and `reversed`.

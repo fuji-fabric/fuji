@@ -1189,6 +1189,14 @@
       "is_dynamic": false
     },
     {
+      "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent",
+      "declaring_class_name": "mod.fuji.module.initializer.chat.style.ChatStyleInitializer",
+      "declaring_method_name": "onServerStopped",
+      "injector_priority": 1000,
+      "consumer_priority": 1000,
+      "is_dynamic": false
+    },
+    {
       "event_type_class_name": "mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent",
       "declaring_class_name": "mod.fuji.module.initializer.cleaner.job.CleanerJob",
       "declaring_method_name": "scheduleCleanerJob",

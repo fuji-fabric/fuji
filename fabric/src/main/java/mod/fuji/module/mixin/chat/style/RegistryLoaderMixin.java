@@ -1,5 +1,7 @@
 package mod.fuji.module.mixin.chat.style;
 
+import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.document.annotation.Cite;
 import mod.fuji.module.initializer.chat.style.ChatStyleInitializer;
 import net.minecraft.network.chat.ChatType;
@@ -80,6 +82,7 @@ public class RegistryLoaderMixin {
     )
     #endif
     {
+        LogUtil.debug("RegisterLoader#load function is called.");
         for (var loader : iterable) {
             #if MC_VER <= MC_1_20_4
             WritableRegistry<?> registry = loader.getFirst();
@@ -95,15 +98,22 @@ public class RegistryLoaderMixin {
 
     @Unique
     private static void tryPatchRegistry(WritableRegistry<?> registry) {
-        /* Register out custom message type in the Registry<MessageType> instance. */
+        /* Register the custom message type into the Register<MessageType> in server-side. */
         ResourceKey<? extends Registry<?>> registryKey = registry.key();
         if (registryKey.equals(Registries.CHAT_TYPE)) {
             Registry<ChatType> messageTypeRegistry = (Registry<ChatType>) registry;
 
-            // NOTE: in single-player world, the MESSAGE_TYPE_KEY will be registered twice, causing a `network protocol error` while join the world.
-            if (!messageTypeRegistry.containsKey(ChatStyleInitializer.MESSAGE_TYPE_KEY)) {
-                Registry.register(messageTypeRegistry, ChatStyleInitializer.MESSAGE_TYPE_KEY, ChatStyleInitializer.MESSAGE_TYPE_VALUE);
+            if (ChatStyleInitializer.CustomMessageType.MESSAGE_TYPE_REGISTERED.compareAndSet(false, true)) {
+                registerCustomMessageType(messageTypeRegistry);
             }
         }
+    }
+
+    @Unique
+    private static void registerCustomMessageType(Registry<ChatType> messageTypeRegistry) {
+        var messageTypeKey = ChatStyleInitializer.CustomMessageType.MESSAGE_TYPE_KEY;
+        var messageTypeValue = ChatStyleInitializer.CustomMessageType.MESSAGE_TYPE_VALUE;
+        LogUtil.debug("Register the custom message type: {}", RegistryHelper.getIdentifier(messageTypeKey));
+        Registry.register(messageTypeRegistry, messageTypeKey, messageTypeValue);
     }
 }

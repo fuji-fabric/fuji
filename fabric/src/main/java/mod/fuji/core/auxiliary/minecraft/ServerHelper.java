@@ -1,6 +1,7 @@
 package mod.fuji.core.auxiliary.minecraft;
 
 import mod.fuji.Fuji;
+import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.document.annotation.TestCase;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,6 +68,11 @@ public class ServerHelper {
             if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
                 runnable.run();
             }
+        }
+
+        public static @NotNull String getEnvironmentString() {
+            String string = FabricLoader.getInstance().getEnvironmentType().toString();
+            return StringUtil.toLowerCase(string);
         }
     }
 

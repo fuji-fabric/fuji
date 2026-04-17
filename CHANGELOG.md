@@ -11,4 +11,4 @@
 - [command_bundle] feature: add new command definitions (`/success` and `/failure`) into the `default config` model.
 
 ## 🐞 Fixes
-- None
+- [chat.style] When installed on the client-side, re-entering the single-player world would fail.
