@@ -38,7 +38,7 @@ loom {
         }
     }
 
-    // set the runServer() jvm args
+    /* Configure the runtime JVM args. */
     runs {
         configureEach {
             vmArgs("-Xms8G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=40 -XX:G1MaxNewSizePercent=50 -XX:G1HeapRegionSize=16M -XX:G1ReservePercent=15 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -XX:+UseLargePages -XX:+UseTransparentHugePages -Duser.timezone=GMT+08 -Dmixin.debug.export=false --enable-native-access=ALL-UNNAMED".split(" "))
@@ -127,7 +127,7 @@ tasks.register('deleteWorldLockFile') {
         delete(file)
     }
 }
-tasks.runServer.dependsOn(deleteWorldLockFile)
+tasks.configureLaunch.dependsOn(deleteWorldLockFile)
 
 /* Ensure the language files are up to date. */
 tasks.register('deleteLanguageFiles') {
@@ -139,7 +139,7 @@ tasks.register('deleteLanguageFiles') {
         delete(file)
     }
 }
-tasks.runServer.dependsOn(deleteLanguageFiles)
+tasks.configureLaunch.dependsOn(deleteLanguageFiles)
 
 /* Re-generate graph (Actually, the graph files should be generated before process the resources) */
-tasks.runServer.dependsOn(check)
+tasks.configureLaunch.dependsOn(check)
