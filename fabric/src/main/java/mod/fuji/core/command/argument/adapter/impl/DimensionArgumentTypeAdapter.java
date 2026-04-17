@@ -4,15 +4,15 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import java.util.List;
+import lombok.SneakyThrows;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import mod.fuji.core.command.argument.adapter.abst.BaseArgumentTypeAdapter;
 import mod.fuji.core.command.argument.structure.CommandArgument;
 import mod.fuji.core.command.argument.wrapper.impl.Dimension;
-import java.util.List;
-import lombok.SneakyThrows;
-import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.DimensionArgument;
 import org.jetbrains.annotations.NotNull;
 
 public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
@@ -23,21 +23,19 @@ public class DimensionArgumentTypeAdapter extends BaseArgumentTypeAdapter {
     }
 
     /**
- *         1. The DimensionArgumentType.dimension() will not suggest the new registered dimensions, or un-registered dimensions.
-        2. The dimension registry is synced when the client joins the server, and it's fixed.
-        3. FIXME: When you call RequiredArgumentBuilder#suggests() method, the `/back {push|clear}` will also be suggested, even the command source has no permission to use it.
-
- **/
+     * 1. The DimensionArgumentType.dimension() will not suggest the new registered dimensions, or un-registered dimensions.
+     * 2. The dimension registry is synced when the client joins the server, and it's fixed.
+     **/
     @Override
     @NotNull
     protected RequiredArgumentBuilder<CommandSourceStack, ?> makeRequiredArgumentBuilder(@NotNull String argumentName) {
         return super.makeRequiredArgumentBuilder(argumentName)
             .suggests(
-            (ctx, builder) -> {
-                WorldHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.getIdAsString(it)));
-                return builder.buildFuture();
-            }
-        );
+                (ctx, builder) -> {
+                    WorldHelper.getWorlds().forEach(it -> builder.suggest(RegistryHelper.getIdAsString(it)));
+                    return builder.buildFuture();
+                }
+            );
     }
 
     @SneakyThrows(CommandSyntaxException.class)
