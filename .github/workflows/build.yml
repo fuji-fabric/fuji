@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Crowdin action
-        uses: crowdin/github-action@v2.10.0
+        uses: crowdin/github-action@v2.14.1
         # If we parallel run the crowdin action, it will fail with 409 error.
         if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '26.1'
         with:
