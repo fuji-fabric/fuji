@@ -9,7 +9,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- None
+- Support new Minecraft version `26.1.2`.
 
 ## 🐞 Fixes
 - None
