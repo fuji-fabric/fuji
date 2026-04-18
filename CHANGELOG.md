@@ -8,6 +8,8 @@
 
 # 📑 Changelog
 
+> This version is the re-publish of the `v14.2.0`.
+
 ## ✨ Features
 - Support new Minecraft version `26.1.2`.
 
