@@ -8,9 +8,10 @@
 
 # 📑 Changelog
 
+This version is the republish of `v14.3.0` and `v14.2.0`.
 
 ## ✨ Features
-- None
+- Support new MC version `26.1.2`
 
 ## 🐞 Fixes
 - None
