@@ -83,7 +83,7 @@ jobs:
       - name: Build
         run: ./gradlew build -PmcVer=${{matrix.target-mc-version}}
       - name: Capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '21' }}
+        if: ${{ runner.os == 'Linux'}}
         uses: actions/upload-artifact@v4
         with:
           name: "artifact-${{matrix.target-mc-version}}"
