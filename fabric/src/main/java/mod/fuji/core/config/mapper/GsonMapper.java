@@ -27,7 +27,6 @@ import lombok.SneakyThrows;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.StringUtil;
 import mod.fuji.core.config.annotation.NotNullEnumType;
-import mod.fuji.core.config.mapper.adapter.BiMapTypeAdapterFactory;
 import mod.fuji.core.config.mapper.adapter.CheckedEnumTypeValueAdapterFactory;
 import mod.fuji.core.config.mapper.structure.PlayerKey;
 import mod.fuji.core.config.mapper.structure.PropertyMapIR;
@@ -52,7 +51,6 @@ public class GsonMapper {
         // Note that non-static inner class always holds a reference to its enclosing outer class. (Makes the no args constructor failed)
         .disableInnerClassSerialization()
         // Register type adapters.
-        .registerTypeAdapterFactory(new BiMapTypeAdapterFactory())
         .registerTypeAdapterFactory(new CheckedEnumTypeValueAdapterFactory())
         .registerTypeAdapter(PropertyMapIR.class, new PropertyMapIR.PropertyMapIRAdapter())
         .registerTypeAdapter(PlayerKey.class, new PlayerKey.PlayerUUIDTypeAdapter())
