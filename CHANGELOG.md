@@ -9,9 +9,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [command_bundle] feature: add new command definitions (`/success` and `/failure`) into the `default config` model.
-- [rtp] feature: improve the command suggestion for `--dimension` optional argument. Now it only suggests the effective dimensions.
+- None
 
 ## 🐞 Fixes
-- [chat.style] When installed on the client-side, re-entering the single-player world would fail.
-- [home] Should allow to set a home at the same position.
+- None
