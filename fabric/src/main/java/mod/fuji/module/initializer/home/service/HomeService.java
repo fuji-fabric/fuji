@@ -1,7 +1,7 @@
 package mod.fuji.module.initializer.home.service;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import java.util.HashMap;
+import java.util.Map;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.exception.AbortCommandExecutionException;
@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class HomeService {
 
-    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull ServerPlayer player) {
+    public static @NotNull Map<String, GlobalPos> withHomeMap(@NotNull ServerPlayer player) {
         return withHomeMap(PlayerHelper.getPlayerName(player));
     }
 
-    public static @NotNull BiMap<String, GlobalPos> withHomeMap(@NotNull String playerName) {
+    public static @NotNull Map<String, GlobalPos> withHomeMap(@NotNull String playerName) {
         return PlayerKey
-            .computeValueByPlayerNameOrThrow(HomeInitializer.data.model().getName2home(), playerName, k -> HashBiMap.create());
+            .computeValueByPlayerNameOrThrow(HomeInitializer.data.model().getName2home(), playerName, k -> new HashMap<>());
     }
 
     public static Optional<GlobalPos> findHome(@NotNull String playerName, @NotNull String homeName) {
@@ -41,14 +41,14 @@ public class HomeService {
     }
 
     public static void renameHome(@NotNull String playerName, @NotNull String oldName, String newName) {
-        BiMap<String, GlobalPos> homes = withHomeMap(playerName);
+        Map<String, GlobalPos> homes = withHomeMap(playerName);
         GlobalPos value = homes.get(oldName);
         homes.remove(oldName);
         homes.put(newName, value);
     }
 
     public static void removeHome(@NotNull String playerName, @NotNull String homeName) {
-        BiMap<String, GlobalPos> homes = withHomeMap(playerName);
+        Map<String, GlobalPos> homes = withHomeMap(playerName);
         homes.remove(homeName);
     }
 }

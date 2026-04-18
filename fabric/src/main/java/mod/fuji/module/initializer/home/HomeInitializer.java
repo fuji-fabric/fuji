@@ -1,6 +1,6 @@
 package mod.fuji.module.initializer.home;
 
-import com.google.common.collect.BiMap;
+import java.util.Map;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.argument.wrapper.impl.OfflinePlayerName;
@@ -56,7 +56,7 @@ public class HomeInitializer extends ModuleInitializer {
     @CommandNode("home tp")
     private static int $tp(@CommandSource ServerPlayer player, HomeName home) {
         HomeService.ensureHomeNameExisting(player, home);
-        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
+        Map<String, GlobalPos> homes = HomeService.withHomeMap(player);
         String homeName = home.getValue();
 
         GlobalPos globalPos = homes.get(homeName);
@@ -77,7 +77,7 @@ public class HomeInitializer extends ModuleInitializer {
 
     @CommandNode("home set")
     private static int $set(@CommandSource ServerPlayer player, HomeName home, Optional<Boolean> override) {
-        BiMap<String, GlobalPos> homes = HomeService.withHomeMap(player);
+        Map<String, GlobalPos> homes = HomeService.withHomeMap(player);
 
         String homeName = home.getValue();
         if (homes.containsKey(homeName)) {

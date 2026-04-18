@@ -14,3 +14,4 @@
 
 ## 🐞 Fixes
 - [chat.style] When installed on the client-side, re-entering the single-player world would fail.
+- [home] Should allow to set a home at the same position.
