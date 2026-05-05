@@ -4,7 +4,6 @@ import eu.pb4.placeholders.api.parsers.NodeParser;
 import java.util.concurrent.atomic.AtomicBoolean;
 import mod.fuji.Fuji;
 import mod.fuji.core.annotation.Unused;
-import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
@@ -20,7 +19,6 @@ import mod.fuji.core.document.annotation.Document;
 import mod.fuji.core.document.annotation.TestCase;
 import mod.fuji.core.event.annotation.EventConsumer;
 import mod.fuji.core.event.message.player.PlayerChatMessagePreEvent;
-import mod.fuji.core.event.message.server.lifecycle.ServerStartingEvent;
 import mod.fuji.core.event.message.server.lifecycle.ServerStoppedEvent;
 import mod.fuji.core.service.style_striper.StyleStriper;
 import mod.fuji.core.structure.IdentifierIR;
@@ -138,7 +136,6 @@ public class ChatStyleInitializer extends ModuleInitializer {
          * However, the actual server starting process is postponed until the click of `Create New World` button.
          * For a dedicated server, it's impossible to re-enter the loading process.
          */
-        LogUtil.warn("server stopped: reset registration status");
         CustomMessageType.MESSAGE_TYPE_REGISTERED.set(false);
     }
 
