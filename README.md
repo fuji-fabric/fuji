@@ -12,27 +12,27 @@ A mod that ports EssentialsX / CMI from bukkit to fabric.
 
 - **fast**: written with performance in mind.
 - **modular**: designed with a minimal core, to load only the specified modules.
-- **simple**: modules are designed to be simple, for one purpose.
-- **flexible**: enable the modules you want to use, customize the module config, shape this mod to fit your server.
+- **simple**: one module is designed to be simple, for one purpose.
+- **flexible**: enable the modules you want to use, and shape this mod to fit your server.
 - **clear**: a text-based pdf manual, and an in-game inspector to describe things.
 - **free**: it's free, open source, and GPL-licensed.
 
 ## Manual
 
 - For the **core** documentation, please refer to the [fuji manual (pdf)](https://github.com/sakurawald/fuji/raw/dev/docs/release/fuji.pdf).
-- For the **modules** documentation, please visit the [online documentation site (html)](https://fuji-fabric.github.io).
+- For the **modules** documentation, please refer to the [online documentation site (html)](https://fuji-fabric.github.io).
 
 ## Contributing
 
 - **For User**: You can report bugs or suggest new features by opening an issue. Share your feedback and experience to help up improve this project.
 - **For Translator**: You can help us translate the `user interface` and `doc string` in [crowdin-project](https://crowdin.com/project/fuji-fabric).
-- **For Developer**: You can make any changes or improvements to this mod, which you think would be beneficial to others. (Especially if your changes are bug fixes!)
+- **For Developer**: You can make any changes or improvements to this project, which you think would be beneficial to others. (Especially if your changes are bug fixes!)
 
-For any contributors, you are welcome to open a `pull-request` in github to add your name into the [contributor list](https://github.com/sakurawald/fuji/blob/dev/fabric/src/main/resources/fabric.mod.json).
+For any contributors, you are welcome to open a `pull-request` to add your name into the [contributor list](https://github.com/sakurawald/fuji/blob/dev/fabric/src/main/resources/fabric.mod.json).
 
 ## Cite
 
-This software cites the following open source
+This project cites the following open source
 projects: [cite](https://github.com/sakurawald/fuji/blob/dev/CITE.md)
 
 ## License
