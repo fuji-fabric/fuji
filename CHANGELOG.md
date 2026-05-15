@@ -9,7 +9,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- Support new MC version `26.1.2`
+- [chat.history] New `/chat history forget` command, to forget the remembered chat history.
 
 ## 🐞 Fixes
 - None

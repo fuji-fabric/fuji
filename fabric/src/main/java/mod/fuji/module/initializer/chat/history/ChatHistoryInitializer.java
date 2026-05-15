@@ -3,8 +3,12 @@ package mod.fuji.module.initializer.chat.history;
 import com.google.common.collect.EvictingQueue;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
+import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.RegistryHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
+import mod.fuji.core.command.annotation.CommandNode;
+import mod.fuji.core.command.annotation.CommandRequirement;
+import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.config.handler.abst.BaseConfigurationHandler;
 import mod.fuji.core.config.handler.impl.ObjectConfigurationHandler;
 import mod.fuji.core.document.annotation.ColorBox;
@@ -16,6 +20,7 @@ import mod.fuji.core.event.message.server.lifecycle.ServerStartedEvent;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.chat.history.config.model.ChatHistoryConfigModel;
 import java.util.Queue;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,6 +51,8 @@ import org.jetbrains.annotations.NotNull;
     A `chat content rejector` filter a `chat message` by its `chat content`.
     A `chat parameter rejector` filter a `chat message` by its `chat parameter`.
     """)
+@CommandNode("chat history")
+@CommandRequirement(level = 4)
 public class ChatHistoryInitializer extends ModuleInitializer {
 
     private static final BaseConfigurationHandler<ChatHistoryConfigModel> config = ObjectConfigurationHandler.ofModule(BaseConfigurationHandler.CONFIG_JSON_LITERAL, ChatHistoryConfigModel.class);
@@ -129,8 +136,12 @@ public class ChatHistoryInitializer extends ModuleInitializer {
     private static void resizeChatHistory() {
         EvictingQueue<Component> newQueue = EvictingQueue.create(config.model().getMaxChatHistorySize());
         newQueue.addAll(chatHistory);
-        chatHistory.clear();
+        clearChathistory();
         chatHistory = newQueue;
+    }
+
+    private static void clearChathistory() {
+        chatHistory.clear();
     }
 
     @Override
@@ -153,6 +164,15 @@ public class ChatHistoryInitializer extends ModuleInitializer {
     private static void watchSentChatText(PlayerChatMessageSentEvent event) {
         processChatHistory(event.getSignedMessage(), event.getParameters());
     }
+
+    @CommandNode("forget")
+    @Document(id = 1778869253229L, value = "Forget the chat history.")
+    private static int $forget(@CommandSource CommandSourceStack source) {
+        clearChathistory();
+        return CommandHelper.Return.SUCCESS;
+    }
+
+
 
 }
 
