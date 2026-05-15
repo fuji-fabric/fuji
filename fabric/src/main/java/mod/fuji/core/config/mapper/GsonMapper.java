@@ -74,9 +74,6 @@ public class GsonMapper {
         }
     }
 
-    /**
-     * I want a friend class, the package visibility is hard to use.
-     **/
     public static @NotNull Gson __GetInternalGsonReferenceWithoutTheUseOfWrappedFunctions() {
         return gson;
     }
