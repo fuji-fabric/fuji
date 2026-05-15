@@ -32,7 +32,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Document(id = 1751826306321L, value = """
-    This module allows to `modify` the `effect` of an existing `target command` using `commands`, without modifying the definition of the target command.
+    This module allows you to `decorate` an existing `target command` with specified `commands`.
+    It can be used to `modify` the `effect` of an existing `target command` with `commands`, without modifying the original definition of the target command.
 
     A `command advice` is a `modifier` for a `target command`.
     The types of command advices include:
@@ -47,34 +48,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
     - `CANCEL_IF_ALL_SUCCESS`
     - ...
     """)
-@ColorBox(id = 1756196951881L, color = ColorBox.ColorBoxTypes.TIP, value = """
-    ◉ Compare between `command_advice` and `command_bundle` module.
-    The `command_advice` module is used to `decorate` an `existing target command`.
-    The `command_bundle` module is used to `create` a `new command`.
-    """)
 @ColorBox(id = 1756197023849L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Semantics of each `advice type`.
-    - `BEFORE_EXECUTION`: Run specified commands `before` the execution of target command (If it's not `cancelled` by other advices).
-    - `AFTER_EXECUTION`: Run specified commands `after` the execution of target command (Regardless of whether it's `SUCCESS` or `FAILURE`).
-    - `ON_EXECUTION_SUCCESS`: Run specified commands `if` the execution of target command is `SUCCESS` (Return value > 0).
-    - `ON_EXECUTION_FAILURE`: Run specified commands `if` the execution of target command is `FAILURE` (Return value = 0).
-    - `ON_EXECUTION_CANCELLED`: Run specified commands `if` the execution of target command is `CANCELLED` by other advices.
-    - `CANCEL_AS_SUCCESS`: Cancel the execution of target command, and treat it as `SUCCESS` (Return value = 1).
-    - `CANCEL_AS_FAILURE`: Cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
-    - `CANCEL_IF_ANY_SUCCESS`: If `ANY specified command is SUCCESS`, then cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
-    - `CANCEL_IF_ALL_SUCCESS`: If `ALL specified commands are SUCCESS`, then cancel the execution of target command, and treat it as `FAILURE` (Return value = 0).
+    - `BEFORE_EXECUTION`: Run specified commands `before` the execution of the target command. (If the execution is not `cancelled` by other advices).
+    - `AFTER_EXECUTION`: Run specified commands `after` the execution of the target command (No matter the execution result is `SUCCESS` or `FAILURE`).
+    - `ON_EXECUTION_SUCCESS`: Run specified commands `if` the execution of the target command is `SUCCESS` (Return value > 0).
+    - `ON_EXECUTION_FAILURE`: Run specified commands `if` the execution of the target command is `FAILURE` (Return value = 0).
+    - `ON_EXECUTION_CANCELLED`: Run specified commands `if` the execution of the target command is `CANCELLED` by other advices.
+    - `CANCEL_AS_SUCCESS`: Cancel the execution of the target command, and treat it as `SUCCESS` (Return value = 1).
+    - `CANCEL_AS_FAILURE`: Cancel the execution of the target command, and treat it as `FAILURE` (Return value = 0).
+    - `CANCEL_IF_ANY_SUCCESS`: If `ANY specified command is SUCCESS`, then cancel the execution of the target command, and treat it as `FAILURE` (Return value = 0).
+    - `CANCEL_IF_ALL_SUCCESS`: If `ALL specified commands are SUCCESS`, then cancel the execution of the target command, and treat it as `FAILURE` (Return value = 0).
     """)
 @ColorBox(id = 1756198153881L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ `Decorate` an existing target command.
     See the example for `/heal` command in default config.
 
-    ◉ `Cancel` the execution of target command, and execute specified commands instead.
+    ◉ `Cancel` the execution of a target command, and execute specified commands instead.
     See the example for `/say` command in default config.
 
     ◉ Ensure that the target command executes only when the specified `conditions` are met, and apply the `cost` if the execution succeeds.
     See the example for `/repair` command in default config:
     1. Use `CANCEL_IF_ANY_SUCCESS` advice type, to check the `conditions`.
-    2. Use `ON_EXECUTION_CANCELLED` advice type, to send `feedback` if conditions are not met.
+    2. Use `ON_EXECUTION_CANCELLED` advice type, to send `feedback` to the user if conditions are not met.
     3. Use `ON_EXECUTION_SUCCESS` advice type, to apply the `cost` for the execution of target command.
     """)
 public class CommandAdviceInitializer extends ModuleInitializer {
