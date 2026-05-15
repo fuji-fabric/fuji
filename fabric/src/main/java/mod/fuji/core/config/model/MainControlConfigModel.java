@@ -734,6 +734,7 @@ public class MainControlConfigModel {
             public Rules rules = new Rules();
             public Speed speed = new Speed();
             public Disconnect disconnect = new Disconnect();
+            public Delete delete = new Delete();
 
             public static class Glow {
                 public boolean enable = false;
@@ -869,6 +870,9 @@ public class MainControlConfigModel {
                 public boolean enable = false;
             }
 
+            public static class Delete {
+                public boolean enable = false;
+            }
         }
 
         public static class CommandDebug {

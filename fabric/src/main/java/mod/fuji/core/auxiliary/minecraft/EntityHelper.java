@@ -73,6 +73,10 @@ public class EntityHelper {
         #endif
     }
 
+    public static void deleteEntity(@NotNull Entity entity) {
+        entity.discard();
+    }
+
     public static class Physics {
 
         public static void addVelocity(@NotNull Entity entity, double x, double y, double z) {

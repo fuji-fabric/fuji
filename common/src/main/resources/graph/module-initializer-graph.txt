@@ -46,6 +46,7 @@ mod.fuji.module.initializer.command_toolbox.CommandToolboxInitializer
 mod.fuji.module.initializer.command_toolbox.bed.BedInitializer
 mod.fuji.module.initializer.command_toolbox.burn.BurnInitializer
 mod.fuji.module.initializer.command_toolbox.compass.CompassInitializer
+mod.fuji.module.initializer.command_toolbox.delete.DeleteInitializer
 mod.fuji.module.initializer.command_toolbox.disconnect.DisconnectModuleInitializer
 mod.fuji.module.initializer.command_toolbox.down.DownInitializer
 mod.fuji.module.initializer.command_toolbox.extinguish.ExtinguishInitializer

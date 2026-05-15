@@ -62,7 +62,7 @@ public class CleanerService {
         }
 
         if (matcher.getCleanupMethod().equals(CleanupMethod.DISCARD)) {
-            entity.discard();
+            EntityHelper.deleteEntity(entity);
             return;
         }
     }

@@ -47,6 +47,7 @@ command_toolbox
 command_toolbox.bed
 command_toolbox.burn
 command_toolbox.compass
+command_toolbox.delete
 command_toolbox.disconnect
 command_toolbox.down
 command_toolbox.extinguish
