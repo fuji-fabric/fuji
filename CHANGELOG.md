@@ -9,6 +9,7 @@
 
 # 📑 Changelog
 
+
 ## ✨ Features
 - [sign_editor] Added a new `sign editor` module. (#574)
   - `/sign-edit glow`
