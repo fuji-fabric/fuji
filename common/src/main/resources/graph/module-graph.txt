@@ -131,6 +131,7 @@ pvp
 queue
 rank
 rtp
+sign_editor
 sit
 skin
 system_message

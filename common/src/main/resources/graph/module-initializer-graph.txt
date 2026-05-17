@@ -129,6 +129,7 @@ mod.fuji.module.initializer.pvp.PvpInitializer
 mod.fuji.module.initializer.queue.QueueInitializer
 mod.fuji.module.initializer.rank.RankInitializer
 mod.fuji.module.initializer.rtp.RtpInitializer
+mod.fuji.module.initializer.sign_editor.SignEditorInitializer
 mod.fuji.module.initializer.sit.SitInitializer
 mod.fuji.module.initializer.skin.SkinInitializer
 mod.fuji.module.initializer.system_message.SystemMessageInitializer

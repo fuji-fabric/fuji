@@ -216,6 +216,7 @@ public class MainControlConfigModel {
         public Head head = new Head();
         public Color color = new Color();
         public Sit sit = new Sit();
+        public SignEditor sign_editor = new SignEditor();
         public TeleportWarmup teleport_warmup = new TeleportWarmup();
         public TempBan temp_ban = new TempBan();
         public AntiBuild anti_build = new AntiBuild();
@@ -696,6 +697,10 @@ public class MainControlConfigModel {
         }
 
         public static class Sit {
+            public boolean enable = false;
+        }
+
+        public static class SignEditor {
             public boolean enable = false;
         }
 

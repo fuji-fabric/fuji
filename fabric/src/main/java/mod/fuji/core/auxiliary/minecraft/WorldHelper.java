@@ -3,35 +3,35 @@ package mod.fuji.core.auxiliary.minecraft;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import mod.fuji.core.command.exception.AbortCommandExecutionException;
 import mod.fuji.core.service.random_teleport.searcher.PositionYTopDownSearcher;
 import mod.fuji.core.structure.BuiltinDimensionTypesIR;
 import mod.fuji.core.structure.GlobalPos;
-import java.util.Collection;
-import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.SectionPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ChunkHolder;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.core.SectionPos;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,7 +97,7 @@ public class WorldHelper {
             .orElseThrow(() -> new IllegalStateException("Dimension %s not found.".formatted(dimensionId)));
     }
 
-    public static boolean isServerWorld(@Nullable Level world)  {
+    public static boolean isServerWorld(@Nullable Level world) {
         if (world == null) {
             return false;
         }
@@ -221,6 +221,14 @@ public class WorldHelper {
 
         public static Optional<BlockPos> getLookingAtBlock(@NotNull ServerPlayer player) {
             return getLookingAtBlock(player, PLAYER_INTERACTION_DISTANCE);
+        }
+
+        public static @NotNull BlockPos getLookingAtBlockOrElseThrow(@NotNull ServerPlayer player) {
+            return getLookingAtBlock(player)
+                .orElseThrow(() -> {
+                    TextHelper.sendTextByKey(player, "raycast.block.no_target");
+                    return new AbortCommandExecutionException();
+                });
         }
 
         public static Optional<BlockPos> getLookingAtBlock(@NotNull ServerPlayer player, double maxDistance) {

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
 public class CollectionUtil {
@@ -42,4 +43,9 @@ public class CollectionUtil {
         return Optional.of(list.get(list.size() - 1));
     }
 
+    public static <T> void padRight(@NotNull List<T> list, int targetSize, @NotNull Supplier<T> valueProvider) {
+        while (list.size() < targetSize) {
+            list.add(valueProvider.get());
+        }
+    }
 }
