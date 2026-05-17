@@ -11,6 +11,7 @@ import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
+import mod.fuji.core.document.annotation.ColorBox;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
 import mod.fuji.module.initializer.sign_editor.command.argument.wrapper.SignLine;
@@ -22,6 +23,23 @@ import net.minecraft.world.item.DyeColor;
 
 @Document(id = 1778874535621L, value = """
     This module provides a sign editor to edit the texts on a sign block.
+    """)
+@ColorBox(id = 1779046171084L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
+    ◉ Modify the states.
+    - Toggle the value: `/sign-edit glow`
+    - Set the value: `/sign-edit glow --glow true`
+
+    ◉ Set the text of the specified line.
+    - `/sign-edit set-line 1 \\<blue\\>Hello World`
+
+    ◉ Set the texts of all lines.
+    - `/sign-edit set-all First Line\\nSecond Line`
+
+    ◉ Mirror the text from one side to another side.
+    - `/sign-edit mirror`
+
+    ◉ Set the text with a `click event` to execute commands.
+    - `/sign-edit set-line 1 <click run_command 'say Hello'>Click Me</click>`
     """)
 @CommandNode("sign-edit")
 @CommandRequirement(level = 4)
