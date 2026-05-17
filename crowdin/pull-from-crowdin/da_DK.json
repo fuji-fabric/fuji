@@ -482,6 +482,8 @@
   "rank.unavailable_rank_node": "<red>The rank node `%s` is un-available.",
   "rank.up": "<green>You have been ranked up to %s",
   "rank.up.requirements_not_meet": "<red>You haven't met the requirements for the rank %s",
+  "raycast.block.no_target": "<red>Please come closer and look at the target block.",
+  "raycast.entity.no_target": "<red>Please come closer and look at the target entity.",
   "reflect.declaring_class": "<blue>Declaring Class: `%s`",
   "reflect.declaring_method": "<blue>Declaring Method: `%s`",
   "registry.list.gui.title": "<blue>Registry",
@@ -1514,5 +1516,6 @@
   "docstring.1768404087952": "◉ How it works?\n\n➜ Store the `chat text` sent by a player.\nWhen a player sends a chat text, store it.\n\n➜ Restore the `chat texts` to a new joined player.\nWhen a player joins the server, send all the stored chat texts to the player.\n",
   "docstring.1768405649879": "◉ What is the `acceptors` and `rejectors`?\nA `chat message` = `chat type` + `chat content` + `chat parameter`\nIn vanilla Minecraft, all `chat messages` are sent in a shared channel.\n\nThe `acceptors` and `rejectors` are used to `select` the interested `chat message`.\nThey are introduced to improve the compatibility with other chat-related mods.\n\nA `chat type acceptor` filter a `chat message` by its `chat type`.\nA `chat content rejector` filter a `chat message` by its `chat content`.\nA `chat parameter rejector` filter a `chat message` by its `chat parameter`.\n",
   "docstring.1778869253229": "Forget the chat history.",
-  "docstring.1778870295366": "Delete the target entity from the dimension."
+  "docstring.1778870295366": "Delete the target entity from the dimension.",
+  "docstring.1778874535621": "This module provides a sign editor to edit the texts on a sign block.\n"
 }
