@@ -1517,5 +1517,11 @@
   "docstring.1768405649879": "◉ What is the `acceptors` and `rejectors`?\nA `chat message` = `chat type` + `chat content` + `chat parameter`\nIn vanilla Minecraft, all `chat messages` are sent in a shared channel.\n\nThe `acceptors` and `rejectors` are used to `select` the interested `chat message`.\nThey are introduced to improve the compatibility with other chat-related mods.\n\nA `chat type acceptor` filter a `chat message` by its `chat type`.\nA `chat content rejector` filter a `chat message` by its `chat content`.\nA `chat parameter rejector` filter a `chat message` by its `chat parameter`.\n",
   "docstring.1778869253229": "Forget the chat history.",
   "docstring.1778870295366": "Delete the target entity from the dimension.",
-  "docstring.1778874535621": "This module provides a sign editor to edit the texts on a sign block.\n"
+  "docstring.1778874535621": "This module provides a sign editor to edit the texts on a sign block.\n",
+  "docstring.1779044844670": "Set the `lock` state of the sign block.",
+  "docstring.1779044865958": "Set the `glowing` state of the sign block.",
+  "docstring.1779044873906": "Set the `color` of the sign block.",
+  "docstring.1779044903372": "Set the text of the specified line of the sign block.",
+  "docstring.1779044929459": "Set the texts of all lines of the sign block.",
+  "docstring.1779044962269": "Mirror the looking side to another side."
 }
