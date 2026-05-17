@@ -28,6 +28,7 @@ import net.minecraft.world.item.DyeColor;
 public class SignEditorInitializer extends ModuleInitializer {
 
     @CommandNode("lock")
+    @Document(id = 1779044844670L, value = "Set the `lock` state of the sign block.")
     private static int $lock(@CommandSource ServerPlayer player, Optional<Boolean> lock) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
@@ -39,6 +40,7 @@ public class SignEditorInitializer extends ModuleInitializer {
     }
 
     @CommandNode("glow")
+    @Document(id = 1779044865958L, value = "Set the `glow` state of the sign block.")
     private static int $glow(@CommandSource ServerPlayer player, Optional<Boolean> glow, Optional<Boolean> frontSide, Optional<Boolean> bothSides) {
         return SignEditorService
             .selectLookingAtSignBlock(player, blockPos -> {
@@ -54,6 +56,7 @@ public class SignEditorInitializer extends ModuleInitializer {
     }
 
     @CommandNode("set-color")
+    @Document(id = 1779044873906L, value = "Set the `color` of the sign block.")
     private static int $setColor(@CommandSource ServerPlayer player, DyeColor color, Optional<Boolean> frontSide, Optional<Boolean> bothSides) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
@@ -66,6 +69,7 @@ public class SignEditorInitializer extends ModuleInitializer {
     }
 
     @CommandNode("set-line")
+    @Document(id = 1779044903372L, value = "Set the text of the specified line of the sign block.")
     private static int $setLine(@CommandSource ServerPlayer player, SignLine line, Optional<Boolean> frontSide, Optional<Boolean> bothSides, GreedyString text) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
@@ -80,6 +84,7 @@ public class SignEditorInitializer extends ModuleInitializer {
     }
 
     @CommandNode("set-all")
+    @Document(id = 1779044929459L, value = "Set the texts of all lines of the sign block.")
     private static int $setAll(@CommandSource ServerPlayer player, Optional<Boolean> frontSide, Optional<Boolean> bothSides, GreedyString text) {
         /* Split and pad the lines. */
         List<String> lines = Arrays
@@ -94,6 +99,21 @@ public class SignEditorInitializer extends ModuleInitializer {
             $setLine(player, signLine, frontSide, bothSides, lineText);
         }
         return CommandHelper.Return.SUCCESS;
+    }
+
+    @CommandNode("mirror")
+    @Document(id = 1779044962269L, value = "Mirror the looking side to another side.")
+    private static int $mirror(@CommandSource ServerPlayer player) {
+        return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
+            return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
+                boolean facingFrontText = signBlockEntity.isFacingFrontText(player);
+                boolean anotherSide = !facingFrontText;
+                SignEditorService.updateSignText(player, signBlockEntity, Optional.of(anotherSide), Optional.of(false), signText -> {
+                    return signBlockEntity.getText(facingFrontText);
+                });
+                return CommandHelper.Return.SUCCESS;
+            });
+        });
     }
 
 }
