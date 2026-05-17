@@ -13,6 +13,7 @@ import mod.fuji.core.command.annotation.CommandSource;
 import mod.fuji.core.command.argument.wrapper.impl.GreedyString;
 import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.ModuleInitializer;
+import mod.fuji.module.initializer.sign_editor.command.argument.wrapper.SignLine;
 import mod.fuji.module.initializer.sign_editor.service.SignEditorService;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,11 +66,11 @@ public class SignEditorInitializer extends ModuleInitializer {
     }
 
     @CommandNode("set-line")
-    private static int $setLine(@CommandSource ServerPlayer player, int line, Optional<Boolean> frontSide, Optional<Boolean> bothSides, GreedyString text) {
+    private static int $setLine(@CommandSource ServerPlayer player, SignLine line, Optional<Boolean> frontSide, Optional<Boolean> bothSides, GreedyString text) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
                 SignEditorService.updateSignText(player, signBlockEntity, frontSide, bothSides, signText -> {
-                    int index = line - 1;
+                    final int index = line.getValue() - 1;
                     Component component = TextHelper.getTextByValue(player, text.getValue());
                     return signText.setMessage(index, component);
                 });
@@ -88,8 +89,9 @@ public class SignEditorInitializer extends ModuleInitializer {
 
         /* Dispatch the operation to the primitive function. */
         for (int currentLine = 1; currentLine <= lines.size(); currentLine++) {
-            GreedyString lineText = new GreedyString(lines.get(currentLine - 1));
-            $setLine(player, currentLine, frontSide, bothSides, lineText);
+            final SignLine signLine = new SignLine(currentLine);
+            final GreedyString lineText = new GreedyString(lines.get(currentLine - 1));
+            $setLine(player, signLine, frontSide, bothSides, lineText);
         }
         return CommandHelper.Return.SUCCESS;
     }

@@ -86,6 +86,7 @@ mod.fuji.module.initializer.rank.command.argument.adapter.NextAvailableRankNodes
 mod.fuji.module.initializer.rank.command.argument.adapter.PreviousAvailableRankNodesArgumentTypeAdapter
 mod.fuji.module.initializer.rank.command.argument.adapter.RankNodeArgumentTypeAdapter
 mod.fuji.module.initializer.rtp.command.argument.adapter.RtpDimensionArgumentTypeAdapter
+mod.fuji.module.initializer.sign_editor.command.argument.adapter.SignLineArgumentTypeAdapter
 mod.fuji.module.initializer.skin.command.argument.adapter.DefaultSkinNameArgumentTypeAdapter
 mod.fuji.module.initializer.world.manager.command.argument.adapter.ChunkGeneratorTypeArgumentTypeAdapter
 mod.fuji.module.initializer.world.manager.command.argument.adapter.LoadedRuntimeDimensionDescriptorArgumentTypeAdapter
