@@ -12,6 +12,7 @@ mod.fuji.core.command.argument.adapter.impl.CommandFunctionArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.DimensionArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.DimensionTypeArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.DoubleArgumentTypeAdapter
+mod.fuji.core.command.argument.adapter.impl.DyeColorArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.EntityAnchorArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.EntityArgumentTypeAdapter
 mod.fuji.core.command.argument.adapter.impl.EntityCollectionArgumentTypeAdapter

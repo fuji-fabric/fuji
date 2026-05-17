@@ -10,8 +10,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [chat.history] New `/chat history forget` command, to forget the remembered chat history.
-- [command_toolbox.delete] New `/delete` command, to delete the target entity without dropping the loot.
+- [core] New `dye color` command argument type.
 
 ## 🐞 Fixes
 - None
