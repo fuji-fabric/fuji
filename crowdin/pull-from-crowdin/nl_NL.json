@@ -1523,5 +1523,6 @@
   "docstring.1779044873906": "Set the `color` of the sign block.",
   "docstring.1779044903372": "Set the text of the specified line of the sign block.",
   "docstring.1779044929459": "Set the texts of all lines of the sign block.",
-  "docstring.1779044962269": "Mirror the looking side to another side."
+  "docstring.1779044962269": "Mirror the looking side to another side.",
+  "docstring.1779046171084": "◉ Modify the states.\n- Toggle the value: `/sign-edit glow`\n- Set the value: `/sign-edit glow --glow true`\n\n◉ Set the text of the specified line.\n- `/sign-edit set-line 1 \\<blue\\>Hello World`\n\n◉ Set the texts of all lines.\n- `/sign-edit set-all First Line\\nSecond Line`\n\n◉ Mirror the text from one side to another side.\n- `/sign-edit mirror`\n\n◉ Set the text with a `click event` to execute commands.\n- `/sign-edit set-line 1 <click run_command 'say Hello'>Click Me</click>`\n"
 }
