@@ -18,6 +18,7 @@
   - `/sign-edit set-line`
   - `/sign-edit set-all`
   - `/sign-edit mirror`
+- [sign_editor] Added the documents.
 
 ## 🐞 Fixes
 - None
