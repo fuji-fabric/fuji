@@ -16,6 +16,7 @@
   - `/sign-edit set-color`
   - `/sign-edit set-line`
   - `/sign-edit set-all`
+  - `/sign-edit mirror`
 
 ## 🐞 Fixes
 - None

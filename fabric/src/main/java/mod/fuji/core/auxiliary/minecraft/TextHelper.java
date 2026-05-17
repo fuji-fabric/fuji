@@ -669,8 +669,8 @@ public class TextHelper {
             .toList();
     }
 
-    public static String[] splitStringIntoLines(@NotNull String string) {
-        return string.split("\\\\n|<newline>");
+    private static String[] splitStringIntoLines(@NotNull String string) {
+        return string.split("\n|<newline>");
     }
 
     public static @NotNull List<Component> getTextListByKey(@Nullable Object audience, String key) {

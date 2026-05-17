@@ -88,7 +88,7 @@ public class SignEditorInitializer extends ModuleInitializer {
     private static int $setAll(@CommandSource ServerPlayer player, Optional<Boolean> frontSide, Optional<Boolean> bothSides, GreedyString text) {
         /* Split and pad the lines. */
         List<String> lines = Arrays
-            .stream(TextHelper.splitStringIntoLines(text.getValue()))
+            .stream(text.getValue().split("\\\\n"))
             .collect(Collectors.toList());
         CollectionUtil.padRight(lines, SignEditorService.MAX_SIGN_BLOCK_LINES, () -> "");
 
