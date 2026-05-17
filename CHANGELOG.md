@@ -10,7 +10,12 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [core] New `dye color` command argument type.
+- [sign_editor] Added a new `sign editor` module. (#574)
+  - `/sign-edit glow`
+  - `/sign-edit lock`
+  - `/sign-edit set-color`
+  - `/sign-edit set-line`
+  - `/sign-edit set-all`
 
 ## 🐞 Fixes
 - None
