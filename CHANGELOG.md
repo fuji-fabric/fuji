@@ -9,16 +9,8 @@
 
 # 📑 Changelog
 
-
 ## ✨ Features
-- [sign_editor] Added a new `sign editor` module. (#574)
-  - `/sign-edit glow`
-  - `/sign-edit lock`
-  - `/sign-edit set-color`
-  - `/sign-edit set-line`
-  - `/sign-edit set-all`
-  - `/sign-edit mirror`
-- [sign_editor] Added the documents.
+- [sign_editor] Added the command feedbacks.
 
 ## 🐞 Fixes
 - None

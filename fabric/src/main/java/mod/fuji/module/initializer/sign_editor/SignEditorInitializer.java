@@ -26,8 +26,8 @@ import net.minecraft.world.item.DyeColor;
     """)
 @ColorBox(id = 1779046171084L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Modify the states.
-    - Toggle the value: `/sign-edit glow`
-    - Set the value: `/sign-edit glow --glow true`
+    - Flip the value: `/sign-edit glowing`
+    - Set the value: `/sign-edit glowing --value true`
 
     ◉ Set the text of the specified line.
     - `/sign-edit set-line 1 \\<blue\\>Hello World`
@@ -45,26 +45,27 @@ import net.minecraft.world.item.DyeColor;
 @CommandRequirement(level = 4)
 public class SignEditorInitializer extends ModuleInitializer {
 
-    @CommandNode("lock")
-    @Document(id = 1779044844670L, value = "Set the `lock` state of the sign block.")
-    private static int $lock(@CommandSource ServerPlayer player, Optional<Boolean> lock) {
+    @CommandNode("locking")
+    @Document(id = 1779044844670L, value = "Modify the `locking` state of the sign block.")
+    private static int $modifyLockingState(@CommandSource ServerPlayer player, Optional<Boolean> value) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
-                boolean newValue = lock.orElseGet(() -> !signBlockEntity.isWaxed());
+                boolean newValue = value.orElseGet(() -> !signBlockEntity.isWaxed());
                 signBlockEntity.setWaxed(newValue);
+                TextHelper.sendTextByKey(player, "sign_editor.state.locking", newValue);
                 return CommandHelper.Return.SUCCESS;
             });
         });
     }
 
-    @CommandNode("glow")
-    @Document(id = 1779044865958L, value = "Set the `glow` state of the sign block.")
-    private static int $glow(@CommandSource ServerPlayer player, Optional<Boolean> glow, Optional<Boolean> frontSide, Optional<Boolean> bothSides) {
-        return SignEditorService
-            .selectLookingAtSignBlock(player, blockPos -> {
+    @CommandNode("glowing")
+    @Document(id = 1779044865958L, value = "Modify the `glowing` state of the sign block.")
+    private static int $modifyGlowingState(@CommandSource ServerPlayer player, Optional<Boolean> value, Optional<Boolean> frontSide, Optional<Boolean> bothSides) {
+        return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
                 return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
                     SignEditorService.updateSignText(player, signBlockEntity, frontSide, bothSides, signText -> {
-                        boolean newValue = glow.orElseGet(() -> !signText.hasGlowingText());
+                        boolean newValue = value.orElseGet(() -> !signText.hasGlowingText());
+                        TextHelper.sendTextByKey(player, "sign_editor.state.glowing", newValue);
                         return signText.setHasGlowingText(newValue);
                     });
                     return CommandHelper.Return.SUCCESS;

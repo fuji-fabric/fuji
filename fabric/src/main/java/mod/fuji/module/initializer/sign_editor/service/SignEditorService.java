@@ -36,7 +36,7 @@ public class SignEditorService {
             return;
         }
 
-        /* Apply the operation on the prefer side. */
+        /* Apply the operation on the preferred side. */
         boolean isPlayerFacingFront = frontSide.orElseGet(() -> signBlockEntity.isFacingFrontText(player));
         signBlockEntity.updateText(mapper::apply, isPlayerFacingFront);
     }
