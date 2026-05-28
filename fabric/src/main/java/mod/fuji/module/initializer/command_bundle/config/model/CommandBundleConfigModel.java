@@ -1,13 +1,13 @@
 package mod.fuji.module.initializer.command_bundle.config.model;
 
 import com.google.gson.annotations.SerializedName;
-import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.document.annotation.Document;
-import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mod.fuji.core.command.structure.CommandRequirementDescriptor;
+import mod.fuji.core.document.annotation.Document;
+import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 
 @Data
 @NoArgsConstructor
@@ -71,6 +71,9 @@ public class CommandBundleConfigModel {
             /* Register the meta commands. */
             this.add(new BundleCommandNode(true, "This command does nothing, and returns `SUCCESS` as its return value.", new CommandRequirementDescriptor(4, null), "success", List.of("nop")));
             this.add(new BundleCommandNode(true, "This command does nothing, and returns `FAILURE` as its return value.", new CommandRequirementDescriptor(4, null), "failure", List.of("NOT nop")));
+
+            /* Register the predicate commands. */
+            this.add(new BundleCommandNode(true, "This is a custom predicate command.", new CommandRequirementDescriptor(4, null), "is-rich? <player target>", List.of("say The commands are executed one by one from up to down.", "say The last command's return value is the final return value of the entire bundle command.", "has-item? $target minecraft:gold_ingot 2048")));
 
         }
     };

@@ -53,7 +53,7 @@ import org.jetbrains.annotations.NotNull;
     Please use a modern text editor.
 
     Most configuration files are written in `JSON format` and may be large.
-    A modern `text editor` provides `structure highlighting` and `error checking` features.
+    A modern `text editor` can `highlight the structure` and `check the errors`.
     It makes configuration easier.
 
     Recommended text editors:

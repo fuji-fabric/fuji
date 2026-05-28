@@ -26,7 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Document(id = 1751826634816L, value = """
-    This module allows executing `defined commands` in response to various `events`.
+    This module allows to define `commands` to react to a target `event`.
+    When an interesting event occurs, the specified commands will be executed, as the response.
     """)
 @ColorBox(id = 1751904334639L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ How it works?
