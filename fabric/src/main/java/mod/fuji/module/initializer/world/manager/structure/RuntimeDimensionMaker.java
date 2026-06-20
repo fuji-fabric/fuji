@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.world.manager.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.Keep;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import mod.fuji.core.annotation.Unused;
 import mod.fuji.core.auxiliary.LogUtil;
@@ -13,27 +14,26 @@ import mod.fuji.core.structure.Pair;
 import mod.fuji.module.initializer.world.manager.accessor.ExtendedDimensionOptions;
 import mod.fuji.module.initializer.world.manager.command.argument.wrapper.ChunkGeneratorType;
 import mod.fuji.module.initializer.world.manager.service.FlatPresetParser;
-import java.util.Optional;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.core.Registry;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.levelgen.presets.WorldPreset;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.presets.WorldPreset;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -126,10 +126,15 @@ public class RuntimeDimensionMaker {
 
     @SuppressWarnings("deprecation")
     private static void postRuntimeDimensionMake(ServerLevel dimension, @NotNull RuntimeDimensionDescriptor runtimeDimensionDescriptor) {
-        // If the dimension type is THE_END, then start the dragon fight.
+        // Handle the dragon fight logics for minecraft:the_end dimension type.
         if (BuiltinDimensionTypesIR.END.toString().equals(runtimeDimensionDescriptor.dimension_type)) {
-            dimension.setDragonFight(makeEndDragonFight(dimension));
+            // In newer MC versions, the dragon fight is properly detected and initialized during the server dimension initialization process. The following handling is for the older MC versions.
+            if (dimension.getDragonFight() == null) {
+                var dragonFight = makeEndDragonFight(dimension);
+                dimension.setDragonFight(dragonFight);
+            }
         }
+
     }
 
     private static @NotNull
