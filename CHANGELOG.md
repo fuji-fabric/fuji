@@ -10,7 +10,7 @@
 # 📑 Changelog
 
 ## ✨ Features
-- [sign_editor] Added the command feedbacks.
+- None
 
 ## 🐞 Fixes
-- None
+- [world] fix: failed to `load` the dimension whose dimension type is `minecraft:the_end`. (#582)
