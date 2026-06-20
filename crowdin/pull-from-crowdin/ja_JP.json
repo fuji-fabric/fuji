@@ -836,7 +836,7 @@
   "docstring.1751826295900": "The `path` of `source command`.\n",
   "docstring.1751826299340": "The `path` of `destination command`.\n",
   "docstring.1751826302190": "This module allows defining `aliases` for `an existing target command`.\nThe defined `alias command` redirects to the corresponding existing command node.\n",
-  "docstring.1751826306321": "This module allows you to `decorate` an existing `target command` with specified `commands`.\nIt can be used to `modify` the `effect` of an existing `target command` with `commands`, without modifying the original `definition` of the target command.\n\nA `command advice` is a `modifier` for a `target command`.\nThe types of command advices include:\n- `BEFORE_EXECUTION`\n- `AFTER_EXECUTION`\n- `ON_EXECUTION_SUCCESS`\n- `ON_EXECUTION_FAILURE`\n- `ON_EXECUTION_CANCELLED`\n- `CANCEL_AS_SUCCESS`\n- `CANCEL_AS_FAILURE`\n- `CANCEL_IF_ANY_SUCCESS`\n- `CANCEL_IF_ALL_SUCCESS`\n- ...\n",
+  "docstring.1751826306321": "This module allows you to `decorate` an existing `target command` with specified `commands`.\n\nA `command advice` is a `modifier` for a `target command`.\nIt can be used to `modify` the `effect` of an existing `target command` with `commands`, without modifying the original `definition` of the target command.\n",
   "docstring.1751826311892": "Define `advices` for the `target command`.\n",
   "docstring.1751826314407": "The `regex` expression used to match the `target command`.\n",
   "docstring.1751826320651": "The type of this advice.\n",
