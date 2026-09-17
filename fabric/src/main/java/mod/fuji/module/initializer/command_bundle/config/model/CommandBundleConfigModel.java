@@ -6,16 +6,12 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mod.fuji.core.command.structure.CommandRequirementDescriptor;
-import mod.fuji.core.document.annotation.Document;
 import mod.fuji.module.initializer.command_bundle.structure.BundleCommandNode;
 
 @Data
 @NoArgsConstructor
 public class CommandBundleConfigModel {
 
-    @Document(id = 1751826342919L, value = """
-        Defined `bundle commands`.
-        """)
     @SerializedName(value = "bundle_commands", alternate = "entries")
     List<BundleCommandNode> bundleCommands = new ArrayList<>() {
         {

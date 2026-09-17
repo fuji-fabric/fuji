@@ -77,7 +77,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
         LogUtil.debug("Define the variable table: {}", variableTable);
 
         /* Resolve the user-defined variables. */
-        List<String> commands = new ArrayList<>(descriptor.entry.getBundle());
+        List<String> commands = new ArrayList<>(descriptor.entry.getBody());
         commands = commands.stream().map(command -> {
             String newCommand = command;
             for (Map.Entry<String, String> variable : variableTable.entrySet()) {
@@ -95,7 +95,7 @@ public class BundleCommandDescriptor extends CommandDescriptor {
 
         /* Execute the commands. */
         LogUtil.debug("Execute bundle command: {}", commands);
-        // NOTE: Use the last return value as the tree return value, so that a bundle command can be used to rewrite a predicate command.
+        // NOTE: Use the last return value as the tree return value, so that it can be used to rewrite a predicate command.
         List<Integer> commandReturnValues = CommandExecutor.executeBatch(ExtendedCommandSource.asConsole(source), commands);
         return CollectionUtil
             .lastElement(commandReturnValues)
@@ -146,10 +146,10 @@ public class BundleCommandDescriptor extends CommandDescriptor {
             List<CommandArgument> commandArguments = new ArrayList<>();
             Map<String, String> defaultValueForOptionalArguments = new HashMap<>();
 
-            String commandPattern = entry.getPattern();
+            String commandSyntax = entry.getHead();
             CommandRequirementDescriptor commandRequirement = entry.getRequirement();
 
-            Matcher matcher = BUNDLE_COMMAND_DSL.matcher(commandPattern);
+            Matcher matcher = BUNDLE_COMMAND_DSL.matcher(commandSyntax);
             while (matcher.find()) {
                 if (matchLiteralArgument(matcher)) {
                     String argumentName = matcher.group(LITERAL_ARGUMENT_NAME_GROUP_INDEX);
