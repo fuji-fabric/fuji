@@ -4,7 +4,7 @@ plugins {
     id "idea"
 
     id "fabric-loom" version "1.15-SNAPSHOT" apply(false)
-    id "net.fabricmc.fabric-loom" version "1.17-SNAPSHOT" apply(false)
+    id "net.fabricmc.fabric-loom" version "1.18-SNAPSHOT" apply(false)
 }
 
 /* Apply the fabric loom gradle plugin. */

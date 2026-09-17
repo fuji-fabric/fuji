@@ -90,7 +90,11 @@ public class LauncherInitializer extends ModuleInitializer {
         entity.setDeltaMovement(x * power, y * power, z * power);
 
         /* Mark velocity as modified. */
+        #if MC_VER < MC_26_3
         entity.hurtMarked = true;
+        #elif MC_VER >= MC_26_3
+        entity.syncVelocity = true;
+        #endif
     }
 
     @CommandNode("launch facing")

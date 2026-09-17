@@ -161,8 +161,11 @@ public class ToastSender {
         /* Send the packet. */
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of(advancementEntry);
-        #elif MC_VER > MC_1_20_1
+        #elif MC_VER > MC_1_20_1 && MC_VER < MC_26_3
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of(advancementEntry);
+        #elif MC_VER >= MC_26_3
+        List<ClientboundUpdateAdvancementsPacket.PositionedAdvancement> toEarn = List.of(
+            new ClientboundUpdateAdvancementsPacket.PositionedAdvancement(advancementEntry, 0, 0));
         #endif
 
         var toRemove = Set.<#if MC_VER < MC_1_21_11
@@ -177,8 +180,10 @@ public class ToastSender {
     private static ClientboundUpdateAdvancementsPacket makeAdvancementUpdatePacket(
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn
-        #elif MC_VER > MC_1_20_1
+        #elif MC_VER > MC_1_20_1 && MC_VER < MC_26_3
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn
+        #elif MC_VER >= MC_26_3
+        List<ClientboundUpdateAdvancementsPacket.PositionedAdvancement> toEarn
         #endif, Set<
     #if MC_VER < MC_1_21_11
     net.minecraft.resources.ResourceLocation
@@ -201,8 +206,10 @@ public class ToastSender {
     private static @NotNull ClientboundUpdateAdvancementsPacket makeRevokePacket(IdentifierIR identifier) {
         #if MC_VER <= MC_1_20_1
         Collection<Advancement> toEarn = List.of();
-        #elif MC_VER > MC_1_20_1
+        #elif MC_VER > MC_1_20_1 && MC_VER < MC_26_3
         Collection<net.minecraft.advancements.AdvancementHolder> toEarn = List.of();
+        #elif MC_VER >= MC_26_3
+        List<ClientboundUpdateAdvancementsPacket.PositionedAdvancement> toEarn = List.of();
         #endif
 
         var toRemove = Set.of(identifier.getNativeValue());

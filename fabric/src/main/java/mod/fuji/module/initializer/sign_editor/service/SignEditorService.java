@@ -31,14 +31,21 @@ public class SignEditorService {
         /* Apply the operation on both sides. */
         boolean $bothSides = bothSides.orElse(false);
         if ($bothSides) {
-            signBlockEntity.updateText(mapper::apply, true);
-            signBlockEntity.updateText(mapper::apply, false);
+            signBlockEntity.updateText(mapper::apply, #if MC_VER < MC_26_3 true #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif);
+            signBlockEntity.updateText(mapper::apply, #if MC_VER < MC_26_3 false #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot.BACK #endif);
             return;
         }
 
         /* Apply the operation on the preferred side. */
+        #if MC_VER < MC_26_3
         boolean isPlayerFacingFront = frontSide.orElseGet(() -> signBlockEntity.isFacingFrontText(player));
         signBlockEntity.updateText(mapper::apply, isPlayerFacingFront);
+        #elif MC_VER >= MC_26_3
+        net.minecraft.world.level.block.entity.SignTextSlot slot = frontSide
+            .map(it -> it ? net.minecraft.world.level.block.entity.SignTextSlot.FRONT : net.minecraft.world.level.block.entity.SignTextSlot.BACK)
+            .orElseGet(() -> signBlockEntity.getSlotPlayerIsFacing(player));
+        signBlockEntity.updateText(mapper::apply, slot);
+        #endif
     }
 
     public static int selectLookingAtSignBlock(@NotNull ServerPlayer player, @NotNull Function<BlockPos, Integer> function) {

@@ -39,6 +39,7 @@ public class FileDependencyChecker extends BaseDependencyChecker {
         // NOTE: An example path is `/home/username/Workspace/github/fuji/fabric/src/main/java/mod/fuji/Fuji.java`
         return file.toString()
             .replace("/", ".")
+            .replace("\\", ".")
             .replace("src.main.java.", "")
             .replace(".java", "");
     }

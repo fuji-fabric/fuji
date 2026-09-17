@@ -44,6 +44,7 @@ public class PlayerHeadGui extends AnvilInputGui {
     #if MC_VER < MC_26_1
     public void onClose()
     #elif MC_VER >= MC_26_1
+
     public void afterRemoval()
     #endif
     {
@@ -86,7 +87,8 @@ public class PlayerHeadGui extends AnvilInputGui {
                         } else if (ItemStackHelper.canCombine(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxStackSize()) {
                             cursorStack.grow(1);
                         } else {
-                            player.drop(headStack.copy(), false);
+                            player.drop(headStack.copy(), false
+                            #if MC_VER >= MC_26_3 , net.minecraft.util.Prediction.SERVER_ONLY #endif);
                         }
                     })
                 );

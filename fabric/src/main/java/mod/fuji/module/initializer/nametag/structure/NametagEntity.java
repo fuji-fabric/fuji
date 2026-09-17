@@ -50,7 +50,11 @@ public class NametagEntity extends Display.TextDisplay {
         NametagEntity nametagEntity = new NametagEntity(EntityHelper.getServerWorld(player), player);
 
         /* Make the nametag entity invulnerable. */
+        #if MC_VER < MC_26_3
         nametagEntity.setInvulnerable(true);
+        #elif MC_VER >= MC_26_3
+        nametagEntity.setPermanentlyInvulnerable(true);
+        #endif
 
         return nametagEntity;
     }

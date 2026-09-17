@@ -114,7 +114,7 @@ public class KitService {
         tryAgainList.removeIf(playerInventory::add);
 
         /* The inventory of player is full, just drop the item in the ground */
-        tryAgainList.forEach(it -> player.drop(it, true));
+        tryAgainList.forEach(it -> player.drop(it, true#if MC_VER >= MC_26_3 , net.minecraft.util.Prediction.SERVER_ONLY #endif));
     }
 
 }
