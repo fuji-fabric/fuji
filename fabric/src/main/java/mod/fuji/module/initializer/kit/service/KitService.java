@@ -2,6 +2,7 @@ package mod.fuji.module.initializer.kit.service;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.NbtHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
@@ -114,7 +115,7 @@ public class KitService {
         tryAgainList.removeIf(playerInventory::add);
 
         /* The inventory of player is full, just drop the item in the ground */
-        tryAgainList.forEach(it -> player.drop(it, true#if MC_VER >= MC_26_3 , net.minecraft.util.Prediction.SERVER_ONLY #endif));
+        tryAgainList.forEach(it -> EntityHelper.dropItem(player, it));
     }
 
 }

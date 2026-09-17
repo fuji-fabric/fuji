@@ -1,5 +1,6 @@
 package mod.fuji.module.initializer.command_interactive;
 
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.CommandExecutor;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
@@ -53,7 +54,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
     private static final String COMMAND_STRING_SPLIT_CHARACTER = "/";
 
     private static @NotNull String mapSignTextIntoString(@NotNull SignText signText) {
-        return #if MC_VER < MC_26_3 Arrays.stream(signText.getMessages(false)) #elif MC_VER >= MC_26_3 signText.getMessages(false).stream() #endif
+        return EntityHelper.SignBlock.getTextStream(signText)
             .map(Component::getString)
             .reduce("", String::concat);
     }
@@ -88,13 +89,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
         /* Extract the sign lines from the sign block. */
         BlockEntity interactingBlockEntity = world.getBlockEntity(blockPos);
         if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
-            SignText facingSignText = signBlockEntity.getText(
-                #if MC_VER < MC_26_3
-                signBlockEntity.isFacingFrontText(player)
-                #elif MC_VER >= MC_26_3
-                signBlockEntity.getSlotPlayerIsFacing(player)
-                #endif
-            );
+            SignText facingSignText = EntityHelper.SignBlock.getFacingSignText(player, signBlockEntity);
             String facingSignLines = CommandInteractiveInitializer.mapSignTextIntoString(facingSignText);
             if (facingSignLines.contains(CommandInteractiveInitializer.COMMAND_STRING_SPLIT_CHARACTER)) {
                 /* Consume this interaction. */

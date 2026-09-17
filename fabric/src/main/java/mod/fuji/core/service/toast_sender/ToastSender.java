@@ -153,7 +153,7 @@ public class ToastSender {
         /* Call obtain for criterion progress. */
         CriterionProgress criterionProgress = advancementProgress.getCriterion(IMPOSSIBLE);
         if (criterionProgress == null) {
-            LogUtil.error("It's strange that the statement `advancementProgress.getCriterionProgress(IMPOSSIBLE)` is null, aborting this advancement packet making.");
+            LogUtil.error("The `advancementProgress.getCriterionProgress(IMPOSSIBLE)` should not be null, now aborting the advancement packet making process.");
             throw new AbortCommandExecutionException();
         }
         criterionProgress.grant();

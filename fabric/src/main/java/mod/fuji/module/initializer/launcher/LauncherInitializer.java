@@ -1,6 +1,7 @@
 package mod.fuji.module.initializer.launcher;
 
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
 import mod.fuji.core.command.annotation.CommandSource;
@@ -90,11 +91,7 @@ public class LauncherInitializer extends ModuleInitializer {
         entity.setDeltaMovement(x * power, y * power, z * power);
 
         /* Mark velocity as modified. */
-        #if MC_VER < MC_26_3
-        entity.hurtMarked = true;
-        #elif MC_VER >= MC_26_3
-        entity.syncVelocity = true;
-        #endif
+        EntityHelper.Physics.markVelocityChanged(entity);
     }
 
     @CommandNode("launch facing")

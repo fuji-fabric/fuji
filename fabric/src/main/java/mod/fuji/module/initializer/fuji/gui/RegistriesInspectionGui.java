@@ -32,13 +32,21 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
         this.isMetaRegistry = isMetaRegistry;
     }
 
+    private static @NotNull List<RegistryDataLoader.RegistryData<?>> getDynamicRegistries() {
+        #if MC_VER < MC_26_3
+        return RegistryDataLoader.WORLDGEN_REGISTRIES;
+        #elif MC_VER >= MC_26_3
+        return RegistryDataLoader.WORLD_REGISTRIES;
+        #endif
+    }
+
     public static RegistriesInspectionGui inspectAll(ServerPlayer player) {
         /* Get the identifiers of meta registries. */
         List<IdentifierIR> staticRegistries = BuiltInRegistries.REGISTRY.registryKeySet()
             .stream()
             .map(RegistryHelper::getIdentifier)
             .toList();
-        List<IdentifierIR> dynamicRegistries = RegistryDataLoader.#if MC_VER < MC_26_3 WORLDGEN_REGISTRIES #elif MC_VER >= MC_26_3 WORLD_REGISTRIES #endif
+        List<IdentifierIR> dynamicRegistries = getDynamicRegistries()
             .stream()
             .map(it -> RegistryHelper.getIdentifier(it.key()))
             .toList();
@@ -106,7 +114,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             }
 
             /* try to get the registry from dynamic registries */
-            Optional<RegistryDataLoader.RegistryData<?>> first = RegistryDataLoader.#if MC_VER < MC_26_3 WORLDGEN_REGISTRIES #elif MC_VER >= MC_26_3 WORLD_REGISTRIES #endif
+            Optional<RegistryDataLoader.RegistryData<?>> first = getDynamicRegistries()
                 .stream()
                 .filter(it -> RegistryHelper.getIdAsString(it.key())
                     .equals(entity.getIdentifier().toString()))

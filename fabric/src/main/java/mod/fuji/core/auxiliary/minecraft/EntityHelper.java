@@ -1,13 +1,20 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import java.util.stream.Stream;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class EntityHelper {
 
@@ -78,6 +85,24 @@ public class EntityHelper {
         entity.discard();
     }
 
+    public static void dropItem(@NotNull LivingEntity entity, @NotNull ItemStack itemStack) {
+        #if MC_VER < MC_26_3
+        entity.drop(itemStack, false);
+        #elif MC_VER >= MC_26_3
+        entity.drop(itemStack, false, net.minecraft.util.Prediction.SERVER_ONLY);
+        #endif
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public static void setInvulnerable(@NotNull Entity entity, boolean value) {
+        #if MC_VER < MC_26_3
+        entity.setInvulnerable(value);
+        #elif MC_VER >= MC_26_3
+        entity.setPermanentlyInvulnerable(value);
+        #endif
+    }
+
+
     public static class Physics {
 
         public static void addVelocity(@NotNull Entity entity, double x, double y, double z) {
@@ -93,6 +118,14 @@ public class EntityHelper {
         public static void updateVelocity(@NotNull Entity entity) {
             ClientboundSetEntityMotionPacket packet = new ClientboundSetEntityMotionPacket(entity);
             PacketHelper.sendPacketToAll(packet);
+        }
+
+        public static void markVelocityChanged(@NonNull Entity entity) {
+            #if MC_VER < MC_26_3
+            entity.hurtMarked = true;
+            #elif MC_VER >= MC_26_3
+            entity.syncVelocity = true;
+            #endif
         }
     }
 
@@ -148,6 +181,27 @@ public class EntityHelper {
             }
         }
         #endif
+    }
+
+    public static class SignBlock {
+
+        public static @NotNull SignText getFacingSignText(@NotNull ServerPlayer player, @NotNull SignBlockEntity signBlockEntity) {
+            return signBlockEntity.getText(
+                #if MC_VER < MC_26_3
+                signBlockEntity.isFacingFrontText(player)
+                #elif MC_VER >= MC_26_3
+                signBlockEntity.getSlotPlayerIsFacing(player)
+                #endif
+            );
+        }
+
+        public static @NotNull Stream<Component> getTextStream(@NotNull SignText signText) {
+            #if MC_VER < MC_26_3
+            return Arrays.stream(signText.getMessages(false));
+            #elif MC_VER >= MC_26_3
+            return signText.getMessages(false).stream();
+            #endif
+        }
     }
 
 }
