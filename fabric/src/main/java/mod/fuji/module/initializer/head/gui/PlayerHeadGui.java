@@ -4,9 +4,9 @@ import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.AnvilInputGui;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import mod.fuji.core.auxiliary.AsyncUtil;
-import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.service.gameprofile_fetcher.MojangProfileFetcher;
 import mod.fuji.module.initializer.head.HeadInitializer;
@@ -88,7 +88,7 @@ public class PlayerHeadGui extends AnvilInputGui {
                         } else if (ItemStackHelper.canCombine(headStack, cursorStack) && cursorStack.getCount() < cursorStack.getMaxStackSize()) {
                             cursorStack.grow(1);
                         } else {
-                            EntityHelper.dropItem(player, headStack.copy());
+                            PlayerHelper.dropItem(player, headStack.copy());
                         }
                     })
                 );

@@ -16,6 +16,7 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,6 +97,14 @@ public class PlayerHelper {
     public static void dismountRidingEntity(@NotNull ServerPlayer player) {
         player.setShiftKeyDown(true);
         player.rideTick();
+    }
+
+    public static void dropItem(@NotNull ServerPlayer player, @NotNull ItemStack itemStack) {
+        #if MC_VER < MC_26_3
+        player.drop(itemStack, false);
+        #elif MC_VER >= MC_26_3
+        player.drop(itemStack, false, net.minecraft.util.Prediction.SERVER_ONLY);
+        #endif
     }
 
     public static class Loader {

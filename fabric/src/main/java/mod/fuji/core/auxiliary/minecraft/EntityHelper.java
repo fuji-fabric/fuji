@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -86,14 +85,6 @@ public class EntityHelper {
 
     public static void deleteEntity(@NotNull Entity entity) {
         entity.discard();
-    }
-
-    public static void dropItem(@NotNull ServerPlayer entity, @NotNull ItemStack itemStack) {
-        #if MC_VER < MC_26_3
-        entity.drop(itemStack, false);
-        #elif MC_VER >= MC_26_3
-        entity.drop(itemStack, false, net.minecraft.util.Prediction.SERVER_ONLY);
-        #endif
     }
 
     @SuppressWarnings("SameParameterValue")

@@ -2,10 +2,10 @@ package mod.fuji.module.initializer.kit.service;
 
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.ReflectionUtil;
-import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.GuiHelper;
 import mod.fuji.core.auxiliary.minecraft.NbtHelper;
 import mod.fuji.core.auxiliary.minecraft.ItemStackHelper;
+import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.module.initializer.kit.KitInitializer;
 import mod.fuji.module.initializer.kit.structure.Kit;
 import lombok.SneakyThrows;
@@ -115,7 +115,7 @@ public class KitService {
         tryAgainList.removeIf(playerInventory::add);
 
         /* The inventory of player is full, just drop the item in the ground */
-        tryAgainList.forEach(it -> EntityHelper.dropItem(player, it));
+        tryAgainList.forEach(it -> PlayerHelper.dropItem(player, it));
     }
 
 }
