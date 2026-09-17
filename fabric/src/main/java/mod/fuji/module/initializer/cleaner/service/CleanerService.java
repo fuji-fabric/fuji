@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -61,7 +60,7 @@ public class CleanerService {
             return;
         }
 
-        if (matcher.getCleanupMethod().equals(CleanupMethod.DISCARD)) {
+        if (matcher.getCleanupMethod().equals(CleanupMethod.DELETE)) {
             EntityHelper.deleteEntity(entity);
             return;
         }

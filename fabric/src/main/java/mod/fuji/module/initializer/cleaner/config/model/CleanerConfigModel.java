@@ -60,10 +60,10 @@ public class CleanerConfigModel {
         """)
     List<CleanerMatcher> matchers = new ArrayList<>() {
         {
-            this.add(new CleanerMatcher(false, "block.minecraft.sand", 1200, CleanupMethod.DISCARD));
-            this.add(new CleanerMatcher(false, "item.minecraft.ender_pearl", 1200, CleanupMethod.DISCARD));
-            this.add(new CleanerMatcher(false, "block.minecraft.white_carpet", 1200, CleanupMethod.DISCARD));
-            this.add(new CleanerMatcher(false, "block.minecraft.cobblestone", 1200, CleanupMethod.DISCARD));
+            this.add(new CleanerMatcher(false, "block.minecraft.sand", 1200, CleanupMethod.DELETE));
+            this.add(new CleanerMatcher(false, "item.minecraft.ender_pearl", 1200, CleanupMethod.DELETE));
+            this.add(new CleanerMatcher(false, "block.minecraft.white_carpet", 1200, CleanupMethod.DELETE));
+            this.add(new CleanerMatcher(false, "block.minecraft.cobblestone", 1200, CleanupMethod.DELETE));
             this.add(new CleanerMatcher(false, "entity.minecraft.skeleton", 1200, CleanupMethod.KILL));
         }
     };

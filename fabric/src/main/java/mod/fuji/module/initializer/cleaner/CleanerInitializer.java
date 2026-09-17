@@ -35,7 +35,7 @@ import net.minecraft.commands.CommandSourceStack;
 @ColorBox(id = 1756789894197L, color = ColorBox.ColorBoxTypes.NOTE, value = """
     ◉ Supported `cleanup methods`
     - `KILL`: Remove the entity as if it had `died`, triggering the `entity death event`. (Loot will be dropped.)
-    - `DISCARD`: Remove the entity by `discarding` it, without triggering any events. (No loot will be dropped.)
+    - `DELETE`: Remove the entity by `deleting` it, without triggering any events. (No loot will be dropped.)
 
     NOTE: For `item entity`, there is no significant difference between the available cleanup methods.
     """)
