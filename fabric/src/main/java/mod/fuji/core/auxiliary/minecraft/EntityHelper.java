@@ -88,7 +88,7 @@ public class EntityHelper {
         entity.discard();
     }
 
-    public static void dropItem(@NotNull LivingEntity entity, @NotNull ItemStack itemStack) {
+    public static void dropItem(@NotNull ServerPlayer entity, @NotNull ItemStack itemStack) {
         #if MC_VER < MC_26_3
         entity.drop(itemStack, false);
         #elif MC_VER >= MC_26_3
