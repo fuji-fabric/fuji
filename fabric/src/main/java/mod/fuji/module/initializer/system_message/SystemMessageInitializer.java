@@ -71,6 +71,8 @@ import org.jetbrains.annotations.Nullable;
     """)
 @ColorBox(id = 1751980039595L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
     ◉ Customize the text used in screen.
+    NOTE: Some texts may need a server restart to apply the changes.
+
     Key: `multiplayer.disconnect.server_shutdown`
     Value: `Server closeeeeeeeed`
 
