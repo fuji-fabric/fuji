@@ -71,7 +71,10 @@ public class ShellInitializer extends ModuleInitializer {
             throw new AbortCommandExecutionException();
         }
 
-        if (ctx.getSource().getTextName() != null && !config.security.allowed_player_names.contains(ctx.getSource().getTextName())) {
+        // NOTE: In newer MC version, the console has a name "Server".
+        if (CommandHelper.Source.isExecutedByPlayer(ctx)
+            && ctx.getSource().getTextName() != null
+            && !config.security.allowed_player_names.contains(ctx.getSource().getTextName())) {
             TextHelper.sendTextByKey(ctx.getSource(), "shell.failed.not_in_allowed_list");
             throw new AbortCommandExecutionException();
         }
