@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Crowdin action
         uses: crowdin/github-action@v2.14.0
-        # If we parallel run the crowdin action, it will fail with 409 error.
+        # If you run the crowdin action parallelly, it will fail with 409 error.
         if: github.ref == 'refs/heads/dev' && matrix.target-mc-version == '26.3'
         with:
             # Define the location of crowdin.yml file.

@@ -17,7 +17,11 @@ public abstract class ServerPlayNetworkHandlerMixin {
     public ServerPlayer player;
 
     @ModifyExpressionValue(
+        #if MC_VER < MC_26_3
         method = "handleMovePlayer",
+        #elif MC_VER >= MC_26_3
+        method = "handlePlayerPositionChange",
+        #endif
         at = @At(
             value = "INVOKE",
             #if MC_VER < MC_1_21_5
