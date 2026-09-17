@@ -24,12 +24,14 @@ public abstract class ServerPlayerEntityMixin {
 
     // NOTE: In lower MC versions like MC 1.20.1, if there are `<rb>` tag in the sign, then the `openEditSignScreen` method will not be called.
     @Inject(method = "openTextEdit", at = @At("HEAD"))
-    private void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity, boolean isFront, @NotNull CallbackInfo ci) {
+    private void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity,
+                                                      #if MC_VER < MC_26_3 boolean isFront #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot slot #endif,
+                                                      @NotNull CallbackInfo ci) {
         ColorSignInitializer
             .readSignCache(new GlobalBlockPos(signBlockEntity.getLevel(), signBlockEntity.getBlockPos()))
             .ifPresent(signCache -> {
                 /* Modify the text of the sign. */
-                List<String> inputLineStrings = isFront ? signCache.getFrontLines() : signCache.getBackLines();
+                List<String> inputLineStrings = #if MC_VER < MC_26_3 isFront #elif MC_VER >= MC_26_3 slot == net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif ? signCache.getFrontLines() : signCache.getBackLines();
                 Component[] outputLineTexts = {Component.empty(), Component.empty(), Component.empty(), Component.empty()};
 
                 for (int i = 0; i < inputLineStrings.size(); i++) {
@@ -44,10 +46,14 @@ public abstract class ServerPlayerEntityMixin {
                 }
 
                 /* Send the update packet. */
+                #if MC_VER < MC_26_3
                 boolean facingFront = signBlockEntity.isFacingFrontText(player);
-                SignText oldSignText = signBlockEntity.getText(facingFront);
-                SignText newSignText = new SignText(outputLineTexts, outputLineTexts, oldSignText.getColor(), oldSignText.hasGlowingText());
-                signBlockEntity.setText(newSignText, facingFront);
+                #elif MC_VER >= MC_26_3
+                net.minecraft.world.level.block.entity.SignTextSlot facingSlot = signBlockEntity.getSlotPlayerIsFacing(player);
+                #endif
+                SignText oldSignText = signBlockEntity.getText(#if MC_VER < MC_26_3 facingFront #elif MC_VER >= MC_26_3 facingSlot #endif);
+                SignText newSignText = new SignText(#if MC_VER < MC_26_3 outputLineTexts, outputLineTexts #elif MC_VER >= MC_26_3 List.of(outputLineTexts), List.of(outputLineTexts) #endif, oldSignText.getColor(), oldSignText.hasGlowingText());
+                signBlockEntity.setText(newSignText, #if MC_VER < MC_26_3 facingFront #elif MC_VER >= MC_26_3 facingSlot #endif);
                 player.connection.send(signBlockEntity.getUpdatePacket());
             });
     }

@@ -38,7 +38,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             .stream()
             .map(RegistryHelper::getIdentifier)
             .toList();
-        List<IdentifierIR> dynamicRegistries = RegistryDataLoader.WORLDGEN_REGISTRIES
+        List<IdentifierIR> dynamicRegistries = RegistryDataLoader.#if MC_VER < MC_26_3 WORLDGEN_REGISTRIES #elif MC_VER >= MC_26_3 WORLD_REGISTRIES #endif
             .stream()
             .map(it -> RegistryHelper.getIdentifier(it.key()))
             .toList();
@@ -106,7 +106,7 @@ public class RegistriesInspectionGui extends PagedGui<IdentifierDescriptor> {
             }
 
             /* try to get the registry from dynamic registries */
-            Optional<RegistryDataLoader.RegistryData<?>> first = RegistryDataLoader.WORLDGEN_REGISTRIES
+            Optional<RegistryDataLoader.RegistryData<?>> first = RegistryDataLoader.#if MC_VER < MC_26_3 WORLDGEN_REGISTRIES #elif MC_VER >= MC_26_3 WORLD_REGISTRIES #endif
                 .stream()
                 .filter(it -> RegistryHelper.getIdAsString(it.key())
                     .equals(entity.getIdentifier().toString()))

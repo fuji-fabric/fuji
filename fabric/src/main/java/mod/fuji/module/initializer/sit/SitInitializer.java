@@ -207,7 +207,11 @@ public class SitInitializer extends ModuleInitializer {
             chairEntity.lookAt(EntityAnchorArgument.Anchor.EYES, lookingTarget.subtract(0, lookingTarget.y() * 2, 0));
         }
         chairEntity.setInvisible(true);
+        #if MC_VER < MC_26_3
         chairEntity.setInvulnerable(true);
+        #elif MC_VER >= MC_26_3
+        chairEntity.setPermanentlyInvulnerable(true);
+        #endif
         chairEntity.setCustomName(Component.literal("FUJI-SIT"));
         chairEntity.setNoGravity(true);
 

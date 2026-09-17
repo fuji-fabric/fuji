@@ -59,8 +59,10 @@ public class ShulkerBoxDisplayGuiFactory extends BaseDisplayGuiFactory {
 
         #if MC_VER > MC_1_20_4 && MC_VER < MC_26_1
         return containerComponent.stream();
-        #elif MC_VER >= MC_26_1
+        #elif MC_VER >= MC_26_1 && MC_VER < MC_26_3
         return containerComponent.allItemsCopyStream();
+        #elif MC_VER >= MC_26_3
+        return containerComponent.itemCopies();
         #endif
     }
 

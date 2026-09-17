@@ -32,13 +32,13 @@ public class SearchHeadsInputGui extends InputSignGui {
 
         /* Filter the entities by keywords. */
         List<Head> entities = HeadProvider.getLoadedHeads().values()
-            .stream()
-            .filter(head -> StringUtil.containsIgnoreCase(head.name, keywords)
-            || StringUtil.containsIgnoreCase(head.getTagsOrEmpty(), keywords))
-            .collect(Collectors.toList());
+                .stream()
+                .filter(head -> StringUtil.containsIgnoreCase(head.name, keywords)
+                        || StringUtil.containsIgnoreCase(head.getTagsOrEmpty(), keywords))
+                .collect(Collectors.toList());
 
         Component title = TextHelper.getTextByKey(player, "gui.search.title", keywords);
         new CategoryHeadsGui(this.parentGui, player, title, entities, 0)
-            .open();
+                .open();
     }
 }

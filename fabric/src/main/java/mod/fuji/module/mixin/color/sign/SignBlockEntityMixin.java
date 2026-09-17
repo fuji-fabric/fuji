@@ -42,7 +42,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "setText", at = @At("HEAD"), argsOnly = true)
     @NotNull
-    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) boolean isFront) {
+    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) #if MC_VER < MC_26_3 boolean isFront #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot slot #endif) {
         /* Only process the sign text when there is a logic server in current session. */
         if (ServerHelper.getServer() == null) return signText;
         if (!WorldHelper.isServerWorld(this.level)) return signText;
@@ -52,7 +52,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             .ofNullable(getPlayerWhoMayEdit())
             .map(editingPlayerUUID -> {
                 /* Process input line texts. */
-                Component[] inputLineTexts = signText.getMessages(false);
+                Component[] inputLineTexts = #if MC_VER < MC_26_3 signText.getMessages(false) #elif MC_VER >= MC_26_3 signText.getMessages(false).toArray(Component[]::new) #endif;
                 Component[] outputLineTexts = new Component[inputLineTexts.length];
                 String[] inputLineStrings = new String[inputLineTexts.length];
 
@@ -81,10 +81,10 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
                 }
 
                 /* Write sign cache. */
-                writeSignCache(isFront, inputLineStrings);
+                writeSignCache(#if MC_VER < MC_26_3 isFront #elif MC_VER >= MC_26_3 slot == net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif, inputLineStrings);
 
                 /* Return the output line texts. */
-                return new SignText(outputLineTexts, outputLineTexts, signText.getColor(), signText.hasGlowingText());
+                return new SignText(#if MC_VER < MC_26_3 outputLineTexts, outputLineTexts #elif MC_VER >= MC_26_3 List.of(outputLineTexts), List.of(outputLineTexts) #endif, signText.getColor(), signText.hasGlowingText());
             })
             .orElse(signText);
     }

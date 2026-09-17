@@ -53,7 +53,7 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
     private static final String COMMAND_STRING_SPLIT_CHARACTER = "/";
 
     private static @NotNull String mapSignTextIntoString(@NotNull SignText signText) {
-        return Arrays.stream(signText.getMessages(false))
+        return #if MC_VER < MC_26_3 Arrays.stream(signText.getMessages(false)) #elif MC_VER >= MC_26_3 signText.getMessages(false).stream() #endif
             .map(Component::getString)
             .reduce("", String::concat);
     }
@@ -88,7 +88,13 @@ public class CommandInteractiveInitializer extends ModuleInitializer {
         /* Extract the sign lines from the sign block. */
         BlockEntity interactingBlockEntity = world.getBlockEntity(blockPos);
         if (interactingBlockEntity instanceof SignBlockEntity signBlockEntity) {
-            SignText facingSignText = signBlockEntity.getText(signBlockEntity.isFacingFrontText(player));
+            SignText facingSignText = signBlockEntity.getText(
+                #if MC_VER < MC_26_3
+                signBlockEntity.isFacingFrontText(player)
+                #elif MC_VER >= MC_26_3
+                signBlockEntity.getSlotPlayerIsFacing(player)
+                #endif
+            );
             String facingSignLines = CommandInteractiveInitializer.mapSignTextIntoString(facingSignText);
             if (facingSignLines.contains(CommandInteractiveInitializer.COMMAND_STRING_SPLIT_CHARACTER)) {
                 /* Consume this interaction. */
