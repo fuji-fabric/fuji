@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 public class EntityHelper {
 
@@ -114,7 +113,7 @@ public class EntityHelper {
             PacketHelper.sendPacketToAll(packet);
         }
 
-        public static void markVelocityChanged(@NonNull Entity entity) {
+        public static void markVelocityChanged(@NotNull Entity entity) {
             #if MC_VER < MC_26_3
             entity.hurtMarked = true;
             #elif MC_VER >= MC_26_3

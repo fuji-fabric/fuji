@@ -9,7 +9,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.component.SwingAnimation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,7 +28,7 @@ public abstract class ServerPlayerLeftClickMixin {
     #if MC_VER < MC_26_3
     void onPlayerLeftClick(InteractionHand hand, CallbackInfo ci)
     #elif MC_VER >= MC_26_3
-    void onPlayerLeftClick(InteractionHand hand, SwingAnimation animation, boolean sendToSwingingEntity, CallbackInfoReturnable<Boolean> cir)
+    void onPlayerLeftClick(InteractionHand hand, net.minecraft.world.item.component.SwingAnimation animation, boolean sendToSwingingEntity, CallbackInfoReturnable<Boolean> cir)
     #endif
     {
         PlayerHelper.Kind.ifServerPlayerEntity(this, player -> {
