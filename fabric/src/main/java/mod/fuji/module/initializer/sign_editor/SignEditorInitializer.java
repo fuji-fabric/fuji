@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import mod.fuji.core.auxiliary.CollectionUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.annotation.CommandNode;
 import mod.fuji.core.command.annotation.CommandRequirement;
@@ -66,7 +67,7 @@ public class SignEditorInitializer extends ModuleInitializer {
                     SignEditorService.updateSignText(player, signBlockEntity, frontSide, bothSides, signText -> {
                         boolean newValue = value.orElseGet(() -> !signText.hasGlowingText());
                         TextHelper.sendTextByKey(player, "sign_editor.state.glowing", newValue);
-                        return #if MC_VER < MC_26_3 signText.setHasGlowingText(newValue) #elif MC_VER >= MC_26_3 signText.withGlowingText(newValue) #endif;
+                        return SignEditorService.withGlowingState(signText, newValue);
                     });
                     return CommandHelper.Return.SUCCESS;
                 });
@@ -80,7 +81,7 @@ public class SignEditorInitializer extends ModuleInitializer {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
                 SignEditorService.updateSignText(player, signBlockEntity, frontSide, bothSides, signText -> {
-                    return #if MC_VER < MC_26_3 signText.setColor(color) #elif MC_VER >= MC_26_3 signText.withColor(color) #endif;
+                    return SignEditorService.withColor(signText, color);
                 });
                 return CommandHelper.Return.SUCCESS;
             });
@@ -94,8 +95,8 @@ public class SignEditorInitializer extends ModuleInitializer {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
                 SignEditorService.updateSignText(player, signBlockEntity, frontSide, bothSides, signText -> {
                     final int index = line.getValue() - 1;
-                    Component component = TextHelper.getTextByValue(player, text.getValue());
-                    return #if MC_VER < MC_26_3 signText.setMessage(index, component) #elif MC_VER >= MC_26_3 signText.asMutable().setLine(index, component).asImmutable() #endif;
+                    Component $text = TextHelper.getTextByValue(player, text.getValue());
+                    return SignEditorService.withLine(signText, index, $text);
                 });
                 return CommandHelper.Return.SUCCESS;
             });
@@ -125,14 +126,10 @@ public class SignEditorInitializer extends ModuleInitializer {
     private static int $mirror(@CommandSource ServerPlayer player) {
         return SignEditorService.selectLookingAtSignBlock(player, blockPos -> {
             return SignEditorService.withSignBlockEntity(player, blockPos, signBlockEntity -> {
-                #if MC_VER < MC_26_3
-                boolean facingFrontText = signBlockEntity.isFacingFrontText(player);
-                #elif MC_VER >= MC_26_3
-                net.minecraft.world.level.block.entity.SignTextSlot facingSlot = signBlockEntity.getSlotPlayerIsFacing(player);
-                boolean facingFrontText = facingSlot == net.minecraft.world.level.block.entity.SignTextSlot.FRONT;
-                #endif
+                boolean facingFrontText = EntityHelper.SignBlock.isFacingFront(player, signBlockEntity);
+
                 SignEditorService.updateSignText(player, signBlockEntity, Optional.of(!facingFrontText), Optional.of(false), signText -> {
-                    return signBlockEntity.getText(#if MC_VER < MC_26_3 facingFrontText #elif MC_VER >= MC_26_3 facingSlot #endif);
+                    return EntityHelper.SignBlock.getFacingSignText(player, signBlockEntity);
                 });
                 return CommandHelper.Return.SUCCESS;
             });

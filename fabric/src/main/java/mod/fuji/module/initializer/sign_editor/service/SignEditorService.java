@@ -3,11 +3,14 @@ package mod.fuji.module.initializer.sign_editor.service;
 import java.util.Optional;
 import java.util.function.Function;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.WorldHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
@@ -31,25 +34,42 @@ public class SignEditorService {
         /* Apply the operation on both sides. */
         boolean $bothSides = bothSides.orElse(false);
         if ($bothSides) {
-            signBlockEntity.updateText(mapper::apply, #if MC_VER < MC_26_3 true #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif);
-            signBlockEntity.updateText(mapper::apply, #if MC_VER < MC_26_3 false #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot.BACK #endif);
+            EntityHelper.SignBlock.updateSignText(signBlockEntity, mapper::apply, true);
+            EntityHelper.SignBlock.updateSignText(signBlockEntity, mapper::apply, false);
             return;
         }
 
         /* Apply the operation on the preferred side. */
-        #if MC_VER < MC_26_3
-        boolean isPlayerFacingFront = frontSide.orElseGet(() -> signBlockEntity.isFacingFrontText(player));
-        signBlockEntity.updateText(mapper::apply, isPlayerFacingFront);
-        #elif MC_VER >= MC_26_3
-        net.minecraft.world.level.block.entity.SignTextSlot slot = frontSide
-            .map(it -> it ? net.minecraft.world.level.block.entity.SignTextSlot.FRONT : net.minecraft.world.level.block.entity.SignTextSlot.BACK)
-            .orElseGet(() -> signBlockEntity.getSlotPlayerIsFacing(player));
-        signBlockEntity.updateText(mapper::apply, slot);
-        #endif
+        boolean preferredSide = frontSide.orElseGet(() -> EntityHelper.SignBlock.isFacingFront(player, signBlockEntity));
+        EntityHelper.SignBlock.updateSignText(signBlockEntity, mapper::apply, preferredSide);
     }
 
     public static int selectLookingAtSignBlock(@NotNull ServerPlayer player, @NotNull Function<BlockPos, Integer> function) {
         BlockPos blockPos = WorldHelper.Raycast.getLookingAtBlockOrElseThrow(player);
         return function.apply(blockPos);
+    }
+
+    public static @NotNull SignText withGlowingState(@NotNull SignText signText, boolean value) {
+        #if MC_VER < MC_26_3
+        return signText.setHasGlowingText(value);
+        #elif MC_VER >= MC_26_3
+        return signText.withGlowingText(value);
+        #endif
+    }
+
+    public static @NotNull SignText withLine(@NotNull SignText signText, int index, @NotNull Component text) {
+        #if MC_VER < MC_26_3
+        return signText.setMessage(index, text);
+        #elif MC_VER >= MC_26_3
+        return signText.asMutable().setLine(index, text).asImmutable();
+        #endif
+    }
+
+    public static @NotNull SignText withColor(@NotNull SignText signText, @NotNull DyeColor color) {
+        #if MC_VER < MC_26_3
+        return signText.setColor(color);
+        #elif MC_VER >= MC_26_3
+        return signText.withColor(color);
+        #endif
     }
 }

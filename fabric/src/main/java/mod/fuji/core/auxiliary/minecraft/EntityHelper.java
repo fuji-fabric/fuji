@@ -1,5 +1,8 @@
 package mod.fuji.core.auxiliary.minecraft;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -185,21 +188,83 @@ public class EntityHelper {
 
     public static class SignBlock {
 
+        /* Define the possible sides of a sign block entity. (Only front side and back side) */
+        #if MC_VER < MC_26_3
+        public static boolean toFacingFront(boolean signTextSpecifier) {
+            return signTextSpecifier;
+        }
+        #elif MC_VER >= MC_26_3
+        public static boolean toFacingFront(net.minecraft.world.level.block.entity.SignTextSlot signTextSpecifier) {
+            return switch (signTextSpecifier) {
+                case net.minecraft.world.level.block.entity.SignTextSlot.FRONT -> true;
+                case net.minecraft.world.level.block.entity.SignTextSlot.BACK -> false;
+            };
+        }
+
+        private static @NotNull net.minecraft.world.level.block.entity.SignTextSlot toFacingSlot(boolean signTextSpecifier) {
+            if (signTextSpecifier) {
+                return net.minecraft.world.level.block.entity.SignTextSlot.FRONT;
+            }
+            return net.minecraft.world.level.block.entity.SignTextSlot.BACK;
+        }
+        #endif
+
+        public static boolean isFacingFront(@NotNull ServerPlayer player, @NotNull SignBlockEntity signBlockEntity) {
+            #if MC_VER < MC_26_3
+            return signBlockEntity.isFacingFrontText(player);
+            #elif MC_VER >= MC_26_3
+            var facingSlot = signBlockEntity.getSlotPlayerIsFacing(player);
+            return toFacingFront(facingSlot);
+            #endif
+        }
+
+        /* Define operators for a sign block entity. */
+        public static @NotNull SignText getSignText(@NotNull SignBlockEntity signBlockEntity, boolean isFront) {
+            #if MC_VER < MC_26_3
+            return signBlockEntity.getText(isFront);
+            #elif MC_VER >= MC_26_3
+            var facingSlot = toFacingSlot(isFront);
+            return signBlockEntity.getText(facingSlot);
+            #endif
+        }
+
         public static @NotNull SignText getFacingSignText(@NotNull ServerPlayer player, @NotNull SignBlockEntity signBlockEntity) {
-            return signBlockEntity.getText(
-                #if MC_VER < MC_26_3
-                signBlockEntity.isFacingFrontText(player)
-                #elif MC_VER >= MC_26_3
-                signBlockEntity.getSlotPlayerIsFacing(player)
-                #endif
-            );
+            boolean isFacingFront = isFacingFront(player, signBlockEntity);
+            return getSignText(signBlockEntity, isFacingFront);
+        }
+
+        public static @NotNull Component[] getTextArray(@NotNull SignText signText) {
+            #if MC_VER < MC_26_3
+            return signText.getMessages(false);
+            #elif MC_VER >= MC_26_3
+            return signText.getMessages(false).toArray(Component[]::new);
+            #endif
         }
 
         public static @NotNull Stream<Component> getTextStream(@NotNull SignText signText) {
+            return Arrays.stream(getTextArray(signText));
+        }
+
+        public static void updateSignText(@NotNull SignBlockEntity signBlockEntity, @NotNull UnaryOperator<SignText> mapper, boolean isFront) {
             #if MC_VER < MC_26_3
-            return Arrays.stream(signText.getMessages(false));
+            signBlockEntity.updateText(mapper, isFront);
             #elif MC_VER >= MC_26_3
-            return signText.getMessages(false).stream();
+            var signTextSlot = toFacingSlot(isFront);
+            signBlockEntity.updateText(mapper, signTextSlot);
+            #endif
+        }
+
+        public static
+        #if MC_VER < MC_26_3
+        Component[]
+        #elif MC_VER >= MC_26_3
+        List<Component>
+        #endif
+        coerceLineTexts(@NotNull Component[] components) {
+            #if MC_VER < MC_26_3
+            return components;
+            #elif MC_VER >= MC_26_3
+            return List.of(components);
             #endif
         }
     }

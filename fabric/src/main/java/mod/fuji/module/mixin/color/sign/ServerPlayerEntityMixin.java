@@ -1,5 +1,6 @@
 package mod.fuji.module.mixin.color.sign;
 
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.structure.GlobalBlockPos;
 import mod.fuji.module.initializer.color.sign.ColorSignInitializer;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -24,14 +25,18 @@ public abstract class ServerPlayerEntityMixin {
 
     // NOTE: In lower MC versions like MC 1.20.1, if there are `<rb>` tag in the sign, then the `openEditSignScreen` method will not be called.
     @Inject(method = "openTextEdit", at = @At("HEAD"))
-    private void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity,
-                                                      #if MC_VER < MC_26_3 boolean isFront #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot slot #endif,
-                                                      @NotNull CallbackInfo ci) {
+    #if MC_VER < MC_26_3
+    void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity, boolean signTextSpecifier, @NotNull CallbackInfo ci)
+    #elif MC_VER >= MC_26_3
+    void restoreInputLineStringsOnClientSide(@NotNull SignBlockEntity signBlockEntity, net.minecraft.world.level.block.entity.SignTextSlot signTextSpecifier, @NotNull CallbackInfo ci)
+    #endif
+    {
         ColorSignInitializer
             .readSignCache(new GlobalBlockPos(signBlockEntity.getLevel(), signBlockEntity.getBlockPos()))
             .ifPresent(signCache -> {
                 /* Modify the text of the sign. */
-                List<String> inputLineStrings = #if MC_VER < MC_26_3 isFront #elif MC_VER >= MC_26_3 slot == net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif ? signCache.getFrontLines() : signCache.getBackLines();
+                boolean isFrontSide = EntityHelper.SignBlock.toFacingFront(signTextSpecifier);
+                List<String> inputLineStrings = isFrontSide ? signCache.getFrontLines() : signCache.getBackLines();
                 Component[] outputLineTexts = {Component.empty(), Component.empty(), Component.empty(), Component.empty()};
 
                 for (int i = 0; i < inputLineStrings.size(); i++) {
@@ -46,14 +51,10 @@ public abstract class ServerPlayerEntityMixin {
                 }
 
                 /* Send the update packet. */
-                #if MC_VER < MC_26_3
-                boolean facingFront = signBlockEntity.isFacingFrontText(player);
-                #elif MC_VER >= MC_26_3
-                net.minecraft.world.level.block.entity.SignTextSlot facingSlot = signBlockEntity.getSlotPlayerIsFacing(player);
-                #endif
-                SignText oldSignText = signBlockEntity.getText(#if MC_VER < MC_26_3 facingFront #elif MC_VER >= MC_26_3 facingSlot #endif);
-                SignText newSignText = new SignText(#if MC_VER < MC_26_3 outputLineTexts, outputLineTexts #elif MC_VER >= MC_26_3 List.of(outputLineTexts), List.of(outputLineTexts) #endif, oldSignText.getColor(), oldSignText.hasGlowingText());
-                signBlockEntity.setText(newSignText, #if MC_VER < MC_26_3 facingFront #elif MC_VER >= MC_26_3 facingSlot #endif);
+                SignText oldSignText = EntityHelper.SignBlock.getFacingSignText(player, signBlockEntity);
+                SignText newSignText = new SignText(EntityHelper.SignBlock.coerceLineTexts(outputLineTexts), EntityHelper.SignBlock.coerceLineTexts(outputLineTexts), oldSignText.getColor(), oldSignText.hasGlowingText());
+
+                EntityHelper.SignBlock.updateSignText(signBlockEntity, a -> newSignText, isFrontSide);
                 player.connection.send(signBlockEntity.getUpdatePacket());
             });
     }

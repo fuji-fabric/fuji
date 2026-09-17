@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import mod.fuji.core.auxiliary.minecraft.EntityHelper;
 import mod.fuji.core.auxiliary.minecraft.PlayerHelper;
 import mod.fuji.core.auxiliary.minecraft.ServerHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
@@ -42,7 +43,12 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
 
     @ModifyVariable(method = "setText", at = @At("HEAD"), argsOnly = true)
     @NotNull
-    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) #if MC_VER < MC_26_3 boolean isFront #elif MC_VER >= MC_26_3 net.minecraft.world.level.block.entity.SignTextSlot slot #endif) {
+    #if MC_VER < MC_26_3
+    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) boolean signTextSpecifier)
+    #elif MC_VER >= MC_26_3
+    SignText processInputLineStrings(@NotNull SignText signText, @Local(argsOnly = true) net.minecraft.world.level.block.entity.SignTextSlot signTextSpecifier)
+    #endif
+    {
         /* Only process the sign text when there is a logic server in current session. */
         if (ServerHelper.getServer() == null) return signText;
         if (!WorldHelper.isServerWorld(this.level)) return signText;
@@ -52,7 +58,7 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
             .ofNullable(getPlayerWhoMayEdit())
             .map(editingPlayerUUID -> {
                 /* Process input line texts. */
-                Component[] inputLineTexts = #if MC_VER < MC_26_3 signText.getMessages(false) #elif MC_VER >= MC_26_3 signText.getMessages(false).toArray(Component[]::new) #endif;
+                Component[] inputLineTexts = EntityHelper.SignBlock.getTextArray(signText);
                 Component[] outputLineTexts = new Component[inputLineTexts.length];
                 String[] inputLineStrings = new String[inputLineTexts.length];
 
@@ -81,10 +87,11 @@ public abstract class SignBlockEntityMixin extends BlockEntity {
                 }
 
                 /* Write sign cache. */
-                writeSignCache(#if MC_VER < MC_26_3 isFront #elif MC_VER >= MC_26_3 slot == net.minecraft.world.level.block.entity.SignTextSlot.FRONT #endif, inputLineStrings);
+                boolean isFront = EntityHelper.SignBlock.toFacingFront(signTextSpecifier);
+                writeSignCache(isFront, inputLineStrings);
 
                 /* Return the output line texts. */
-                return new SignText(#if MC_VER < MC_26_3 outputLineTexts, outputLineTexts #elif MC_VER >= MC_26_3 List.of(outputLineTexts), List.of(outputLineTexts) #endif, signText.getColor(), signText.hasGlowingText());
+                return new SignText(EntityHelper.SignBlock.coerceLineTexts(outputLineTexts), EntityHelper.SignBlock.coerceLineTexts(outputLineTexts), signText.getColor(), signText.hasGlowingText());
             })
             .orElse(signText);
     }
