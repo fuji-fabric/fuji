@@ -1,17 +1,17 @@
 package mod.fuji.core.command.executor;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import java.util.List;
 import mod.fuji.core.auxiliary.LogUtil;
 import mod.fuji.core.auxiliary.minecraft.CommandHelper;
 import mod.fuji.core.auxiliary.minecraft.TextHelper;
 import mod.fuji.core.command.executor.structure.ExtendedCommandSource;
-import java.util.List;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,14 +29,13 @@ public class CommandExecutor {
     }
 
     /**
- *         Cases:
-        1. /run as console bad command
-        2. /run as console run as player bad command
-        3. /run as console run as player <player> run as console bad command
-        4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
-
- **/
-    public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command, TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
+     * Cases:
+     * 1. /run as console bad command
+     * 2. /run as console run as player bad command
+     * 3. /run as console run as player <player> run as console bad command
+     * 4. /run as console run as player %player:name% run as fake-op %player:name% say I am %player:name%
+     **/
+    public static int executeSingle(@NotNull ExtendedCommandSource context, @NotNull String command, @NotNull TriConsumer<ExtendedCommandSource, String, Exception> exceptionHandler) {
 
         /* Expand the command. */
         command = context.expandCommand(command);
