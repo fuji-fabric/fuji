@@ -168,11 +168,6 @@
 
 [Test Case]
 - Module: core
-- Action: **Issue `/fuji` command, and press `F` key.**
-- Target: Check the semantics of `SlotGuiInterface#click`, ensure it didn't changed in new version.
-
-[Test Case]
-- Module: core
 - Action: **Issue `/fuji`, and see the `document of afk module`, the `details of run module` and the `details of skin` module.**
 - Target: The text parser should parse the text properly from the earliest version to the latest version.
 - Target: The URL highlighter should work properly.

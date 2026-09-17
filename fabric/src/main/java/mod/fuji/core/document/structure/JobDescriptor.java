@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 import mod.fuji.core.document.interfaces.SourceModuleGetter;
+import mod.fuji.core.job.GlobalScheduler;
 import mod.fuji.core.module.ModulePathResolver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import mod.fuji.core.job.JobManager;
 import org.jetbrains.annotations.NotNull;
 import org.quartz.Job;
 import org.quartz.JobDetail;
@@ -29,7 +29,7 @@ public class JobDescriptor implements SourceModuleGetter {
         List<JobDescriptor> entities = new ArrayList<>();
 
         /* Get all jobs. */
-        Scheduler scheduler = JobManager.getScheduler();
+        Scheduler scheduler = GlobalScheduler.getInstance();
 
         // NOTE: Match all jobs, including `CronJob` and `FixedIntervalJob`.
         GroupMatcher<JobKey> jobKeyGroupMatcher = GroupMatcher.anyJobGroup();
