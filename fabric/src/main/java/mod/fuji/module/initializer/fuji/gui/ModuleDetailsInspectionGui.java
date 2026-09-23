@@ -133,7 +133,7 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementIR> {
     private static List<GuiElementIR> searchModuleJobs(SimpleGui parent, ServerPlayer player, String modulePathString) {
         return JobsInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
@@ -179,35 +179,35 @@ public class ModuleDetailsInspectionGui extends PagedGui<GuiElementIR> {
     private static List<GuiElementIR> searchModuleArgumentTypes(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return ArgumentTypesInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementIR> searchModuleConfigurations(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return ConfigurationsInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementIR> searchModulePlaceholders(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return PlaceholdersInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementIR> searchModuleCommands(SimpleGui parent, ServerPlayer player, String modulePathString) {
         return CommandsInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 
     private static List<GuiElementIR> searchModulePermissionsAndMetas(@Nullable SimpleGui parent, ServerPlayer player, String modulePathString) {
         return PermissionsAndMetasInspectionGui
             .inspectAll(parent, player)
-            .skipCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
+            .dropCurrentGuiAndSearch(it -> it.getSourceModule().equals(modulePathString))
             .toGuiElements();
     }
 

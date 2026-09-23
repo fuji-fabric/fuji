@@ -127,8 +127,8 @@ public abstract class PagedGui<T> extends SimpleGuiDuck {
         "Issue `/fuji`, and click the `afk` module, to open the module details GUI, then press `Esc` key to close this GUI.",
         "Issue `/fuji`, click `Next Page` button twice, and click any module here, then press `Esc` key to close this GUI.",
     })
-    public @NotNull PagedGui<T> skipCurrentGuiAndSearch(@NotNull Predicate<T> predicate) {
-        // NOTE: This method is usually called after inspectAll() method, to only filters the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, we return an intermediate GUI, someone else wil take bits from it.
+    public @NotNull PagedGui<T> dropCurrentGuiAndSearch(@NotNull Predicate<T> predicate) {
+        // NOTE: This method is usually called after inspectAll() method, to only filter the GUI elements, and link this GUI to `parent GUI` (The true GUI). In this use-case, this function will return an intermediate GUI for searching.
         Component resultTitle = TextHelper.getTextByKey(getPlayer(), "gui.search.title", "YOU SHOULD NOT SEE THIS");
         List<T> resultEntities = entities.stream()
             .filter(predicate)

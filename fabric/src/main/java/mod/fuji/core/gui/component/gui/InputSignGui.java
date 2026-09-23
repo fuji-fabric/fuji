@@ -36,7 +36,7 @@ public class InputSignGui extends SignGui {
     }
 
     public void onVirtualGuiClose() {
-
+        // no-op
     }
 
     #if MC_VER < MC_26_1
