@@ -82,6 +82,13 @@
         "role": "cs_CZ translator",
         "homepage": "https://github.com/Steedr"
       }
+    },
+    {
+      "name": "GLDYM",
+      "contact": {
+        "role": "contributor",
+        "homepage": "https://github.com/GLDYM"
+      }
     }
   ],
   "environment": "*",

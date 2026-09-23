@@ -12,4 +12,4 @@
 - None
 
 ## 🐞 Fixes
-- [anti_build] Should not run the `attack entity` logics on a client player, to avoid the client crash if the mod is installed on client side. (#595)
+- [core] fix: the job scheduler should not block the game exiting process when the mod is installed on the client side. (#587)
