@@ -6,10 +6,11 @@
 >
 
 
+
 # 📑 Changelog
 
 ## ✨ Features
-- None
+- [core] chore: support Minecraft 26.3 version. (Great thanks to @GLDYM who did the most of the work!)
 
 ## 🐞 Fixes
-- [core] fix: the job scheduler should not block the game exiting process when the mod is installed on the client side. (#587)
+- None
