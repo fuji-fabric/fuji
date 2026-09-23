@@ -23,7 +23,7 @@ import mod.fuji.module.initializer.command_bundle.structure.BundleCommandDescrip
 import net.minecraft.commands.CommandSourceStack;
 
 @Document(id = 1751826356909L, value = """
-    This module allows to `create` a new command. (Called bundle command` or `template command.)
+    This module allows to `create` a new command. (Called `bundle command` or `template command`.)
 
     The new command is made up of existing commands.
     It can accept `user-defined arguments` and `placeholders`.
@@ -49,7 +49,7 @@ import net.minecraft.commands.CommandSourceStack;
     For example, the `head` instance `first second third` describes a command `/first second third`.
     It is made up of three `command nodes`, which are all `literal arguments`.
 
-    There are 3 types of `arguments`:
+    There are 3 kinds of `arguments`:
     1. `Literal Argument`: You can write it down directly. For example, `first`, `second`, `third`, and `claim-kit` are all literal arguments.
     2. `Required Argument`: Its syntax is `\\<arg-type arg-name\\>`. For example, `\\<int age\\>` describes a `required argument` whose `argument type is int` and `argument name is age`.
     3. `Optional Argument`: Its syntax is `[arg-type arg-name default-value]`. It is similar to `required argument`, but you can provide a `default value` if this argument is not specified by the `command source`.
@@ -144,7 +144,7 @@ import net.minecraft.commands.CommandSourceStack;
     - `/smite` and `/thunder` -> `/summon minecraft:lighting_bolt`
     """)
 @ColorBox(id = 1753243426623L, color = ColorBox.ColorBoxTypes.EXAMPLE, value = """
-    ◉ Define a `/tpw` command to teleport players to a specified dimension.
+    ◉ Define a `/my-tp` command to teleport players to a specified dimension.
     Head: `my-tp resource-world`
     Body:
     1. `run as fake-op %player:name% tppos --centerX 0 --centerZ 0 --maxRange 128 --dimension fuji:overworld`
